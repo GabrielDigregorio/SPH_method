@@ -8,8 +8,8 @@ computational method. SPH originated in the late 1970’s for astrophysical prob
 has been used since then in numerous application areas. The method is a mesh-free,
 particle-based Lagrangian method, where the coordinates move with the fluid (particles).
 We ask you to study, implement and test the SPH method presented in the following reference:
-Louis Goffin, “Development of a didactic SPH model”, Travail de fin d’´etudes r´ealis´e
-en vue de l’obtention du grade de Master Ing´enieur Civil des Constructions, Universit´e de
+Louis Goffin, “Development of a didactic SPH model”, Travail de fin d’études réalisé
+en vue de l’obtention du grade de Master Ingénieur Civil des Constructions, Université de
 Liège, année académique 2012-2013.
 
 The project is organized with 4 intermediate deadlines, and with students divided into 2
@@ -48,3 +48,13 @@ results, the computer implementation and a detailed analysis of physical experim
 non-trivial configurations) is due on May 19th. An oral presentation of the main project
 results will be organized during the June exam session; individual theoretical and practical
 questions will be asked to each member of the two student groups.
+
+
+
+Xavier Adriaens     :
+Andrea Attipoe      :
+Sébastien Brialmont : 
+Gabriel Digregorio  : ok
+Julien Dular        :
+Romain Hanus        :
+
