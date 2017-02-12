@@ -55,6 +55,6 @@ Xavier Adriaens     :
 Andrea Attipoe      :
 Sébastien Brialmont : 
 Gabriel Digregorio  : ok
-Julien Dular        :
+Julien Dular        : ok
 Romain Hanus        :
 
