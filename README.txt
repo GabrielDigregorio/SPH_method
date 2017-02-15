@@ -56,5 +56,5 @@ Andrea Attipoe      :
 Sébastien Brialmont : 
 Gabriel Digregorio  : ok
 Julien Dular        : ok
-Romain Hanus        :
+Romain Hanus        : ok
 
