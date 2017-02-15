@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Simple Cube-->
+<prop>
+	<partProp> <!--Properties of the particles-->
+		<partnum>1000</partnum> <!--Number of particles-->
+		<partvol>1</partvol> <!--Volume of a particle (m^3)-->
+		<partdns>10</partdns> <!--Density of a particle (kg/m^3)-->
+	</partProp>
+	
+	<fludProp>
+		<!--Properties of the fluid-->
+	</fludProp>
+
+	<sfctProp>
+		<!--Properties of the smoothing function-->
+	</sfctProp>
+
+	<bdryProp>
+		<!--Properties of the boundaries-->
+	</bdryProp>
+</prop>
+<part>
+	0.0 0.0 0.0
+	1.0 0.0 0.0
+	0.0 1.0 0.0
+	0.0 0.0 1.0
+	1.0 1.0 0.0
+	0.0 1.0 1.0
+	1.0 0.0 1.0
+	1.0 1.0 1.0
+</part>

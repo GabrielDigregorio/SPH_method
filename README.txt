@@ -52,9 +52,8 @@ questions will be asked to each member of the two student groups.
 
 
 Xavier Adriaens     : ok
-Andrea Attipoe      :
-Sébastien Brialmont : 
+Andrea Attipoe      : ok
+Sébastien Brialmont :
 Gabriel Digregorio  : ok
 Julien Dular        : ok
 Romain Hanus        : ok
-
