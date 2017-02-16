@@ -53,7 +53,7 @@ questions will be asked to each member of the two student groups.
 
 Xavier Adriaens     : ok
 Andrea Attipoe      : ok
-Sébastien Brialmont :
+Sébastien Brialmont : ok
 Gabriel Digregorio  : ok
 Julien Dular        : ok
 Romain Hanus        : ok
