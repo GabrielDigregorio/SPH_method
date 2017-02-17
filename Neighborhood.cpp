@@ -4,7 +4,7 @@
 
 /// Naive method to find the neighbors of a given particle at position p(x,y,z)
 
-void neighborNaive (double p[3], double h, std::vector<double> &pos, std::vector<double> &neighbor)
+void neighborAllPair (double p[3], double h, std::vector<double> &pos, std::vector<double> &neighbor)
 { 
     // memory allocation
     /*pos.reserve(pos.size() + ??? ); GABY : We don't know how many neighbors...*/
@@ -24,12 +24,6 @@ void neighborNaive (double p[3], double h, std::vector<double> &pos, std::vector
 
 
 /// Advanced method to find the neighbors of a given particle at position p(x,y,z)
-
-// All-Pair search algorithm
-void neighborAllPair (double p[3], double h, std::vector<double> &pos)
-{
-
-}
 
 // Linked-list algorithm
 void neighborLinkedList (double p[3], double h, std::vector<double> &pos)

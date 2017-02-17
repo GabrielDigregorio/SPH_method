@@ -92,7 +92,7 @@ void meshcylinder(double o[3], double L, double R, double s, std::vector<double>
                 pos.push_back(x);
                 pos.push_back(y);
                 pos.push_back(z);
-                myfile << x << " " << y << " " << z << ";" ; 
+                myfile << x << " " << y << " " << z << "\n" ; 
             }
         }
     }
