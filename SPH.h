@@ -21,6 +21,10 @@ void neighborLinkedList (std::vector<double> &pos,
                          std::vector<double> &values,
                          std::vector<int> &row,
                          std::vector<int> &column);
+void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes);
+double distance(std::vector<double> pos, int partA, int partB);
+
+
 
 // ParaView.cpp
 void paraview(std::string const &filename,

@@ -31,19 +31,19 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos)
     pos.reserve(pos.size() + ni*nj*nk*3);
 
     // particle generation
-    for(int i=0; i<ni; ++i)
+    for(int k=0; k<nk; ++k)
     {
-        double x = o[0]+ i*dx;
+        double z = o[2]+ k*dz;
         for(int j=0; j<nj; ++j)
         {
             double y = o[1]+j*dy;
-            for(int k=0; k<nk; ++k)
+            for(int i=0; i<ni; ++i)
             {
-                double z = o[2]+k*dz;
+                double x = o[0]+i*dx;
                 pos.push_back(x);
                 pos.push_back(y);
                 pos.push_back(z);
-                myfile << x << " " << y << " " << z << "\n" ; 
+                myfile << x << " " << y << " " << z << "\n" ;
             }
         }
     }

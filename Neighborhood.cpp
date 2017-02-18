@@ -61,9 +61,7 @@ void neighborLinkedList (std::vector<double> &pos,
         vector<int> row;
         boxes.push_back(row);
     }
-
     //std::cout << nBoxesX << " " << nBoxesY << " " << nBoxesZ << " \n";
-
 
     // Sort the particles
     int nPart = pos.size()/3;
@@ -85,15 +83,62 @@ void neighborLinkedList (std::vector<double> &pos,
         //std::cout << boxX*nBoxesY*nBoxesZ + boxY*nBoxesZ + boxZ << " \n";
     }
 
-
-
     // Search for their neighbors
-
-
-
-
+    int particleID;
+    // Spans the boxes
+    for(int box=0 ; box<nBoxes ; box++)
+    {
+        // Determines the list of surronding boxes (boundaries -> not trivial)
+        std::vector<int> surrBoxes;
+        surroundingBoxes(box, nBoxesX, nBoxesY, nBoxesZ, surrBoxes);
+        // Spans the particles in the box
+        for(int part=0 ; part<boxes[box].size() ; part++)
+        {
+            particleID = boxes[box][part];
+            // Spans the surrounding boxes
+            for(int surrBox = 0 ; surrBox < surrBoxes.size() ; surrBox++)
+            {
+                // Spans the higher index particles in the box (symmetry)
+                for(int i=0 ; i<boxes[surrBox].size() ; i++)
+                {
+                    int potNeighborID = boxes[surrBox][i];
+                    if(potNeighborID >= particleID)
+                    {
+                        double r = distance(pos, particleID, potNeighborID);
+                        if(r<kh)
+                        {
+                            std::cout << r << "\t: ";
+                            std::cout << particleID << " " << potNeighborID << "\n";
+                            values.push_back(r); // The distance bewteen the two found neighbors
+                            row.push_back(particleID); // The one we search the neighbors of
+                            column.push_back(potNeighborID); // The neighbor we have just found
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }
+
+// Gives the list of the surrounding boxes
+void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes)
+{
+    // TO COMPLETE !!!
+    surrBoxes.push_back(box);
+    return;
+}
+
+// Gives the distance between two particles
+double distance(std::vector<double> pos, int partA, int partB)
+{
+    return sqrt( pow(pos[partA*3]-pos[partB*3],2)
+               + pow(pos[partA*3+1]-pos[partB*3+1],2)
+               + pow(pos[partA*3+2]-pos[partB*3+2],2));
+}
+
+
+
 
 // tree search algorithm
 void neighborTree (double p[3], double h, std::vector<double> &pos)
