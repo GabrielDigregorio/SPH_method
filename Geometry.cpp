@@ -8,7 +8,7 @@ using namespace std;
 //  - s: particle spacing
 
 void meshcube(double o[3], double L[3], double s, std::vector<double> &pos)
-{   
+{
     // open a file to write the geometry (check for valydity)
     ofstream myfile;
     myfile.open ("cube.txt");
@@ -43,7 +43,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos)
                 pos.push_back(x);
                 pos.push_back(y);
                 pos.push_back(z);
-                myfile << x << " " << y << " " << z << ";" ; 
+                myfile << x << " " << y << " " << z << "\n" ; 
             }
         }
     }
@@ -78,7 +78,7 @@ void meshcylinder(double o[3], double L, double R, double s, std::vector<double>
 
     // memory allocation
     pos.reserve(pos.size() + nl*nr*nr*3);
-  
+
     // particle generation
     for(int l=0; l<nl-1; ++l)
     {
@@ -92,13 +92,13 @@ void meshcylinder(double o[3], double L, double R, double s, std::vector<double>
                 pos.push_back(x);
                 pos.push_back(y);
                 pos.push_back(z);
-                myfile << x << " " << y << " " << z << "\n" ; 
+                myfile << x << " " << y << " " << z << "\n" ;
             }
         }
     }
 
     myfile.close();
-    
+
 }
 
 
@@ -117,5 +117,5 @@ void meshsphere(double o[3], double r, double s, std::vector<double> &pos)
     // memory allocation
 
     // particle generation
-    
+
 }

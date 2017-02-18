@@ -1,5 +1,8 @@
 #include "sph.h"
+#include <cmath>
 
+
+using namespace std;
 
 
 /// Naive method to find the neighbors of a given particle at position p(x,y,z)
@@ -44,6 +47,47 @@ void neighborLinkedList (std::vector<double> &pos,
                          std::vector<int> &row,
                          std::vector<int> &column)
 {
+
+    // Box definition
+    vector<vector<int> > boxes;
+    int nBoxesX = ceil((u[0] - l[0])/kh); // Extra box if non integer quotient
+    int nBoxesY = ceil((u[1] - l[1])/kh);
+    int nBoxesZ = ceil((u[2] - l[2])/kh);
+
+    int nBoxes = nBoxesX * nBoxesY * nBoxesZ;
+
+    for(int i=0 ; i<nBoxes ; i++)
+    {
+        vector<int> row;
+        boxes.push_back(row);
+    }
+
+    //std::cout << nBoxesX << " " << nBoxesY << " " << nBoxesZ << " \n";
+
+
+    // Sort the particles
+    int nPart = pos.size()/3;
+    // Box identifier variables
+    int boxX;
+    int boxY;
+    int boxZ;
+    double temp;
+    for(int i=0 ; i<nPart ; i++)
+    {
+        temp = (pos[3*i] - l[0])/kh; // Integer division
+        boxX = (temp < nBoxesX-1) ? temp : nBoxesX-1;
+        temp = (pos[3*i+1] - l[1])/kh;
+        boxY = (temp < nBoxesY-1) ? temp : nBoxesY-1;
+        temp = (pos[3*i+2] - l[2])/kh;
+        boxZ = (temp < nBoxesZ-1) ? temp : nBoxesZ-1;
+        // Put the particle identifier in the corresponding box array
+        boxes[boxX*nBoxesY*nBoxesZ + boxY*nBoxesZ + boxZ].push_back(i);
+        //std::cout << boxX*nBoxesY*nBoxesZ + boxY*nBoxesZ + boxZ << " \n";
+    }
+
+
+
+    // Search for their neighbors
 
 
 

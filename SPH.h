@@ -14,15 +14,21 @@ void meshcylinder(double o[3], double L, double R, double s, std::vector<double>
 
 // Neighborhood
 void neighborAllPair(double p[3], double h, std::vector<double> &pos, std::vector<double> &neighbor);
+void neighborLinkedList (std::vector<double> &pos,
+                         double l[3],
+                         double u[3],
+                         double kh,
+                         std::vector<double> &values,
+                         std::vector<int> &row,
+                         std::vector<int> &column);
 
 // ParaView.cpp
-void paraview(std::string const &filename, 
+void paraview(std::string const &filename,
               int step,
               std::vector<double> const &pos,
               std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors);       
+              std::map<std::string, std::vector<double> *> const &vectors);
 
 
 
 #endif
-
