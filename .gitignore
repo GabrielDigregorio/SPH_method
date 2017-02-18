@@ -5,6 +5,7 @@ build/
 *.o
 *.obj
 *.bak
-*.vkt
+*.vtk
 a.out
 *.exe
+cylinder.txt

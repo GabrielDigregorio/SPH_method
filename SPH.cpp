@@ -10,11 +10,11 @@ int main(int argc, char *argv[])
     //meshcube(o, L, s, pos);
 
     double o[3] = { 0.0, 0.0, 0.0 };
-    double L = 50;
-	double R = 30;
+    double L = 10;
+	  double R = 10;
     double s = 1;
     meshcylinder(o, L, R, s, pos);
-   
+
 
     // creation of dummy pressure/density/velocity fields &
     int nbp = pos.size()/3;
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     vectors["velocity"] = &velocity;
 
     // time step loop
-    for(int nstep=0; nstep<20; ++nstep)
+    for(int nstep=0; nstep<2; ++nstep)
     {
         double a = nstep/20.0*8*atan(1.0);
 
