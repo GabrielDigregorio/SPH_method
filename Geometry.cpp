@@ -1,4 +1,4 @@
-#include "sph.h"
+#include "SPH.h"
 #include <fstream>
 using namespace std;
 
