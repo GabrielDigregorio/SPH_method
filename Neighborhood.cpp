@@ -24,9 +24,9 @@ void neighborAllPair (std::vector<double> &pos,
                          std::vector<int> &column)
 {
     // For each particle, browse all other particles and compute the distance
-    for(int i=0; i<=pos.size(); i=i+3)
+    for(int i=0; i<pos.size(); i=i+3)
     {
-        for(int j=0; j<=pos.size(); j=j+3)
+        for(int j=0; j<pos.size(); j=j+3)
         {
             double r = distance(pos, i, j);
             if( r < kh )
