@@ -1,0 +1,6 @@
+#para1 %Basic Building Block definition
+
+#param
+nump=1000
+spac=0.1
+mass=10.0
