@@ -23,17 +23,19 @@ void neighborAllPair (std::vector<double> &pos,
                          std::vector<int> &row,
                          std::vector<int> &column)
 {
+    double kh2 = pow(kh,2);
+
     // For each particle, browse all other particles and compute the distance
     for(int i=0; i<pos.size(); i=i+3)
     {
         for(int j=0; j<pos.size(); j=j+3)
         {
-            double r = distance(pos, i, j);
-            if( r < kh )
+            double r2 = distance(pos, i, j);
+            if( r2 < kh2 )
             {
-                std::cout << r << "\t: ";
+                std::cout << r2 << "\t: ";
                 std::cout << i << " " << j << "\n";
-                values.push_back(r); // The distance bewteen the two found neighbors
+                values.push_back(r2); // The distance bewteen the two found neighbors
                 row.push_back(i); // The one we search the neighbors of
                 column.push_back(j); // The neighbor we have just found
             }
@@ -67,6 +69,7 @@ void neighborLinkedList (std::vector<double> &pos,
                          std::vector<int> &row,
                          std::vector<int> &column)
 {
+    double kh2 = pow(kh,2);
 
     // Box definition
     vector<vector<int> > boxes;
@@ -124,12 +127,12 @@ void neighborLinkedList (std::vector<double> &pos,
                     int potNeighborID = boxes[surrBox][i];
                     if(potNeighborID >= particleID)
                     {
-                        double r = distance(pos, particleID, potNeighborID);
-                        if(r<kh)
+                        double r2 = distance(pos, particleID, potNeighborID);
+                        if(r2<kh2)
                         {
-                            std::cout << r << "\t: ";
+                            std::cout << r2 << "\t: ";
                             std::cout << particleID << " " << potNeighborID << "\n";
-                            values.push_back(r); // The distance bewteen the two found neighbors
+                            values.push_back(r2); // The distance bewteen the two found neighbors
                             row.push_back(particleID); // The one we search the neighbors of
                             column.push_back(potNeighborID); // The neighbor we have just found
                         }
@@ -313,9 +316,9 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
 // Gives the distance between two particles
 double distance(std::vector<double> pos, int partA, int partB)
 {
-    return sqrt( pow(pos[partA*3]-pos[partB*3],2)
+    return pow(pos[partA*3]-pos[partB*3],2)
                + pow(pos[partA*3+1]-pos[partB*3+1],2)
-               + pow(pos[partA*3+2]-pos[partB*3+2],2));
+               + pow(pos[partA*3+2]-pos[partB*3+2],2);
 }
 
 
