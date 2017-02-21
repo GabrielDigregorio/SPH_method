@@ -58,8 +58,8 @@ void neighborLinkedList (std::vector<double> &pos,
 
     for(int i=0 ; i<nBoxes ; i++)
     {
-        vector<int> row;
-        boxes.push_back(row);
+        vector<int> boxContent;
+        boxes.push_back(boxContent);
     }
     //std::cout << nBoxesX << " " << nBoxesY << " " << nBoxesZ << " \n";
 
@@ -205,7 +205,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
      {
         neighbors in plane z = -1
         neighbors in current plane
-        
+
         if(y_bondaries = top)
         {
             if(x_bondaries = left)
@@ -214,7 +214,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
             }
             else if(x_bondaries = right)
             {
-                
+
             }
             else
             {
@@ -247,7 +247,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
         neighbors in plane z = -1
         neighbors in current plane
         neighbors in plane z = +1
-        
+
         if(y_bondaries = top)
         {
             if(x_bondaries = left)
@@ -256,7 +256,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
             }
             else if(x_bondaries = right)
             {
-                
+
             }
             else
             {
