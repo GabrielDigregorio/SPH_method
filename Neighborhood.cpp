@@ -124,8 +124,133 @@ void neighborLinkedList (std::vector<double> &pos,
 // Gives the list of the surrounding boxes
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes)
 {
-    // TO COMPLETE !!!
     surrBoxes.push_back(box);
+    // TO COMPLETE !!!
+    /* NAIVE WAY !
+    // in current plane
+    north_neighbors = box - nBoxesX
+    northeast_neighbors = box - nBoxesX + 1
+    east_neighbors = box + 1
+    southeast_neighbors = box + nBoxesX + 1
+    south_neighbors = box + nBoxesX
+    southwest_neighbors = box + nBoxesX - 1
+    west_neighbors = box - 1
+    northwest_neighbors = box - nBoxesX - 1
+
+    // in plane z = -1
+    front_neighbors = - nBoxesY*nBoxesX
+    front_north_neighbors = box - nBoxesX - nBoxesY*nBoxesX
+    front_northeast_neighbors = box - nBoxesX + 1 - nBoxesY*nBoxesX
+    front_east_neighbors = box + 1 - nBoxesY*nBoxesX
+    front_southeast_neighbors = box + nBoxesX + 1 - nBoxesY*nBoxesX
+    front_south_neighbors = box + nBoxesX - nBoxesY*nBoxesX
+    front_southwest_neighbors = box + nBoxesX - 1 - nBoxesY*nBoxesX
+    front_west_neighbors = box - 1 - nBoxesY*nBoxesX
+    front_northwest_neighbors = box - nBoxesX - 1 - nBoxesY*nBoxesX
+
+    // in plane z = 1
+    back_neighbors = + nBoxesY*nBoxesX
+    back_north_neighbors = box - nBoxesX + nBoxesY*nBoxesX
+    back_northeast_neighbors = box - nBoxesX + 1 + nBoxesY*nBoxesX
+    back_east_neighbors = box + 1 + nBoxesY*nBoxesX
+    back_southeast_neighbors = box + nBoxesX + 1 + nBoxesY*nBoxesX
+    back_south_neighbors = box + nBoxesX + nBoxesY*nBoxesX
+    back_southwest_neighbors = box + nBoxesX - 1 + nBoxesY*nBoxesX
+    back_west_neighbors = box - 1 + nBoxesY*nBoxesX
+    back_northwest_neighbors = box - nBoxesX - 1 + nBoxesY*nBoxesX
+
+    // Check all cases
+     if(z_bondaries = front)
+     {
+        neighbors in current plane
+        neighbors in plane z = +1
+
+        if(y_bondaries = top)
+        {
+            if(x_bondaries = left)
+            {
+
+            }
+            else if(x_bondaries = right)
+            {
+
+            }
+        }
+        else if (y_bondaries = bottom)
+        {
+            if(x_bondaries = left)
+            {
+
+            }
+            else if(x_bondaries = right)
+            {
+
+            }
+        }
+
+     }
+     else if (z_bondaries = back)
+     {
+        neighbors in plane z = -1
+        neighbors in current plane
+        
+        if(y_bondaries = top)
+        {
+            if(x_bondaries = left)
+            {
+
+            }
+            else if(x_bondaries = right)
+            {
+                
+            }
+        }
+        else if (y_bondaries = bottom)
+        {
+            if(x_bondaries = left)
+            {
+
+            }
+            else if(x_bondaries = right)
+            {
+
+            }
+        }
+
+     }
+     else
+     {
+        neighbors in plane z = -1
+        neighbors in current plane
+        neighbors in plane z = +1
+        
+        if(y_bondaries = top)
+        {
+            if(x_bondaries = left)
+            {
+
+            }
+            else if(x_bondaries = right)
+            {
+                
+            }
+        }
+        else if (y_bondaries = bottom)
+        {
+            if(x_bondaries = left)
+            {
+
+            }
+            else if(x_bondaries = right)
+            {
+
+            }
+
+        }
+
+     }
+
+    */
     return;
 }
 
