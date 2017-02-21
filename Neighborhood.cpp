@@ -175,6 +175,10 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
             {
 
             }
+            else
+            {
+
+            }
         }
         else if (y_bondaries = bottom)
         {
@@ -186,6 +190,14 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
             {
 
             }
+            else
+            {
+
+            }
+        }
+        else
+        {
+
         }
 
      }
@@ -204,6 +216,10 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
             {
                 
             }
+            else
+            {
+
+            }
         }
         else if (y_bondaries = bottom)
         {
@@ -215,6 +231,14 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
             {
 
             }
+            else
+            {
+
+            }
+        }
+        else
+        {
+
         }
 
      }
@@ -234,6 +258,10 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
             {
                 
             }
+            else
+            {
+
+            }
         }
         else if (y_bondaries = bottom)
         {
@@ -245,6 +273,14 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
             {
 
             }
+            else
+            {
+
+            }
+
+        }
+        else
+        {
 
         }
 
