@@ -5,7 +5,7 @@
 using namespace std;
 
 
-/// Naive method to find the neighbors of a given particle at position p(x,y,z)
+/// Naive method to find the neighbors of all particles.
 // All-pair search algorithm
 /*
 Inputs:
@@ -23,7 +23,7 @@ void neighborAllPair (std::vector<double> &pos,
                          std::vector<int> &row,
                          std::vector<int> &column)
 {
-    // for each particle, brows all other particle and compute the distance
+    // For each particle, browse all other particles and compute the distance
     for(int i=0; i<=pos.size(); i=i+3)
     {
         for(int j=0; j<=pos.size(); j=j+3)
@@ -44,7 +44,7 @@ void neighborAllPair (std::vector<double> &pos,
 
 
 
-/// Advanced method to find the neighbors of a given particle at position p(x,y,z)
+/// Advanced method to find the neighbors of all particles.
 
 // Linked-list algorithm
 /*
