@@ -1,0 +1,7 @@
+# list of ignored files/folders
+
+build/
+*~
+*.o
+*.obj
+*.bak
