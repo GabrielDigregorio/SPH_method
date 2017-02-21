@@ -6,19 +6,24 @@ using namespace std;
 
 
 /// Naive method to find the neighbors of a given particle at position p(x,y,z)
-
+// All-pair search algorithm
+/*
+Inputs:
+- pos: array with the particle positions (x,y,z components)
+- kh: support size of the kernel
+- values: nonzero values of the incidence matrix (r_ab for the moment...)
+- row: row indices of the nonzero values
+- column: column indices of the nonzero values
+Output:
+/
+*/
 void neighborAllPair (std::vector<double> &pos,
-                         double l[3],
-                         double u[3],
                          double kh,
                          std::vector<double> &values,
                          std::vector<int> &row,
                          std::vector<int> &column)
 {
-    // memory allocation
-    /*pos.reserve(pos.size() + ??? ); GABY : We don't know how many neighbors...*/
-
-    
+    // for each particle, brows all other particle and compute the distance
     for(int i=0; i<=pos.size(); i=i+3)
     {
         for(int j=0; j<=pos.size(); j=j+3)
@@ -26,12 +31,11 @@ void neighborAllPair (std::vector<double> &pos,
             double r = distance(pos, i, j);
             if( r < kh )
             {
-                // the vector neighbor takes the pos vector indices where particles are close to p
                 std::cout << r << "\t: ";
-                std::cout << particleID << " " << potNeighborID << "\n";
+                std::cout << i << " " << j << "\n";
                 values.push_back(r); // The distance bewteen the two found neighbors
-                row.push_back(particleID); // The one we search the neighbors of
-                column.push_back(potNeighborID); // The neighbor we have just found
+                row.push_back(i); // The one we search the neighbors of
+                column.push_back(j); // The neighbor we have just found
             }
         }       
     }
