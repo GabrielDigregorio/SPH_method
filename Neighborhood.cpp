@@ -7,22 +7,38 @@ using namespace std;
 
 /// Naive method to find the neighbors of a given particle at position p(x,y,z)
 
-void neighborAllPair (double p[3], double h, std::vector<double> &pos, std::vector<double> &neighbor)
+void neighborAllPair (std::vector<double> &pos,
+                         double l[3],
+                         double u[3],
+                         double kh,
+                         std::vector<double> &values,
+                         std::vector<int> &row,
+                         std::vector<int> &column)
 {
     // memory allocation
     /*pos.reserve(pos.size() + ??? ); GABY : We don't know how many neighbors...*/
 
+    
     for(int i=0; i<=pos.size(); i=i+3)
     {
-        if(pow((p[0]-pos[i]),2)+pow((p[1]-pos[i+1]),2)+pow((p[2]-pos[i+2]),2) <= pow(h,2))
+        for(int j=0; j<=pos.size(); j=j+3)
         {
-            // the vector neighbor takes the pos vector indices where particles are close to p
-            neighbor.push_back(i);
-        }
-
+            double r = distance(pos, i, j);
+            if( r < kh )
+            {
+                // the vector neighbor takes the pos vector indices where particles are close to p
+                std::cout << r << "\t: ";
+                std::cout << particleID << " " << potNeighborID << "\n";
+                values.push_back(r); // The distance bewteen the two found neighbors
+                row.push_back(particleID); // The one we search the neighbors of
+                column.push_back(potNeighborID); // The neighbor we have just found
+            }
+        }       
     }
 
 }
+
+
 
 /// Advanced method to find the neighbors of a given particle at position p(x,y,z)
 
