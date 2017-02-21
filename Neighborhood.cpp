@@ -30,11 +30,11 @@ void neighborAllPair (std::vector<double> &pos,
     {
         for(int j=i; j<pos.size(); j=j+3)
         {
-            double r2 = distance(pos, i, j);
+            double r2 = distance(pos, i/3, j/3);
             if( r2 < kh2 )
             {
-                std::cout << r2 << "\t: ";
-                std::cout << i << " " << j << "\n";
+                //std::cout << r2 << "\t: ";
+                //std::cout << i << " " << j << "\n";
                 values.push_back(r2); // The distance bewteen the two found neighbors
                 row.push_back(i); // The one we search the neighbors of
                 column.push_back(j); // The neighbor we have just found
@@ -130,8 +130,8 @@ void neighborLinkedList (std::vector<double> &pos,
                         double r2 = distance(pos, particleID, potNeighborID);
                         if(r2<kh2)
                         {
-                            std::cout << r2 << "\t: ";
-                            std::cout << particleID << " " << potNeighborID << "\n";
+                            //std::cout << r2 << "\t: ";
+                            //std::cout << particleID << " " << potNeighborID << "\n";
                             values.push_back(r2); // The distance bewteen the two found neighbors
                             row.push_back(particleID); // The one we search the neighbors of
                             column.push_back(potNeighborID); // The neighbor we have just found
@@ -320,8 +320,6 @@ double distance(std::vector<double> pos, int partA, int partB)
                + pow(pos[partA*3+1]-pos[partB*3+1],2)
                + pow(pos[partA*3+2]-pos[partB*3+2],2);
 }
-
-
 
 
 // tree search algorithm

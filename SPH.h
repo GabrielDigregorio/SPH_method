@@ -30,7 +30,6 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
 double distance(std::vector<double> pos, int partA, int partB);
 
 
-
 // ParaView.cpp
 void paraview(std::string const &filename,
               int step,
