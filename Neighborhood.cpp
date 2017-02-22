@@ -284,22 +284,89 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
               }
               else // can take up and down
               {
-
+                surrBoxes.push_back(box+1);// right
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box+nx*ny);// up
+                surrBoxes.push_back(box-nx*ny);// down
+                // right up
+                surrBoxes.push_back(box+1 +nx*ny);
+                surrBoxes.push_back(box+1 +nx*ny+nx);
+                surrBoxes.push_back(box+1 +nx*ny-nx);
+                // right down
+                surrBoxes.push_back(box+1 -nx*ny);
+                surrBoxes.push_back(box+1 -nx*ny+nx);
+                surrBoxes.push_back(box+1 -nx*ny-nx);
+                // front up
+                surrBoxes.push_back(box-nx +nx*ny);
+                // fornt down
+                surrBoxes.push_back(box-nx -nx*ny);
+                // front  right
+                surrBoxes.push_back(box-nx +1);
               }
         }
         else// can take front and back
         {
               if(index_z==0)// no down block to consider
               {
-
+                surrBoxes.push_back(box+1);// right
+                surrBoxes.push_back(box+nx);// back
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box+nx*ny);// up
+                // right up
+                surrBoxes.push_back(box+1 +nx*ny);
+                surrBoxes.push_back(box+1 +nx*ny+nx);
+                surrBoxes.push_back(box+1 +nx*ny-nx);
+                //  front-back up
+                surrBoxes.push_back(box+nx +nx*ny);
+                surrBoxes.push_back(box-nx +nx*ny);
+                // front  right
+                surrBoxes.push_back(box-nx +1);
+                // back  right
+                surrBoxes.push_back(box+nx +1);
               }
               else if(index_z==(nz-1))// no up block to consider
               {
-
+                surrBoxes.push_back(box+1);// right
+                surrBoxes.push_back(box+nx);// back
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box-nx*ny);// down
+                // right down
+                surrBoxes.push_back(box+1 -nx*ny);
+                surrBoxes.push_back(box+1 -nx*ny+nx);
+                surrBoxes.push_back(box+1 -nx*ny-nx);
+                //  front-back down
+                surrBoxes.push_back(box+nx -nx*ny);
+                surrBoxes.push_back(box-nx -nx*ny);
+                // front  right
+                surrBoxes.push_back(box-nx +1);
+                // back right
+                surrBoxes.push_back(box+nx +1);
               }
               else // can take up and down
               {
-
+                surrBoxes.push_back(box+1);// right
+                surrBoxes.push_back(box+nx);// back
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box+nx*ny);// up
+                surrBoxes.push_back(box-nx*ny);// down
+                // right up
+                surrBoxes.push_back(box+1 +nx*ny);
+                surrBoxes.push_back(box+1 +nx*ny+nx);
+                surrBoxes.push_back(box+1 +nx*ny-nx);
+                // right down
+                surrBoxes.push_back(box+1 -nx*ny);
+                surrBoxes.push_back(box+1 -nx*ny+nx);
+                surrBoxes.push_back(box+1 -nx*ny-nx);
+                //  front-back up
+                surrBoxes.push_back(box+nx +nx*ny);
+                surrBoxes.push_back(box-nx +nx*ny);
+                //  front-back down
+                surrBoxes.push_back(box+nx -nx*ny);
+                surrBoxes.push_back(box-nx -nx*ny);
+                // front  right
+                surrBoxes.push_back(box-nx +1);
+                // back  right
+                surrBoxes.push_back(box+nx +1);
               }
         }
     }
@@ -309,7 +376,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
         {
             if(index_z==0)// no down block to consider
             {
-
+              
             }
             else if(index_z==(nz-1))// no up block to consider
             {
