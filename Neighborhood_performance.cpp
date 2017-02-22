@@ -1,16 +1,20 @@
 #include "SPH.h"
 #include <fstream>
 #include <vector>
+#include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 int main(int argc, char *argv[])
 {
-    //Should be in argv[]
+    //Input parameters
+    double s = atof(argv[1]);
+    double kh = atof(argv[2]);
+    double l = atof(argv[3]);
+    std::cout << "\n Parameter list: " << s << ", " << kh << ", " << l << "\n";
+
     double o[3] = {0.0,0.0,0.0};
-    double L[3] = {20.0,15.0,10.0};
-    double s = 1.4;
-    double kh = 2.2;
-    //End input (end of what should be in argv)
+    double L[3] = {l,l,l};
 
     std::vector<double> pos;
     std::vector<double> values;
@@ -35,6 +39,6 @@ int main(int argc, char *argv[])
     std::cout<<"Elapsed time Linked List: "<< duration <<" [s]\n";
 
 
-
+    std::cout << "\n";
     return 0;
 }
