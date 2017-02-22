@@ -376,10 +376,26 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
         {
             if(index_z==0)// no down block to consider
             {
-              
+              surrBoxes.push_back(box-1);// left
+              surrBoxes.push_back(box+nx);// back
+              surrBoxes.push_back(box+nx*ny);// up
+              // left up
+              surrBoxes.push_back(box-1 +nx*ny);
+              surrBoxes.push_back(box-1 +nx*ny+nx);
+              surrBoxes.push_back(box-1 +nx*ny-nx);
+              // back up
+              surrBoxes.push_back(box+nx +nx*ny);
+              // front left
+              surrBoxes.push_back(box-nx -1);
+              // back left
+              surrBoxes.push_back(box+nx -1);
+
             }
             else if(index_z==(nz-1))// no up block to consider
             {
+              surrBoxes.push_back(box-1);// left
+              surrBoxes.push_back(box+nx);// back
+              surrBoxes.push_back(box-nx*ny);// down
 
             }
             else // can take up and down
