@@ -10,7 +10,7 @@ using namespace std;
 
 void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation)
 {
-    // open a file to write the geometry (check for valydity)
+    // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
     ofstream myfile;
     myfile.open ("cube.txt");
 
@@ -63,9 +63,9 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
 //  - L: length of the cylinder
 //  - s: particle spacing
 
-void meshcylinder(double o[3], double L, double R, double s, std::vector<double> &pos)
+void meshcylinder(double o[3], double L, double R, double s, std::vector<double> &pos, double perturbation)
 {
-    // open a file to write the geometry (check for valydity)
+    // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
     ofstream myfile;
     myfile.open ("cylinder.txt");
 
@@ -84,6 +84,10 @@ void meshcylinder(double o[3], double L, double R, double s, std::vector<double>
     // memory allocation
     pos.reserve(pos.size() + nl*nr*nr*3);
 
+    // generates number in the range -s*perturbation % and s*perturbation %
+    std::default_random_engine generator;
+    std::uniform_real_distribution<double> distribution(-s*perturbation/100,s*perturbation/100);
+
     // particle generation
     for(int l=0; l<nl-1; ++l)
     {
@@ -94,10 +98,10 @@ void meshcylinder(double o[3], double L, double R, double s, std::vector<double>
             for(int j=-int(sqrt(pow(R,2)-pow(x,2))); j<int(sqrt(pow(R,2)-pow(x,2)))+1; ++j)
             {
                 double y = o[1]+j*dr;
-                pos.push_back(x);
-                pos.push_back(y);
-                pos.push_back(z);
-                myfile << x << " " << y << " " << z << "\n" ;
+                pos.push_back(x + distribution(generator));
+                pos.push_back(y + distribution(generator));
+                pos.push_back(z + distribution(generator));
+                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
             }
         }
     }

@@ -10,12 +10,12 @@
 #include <cassert>
 #include <ctime>
 #include <fstream>
-#include<random>
+#include <random>
 
 
 // Geometry.cpp
 void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation );
-void meshcylinder(double o[3], double L, double R, double s, std::vector<double> &pos);
+void meshcylinder(double o[3], double L, double R, double s, std::vector<double> &pos, double perturbation);
 
 // Neighborhood.cpp
 void neighborAllPair (std::vector<double> &pos,
