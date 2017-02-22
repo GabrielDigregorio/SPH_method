@@ -1,13 +1,14 @@
 #include "SPH.h"
-#include <fstream>
+
 using namespace std;
 
 // build a cube of particles aligned with x,y,z axes.
 //  - o[3]: corner of the cube with the lowest (x,y,z) values
 //  - L[3]: edge lengths along x,y and z
 //  - s: particle spacing
+//  - pertubation: percentage of perturbation in position of particles (equal 0 by default)
 
-void meshcube(double o[3], double L[3], double s, std::vector<double> &pos)
+void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation)
 {
     // open a file to write the geometry (check for valydity)
     ofstream myfile;
@@ -30,6 +31,10 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos)
     // memory allocation
     pos.reserve(pos.size() + ni*nj*nk*3);
 
+    // generates number in the range -s*perturbation % and s*perturbation %
+    std::default_random_engine generator;
+    std::uniform_real_distribution<double> distribution(-s*perturbation/100,s*perturbation/100);
+
     // particle generation
     for(int k=0; k<nk; ++k)
     {
@@ -40,10 +45,10 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos)
             for(int i=0; i<ni; ++i)
             {
                 double x = o[0]+i*dx;
-                pos.push_back(x);
-                pos.push_back(y);
-                pos.push_back(z);
-                myfile << x << " " << y << " " << z << "\n" ;
+                pos.push_back(x + distribution(generator));
+                pos.push_back(y + distribution(generator));
+                pos.push_back(z + distribution(generator));
+                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
             }
         }
     }
