@@ -39,7 +39,7 @@ void neighborAllPair (std::vector<double> &pos,
                 row.push_back(i); // The one we search the neighbors of
                 column.push_back(j); // The neighbor we have just found
             }
-        }       
+        }
     }
 
 }
@@ -148,170 +148,255 @@ void neighborLinkedList (std::vector<double> &pos,
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes)
 {
     surrBoxes.push_back(box);
-    // TO COMPLETE !!!
-    /* NAIVE WAY !
-    // in current plane
-    north_neighbors = box - nBoxesX
-    northeast_neighbors = box - nBoxesX + 1
-    east_neighbors = box + 1
-    southeast_neighbors = box + nBoxesX + 1
-    south_neighbors = box + nBoxesX
-    southwest_neighbors = box + nBoxesX - 1
-    west_neighbors = box - 1
-    northwest_neighbors = box - nBoxesX - 1
-
-    // in plane z = -1
-    front_neighbors = - nBoxesY*nBoxesX
-    front_north_neighbors = box - nBoxesX - nBoxesY*nBoxesX
-    front_northeast_neighbors = box - nBoxesX + 1 - nBoxesY*nBoxesX
-    front_east_neighbors = box + 1 - nBoxesY*nBoxesX
-    front_southeast_neighbors = box + nBoxesX + 1 - nBoxesY*nBoxesX
-    front_south_neighbors = box + nBoxesX - nBoxesY*nBoxesX
-    front_southwest_neighbors = box + nBoxesX - 1 - nBoxesY*nBoxesX
-    front_west_neighbors = box - 1 - nBoxesY*nBoxesX
-    front_northwest_neighbors = box - nBoxesX - 1 - nBoxesY*nBoxesX
-
-    // in plane z = 1
-    back_neighbors = + nBoxesY*nBoxesX
-    back_north_neighbors = box - nBoxesX + nBoxesY*nBoxesX
-    back_northeast_neighbors = box - nBoxesX + 1 + nBoxesY*nBoxesX
-    back_east_neighbors = box + 1 + nBoxesY*nBoxesX
-    back_southeast_neighbors = box + nBoxesX + 1 + nBoxesY*nBoxesX
-    back_south_neighbors = box + nBoxesX + nBoxesY*nBoxesX
-    back_southwest_neighbors = box + nBoxesX - 1 + nBoxesY*nBoxesX
-    back_west_neighbors = box - 1 + nBoxesY*nBoxesX
-    back_northwest_neighbors = box - nBoxesX - 1 + nBoxesY*nBoxesX
-
-    // Check all cases
-     if(z_bondaries = front)
-     {
-        neighbors in current plane
-        neighbors in plane z = +1
-
-        if(y_bondaries = top)
+    int nx=nBoxesX;
+    int ny=nBoxesY;
+    int nz=nBoxesZ;
+    int index_x;
+    int index_y;
+    int index_z;
+    index_z=box/(nBoxesX*nBoxesY);
+    index_y=(box-index_z*nBoxesX*nBoxesY)/nBoxesX;
+    index_x=box-index_z*nBoxesX*nBoxesY-index_y*nBoxesX;
+    if(index_x>0 &&  index_y>0  && index_z>0 && index_x<(nBoxesX-1) &&  index_y<(nBoxesY-1)  && index_z<(nBoxesZ-1))
+    {
+      // direct face neigbour
+      surrBoxes.push_back(box+1);// right
+      surrBoxes.push_back(box-1);// left
+      surrBoxes.push_back(box+nx);// back
+      surrBoxes.push_back(box-nx);// front
+      surrBoxes.push_back(box+nx*ny);// up
+      surrBoxes.push_back(box-nx*ny);// down
+      // corner + arete neigbour
+      // right up
+      surrBoxes.push_back(box+1 +nx*ny);
+      surrBoxes.push_back(box+1 +nx*ny+nx);
+      surrBoxes.push_back(box+1 +nx*ny-nx);
+      // right down
+      surrBoxes.push_back(box+1 -nx*ny);
+      surrBoxes.push_back(box+1 -nx*ny+nx);
+      surrBoxes.push_back(box+1 -nx*ny-nx);
+      // left up
+      surrBoxes.push_back(box-1 +nx*ny);
+      surrBoxes.push_back(box-1 +nx*ny+nx);
+      surrBoxes.push_back(box-1 +nx*ny-nx);
+      // left down
+      surrBoxes.push_back(box-1 -nx*ny);
+      surrBoxes.push_back(box-1 -nx*ny+nx);
+      surrBoxes.push_back(box-1 -nx*ny-nx);
+      //  front-back up
+      surrBoxes.push_back(box+nx +nx*ny);
+      surrBoxes.push_back(box-nx +nx*ny);
+      //  front-back down
+      surrBoxes.push_back(box+nx -nx*ny);
+      surrBoxes.push_back(box-nx -nx*ny);
+      // front left right
+      surrBoxes.push_back(box-nx +1);
+      surrBoxes.push_back(box-nx -1);
+      // back left right
+      surrBoxes.push_back(box+nx +1);
+      surrBoxes.push_back(box+nx -1);
+    }
+    if(index_x==0)// no left block to consider , for all index_y and index_z
+    {
+        if(index_y==0)// no front block to consider , for all index_z
         {
-            if(x_bondaries = left)
+            if(index_z==0)// no down block to consider
+            {
+              surrBoxes.push_back(box+1);// right
+              surrBoxes.push_back(box+nx);// back
+              surrBoxes.push_back(box+nx*ny);// up
+              // right up
+              surrBoxes.push_back(box+1 +nx*ny);
+              surrBoxes.push_back(box+1 +nx*ny+nx);
+              surrBoxes.push_back(box+1 +nx*ny-nx);
+              //back up
+              surrBoxes.push_back(box+nx +nx*ny);
+              // back right
+              surrBoxes.push_back(box+nx +1);
+            }
+            else if(index_z==(nz-1))// no up block to consider
+            {
+                surrBoxes.push_back(box+1);// right
+                surrBoxes.push_back(box+nx);// back
+                surrBoxes.push_back(box-nx*ny);// down
+                // right down
+                surrBoxes.push_back(box+1 -nx*ny);
+                surrBoxes.push_back(box+1 -nx*ny+nx);
+                surrBoxes.push_back(box+1 -nx*ny-nx);
+                // back down
+                surrBoxes.push_back(box+nx -nx*ny);
+                // back right
+                surrBoxes.push_back(box+nx +1);
+                // back up
+                surrBoxes.push_back(box+nx +nx*ny);
+            }
+            else // can take up and down
+            {
+                surrBoxes.push_back(box+1);// right
+                surrBoxes.push_back(box+nx);// back
+                surrBoxes.push_back(box+nx*ny);// up
+                surrBoxes.push_back(box-nx*ny);// down
+                // right up
+                surrBoxes.push_back(box+1 +nx*ny);
+                surrBoxes.push_back(box+1 +nx*ny+nx);
+                surrBoxes.push_back(box+1 +nx*ny-nx);
+                // right down
+                surrBoxes.push_back(box+1 -nx*ny);
+                surrBoxes.push_back(box+1 -nx*ny+nx);
+                surrBoxes.push_back(box+1 -nx*ny-nx);
+                //back down
+                surrBoxes.push_back(box+nx -nx*ny);
+                // back right
+                surrBoxes.push_back(box+nx +1);
+                // back up
+                surrBoxes.push_back(box+nx +nx*ny);
+            }
+        }
+        else if (index_y==(ny-1))// no back block
+        {
+              if(index_z==0)// no down block to consider
+              {
+                surrBoxes.push_back(box+1);// right
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box+nx*ny);// up
+                // right up
+                surrBoxes.push_back(box+1 +nx*ny);
+                surrBoxes.push_back(box+1 +nx*ny+nx);
+                surrBoxes.push_back(box+1 +nx*ny-nx);
+                // front up
+                surrBoxes.push_back(box-nx +nx*ny);
+                // front  right
+                surrBoxes.push_back(box-nx +1);
+              }
+              else if(index_z==(nz-1))// no up block to consider
+              {
+                  surrBoxes.push_back(box+1);// right
+                  surrBoxes.push_back(box-nx);// front
+                  surrBoxes.push_back(box-nx*ny);// down
+                  // right down
+                  surrBoxes.push_back(box+1 -nx*ny);
+                  surrBoxes.push_back(box+1 -nx*ny+nx);
+                  surrBoxes.push_back(box+1 -nx*ny-nx);
+                  // front down
+                  surrBoxes.push_back(box-nx -nx*ny);
+                  // front  right
+                  surrBoxes.push_back(box-nx +1);
+              }
+              else // can take up and down
+              {
+
+              }
+        }
+        else// can take front and back
+        {
+              if(index_z==0)// no down block to consider
+              {
+
+              }
+              else if(index_z==(nz-1))// no up block to consider
+              {
+
+              }
+              else // can take up and down
+              {
+
+              }
+        }
+    }
+    else if (index_x==(nx-1)) // no right block
+    {
+        if(index_y==0)// no front block to consider , for all index_z
+        {
+            if(index_z==0)// no down block to consider
             {
 
             }
-            else if(x_bondaries = right)
+            else if(index_z==(nz-1))// no up block to consider
             {
 
             }
-            else
+            else // can take up and down
             {
 
             }
         }
-        else if (y_bondaries = bottom)
+        else if (index_y==(ny-1))// no back
         {
-            if(x_bondaries = left)
-            {
+              if(index_z==0)// no down block to consider
+              {
 
-            }
-            else if(x_bondaries = right)
-            {
+              }
+              else if(index_z==(nz-1))// no up block to consider
+              {
 
-            }
-            else
-            {
+              }
+              else // can take up and down
+              {
 
-            }
+              }
         }
-        else
+        else// can take front and back
         {
+              if(index_z==0)// no down block to consider
+              {
 
+              }
+              else if(index_z==(nz-1))// no up block to consider
+              {
+
+              }
+              else // can take up and down
+              {
+
+              }
         }
-
-     }
-     else if (z_bondaries = back)
-     {
-        neighbors in plane z = -1
-        neighbors in current plane
-
-        if(y_bondaries = top)
-        {
-            if(x_bondaries = left)
-            {
-
-            }
-            else if(x_bondaries = right)
-            {
-
-            }
-            else
-            {
-
-            }
-        }
-        else if (y_bondaries = bottom)
-        {
-            if(x_bondaries = left)
-            {
-
-            }
-            else if(x_bondaries = right)
-            {
-
-            }
-            else
-            {
-
-            }
-        }
-        else
+    }
+    else // can take right and left block
+    {
+    if(index_y==0)// no front block to consider , for all index_z
+    {
+        if(index_z==0)// no down block to consider
         {
 
         }
-
-     }
-     else
-     {
-        neighbors in plane z = -1
-        neighbors in current plane
-        neighbors in plane z = +1
-
-        if(y_bondaries = top)
-        {
-            if(x_bondaries = left)
-            {
-
-            }
-            else if(x_bondaries = right)
-            {
-
-            }
-            else
-            {
-
-            }
-        }
-        else if (y_bondaries = bottom)
-        {
-            if(x_bondaries = left)
-            {
-
-            }
-            else if(x_bondaries = right)
-            {
-
-            }
-            else
-            {
-
-            }
-
-        }
-        else
+        else if(index_z==(nz-1))// no up block to consider
         {
 
         }
+        else // can take up and down
+        {
 
-     }
+        }
+    }
+    else if (index_y==(ny-1))// no back
+    {
+          if(index_z==0)// no down block to consider
+          {
 
-    */
+          }
+          else if(index_z==(nz-1))// no up block to consider
+          {
+
+          }
+          else // can take up and down
+          {
+
+          }
+    }
+    else// can take front and back
+    {
+          if(index_z==0)// no down block to consider
+          {
+
+          }
+          else if(index_z==(nz-1))// no up block to consider
+          {
+
+          }// no else since already done
+    }
+    }
     return;
-}
+    }
 
 // Gives the distance between two particles
 double distance(std::vector<double> pos, int partA, int partB)
