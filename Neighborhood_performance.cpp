@@ -16,7 +16,6 @@ int main(int argc, char *argv[])
     double o[3] = {0.0,0.0,0.0};
     double L[3] = {l,l,l};
 
-
     std::vector<double> pos;
     std::vector<double> values;
     std::vector<int> row;
