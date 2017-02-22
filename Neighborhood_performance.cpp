@@ -15,10 +15,7 @@ int main(int argc, char *argv[])
 
     double o[3] = {0.0,0.0,0.0};
     double L[3] = {l,l,l};
-    double L[3] = {10.0,10.0,10.0};
-    double s = 1.4;
-    double kh = 2.2;
-    //End input (end of what should be in argv)
+
 
     std::vector<double> pos;
     std::vector<double> values;
