@@ -153,47 +153,57 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     index_y=(box-index_z*nBoxesX*nBoxesY)/nBoxesX;
     index_x=box-index_z*nBoxesX*nBoxesY-index_y*nBoxesX;
     int a1=0; int b1=0; int c1=0;
+    int a=0;int b=0;int c=0;
     for (int i = 0; i < 3; i++)
     {
       if (i==0 && index_x>0)// down  ok
       {
         a1=1;
+        a=-1;
       }
       if (i==1)// middle
       {
         a1=1;
+        a=0;
       }
       if (i==2 && index_x<nx-1)// up ok
       {
         a1=1;
+        a=+1;
       }
         for (int j = 0; j < 3; j++)
         {
           if (j==0 && index_y>0)
           {
             b1=1;
+            b=-nx;
           }
           if (j==1)
           {
             b1=1;
+            b=0;
           }
           if (j==2 && index_y<ny-1)
           {
             b1=1;
+            b=+nx;
           }
             for (int k = 0; k < 3; k++)
             {
               if (j==0 && index_y>0)
               {
                 c1=1;
+                c=-nx*ny;
               }
               if (j==1)
               {
                 c1=1;
+                c=0;
               }
               if (j==2 && index_y<ny-1)
               {
                 c1=1;
+                c=+nx*ny;
               }
                       if (a1*b1*c1>0)
                       {
@@ -208,6 +218,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
                         //    1->0
                         //    2->+nx*ny
                         // surrBoxes.push_back(box+...);
+                        surrBoxes.push_back(box+a+b+c);
                       }
               c1=0;
             }
