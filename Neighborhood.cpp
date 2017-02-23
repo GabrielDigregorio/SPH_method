@@ -143,7 +143,6 @@ void neighborLinkedList (std::vector<double> &pos,
 // Gives the list of the surrounding boxes
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes)
 {
-    surrBoxes.push_back(box);
     int nx=nBoxesX;
     int ny=nBoxesY;
     int nz=nBoxesZ;
@@ -153,7 +152,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     index_z=box/(nBoxesX*nBoxesY);
     index_y=(box-index_z*nBoxesX*nBoxesY)/nBoxesX;
     index_x=box-index_z*nBoxesX*nBoxesY-index_y*nBoxesX;
-    int a1=0;int a2=0;int a3=0;  int b1=0;int b2=0;int b3=0;  int c1=0;int c2=0;int c3=0;
+    int a1=0; int b1=0; int c1=0;
     for (int i = 0; i < 3; i++)
     {
       if (i==0 && index_x>0)// down  ok
@@ -198,7 +197,17 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
               }
                       if (a1*b1*c1>0)
                       {
-                        // given i j k , we have the block to push 
+                        // given i j k , we have the block to push
+                        // i: 0->-1
+                        //    1->0
+                        //    2->+1
+                        // j: 0->-nx
+                        //    1->0
+                        //    2->+nx
+                        // k: 0->-nx*ny
+                        //    1->0
+                        //    2->+nx*ny
+                        // surrBoxes.push_back(box+...);
                       }
               c1=0;
             }
