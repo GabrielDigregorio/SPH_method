@@ -9,8 +9,9 @@ set(groot,'defaultLineLineWidth',2)
 % colormap(jet);
 % colorbar;
 
+
 %% ANALYS TIME ALGO SEARCH
- A = importdata('neighborAnalysis.txt');
+A = importdata('neighborAnalysis.txt');
 
 plot(A(:,1),A(:,2),A(:,1),A(:,3))
         %axis([-216 0 0 2e-3])
