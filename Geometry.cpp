@@ -27,7 +27,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
     std::cout << "of size L=(" <<L[0]<< ","  <<L[1]<< ","  <<L[2]<< ")\n";
     std::cout << "\tparticle spacing s=(" <<dx<< ","  <<dy<< ","  <<dz<< ") [target was s=" << s << "]\n";
     std::cout << "\t=> "<<ni<< "*"  <<nj<< "*"  <<nk<< " = " << ni*nj*nk << " particles to be generated\n";
-
+    
     // memory allocation
     pos.reserve(pos.size() + ni*nj*nk*3);
 
@@ -52,6 +52,8 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
             }
         }
     }
+
+    myfile.close();
 
 }
 
