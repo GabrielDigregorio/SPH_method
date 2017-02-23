@@ -8,5 +8,6 @@ build/
 *.vtk
 a.out
 *.exe
+test.cpp
 cylinder.txt
 cube.txt
