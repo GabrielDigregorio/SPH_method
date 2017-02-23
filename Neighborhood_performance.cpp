@@ -34,7 +34,9 @@ int main(int argc, char *argv[])
     std::cout<<"Elapsed time AllPair: "<< duration <<" [s]\n";
 
     start = std::clock();
-    neighborLinkedList(pos,o, L, kh, values, row, column);
+    double l[3] = {-L[0]/2, -L[1]/2, -L[2]/2};
+    double u[3] = {L[0]/2, L[1]/2, L[2]/2};
+    neighborLinkedList(pos, l, u, kh, values, row, column);
     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     std::cout<<"Elapsed time Linked List: "<< duration <<" [s]\n";
 
