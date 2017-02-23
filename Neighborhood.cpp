@@ -782,7 +782,9 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     }
     }
     return;
-    }
+}
+
+
 // Gives the distance between two particles
 double distance(std::vector<double> pos, int partA, int partB)
 {
