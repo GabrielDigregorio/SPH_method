@@ -1,10 +1,6 @@
 #include "SPH.h"
 #include <cmath>
 
-
-using namespace std;
-
-
 /// Naive method to find the neighbors of all particles.
 // All-pair search algorithm
 /*
@@ -72,7 +68,7 @@ void neighborLinkedList (std::vector<double> &pos,
     double kh2 = pow(kh,2);
 
     // Box definition
-    vector<vector<int> > boxes;
+    std::vector<std::vector<int> > boxes;
     int nBoxesX = ceil((u[0] - l[0])/kh); // Extra box if non integer quotient
     int nBoxesY = ceil((u[1] - l[1])/kh);
     int nBoxesZ = ceil((u[2] - l[2])/kh);
@@ -81,7 +77,7 @@ void neighborLinkedList (std::vector<double> &pos,
 
     for(int i=0 ; i<nBoxes ; i++)
     {
-        vector<int> boxContent;
+        std::vector<int> boxContent;
         boxes.push_back(boxContent);
     }
     //std::cout << nBoxesX << " " << nBoxesY << " " << nBoxesZ << " \n";

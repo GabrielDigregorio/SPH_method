@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     double o[3] = { 0.0, 0.0, 0.0 };
     double L[3] = { 2.0, 3.0, 4.0 };
     double s = 1;
-    meshcube(o, L, s, pos);
+    meshcube(o, L, s, pos, 0.0);
 
     /*
     double o[3] = { 0.0, 0.0, 0.0 };
