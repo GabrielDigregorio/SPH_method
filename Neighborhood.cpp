@@ -396,41 +396,157 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
               surrBoxes.push_back(box-1);// left
               surrBoxes.push_back(box+nx);// back
               surrBoxes.push_back(box-nx*ny);// down
+              // left down
+              surrBoxes.push_back(box-1 -nx*ny);
+              surrBoxes.push_back(box-1 -nx*ny+nx);
+              surrBoxes.push_back(box-1 -nx*ny-nx);
+              //back down
+              surrBoxes.push_back(box+nx -nx*ny);
+              // front left
+              surrBoxes.push_back(box-nx -1);
+              // back left
+              surrBoxes.push_back(box+nx -1);
 
             }
             else // can take up and down
             {
-
+              surrBoxes.push_back(box-1);// left
+              surrBoxes.push_back(box+nx);// back
+              surrBoxes.push_back(box+nx*ny);// up
+              surrBoxes.push_back(box-nx*ny);// down
+              // left up
+              surrBoxes.push_back(box-1 +nx*ny);
+              surrBoxes.push_back(box-1 +nx*ny+nx);
+              surrBoxes.push_back(box-1 +nx*ny-nx);
+              // left down
+              surrBoxes.push_back(box-1 -nx*ny);
+              surrBoxes.push_back(box-1 -nx*ny+nx);
+              surrBoxes.push_back(box-1 -nx*ny-nx);
+              // back up
+              surrBoxes.push_back(box+nx +nx*ny);
+              // back down
+              surrBoxes.push_back(box+nx -nx*ny);
+              // back left
+              surrBoxes.push_back(box+nx -1);
             }
         }
         else if (index_y==(ny-1))// no back
         {
               if(index_z==0)// no down block to consider
               {
-
+                surrBoxes.push_back(box-1);// left
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box+nx*ny);// up
+                // left up
+                surrBoxes.push_back(box-1 +nx*ny);
+                surrBoxes.push_back(box-1 +nx*ny+nx);
+                surrBoxes.push_back(box-1 +nx*ny-nx);
+                //  front up
+                surrBoxes.push_back(box-nx +nx*ny);
+                // front left
+                surrBoxes.push_back(box-nx -1);
               }
               else if(index_z==(nz-1))// no up block to consider
               {
+                surrBoxes.push_back(box-1);// left
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box-nx*ny);// down
+
+                // left down
+                surrBoxes.push_back(box-1 -nx*ny);
+                surrBoxes.push_back(box-1 -nx*ny+nx);
+                surrBoxes.push_back(box-1 -nx*ny-nx);
+                //  front down
+                surrBoxes.push_back(box-nx -nx*ny);
+                // front left
+                surrBoxes.push_back(box-nx -1);
 
               }
               else // can take up and down
               {
-
+                surrBoxes.push_back(box-1);// left
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box+nx*ny);// up
+                surrBoxes.push_back(box-nx*ny);// down
+                // left up
+                surrBoxes.push_back(box-1 +nx*ny);
+                surrBoxes.push_back(box-1 +nx*ny+nx);
+                surrBoxes.push_back(box-1 +nx*ny-nx);
+                // left down
+                surrBoxes.push_back(box-1 -nx*ny);
+                surrBoxes.push_back(box-1 -nx*ny+nx);
+                surrBoxes.push_back(box-1 -nx*ny-nx);
+                //  front up
+                surrBoxes.push_back(box-nx +nx*ny);
+                //  front down
+                surrBoxes.push_back(box-nx -nx*ny);
+                // front left
+                surrBoxes.push_back(box-nx -1);
               }
         }
         else// can take front and back
         {
               if(index_z==0)// no down block to consider
               {
-
+                surrBoxes.push_back(box-1);// left
+                surrBoxes.push_back(box+nx);// back
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box+nx*ny);// up
+                // left up
+                surrBoxes.push_back(box-1 +nx*ny);
+                surrBoxes.push_back(box-1 +nx*ny+nx);
+                surrBoxes.push_back(box-1 +nx*ny-nx);
+                //  front-back up
+                surrBoxes.push_back(box+nx +nx*ny);
+                surrBoxes.push_back(box-nx +nx*ny);
+                // front left
+                surrBoxes.push_back(box-nx -1);
+                // back left
+                surrBoxes.push_back(box+nx -1);
               }
               else if(index_z==(nz-1))// no up block to consider
               {
-
+                surrBoxes.push_back(box-1);// left
+                surrBoxes.push_back(box+nx);// back
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box-nx*ny);// down
+                // left down
+                surrBoxes.push_back(box-1 -nx*ny);
+                surrBoxes.push_back(box-1 -nx*ny+nx);
+                surrBoxes.push_back(box-1 -nx*ny-nx);
+                //  front-back down
+                surrBoxes.push_back(box+nx -nx*ny);
+                surrBoxes.push_back(box-nx -nx*ny);
+                // front left
+                surrBoxes.push_back(box-nx -1);
+                // back left
+                surrBoxes.push_back(box+nx -1);
               }
               else // can take up and down
               {
-
+                surrBoxes.push_back(box-1);// left
+                surrBoxes.push_back(box+nx);// back
+                surrBoxes.push_back(box-nx);// front
+                surrBoxes.push_back(box+nx*ny);// up
+                surrBoxes.push_back(box-nx*ny);// down
+                // left up
+                surrBoxes.push_back(box-1 +nx*ny);
+                surrBoxes.push_back(box-1 +nx*ny+nx);
+                surrBoxes.push_back(box-1 +nx*ny-nx);
+                // left down
+                surrBoxes.push_back(box-1 -nx*ny);
+                surrBoxes.push_back(box-1 -nx*ny+nx);
+                surrBoxes.push_back(box-1 -nx*ny-nx);
+                //  front-back up
+                surrBoxes.push_back(box+nx +nx*ny);
+                surrBoxes.push_back(box-nx +nx*ny);
+                //  front-back down
+                surrBoxes.push_back(box+nx -nx*ny);
+                surrBoxes.push_back(box-nx -nx*ny);
+                // front left
+                surrBoxes.push_back(box-nx -1);
+                // back left
+                surrBoxes.push_back(box+nx -1);
               }
         }
     }
@@ -440,29 +556,169 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     {
         if(index_z==0)// no down block to consider
         {
-
+          // direct face neigbour
+          surrBoxes.push_back(box+1);// right
+          surrBoxes.push_back(box-1);// left
+          surrBoxes.push_back(box+nx);// back
+          surrBoxes.push_back(box+nx*ny);// up
+          // right up
+          surrBoxes.push_back(box+1 +nx*ny);
+          surrBoxes.push_back(box+1 +nx*ny+nx);
+          surrBoxes.push_back(box+1 +nx*ny-nx);
+          // left up
+          surrBoxes.push_back(box-1 +nx*ny);
+          surrBoxes.push_back(box-1 +nx*ny+nx);
+          surrBoxes.push_back(box-1 +nx*ny-nx);
+          // back up
+          surrBoxes.push_back(box+nx +nx*ny);
+          // back left right
+          surrBoxes.push_back(box+nx +1);
+          surrBoxes.push_back(box+nx -1);
         }
         else if(index_z==(nz-1))// no up block to consider
         {
-
+          // direct face neigbour
+          surrBoxes.push_back(box+1);// right
+          surrBoxes.push_back(box-1);// left
+          surrBoxes.push_back(box+nx);// back
+          surrBoxes.push_back(box-nx*ny);// down
+          // right down
+          surrBoxes.push_back(box+1 -nx*ny);
+          surrBoxes.push_back(box+1 -nx*ny+nx);
+          surrBoxes.push_back(box+1 -nx*ny-nx);
+          // left down
+          surrBoxes.push_back(box-1 -nx*ny);
+          surrBoxes.push_back(box-1 -nx*ny+nx);
+          surrBoxes.push_back(box-1 -nx*ny-nx);
+          //  back down
+          surrBoxes.push_back(box+nx -nx*ny);
+          // back left right
+          surrBoxes.push_back(box+nx +1);
+          surrBoxes.push_back(box+nx -1);
         }
         else // can take up and down
         {
-
+          // direct face neigbour
+          surrBoxes.push_back(box+1);// right
+          surrBoxes.push_back(box-1);// left
+          surrBoxes.push_back(box+nx);// back
+          surrBoxes.push_back(box+nx*ny);// up
+          surrBoxes.push_back(box-nx*ny);// down
+          // right up
+          surrBoxes.push_back(box+1 +nx*ny);
+          surrBoxes.push_back(box+1 +nx*ny+nx);
+          surrBoxes.push_back(box+1 +nx*ny-nx);
+          // right down
+          surrBoxes.push_back(box+1 -nx*ny);
+          surrBoxes.push_back(box+1 -nx*ny+nx);
+          surrBoxes.push_back(box+1 -nx*ny-nx);
+          // left up
+          surrBoxes.push_back(box-1 +nx*ny);
+          surrBoxes.push_back(box-1 +nx*ny+nx);
+          surrBoxes.push_back(box-1 +nx*ny-nx);
+          // left down
+          surrBoxes.push_back(box-1 -nx*ny);
+          surrBoxes.push_back(box-1 -nx*ny+nx);
+          surrBoxes.push_back(box-1 -nx*ny-nx);
+          //  back up
+          surrBoxes.push_back(box+nx +nx*ny);
+          //  back down
+          surrBoxes.push_back(box+nx -nx*ny);
+          // back left right
+          surrBoxes.push_back(box+nx +1);
+          surrBoxes.push_back(box+nx -1);
         }
     }
     else if (index_y==(ny-1))// no back
     {
           if(index_z==0)// no down block to consider
           {
+            surrBoxes.push_back(box+1);// right
+            surrBoxes.push_back(box-1);// left
+
+            surrBoxes.push_back(box-nx);// front
+            surrBoxes.push_back(box+nx*ny);// up
+
+            // right up
+            surrBoxes.push_back(box+1 +nx*ny);
+            surrBoxes.push_back(box+1 +nx*ny+nx);
+            surrBoxes.push_back(box+1 +nx*ny-nx);
+
+            // left up
+            surrBoxes.push_back(box-1 +nx*ny);
+            surrBoxes.push_back(box-1 +nx*ny+nx);
+            surrBoxes.push_back(box-1 +nx*ny-nx);
+
+            //  front up
+
+            surrBoxes.push_back(box-nx +nx*ny);
+
+            // front left right
+            surrBoxes.push_back(box-nx +1);
+            surrBoxes.push_back(box-nx -1);
 
           }
           else if(index_z==(nz-1))// no up block to consider
           {
+            surrBoxes.push_back(box+1);// right
+            surrBoxes.push_back(box-1);// left
+
+            surrBoxes.push_back(box-nx);// front
+
+            surrBoxes.push_back(box-nx*ny);// down
+
+            // right down
+            surrBoxes.push_back(box+1 -nx*ny);
+            surrBoxes.push_back(box+1 -nx*ny+nx);
+            surrBoxes.push_back(box+1 -nx*ny-nx);
+
+            // left down
+            surrBoxes.push_back(box-1 -nx*ny);
+            surrBoxes.push_back(box-1 -nx*ny+nx);
+            surrBoxes.push_back(box-1 -nx*ny-nx);
+
+            //  front down
+
+            surrBoxes.push_back(box-nx -nx*ny);
+            // front left right
+            surrBoxes.push_back(box-nx +1);
+            surrBoxes.push_back(box-nx -1);
 
           }
           else // can take up and down
           {
+            surrBoxes.push_back(box+1);// right
+            surrBoxes.push_back(box-1);// left
+
+            surrBoxes.push_back(box-nx);// front
+            surrBoxes.push_back(box+nx*ny);// up
+            surrBoxes.push_back(box-nx*ny);// down
+
+            // right up
+            surrBoxes.push_back(box+1 +nx*ny);
+            surrBoxes.push_back(box+1 +nx*ny+nx);
+            surrBoxes.push_back(box+1 +nx*ny-nx);
+            // right down
+            surrBoxes.push_back(box+1 -nx*ny);
+            surrBoxes.push_back(box+1 -nx*ny+nx);
+            surrBoxes.push_back(box+1 -nx*ny-nx);
+            // left up
+            surrBoxes.push_back(box-1 +nx*ny);
+            surrBoxes.push_back(box-1 +nx*ny+nx);
+            surrBoxes.push_back(box-1 +nx*ny-nx);
+            // left down
+            surrBoxes.push_back(box-1 -nx*ny);
+            surrBoxes.push_back(box-1 -nx*ny+nx);
+            surrBoxes.push_back(box-1 -nx*ny-nx);
+            //  front up
+
+            surrBoxes.push_back(box-nx +nx*ny);
+            //  front down
+
+            surrBoxes.push_back(box-nx -nx*ny);
+            // front left right
+            surrBoxes.push_back(box-nx +1);
+            surrBoxes.push_back(box-nx -1);
 
           }
     }
@@ -470,17 +726,67 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     {
           if(index_z==0)// no down block to consider
           {
+            surrBoxes.push_back(box+1);// right
+            surrBoxes.push_back(box-1);// left
+            surrBoxes.push_back(box+nx);// back
+            surrBoxes.push_back(box-nx);// front
+            surrBoxes.push_back(box+nx*ny);// up
 
+
+            // right up
+            surrBoxes.push_back(box+1 +nx*ny);
+            surrBoxes.push_back(box+1 +nx*ny+nx);
+            surrBoxes.push_back(box+1 +nx*ny-nx);
+
+            // left up
+            surrBoxes.push_back(box-1 +nx*ny);
+            surrBoxes.push_back(box-1 +nx*ny+nx);
+            surrBoxes.push_back(box-1 +nx*ny-nx);
+
+            //  front-back up
+            surrBoxes.push_back(box+nx +nx*ny);
+            surrBoxes.push_back(box-nx +nx*ny);
+
+            // front left right
+            surrBoxes.push_back(box-nx +1);
+            surrBoxes.push_back(box-nx -1);
+            // back left right
+            surrBoxes.push_back(box+nx +1);
+            surrBoxes.push_back(box+nx -1);
           }
           else if(index_z==(nz-1))// no up block to consider
           {
+            surrBoxes.push_back(box+1);// right
+            surrBoxes.push_back(box-1);// left
+            surrBoxes.push_back(box+nx);// back
+            surrBoxes.push_back(box-nx);// front
 
+            surrBoxes.push_back(box-nx*ny);// down
+
+            // right down
+            surrBoxes.push_back(box+1 -nx*ny);
+            surrBoxes.push_back(box+1 -nx*ny+nx);
+            surrBoxes.push_back(box+1 -nx*ny-nx);
+
+            // left down
+            surrBoxes.push_back(box-1 -nx*ny);
+            surrBoxes.push_back(box-1 -nx*ny+nx);
+            surrBoxes.push_back(box-1 -nx*ny-nx);
+          
+            //  front-back down
+            surrBoxes.push_back(box+nx -nx*ny);
+            surrBoxes.push_back(box-nx -nx*ny);
+            // front left right
+            surrBoxes.push_back(box-nx +1);
+            surrBoxes.push_back(box-nx -1);
+            // back left right
+            surrBoxes.push_back(box+nx +1);
+            surrBoxes.push_back(box+nx -1);
           }// no else since already done
     }
     }
     return;
     }
-
 // Gives the distance between two particles
 double distance(std::vector<double> pos, int partA, int partB)
 {
