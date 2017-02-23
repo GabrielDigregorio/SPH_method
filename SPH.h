@@ -15,7 +15,7 @@
 
 // Geometry.cpp
 void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation );
-void meshcylinder(double o[3], double L, double R, double s, std::vector<double> &pos, double perturbation);
+void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation);
 
 // Neighborhood.cpp
 void neighborAllPair (std::vector<double> &pos,
@@ -31,7 +31,9 @@ void neighborLinkedList (std::vector<double> &pos,
                          std::vector<double> &values,
                          std::vector<int> &row,
                          std::vector<int> &column);
+
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes);
+
 double distance(std::vector<double> pos, int partA, int partB);
 
 
