@@ -23,7 +23,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
     double dz = L[2]/nk; ++nk;
 
     // output
-    std::cout << "meshing cube at center o=(" <<o[0]-L[0]/2<< ","  <<o[1]-L[1]/2<< ","  <<o[2]-L[2]/2<< ") ";
+    std::cout << "meshing cube at center o=(" << o[0] << ","  << o[1] << ","  << o[2] << ") ";
     std::cout << "of size L=(" <<L[0]<< ","  <<L[1]<< ","  <<L[2]<< ")\n";
     std::cout << "\tparticle spacing s=(" <<dx<< ","  <<dy<< ","  <<dz<< ") [target was s=" << s << "]\n";
     std::cout << "\t=> "<<ni<< "*"  <<nj<< "*"  <<nk<< " = " << ni*nj*nk << " particles to be generated\n";
