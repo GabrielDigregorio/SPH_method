@@ -65,7 +65,7 @@ void neighborLinkedList (std::vector<double> &pos,
                          std::vector<int> &row,
                          std::vector<int> &column)
 {
-    double kh2 = pow(kh,2);
+    double kh2 = pow(kh,2); // More efficient to compare distance^2
 
     // Box definition
     std::vector<std::vector<int> > boxes;
