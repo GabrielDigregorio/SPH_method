@@ -152,61 +152,44 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     index_z=box/(nBoxesX*nBoxesY);
     index_y=(box-index_z*nBoxesX*nBoxesY)/nBoxesX;
     index_x=box-index_z*nBoxesX*nBoxesY-index_y*nBoxesX;
-    int a1=0; int b1=0; int c1=0;
-    int a=0;int b=0;int c=0;
-    for (int i = 0; i < 3; i++)
+    std::vector<int> tab(6, 1);
+    std::vector<int> value(9, 0);
+    value[0]=-1;value[1]=0;value[2]=1;value[3]=-nx;value[4]=0;value[5]=nx;value[6]=-nx*ny;value[7]=0;value[8]=nx*ny;
+    // remplissage du vecteur tab.
+    if (index_x>0)
     {
-      if (i==0 && index_x>0)// down  ok
-      {
-        a1=1;
-        a=-1;
-      }
-      if (i==1)// middle
-      {
-        a1=1;
-        a=0;
-      }
-      if (i==2 && index_x<nx-1)// up ok
-      {
-        a1=1;
-        a=+1;
-      }
-        for (int j = 0; j < 3; j++)
+      tab[0]=0;
+    }
+    if (index_x<nx-1)
+    {
+      tab[1]=2;
+    }
+    if (index_y>0)
+    {
+      tab[2]=0;
+    }
+    if (index_y<ny-1)
+    {
+      tab[3]=2;
+    }
+    if (index_z>0)
+    {
+      tab[4]=0;
+    }
+    if (index_y<ny-1)
+    {
+      tab[5]=2;
+    }
+
+    for (int i = tab[0]; i < tab[1]; i++)
+    {
+
+        for (int j = tab[2]; j < tab[3]; j++)
         {
-          if (j==0 && index_y>0)
-          {
-            b1=1;
-            b=-nx;
-          }
-          if (j==1)
-          {
-            b1=1;
-            b=0;
-          }
-          if (j==2 && index_y<ny-1)
-          {
-            b1=1;
-            b=+nx;
-          }
-            for (int k = 0; k < 3; k++)
+
+            for (int k = tab[4]; k < tab[5]; k++)
             {
-              if (j==0 && index_y>0)
-              {
-                c1=1;
-                c=-nx*ny;
-              }
-              if (j==1)
-              {
-                c1=1;
-                c=0;
-              }
-              if (j==2 && index_y<ny-1)
-              {
-                c1=1;
-                c=+nx*ny;
-              }
-                      if (a1*b1*c1>0)
-                      {
+
                         // given i j k , we have the block to push
                         // i: 0->-1
                         //    1->0
@@ -218,13 +201,10 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
                         //    1->0
                         //    2->+nx*ny
                         // surrBoxes.push_back(box+...);
-                        surrBoxes.push_back(box+a+b+c);
-                      }
-              c1=0;
+                        surrBoxes.push_back(box+value[i]+value[j+3]+value[k+6]);
+
             }
-            b1=0;
         }
-        a1=0;
     }
     return;
 }
