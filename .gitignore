@@ -6,9 +6,7 @@ build/
 *.obj
 *.bak
 *.vtk
-a.out
+*.out
 *.exe
+*.txt
 test.cpp
-cylinder.txt
-cube.txt
-neighborAnalysis.txt

@@ -1,5 +1,6 @@
 #include "SPH.hpp"
 
+
 using namespace std;
 
 // build a cube of particles aligned with x,y,z axes.
