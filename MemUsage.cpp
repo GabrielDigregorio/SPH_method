@@ -34,10 +34,10 @@
             DWORDLONG physMemUsed = memInfo.ullTotalPhys - memInfo.ullAvailPhys;
 
         if(print == true){
-            std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [KB]\n";
-            std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [KB]\n";
-            std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [KB]\n";
-            std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [KB]\n \n";
+            std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [B]\n";
+            std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [B]\n";
+            std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [B]\n";
+            std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [B]\n \n";
         }
             
         myfile << totalVirtualMem << " " << virtualMemUsed << " " << totalPhysMem << " " << physMemUsed << "\n" ;
@@ -93,10 +93,10 @@
             physMemUsed *= memInfo.mem_unit;
 
         if(print == true){
-            std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [KB]\n";
-            std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [KB]\n";
-            std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [KB]\n";
-            std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [KB]\n \n";
+            std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [B]\n";
+            std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [B]\n";
+            std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [B]\n";
+            std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [B]\n \n";
         }
             
         myfile << totalVirtualMem << " " << virtualMemUsed << " " << totalPhysMem << " " << physMemUsed << "\n" ;

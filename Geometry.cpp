@@ -49,7 +49,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
                 pos.push_back(x + distribution(generator));
                 pos.push_back(y + distribution(generator));
                 pos.push_back(z + distribution(generator));
-                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
+                //myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
             }
         }
     }
@@ -104,7 +104,7 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
                 pos.push_back(x + distribution(generator));
                 pos.push_back(y + distribution(generator));
                 pos.push_back(z + distribution(generator));
-                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
+                //myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
             }
         }
     }
