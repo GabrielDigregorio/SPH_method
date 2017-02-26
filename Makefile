@@ -4,17 +4,15 @@
 
 # Compile parameters
 COMP=g++
-FLAGS= -std=c++0x -W -Wall -g --pedantic -DNDEBUG
+FLAGS= -std=c++11  -W -Wall -g --pedantic -DNDEBUG
 
 all: sph
 
 # Objects used
-sph: SPH.o Geometry.o ParaView.o Neighborhood.o #Neighborhood_performance.o
+sph: SPH.o Geometry.o ParaView.o Neighborhood.o
 	$(COMP) $^ $(FLAGS) -o $@
 
-SPH.o: SPH.hpp #SPH.cpp Geometry.cpp ParaView.cpp
-
-#Neighborhood_performance.o: SPH.hpp
+SPH.o: SPH.hpp
 
 Neighborhood.o: SPH.hpp
 
