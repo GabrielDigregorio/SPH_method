@@ -3,7 +3,7 @@
 using namespace std;
 
 // build a cube of particles aligned with x,y,z axes.
-//  - o[3]: corner of the cube with the lowest (x,y,z) values
+//  - o[3]: corner of the cube with the lowest (x,y,z) values ??? Center ???
 //  - L[3]: edge lengths along x,y and z
 //  - s: particle spacing
 //  - pertubation: percentage of perturbation in position of particles (equal 0 by default)
