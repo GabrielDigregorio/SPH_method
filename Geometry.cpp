@@ -112,21 +112,3 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
 
 }
 
-
-
-// build a sphere of particles centered in [x,y,z]=(0,0,0).
-//  - o[3]: center of the sphere
-//  - r: radius of the sphere
-//  - s: particle spacing
-
-void meshsphere(double o[3], double r, double s, std::vector<double> &pos)
-{
-    // calculate nb of particles along the radius from target size "s"
-
-    // output
-
-    // memory allocation
-
-    // particle generation
-
-}

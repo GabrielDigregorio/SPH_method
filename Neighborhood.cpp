@@ -22,9 +22,9 @@ void neighborAllPair (std::vector<double> &pos,
     double kh2 = pow(kh,2);
 
     // For each particle, browse all other particles and compute the distance
-    for(int i=0; i<pos.size(); i=i+3)
+    for(unsigned int i=0; i<pos.size(); i=i+3)
     {
-        for(int j=i; j<pos.size(); j=j+3)
+        for(unsigned int j=i; j<pos.size(); j=j+3)
         {
             double r2 = distance(pos, i/3, j/3);
             if( r2 < kh2 )
@@ -111,14 +111,14 @@ void neighborLinkedList (std::vector<double> &pos,
         std::vector<int> surrBoxes;
         surroundingBoxes(box, nBoxesX, nBoxesY, nBoxesZ, surrBoxes);
         // Spans the particles in the box
-        for(int part=0 ; part<boxes[box].size() ; part++)
+        for(unsigned int part=0 ; part<boxes[box].size() ; part++)
         {
             particleID = boxes[box][part];
             // Spans the surrounding boxes
-            for(int surrBox = 0 ; surrBox < surrBoxes.size() ; surrBox++)
+            for(unsigned int surrBox = 0 ; surrBox < surrBoxes.size() ; surrBox++)
             {
                 // Spans the higher index particles in the box (symmetry)
-                for(int i=0 ; i<boxes[surrBox].size() ; i++)
+                for(unsigned int i=0 ; i<boxes[surrBox].size() ; i++)
                 {
                     int potNeighborID = boxes[surrBox][i];
                     if(potNeighborID >= particleID)
@@ -145,7 +145,6 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
 {
     int nx=nBoxesX;
     int ny=nBoxesY;
-    int nz=nBoxesZ;
     int index_x;
     int index_y;
     int index_z;
@@ -218,9 +217,3 @@ double distance(std::vector<double> pos, int partA, int partB)
                + pow(pos[partA*3+2]-pos[partB*3+2],2);
 }
 
-
-// tree search algorithm
-void neighborTree (double p[3], double h, std::vector<double> &pos)
-{
-
-}
