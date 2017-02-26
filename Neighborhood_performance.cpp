@@ -1,4 +1,4 @@
-#include "SPH.h"
+#include "SPH.hpp"
 #include <fstream>
 #include <vector>
 #include <cstdlib>

@@ -1,4 +1,4 @@
-#include "SPH.h"
+#include "SPH.hpp"
 
 using namespace std;
 
