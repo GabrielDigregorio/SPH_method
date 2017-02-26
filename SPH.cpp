@@ -1,4 +1,4 @@
-#include "sph.h"
+#include "SPH.hpp"
 
 int main(int argc, char *argv[])
 {

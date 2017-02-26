@@ -1,4 +1,4 @@
-#include "SPH.h"
+#include "SPH.hpp"
 #include <cmath>
 
 /// Naive method to find the neighbors of all particles.
