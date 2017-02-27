@@ -145,6 +145,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
 {
     int nx=nBoxesX;
     int ny=nBoxesY;
+    int nz=nBoxesZ;
     int index_x;
     int index_y;
     int index_z;
@@ -175,7 +176,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     {
       tab[4]=0;
     }
-    if (index_y<ny-1)
+    if (index_z<nz-1)
     {
       tab[5]=2;
     }
@@ -216,4 +217,3 @@ double distance(std::vector<double> pos, int partA, int partB)
                + pow(pos[partA*3+1]-pos[partB*3+1],2)
                + pow(pos[partA*3+2]-pos[partB*3+2],2);
 }
-
