@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
         start = std::clock();
         neighborAllPair(pos, kh, valuesNaive, rowNaive, columnNaive);
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
         std::cout<<"Elapsed time AllPair: " << duration <<" [s]\n";
         //myfile << duration << " " ;
 
@@ -57,8 +56,8 @@ int main(int argc, char *argv[])
         std::cout<<"Elapsed time Linked List: " << duration <<" [s]\n";
         //myfile << duration << " " << "\n" ;
 
-        //std::cout<<"Neighbor pairs for Naive:" << valuesNaive.size() << "\n";
-        //std::cout<<"Neighbor pairs for Linked-list:" << valuesLL.size() << "\n";
+        std::cout<<"Neighbor pairs for Naive:" << valuesNaive.size() << "\n";
+        std::cout<<"Neighbor pairs for Linked-list:" << valuesLL.size() << "\n";
 
     //}
 

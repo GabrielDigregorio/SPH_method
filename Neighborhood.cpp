@@ -57,7 +57,7 @@ Inputs:
 Output:
 /
 */
-void neighborLinkedList (std::vector<double> &pos,
+void neighborLinkedList(std::vector<double> &pos,
                          double l[3],
                          double u[3],
                          double kh,
@@ -139,8 +139,8 @@ void neighborLinkedList (std::vector<double> &pos,
             }
         }
     }
-
 }
+
 
 // Gives the list of the surrounding boxes
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes)
