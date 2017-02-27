@@ -12,6 +12,10 @@
 #include <fstream>
 #include <random>
 
+// Memory and CPU consumption
+size_t GetMemory(bool screen, bool print);
+size_t GetMemoryProcess(bool screen, bool print);
+size_t GetMemoryProcessPeak(bool screen, bool print);
 
 // Geometry.cpp
 void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation );

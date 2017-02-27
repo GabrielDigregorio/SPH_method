@@ -1,5 +1,6 @@
 #include "SPH.hpp"
 
+
 using namespace std;
 
 // build a cube of particles aligned with x,y,z axes.
@@ -48,7 +49,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
                 pos.push_back(x + distribution(generator));
                 pos.push_back(y + distribution(generator));
                 pos.push_back(z + distribution(generator));
-                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
+                //myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
             }
         }
     }
@@ -103,7 +104,7 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
                 pos.push_back(x + distribution(generator));
                 pos.push_back(y + distribution(generator));
                 pos.push_back(z + distribution(generator));
-                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
+                //myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
             }
         }
     }
@@ -112,21 +113,3 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
 
 }
 
-
-
-// build a sphere of particles centered in [x,y,z]=(0,0,0).
-//  - o[3]: center of the sphere
-//  - r: radius of the sphere
-//  - s: particle spacing
-
-void meshsphere(double o[3], double r, double s, std::vector<double> &pos)
-{
-    // calculate nb of particles along the radius from target size "s"
-
-    // output
-
-    // memory allocation
-
-    // particle generation
-
-}
