@@ -1,6 +1,6 @@
 #include "SPH.hpp"
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <windows.h>
 #include <psapi.h>
     #include <winbase.h>
@@ -12,7 +12,6 @@
 #include <sys/resource.h>
     #include "sys/types.h"
     #include "sys/sysinfo.h"
-    struct sysinfo memInfo;
 
 #if defined(__APPLE__) && defined(__MACH__)
 #include <mach/mach.h>
@@ -67,10 +66,6 @@ size_t GetMemory(bool screen, bool print)
 
     #elif defined(__unix__) || defined(__unix) || defined(unix)
         /* BSD, Linux, and OSX -------------------------------------- */
-        // open a file to write the memory consumption
-        std::ofstream myfile;
-        myfile.open ("Memory.txt", std::ofstream::out | std::ofstream::app);
-
         // Memory request
         sysinfo (&memInfo);
 
@@ -159,7 +154,7 @@ size_t GetMemoryProcessPeak(bool screen, bool print)
     #else
         /* Unknown OS ----------------------------------------------- */
         return (size_t)0L;			/* Unsupported. */
-        
+
     #endif
 
     myfile.close();
