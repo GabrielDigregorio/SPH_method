@@ -9,4 +9,5 @@ build/
 *.out
 *.exe
 *.txt
+*.dat
 test.cpp
