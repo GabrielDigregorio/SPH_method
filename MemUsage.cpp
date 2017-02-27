@@ -97,7 +97,7 @@ size_t GetMemory(bool screen, bool print)
             std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [B]\n";
             std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [B]\n \n";
         }
-        if(print == true){    
+        if(print == true)    
             myfile << totalVirtualMem << " " << virtualMemUsed << " " << totalPhysMem << " " << physMemUsed << "\n" ;
 
         myfile.close();
