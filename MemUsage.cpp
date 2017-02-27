@@ -1,24 +1,43 @@
 #include "SPH.hpp"
 
-// For Windows
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-    
-    #include "windows.h"
+#if defined(_WIN32)
+#include <windows.h>
+#include <psapi.h>
+    #include <winbase.h>
     #include <stdio.h>
-    #include "psapi.h"
+    #pragma comment( lib, "psapi.lib" )
 
-    // Get the memory usage of the current process
-    void GetMemoryProcess(bool print){
+#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
+#include <unistd.h>
+#include <sys/resource.h>
+    #include "sys/types.h"
+    #include "sys/sysinfo.h"
+    struct sysinfo memInfo;
 
-    }
+#if defined(__APPLE__) && defined(__MACH__)
+#include <mach/mach.h>
 
-    // Get the memory usage of the computer
-    void GetMemory(bool print){
+#elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+#include <stdio.h>
+    #include "sys/types.h"
+    #include "sys/sysinfo.h"
+    struct sysinfo memInfo;
+    
+#endif
 
-        // open a file to write the memory consumption
-        std::ofstream myfile;
-        myfile.open ("MemoryConsumption.txt", std::ofstream::out | std::ofstream::app);
+#else
+#error "Cannot define GetMemory( ) or GetMemoryProcessPeak( ) or GetMemoryProcess() for an unknown OS."
+#endif
 
+
+size_t GetMemory(bool screen, bool print)
+{
+    // open a file to write the memory consumption
+    std::ofstream myfile;
+    myfile.open ("Memory.txt", std::ofstream::out | std::ofstream::app);
+
+    #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+        /* Windows -------------------------------------------------- */
         // Memory request
         MEMORYSTATUSEX memInfo;
         memInfo.dwLength = sizeof(MEMORYSTATUSEX);
@@ -33,39 +52,24 @@
             //Physical Memory currently used:
             DWORDLONG physMemUsed = memInfo.ullTotalPhys - memInfo.ullAvailPhys;
 
-        if(print == true){
+
+        if(screen == true){
             std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [B]\n";
             std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [B]\n";
             std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [B]\n";
             std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [B]\n \n";
         }
-            
-        myfile << totalVirtualMem << " " << virtualMemUsed << " " << totalPhysMem << " " << physMemUsed << "\n" ;
+        if(print == true)    
+            myfile << totalVirtualMem << " " << virtualMemUsed << " " << totalPhysMem << " " << physMemUsed << "\n" ;
+
         myfile.close();
+        return (size_t) physMemUsed;
 
-    }
-
-// For Linux & UNIX
-#elif __unix || __unix__ || __linux__
-    #include "stdlib.h"
-    #include "stdio.h"
-    #include "string.h"
-    #include "sys/types.h"
-    #include "sys/sysinfo.h"
-
-    struct sysinfo memInfo;
-
-    // Get the memory usage of the current process
-    void GetMemoryProcess(bool print){
-
-    }
-
-    // Get the memory usage of the computer
-    void GetMemory(bool print){
-
+    #elif defined(__unix__) || defined(__unix) || defined(unix)
+        /* BSD, Linux, and OSX -------------------------------------- */
         // open a file to write the memory consumption
         std::ofstream myfile;
-        myfile.open ("MemoryConsumption.txt", std::ofstream::out | std::ofstream::app);
+        myfile.open ("Memory.txt", std::ofstream::out | std::ofstream::app);
 
         // Memory request
         sysinfo (&memInfo);
@@ -92,41 +96,133 @@
             //Multiply in next statement to avoid int overflow on right hand side...
             physMemUsed *= memInfo.mem_unit;
 
-        if(print == true){
+        if(screen == true){
             std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [B]\n";
             std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [B]\n";
             std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [B]\n";
             std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [B]\n \n";
         }
-            
-        myfile << totalVirtualMem << " " << virtualMemUsed << " " << totalPhysMem << " " << physMemUsed << "\n" ;
+        if(print == true){    
+            myfile << totalVirtualMem << " " << virtualMemUsed << " " << totalPhysMem << " " << physMemUsed << "\n" ;
+
         myfile.close();
-    }
+        return (size_t) physMemUsed;
 
-    int parseLine(char* line){
-        // This assumes that a digit will be found and the line ends in " Kb".
-        int i = strlen(line);
-        const char* p = line;
-        while (*p <'0' || *p > '9') p++;
-        line[i-3] = '\0';
-        i = atoi(p);
-        return i;
-    }
+    #else
+        /* MAC, AIX, BSD, Solaris, and Unknown OS ------------------------ */
+        return (size_t)0L;			/* Unsupported. */
 
-    //Note: this value is in KB!
-    int getValue(){
-        FILE* file = fopen("/proc/self/status", "r");
-        int result = -1;
-        char line[128];
+    #endif
 
-        while (fgets(line, 128, file) != NULL){
-            if (strncmp(line, "VmSize:", 7) == 0){
-                result = parseLine(line);
-                break;
-            }
+}
+
+
+/*
+ * Returns the peak (maximum so far) resident set size (physical
+ * memory use) measured in bytes, or zero if the value cannot be
+ * determined on this OS.
+ */
+size_t GetMemoryProcessPeak(bool screen, bool print)
+{
+    // open a file to write the memory consumption
+    std::ofstream myfile;
+    myfile.open ("MemoryProcessPeak.txt", std::ofstream::out | std::ofstream::app);
+
+    #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+        /* Windows -------------------------------------------------- */
+        PROCESS_MEMORY_COUNTERS info;
+        GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
+        if(screen == true)
+                std::cout<<" MemoryPeak RSS:\t"<< (size_t)info.PeakWorkingSetSize <<" [B]\n \n";
+        if(print == true)
+                myfile << (size_t)info.PeakWorkingSetSize << "\n" ;
+        return (size_t)info.PeakWorkingSetSize;
+
+    #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
+        /* BSD, Linux, and OSX -------------------------------------- */
+        struct rusage rusage;
+        getrusage( RUSAGE_SELF, &rusage );
+        #if defined(__APPLE__) && defined(__MACH__)
+            if(screen == true)
+                std::cout<<" MemoryPeak RSS:\t"<< (size_t)rusage.ru_maxrss <<" [B]\n \n";
+            if(print == true)
+                myfile << (size_t)rusage.ru_maxrss << "\n" ;
+            return (size_t)rusage.ru_maxrss;
+        #else
+            if(screen == true)
+                std::cout<<" MemoryPeak RSS:\t"<< (size_t)(rusage.ru_maxrss * 1024L) <<" [B]\n \n";
+            if(print == true)
+                myfile << (size_t)(rusage.ru_maxrss * 1024L) << "\n" ;
+            return (size_t)(rusage.ru_maxrss * 1024L);
+        #endif
+
+    #else
+        /* Unknown OS ----------------------------------------------- */
+        return (size_t)0L;			/* Unsupported. */
+        
+    #endif
+
+    myfile.close();
+}
+
+
+
+
+/*
+ * Returns the current resident set size (physical memory use) measured
+ * in bytes, or zero if the value cannot be determined on this OS.
+ */
+size_t GetMemoryProcess(bool screen, bool print) 
+{
+    // open a file to write the memory consumption
+    std::ofstream myfile;
+    myfile.open ("MemoryProcess.txt", std::ofstream::out | std::ofstream::app);
+
+    #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+        /* Windows -------------------------------------------------- */
+        PROCESS_MEMORY_COUNTERS info;
+        GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
+        if(screen == true)
+                std::cout<<" Memory RSS:\t"<< (size_t)info.WorkingSetSize <<" [B]\n \n";
+        if(print == true)
+                myfile << (size_t)info.WorkingSetSize << "\n" ;
+        return (size_t)info.WorkingSetSize;
+
+    #elif defined(__APPLE__) && defined(__MACH__)
+        /* OSX ------------------------------------------------------ */
+        struct mach_task_basic_info info;
+        mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
+        if ( task_info( mach_task_self( ), MACH_TASK_BASIC_INFO,
+            (task_info_t)&info, &infoCount ) != KERN_SUCCESS )
+            return (size_t)0L;		/* Can't access? */
+        if(screen == true)
+                std::cout<<" Memory RSS:\t"<< (size_t)info.resident_size <<" [B]\n \n";
+        if(print == true)
+                myfile << (size_t)info.resident_size << "\n" ;
+        return (size_t)info.resident_size;
+
+    #elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+        /* Linux ---------------------------------------------------- */
+        long rss = 0L;
+        FILE* fp = NULL;
+        if ( (fp = fopen( "/proc/self/statm", "r" )) == NULL )
+            return (size_t)0L;		/* Can't open? */
+        if ( fscanf( fp, "%*s%ld", &rss ) != 1 )
+        {
+            fclose( fp );
+            return (size_t)0L;		/* Can't read? */
         }
-        fclose(file);
-        return result;
-    }
+        fclose( fp );
+        if(screen == true)
+                std::cout<<" Memory RSS:\t"<< (size_t)rss * (size_t)sysconf( _SC_PAGESIZE) <<" [B]\n \n";
+        if(print == true)
+                myfile << (size_t)rss * (size_t)sysconf( _SC_PAGESIZE) << "\n" ;
+        return (size_t)rss * (size_t)sysconf( _SC_PAGESIZE);
 
-#endif
+    #else
+        /* AIX, BSD, Solaris, and Unknown OS ------------------------ */
+        return (size_t)0L;			/* Unsupported. */
+    #endif
+
+    myfile.close();
+}
