@@ -13,7 +13,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
 {
     // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
     ofstream myfile;
-    myfile.open ("cube.txt");
+    myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
 
     // calculate nb of particles along each direction from target size "s"
     int ni = int(ceil(L[0]/s));
@@ -49,7 +49,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
                 pos.push_back(x + distribution(generator));
                 pos.push_back(y + distribution(generator));
                 pos.push_back(z + distribution(generator));
-                //myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
+                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
             }
         }
     }
@@ -70,7 +70,7 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
 {
     // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
     ofstream myfile;
-    myfile.open ("cylinder.txt");
+    myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
 
     // calculate nb of particles along the radius from target size "s"
     int nl = int(ceil(L[2]/s));
@@ -98,13 +98,13 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
         for(int i=-nr+1; i<nr; ++i)
         {
             double x = o[0]+i*dr;
-            for(int j=-int(sqrt(pow(L[1]/2,2)-pow(x,2))); j<int(sqrt(pow(L[1]/2,2)-pow(x,2)))+1; ++j)
+            for(int j=-int(sqrt(pow(L[0]/2,2)-pow(x,2)))-2; j<=int(sqrt(pow(L[0]/2,2)-pow(x,2)))+2; ++j)
             {
                 double y = o[1]+j*dr;
                 pos.push_back(x + distribution(generator));
                 pos.push_back(y + distribution(generator));
                 pos.push_back(z + distribution(generator));
-                //myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
+                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
             }
         }
     }

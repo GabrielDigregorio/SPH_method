@@ -11,6 +11,7 @@
 #include <ctime>
 #include <fstream>
 #include <random>
+#include <sstream>
 
 // Memory and CPU consumption
 size_t GetMemory(bool screen, bool print);
@@ -20,6 +21,10 @@ size_t GetMemoryProcessPeak(bool screen, bool print);
 // Geometry.cpp
 void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation );
 void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation);
+
+// Playground.cpp
+void fillVector(std::vector<double> &vect, double A, double B, double C);
+void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed, const char *filename);
 
 // Neighborhood.cpp
 void neighborAllPair (std::vector<double> &pos,
