@@ -154,7 +154,15 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     index_x=box-index_z*nBoxesX*nBoxesY-index_y*nBoxesX;
     std::vector<int> tab(6, 1);
     std::vector<int> value(9, 0);
-    value[0]=-1;value[1]=0;value[2]=1;value[3]=-nx;value[4]=0;value[5]=nx;value[6]=-nx*ny;value[7]=0;value[8]=nx*ny;
+    value[0]=-1;
+    value[1]=0;
+    value[2]=1;
+    value[3]=-nx;
+    value[4]=0;
+    value[5]=nx;
+    value[6]=-nx*ny;
+    value[7]=0;
+    value[8]=nx*ny;
     // remplissage du vecteur tab.
     if (index_x>0)
     {
