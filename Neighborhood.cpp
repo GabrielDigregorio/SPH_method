@@ -98,8 +98,8 @@ void neighborLinkedList (std::vector<double> &pos,
         temp = (pos[3*i+2] - l[2])/kh;
         boxZ = (temp < nBoxesZ-1) ? temp : nBoxesZ-1;
         // Put the particle identifier in the corresponding box array
-        boxes[boxX*nBoxesY*nBoxesZ + boxY*nBoxesZ + boxZ].push_back(i);
-        //std::cout << boxX*nBoxesY*nBoxesZ + boxY*nBoxesZ + boxZ << " \n";
+        boxes[boxX + boxY*nBoxesX + boxZ*nBoxesX*nBoxesY].push_back(i);
+        //std::cout << i << " " << boxX + boxY*nBoxesX + boxZ*nBoxesX*nBoxesY << " \n";
     }
 
     // Search for their neighbors
@@ -117,17 +117,19 @@ void neighborLinkedList (std::vector<double> &pos,
             // Spans the surrounding boxes
             for(unsigned int surrBox = 0 ; surrBox < surrBoxes.size() ; surrBox++)
             {
+
                 // Spans the higher index particles in the box (symmetry)
-                for(unsigned int i=0 ; i<boxes[surrBox].size() ; i++)
+                for(unsigned int i=0 ; i<boxes[surrBoxes[surrBox]].size() ; i++)
                 {
-                    int potNeighborID = boxes[surrBox][i];
+                    int potNeighborID = boxes[surrBoxes[surrBox]][i];
+
                     if(potNeighborID >= particleID)
                     {
                         double r2 = distance(pos, particleID, potNeighborID);
                         if(r2<kh2)
                         {
-                            //std::cout << r2 << "\t: ";
-                            //std::cout << particleID << " " << potNeighborID << "\n";
+                            //std::cout << sqrt(r2) << "\t: ";
+                            //std::cout << particleID << " " << potNeighborID <<"\n";
                             values.push_back(r2); // The distance bewteen the two found neighbors
                             row.push_back(particleID); // The one we search the neighbors of
                             column.push_back(potNeighborID); // The neighbor we have just found
@@ -163,41 +165,21 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     value[6]=-nx*ny;
     value[7]=0;
     value[8]=nx*ny;
-    // remplissage du vecteur tab.
-    if (index_x>0)
-    {
-      tab[0]=0;
-    }
-    if (index_x<nx-1)
-    {
-      tab[1]=2;
-    }
-    if (index_y>0)
-    {
-      tab[2]=0;
-    }
-    if (index_y<ny-1)
-    {
-      tab[3]=2;
-    }
-    if (index_z>0)
-    {
-      tab[4]=0;
-    }
-    if (index_z<nz-1)
-    {
-      tab[5]=2;
-    }
 
-    for (int i = tab[0]; i < tab[1]; i++)
-    {
+    // Filling of the tab vector.
+    if (index_x>0){tab[0]=0;}
+    if (index_x<nx-1){tab[1]=2;}
+    if (index_y>0){tab[2]=0;}
+    if (index_y<ny-1){tab[3]=2;}
+    if (index_z>0){tab[4]=0;}
+    if (index_z<nz-1){tab[5]=2;}
 
-        for (int j = tab[2]; j < tab[3]; j++)
+    for (int k = tab[4]; k <= tab[5]; k++)
+    {
+        for (int j = tab[2]; j <= tab[3]; j++)
         {
-
-            for (int k = tab[4]; k < tab[5]; k++)
+            for (int i = tab[0]; i <= tab[1]; i++)
             {
-
                         // given i j k , we have the block to push
                         // i: 0->-1
                         //    1->0
@@ -210,7 +192,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
                         //    2->+nx*ny
                         // surrBoxes.push_back(box+...);
                         surrBoxes.push_back(box+value[i]+value[j+3]+value[k+6]);
-
+                        //std::cout<< box << " " << box+value[i]+value[j+3]+value[k+6]<< "\n";
             }
         }
     }
