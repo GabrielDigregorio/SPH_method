@@ -1,10 +1,13 @@
 #include "SPH.hpp"
 
+///*************************************************************************************
+// The "Resident set size" (RSS) ("Working set size" on Windows) is the amount of physical 
+// memory (RAM) used by a process's code and data.
+//**************************************************************************************
+
 #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <windows.h>
 #include <psapi.h>
-    #include <winbase.h>
-    #include <stdio.h>
     #pragma comment( lib, "psapi.lib" )
 
 #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
