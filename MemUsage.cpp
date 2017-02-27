@@ -28,7 +28,10 @@
 #error "Cannot define GetMemory( ) or GetMemoryProcessPeak( ) or GetMemoryProcess() for an unknown OS."
 #endif
 
-
+/*
+ * Returns the Physical Memory currently used in all processes in bits, or zero if the value cannot be
+ * determined on this OS.
+ */
 size_t GetMemory(bool screen, bool print)
 {
     // open a file to write the memory consumption
@@ -53,10 +56,10 @@ size_t GetMemory(bool screen, bool print)
 
 
         if(screen == true){
-            std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [B]\n";
-            std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [B]\n";
-            std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [B]\n";
-            std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [B]\n \n";
+            std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [bits]\n";
+            std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [bits]\n";
+            std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [bits]\n";
+            std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [bits]\n \n";
         }
         if(print == true)    
             myfile << totalVirtualMem << " " << virtualMemUsed << " " << totalPhysMem << " " << physMemUsed << "\n" ;
@@ -92,12 +95,12 @@ size_t GetMemory(bool screen, bool print)
             physMemUsed *= memInfo.mem_unit;
 
         if(screen == true){
-            std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [B]\n";
-            std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [B]\n";
-            std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [B]\n";
-            std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [B]\n \n";
+            std::cout<<"\n TotVirtMem:    \t"<< totalVirtualMem <<" [bits]\n";
+            std::cout<<" VirtMemCurrUsed:\t"<< virtualMemUsed <<" [bits]\n";
+            std::cout<<" TotPhysMem(RAM):\t"<< totalPhysMem <<" [bits]\n";
+            std::cout<<" PhysMemCurrUsed:\t"<< physMemUsed <<" [bits]\n \n";
         }
-        if(print == true){    
+        if(print == true)   
             myfile << totalVirtualMem << " " << virtualMemUsed << " " << totalPhysMem << " " << physMemUsed << "\n" ;
 
         myfile.close();
@@ -128,7 +131,7 @@ size_t GetMemoryProcessPeak(bool screen, bool print)
         PROCESS_MEMORY_COUNTERS info;
         GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
         if(screen == true)
-                std::cout<<" MemoryPeak RSS:\t"<< (size_t)info.PeakWorkingSetSize <<" [B]\n \n";
+                std::cout<<" MemoryPeak RSS:\t"<< (size_t)info.PeakWorkingSetSize <<" [bytes]\n \n";
         if(print == true)
                 myfile << (size_t)info.PeakWorkingSetSize << "\n" ;
         return (size_t)info.PeakWorkingSetSize;
@@ -139,13 +142,13 @@ size_t GetMemoryProcessPeak(bool screen, bool print)
         getrusage( RUSAGE_SELF, &rusage );
         #if defined(__APPLE__) && defined(__MACH__)
             if(screen == true)
-                std::cout<<" MemoryPeak RSS:\t"<< (size_t)rusage.ru_maxrss <<" [B]\n \n";
+                std::cout<<" MemoryPeak RSS:\t"<< (size_t)rusage.ru_maxrss <<" [bytes]\n \n";
             if(print == true)
                 myfile << (size_t)rusage.ru_maxrss << "\n" ;
             return (size_t)rusage.ru_maxrss;
         #else
             if(screen == true)
-                std::cout<<" MemoryPeak RSS:\t"<< (size_t)(rusage.ru_maxrss * 1024L) <<" [B]\n \n";
+                std::cout<<" MemoryPeak RSS:\t"<< (size_t)(rusage.ru_maxrss * 1024L) <<" [bytes]\n \n";
             if(print == true)
                 myfile << (size_t)(rusage.ru_maxrss * 1024L) << "\n" ;
             return (size_t)(rusage.ru_maxrss * 1024L);
@@ -178,7 +181,7 @@ size_t GetMemoryProcess(bool screen, bool print)
         PROCESS_MEMORY_COUNTERS info;
         GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
         if(screen == true)
-                std::cout<<" Memory RSS:\t"<< (size_t)info.WorkingSetSize <<" [B]\n \n";
+                std::cout<<" Memory RSS:\t"<< (size_t)info.WorkingSetSize <<" [bytes]\n \n";
         if(print == true)
                 myfile << (size_t)info.WorkingSetSize << "\n" ;
         return (size_t)info.WorkingSetSize;
@@ -191,7 +194,7 @@ size_t GetMemoryProcess(bool screen, bool print)
             (task_info_t)&info, &infoCount ) != KERN_SUCCESS )
             return (size_t)0L;		/* Can't access? */
         if(screen == true)
-                std::cout<<" Memory RSS:\t"<< (size_t)info.resident_size <<" [B]\n \n";
+                std::cout<<" Memory RSS:\t"<< (size_t)info.resident_size <<" [bytes]\n \n";
         if(print == true)
                 myfile << (size_t)info.resident_size << "\n" ;
         return (size_t)info.resident_size;
@@ -209,7 +212,7 @@ size_t GetMemoryProcess(bool screen, bool print)
         }
         fclose( fp );
         if(screen == true)
-                std::cout<<" Memory RSS:\t"<< (size_t)rss * (size_t)sysconf( _SC_PAGESIZE) <<" [B]\n \n";
+                std::cout<<" Memory RSS:\t"<< (size_t)rss * (size_t)sysconf( _SC_PAGESIZE) <<" [bytes]\n \n";
         if(print == true)
                 myfile << (size_t)rss * (size_t)sysconf( _SC_PAGESIZE) << "\n" ;
         return (size_t)rss * (size_t)sysconf( _SC_PAGESIZE);
