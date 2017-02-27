@@ -40,6 +40,9 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
 
 double distance(std::vector<double> pos, int partA, int partB);
 
+// Kernel.cpp
+double Wab(std::vector<double> pos, int partA, int partB, double h, size_t choice);
+double grad_Wab(std::vector<double> pos, int partA, int partB, double h, size_t choice);
 
 // ParaView.cpp
 void paraview(std::string const &filename,
