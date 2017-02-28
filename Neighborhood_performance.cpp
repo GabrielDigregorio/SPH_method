@@ -7,6 +7,9 @@
 
 int main(int argc, char *argv[])
 {
+    // no stack geometry
+    bool stack = false;
+    
     // open a file to write the time (import into matlab) MUST BE REMOVE LATER
     //ofstream myfile;
     //myfile.open("neighborAnalysis.txt", std::ofstream::out | std::ofstream::app);
@@ -34,7 +37,7 @@ int main(int argc, char *argv[])
         std::vector<int> columnLL;
 
         //Generate cube
-        meshcube(o,L,s,pos, eps);
+        meshcube(o,L,s,pos, eps, stack);
         //myfile << (l+1)*(l+1)*(l+1) << " " ;
 
         double ll[3] = {-L[0]/2, -L[1]/2, -L[2]/2};

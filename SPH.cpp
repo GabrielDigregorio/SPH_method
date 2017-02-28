@@ -3,11 +3,12 @@
 int main(int argc, char *argv[])
 {
     // creation of a cube of particles
+    bool stack = true;
     std::vector<double> pos;
     double o[3] = { 0.0, 0.0, 0.0 };
     double L[3] = { 2.0, 3.0, 4.0 };
     double s = 1;
-    meshcube(o, L, s, pos, 0.0);
+    meshcube(o, L, s, pos, 0.0, stack);
 
     /*
     double o[3] = { 0.0, 0.0, 0.0 };
