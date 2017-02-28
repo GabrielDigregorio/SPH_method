@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
 {
     // no stack geometry
     bool stack = false;
-    size_t memInit, memEnd;
 
     // open a file to write the time (import into matlab) MUST BE REMOVE LATER
     //ofstream myfile;
@@ -49,10 +48,8 @@ int main(int argc, char *argv[])
         double duration;
 
         start = std::clock();
-        memInit=GetMemoryProcessPeak(false, false);
         neighborAllPair(pos, kh, valuesNaive, rowNaive, columnNaive);
-        memEnd=GetMemoryProcessPeak(false, false);
-        std::cout<<"Mem for AllPair:" << memEnd-memInit << "\n";
+
 
 
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
@@ -61,10 +58,7 @@ int main(int argc, char *argv[])
 
         start = std::clock();
 
-        memInit=GetMemoryProcessPeak(false, false);
         neighborLinkedList(pos, ll, uu, kh, valuesLL, rowLL, columnLL);
-        memEnd=GetMemoryProcessPeak(false, false);
-        std::cout<<"Mem for Linked List:" << memEnd-memInit << "\n";
 
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout<<"Elapsed time Linked List: " << duration <<" [s]\n";
