@@ -153,10 +153,10 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         //Generate the geometry for Free particles
         switch (myPlayground.geometry[(i/3)]){
         case 1 : // Cube
-            meshcube(o,L,s,posFree, r, stack);
+            meshcube(o,L,s,posFree, r);
         break;
         case 2 : // Cylinder
-            meshcylinder(o,L,s,posFree, r, stack);
+            meshcylinder(o,L,s,posFree, r);
         break;
         case 3 : // Sphere
             //meshspherer(o,L,s,posFree, r, stack);
@@ -179,10 +179,10 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         //Generate the geometry for Moving particles
         switch (myPlayground.geometry[(i/3)]){
         case 1 : // Cube
-            meshcube(o,L,s,posMoving, r, stack);
+            meshcube(o,L,s,posMoving, r);
         break;
         case 2 : // Cylinder
-            meshcylinder(o,L,s,posMoving, r, stack);
+            meshcylinder(o,L,s,posMoving, r);
         break;
         case 3 : // Sphere
             //meshspherer(o,L,s,posMoving, r, stack);
@@ -205,10 +205,10 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         //Generate the geometry for Fixed particles
         switch (myPlayground.geometry[(i/3)]){
         case 1 : // Cube
-            meshcube(o,L,s,posFixed, r, stack);
+            meshcube(o,L,s,posFixed, r);
         break;
         case 2 : // Cylinder
-            meshcylinder(o,L,s,posFixed, r, stack);
+            meshcylinder(o,L,s,posFixed, r);
         break;
         case 3 : // Sphere
             //meshspherer(o,L,s,posFixed, r, stack);
