@@ -132,6 +132,9 @@ Playground ReadPlayground(const char *filename)
 
 void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed, const char *filename)
 {
+    //Stack all geometries
+    bool stack = true;
+
     // Playground initialisation and reading .kzr
     Playground myPlayground =  ReadPlayground(filename);
 
@@ -150,13 +153,13 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         //Generate the geometry for Free particles
         switch (myPlayground.geometry[(i/3)]){
         case 1 : // Cube
-            meshcube(o,L,s,posFree, r);
+            meshcube(o,L,s,posFree, r, stack);
         break;
         case 2 : // Cylinder
-            meshcylinder(o,L,s,posFree, r);
+            meshcylinder(o,L,s,posFree, r, stack);
         break;
         case 3 : // Sphere
-            //meshspherer(o,L,s,posFree, r);
+            //meshspherer(o,L,s,posFree, r, stack);
         break;
         }
     }
@@ -176,13 +179,13 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         //Generate the geometry for Moving particles
         switch (myPlayground.geometry[(i/3)]){
         case 1 : // Cube
-            meshcube(o,L,s,posMoving, r);
+            meshcube(o,L,s,posMoving, r, stack);
         break;
         case 2 : // Cylinder
-            meshcylinder(o,L,s,posMoving, r);
+            meshcylinder(o,L,s,posMoving, r, stack);
         break;
         case 3 : // Sphere
-            //meshspherer(o,L,s,posMoving, r);
+            //meshspherer(o,L,s,posMoving, r, stack);
         break;
         }
     }
@@ -202,13 +205,13 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         //Generate the geometry for Fixed particles
         switch (myPlayground.geometry[(i/3)]){
         case 1 : // Cube
-            meshcube(o,L,s,posFixed, r);
+            meshcube(o,L,s,posFixed, r, stack);
         break;
         case 2 : // Cylinder
-            meshcylinder(o,L,s,posFixed, r);
+            meshcylinder(o,L,s,posFixed, r, stack);
         break;
         case 3 : // Sphere
-            //meshspherer(o,L,s,posFixed, r);
+            //meshspherer(o,L,s,posFixed, r, stack);
         break;
         }
     }

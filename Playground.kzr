@@ -1,5 +1,5 @@
 %********************************************
-% PLAYGROUND : Geometry test
+% PLAYGROUND : Geometry example
 % geometry : #brick, #cylin or #spher
 % #param
 %   c ==> 0=free, 1=moving, 2=fixed

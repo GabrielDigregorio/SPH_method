@@ -32,8 +32,8 @@ size_t GetMemoryProcess(bool screen, bool print);
 size_t GetMemoryProcessPeak(bool screen, bool print);
 
 // Geometry.cpp
-void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation );
-void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation);
+void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack);
+void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack);
 
 // Playground.cpp
 void fillVector(std::vector<double> &vect, double A, double B, double C);

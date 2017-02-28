@@ -9,11 +9,16 @@ using namespace std;
 //  - s: particle spacing
 //  - pertubation: percentage of perturbation in position of particles (equal 0 by default)
 
-void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation)
+void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack)
 {
     // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
     ofstream myfile;
     myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
+
+    // if we stack the cube:
+    if(stack = true){
+        L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
+    }
 
     // calculate nb of particles along each direction from target size "s"
     int ni = int(ceil(L[0]/s));
@@ -66,11 +71,16 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
 //  - s: particle spacing
 //  - pertubation: percentage of perturbation in position of particles (equal 0 by default)
 
-void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation)
+void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack)
 {
     // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
     ofstream myfile;
     myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
+
+    // if we stack the cylinder:
+    if(stack = true){
+        L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
+    }
 
     // ellipse parameter
     double a=L[0]/2, b=L[1]/2; 
