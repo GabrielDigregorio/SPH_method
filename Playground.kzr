@@ -61,8 +61,6 @@
         d=4
         H=20
 
-#geom
-
     #brick
         #param
         c=0
