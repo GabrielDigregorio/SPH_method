@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
         std::vector<int> columnLL;
 
         //Generate cube
-        meshcube(o,L,s,pos, eps, stack);
+        meshcube(o,L,s,pos, eps);
         //myfile << (l+1)*(l+1)*(l+1) << " " ;
 
         double ll[3] = {-L[0]/2, -L[1]/2, -L[2]/2};

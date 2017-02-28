@@ -69,7 +69,8 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
 //  - o[3]: center of the cylinder
 //  - L[3]: diameter1 of the cylinder, diameter2 of the cylinder, length of the cylinder
 //  - s: particle spacing
-//  - pertubation: percentage of perturbation in position of particles (equal 0 by default)
+//  - (optional) pertubation: percentage of perturbation in position of particles (equal 0 by default)
+//  - (optional) stack: reduce L[3] by s/2 in order to stack cube (equal 0 by default)
 
 void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack)
 {

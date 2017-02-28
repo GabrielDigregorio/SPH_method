@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     double o[3] = { 0.0, 0.0, 0.0 };
     double L[3] = { 2.0, 3.0, 4.0 };
     double s = 1;
-    meshcube(o, L, s, pos, 0.0, stack);
+    meshcube(o, L, s, pos);
 
     /*
     double o[3] = { 0.0, 0.0, 0.0 };
@@ -29,8 +29,6 @@ int main(int argc, char *argv[])
     scalars["pressure"] = &pressure;
     scalars["density"]  = &density;
     vectors["velocity"] = &velocity;
-
-
 
 
     // time step loop
