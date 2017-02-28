@@ -1,9 +1,21 @@
-%***********************************
+%********************************************
 % PLAYGROUND : Geometry test
-% c ==> 0=free, 1=moving, 2=fixed
-% s ==> spacing between particles
-% r ==> % randomness
-%***********************************
+% geometry : #brick, #cylin or #spher
+% #param
+%   c ==> 0=free, 1=moving, 2=fixed
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% #coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% #dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+%********************************************
 
 #geom
 
@@ -38,16 +50,16 @@
     #cylin
         #param
         c=2
-        s=0.5
+        s=0.2
         r=0
         #coord
         x=0
         y=0
         z=10
         #dimen
-        R=6
-        R=6
-        L=20
+        D=7
+        d=4
+        H=20
 
 #geom
 

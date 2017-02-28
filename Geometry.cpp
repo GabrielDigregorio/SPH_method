@@ -72,20 +72,25 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
     ofstream myfile;
     myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
 
+    // ellipse parameter
+    double a=L[0]/2, b=L[1]/2; 
+    
     // calculate nb of particles along the radius from target size "s"
+    int nd1 = int(ceil(L[0]/s));
+    double dr1 = L[0]/nd1; ++nd1;
+    int nd2 = int(ceil(L[1]/s));
+    double dr2 = L[1]/nd2; ++nd2;
     int nl = int(ceil(L[2]/s));
     double dl = L[2]/nl; ++nl;
-    int nr = int(ceil(L[0]/(2*s)));
-    double dr = L[0]/(2*nr); ++nr;
 
     // output
     std::cout << "meshing cylinder at o=(" <<o[0]<< ","  <<o[1]<< ","  <<o[2]<< ") ";
     std::cout << "of diameter D1=" << L[0] << ", diameter D2=" << L[1] << " and L=" << L[2] << "\n";
-    std::cout << "\tparticle spacing s=(" <<dr<< "," <<dl<< ") [target was s=" << s << "]\n";
-    std::cout << "\t=> "<<nl<< "*"  <<nr<< "*"  <<nr<< " = " << nl*nr*nr << " particles to be generated\n";
+    std::cout << "\tparticle spacing s=(" <<dr1<< " and "<<dr2<< "," <<dl<< ") [target was s=" << s << "]\n";
+    std::cout << "\t=> "<<nl<< "*"  <<nd1<< "*"  <<nd2<< " = " << nl*nd1/2*nd2/2 << " particles to be generated\n";
 
     // memory allocation
-    pos.reserve(pos.size() + nl*nr*nr*3);
+    pos.reserve(pos.size() + nl*nd1/2*nd2/2*3);
 
     // generates number in the range -s*perturbation % and s*perturbation %
     std::default_random_engine generator;
@@ -94,17 +99,21 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
     // particle generation
     for(int l=(-nl+1)/2; l<=(nl-1)/2; ++l)
     {
-        double z = o[2]+ l*dl;
-        for(int i=-nr+1; i<nr; ++i)
+        double z = o[2] + l*dl;
+        for(int i=(-nd1+1)/2 ; i<=(nd1-1)/2; ++i)
         {
-            double x = o[0]+i*dr;
-            for(int j=-int(sqrt(pow(L[0]/2,2)-pow(x,2)))-2; j<=int(sqrt(pow(L[0]/2,2)-pow(x,2)))+2; ++j)
+            double tmpx = i*dr1;
+            for(int j= (-nd2+1)/2; j<=(nd2-1)/2; ++j)
             {
-                double y = o[1]+j*dr;
-                pos.push_back(x + distribution(generator));
-                pos.push_back(y + distribution(generator));
-                pos.push_back(z + distribution(generator));
-                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
+                if(j*s>- sqrt(pow(b,2)*(1-(pow(tmpx,2)/pow(a,2)))) && j*s<= sqrt( pow(b,2)*(1-(pow(tmpx,2)/pow(a,2)))) )
+                {
+                    double x = o[0] + i*dr1;
+                    double y = o[1] + j*dr2;
+                    pos.push_back(x + distribution(generator));
+                    pos.push_back(y + distribution(generator));
+                    pos.push_back(z + distribution(generator));
+                    myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;  
+                } 
             }
         }
     }

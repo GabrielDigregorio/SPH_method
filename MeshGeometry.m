@@ -1,4 +1,4 @@
-clear all; clc; close all;
+%clear all; clc; close all;
 set(groot,'defaultLineLineWidth',2)
 
 %% SEE GEOMETRY

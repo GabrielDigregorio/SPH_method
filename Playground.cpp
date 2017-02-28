@@ -14,6 +14,7 @@ void fillVector(std::vector<double> &vect, double A, double B, double C)
 
 // ReadPlayground: Read the entire .kzr playground and store all data 
 //                 in separate variables within a structure
+//                 (NO GENERATION OF PARTICLES HERE)
 //      Input : filename
 //      output: structure that contains all data
 
