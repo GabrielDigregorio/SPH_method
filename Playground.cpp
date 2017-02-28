@@ -1,19 +1,8 @@
 #include "SPH.hpp"
 
-// Structure playground with limited acess to GeneratePlayground function
-struct Playground{
-    //type of geometry
-    std::vector<int> geometry;
-    // free geometry
-    std::vector<double> geoFreeParam, geoFreeCoord, geoFreeDimen;
-    // moving geometry
-    std::vector<double> geoMovingParam, geoMovingCoord, geoMovingDimen;
-    // fixed geometry
-    std::vector<double> geoFixedParam, geoFixedCoord, geoFixedDimen;
-};
 
 
-// Function to fill vectors
+// Function to fill vectors in ReadPlayground function
 void fillVector(std::vector<double> &vect, double A, double B, double C)
 {
         vect.push_back(A);
@@ -22,11 +11,13 @@ void fillVector(std::vector<double> &vect, double A, double B, double C)
 }
 
 
-// ReadPlayground: Read the entire .kzr playground and store all data in separate variables
+
+// ReadPlayground: Read the entire .kzr playground and store all data 
+//                 in separate variables within a structure
 //      Input : filename
-//      output: pointer to a structure that contains all data
-// !!!SHOULD BE!!! : static Playground *ReadPlayground(const char *filename)
-void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed, const char *filename)
+//      output: structure that contains all data
+
+Playground ReadPlayground(const char *filename)
 {
     // open a file geometry.kzr
     std::ifstream infile(filename);
@@ -34,8 +25,7 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
     std::getline(infile, line);
 
     // Playground initialisation
-    Playground *myPlayground, ptr;
-    myPlayground = &ptr;
+    Playground myPlayground;
 
     // tempory parameters
     int geom;// param[0]= geometry type (cube, cylinder, sphere), 
@@ -60,7 +50,7 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
                     else if(line == "    #spher")
                         geom = 3; // Sphere identifier
                     
-                    myPlayground->geometry.push_back(geom);
+                    myPlayground.geometry.push_back(geom);
                     std::getline(infile, line);
 
                     // check for parameters
@@ -103,21 +93,21 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
                     // Memorise the brick in vectors (separate vector for each status parameter)
                     if(param[0] == 0)
                     {
-                        fillVector(myPlayground->geoFreeParam, param[0], param[1], param[2]);
-                        fillVector(myPlayground->geoFreeCoord, coord[0], coord[1], coord[2]);
-                        fillVector(myPlayground->geoFreeDimen, dimen[0], dimen[1], dimen[2]);
+                        fillVector(myPlayground.geoFreeParam, param[0], param[1], param[2]);
+                        fillVector(myPlayground.geoFreeCoord, coord[0], coord[1], coord[2]);
+                        fillVector(myPlayground.geoFreeDimen, dimen[0], dimen[1], dimen[2]);
                     }
                     else if(param[0] == 1)
                     {
-                        fillVector(myPlayground->geoMovingParam, param[0], param[1], param[2]);
-                        fillVector(myPlayground->geoMovingCoord, coord[0], coord[1], coord[2]);
-                        fillVector(myPlayground->geoMovingDimen, dimen[0], dimen[1], dimen[2]);
+                        fillVector(myPlayground.geoMovingParam, param[0], param[1], param[2]);
+                        fillVector(myPlayground.geoMovingCoord, coord[0], coord[1], coord[2]);
+                        fillVector(myPlayground.geoMovingDimen, dimen[0], dimen[1], dimen[2]);
                     }
                     else if(param[0] == 2)
                     {
-                        fillVector(myPlayground->geoFixedParam, param[0], param[1], param[2]);
-                        fillVector(myPlayground->geoFixedCoord, coord[0], coord[1], coord[2]);
-                        fillVector(myPlayground->geoFixedDimen, dimen[0], dimen[1], dimen[2]);
+                        fillVector(myPlayground.geoFixedParam, param[0], param[1], param[2]);
+                        fillVector(myPlayground.geoFixedCoord, coord[0], coord[1], coord[2]);
+                        fillVector(myPlayground.geoFixedDimen, dimen[0], dimen[1], dimen[2]);
                     }
                     if(1) // put 1 to display value in terminal
                     {
@@ -130,27 +120,34 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         }
     }// End Reading The Entire File .kzr
 
+    return myPlayground;
+}
 
 
-//***********************************************************************
-// Generate particles for each geometry !!!SHOULD BE IN AN OTHER FUNCTION!!!
-//***********************************************************************
+
+// GeneratePlayground: Generate all particles in all geometries from structure Playground
+//      Input : posFree, posMoving, posFixed, filename
+//      output: filled posFree, posMoving, posFixed by structure Playground
+
+void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed, const char *filename)
+{
+    // Playground initialisation and reading .kzr
+    Playground myPlayground =  ReadPlayground(filename);
 
     // For free particles
-    for(unsigned int i=0; i<myPlayground->geoFreeCoord.size(); i+=3)
+    for(unsigned int i=0; i<myPlayground.geoFreeCoord.size(); i+=3)
     {
-        double o[3] = { myPlayground->geoFreeCoord[i],
-                        myPlayground->geoFreeCoord[i+1],
-                        myPlayground->geoFreeCoord[i+2]};
-        double L[3] = { myPlayground->geoFreeDimen[i],
-                        myPlayground->geoFreeDimen[i+1],
-                        myPlayground->geoFreeDimen[i+2]};
-        double s = myPlayground->geoFreeParam[i+1];
-        double r = myPlayground->geoFreeParam[i+2];
+        double o[3] = { myPlayground.geoFreeCoord[i],
+                        myPlayground.geoFreeCoord[i+1],
+                        myPlayground.geoFreeCoord[i+2]};
+        double L[3] = { myPlayground.geoFreeDimen[i],
+                        myPlayground.geoFreeDimen[i+1],
+                        myPlayground.geoFreeDimen[i+2]};
+        double s = myPlayground.geoFreeParam[i+1];
+        double r = myPlayground.geoFreeParam[i+2];
 
         //Generate the geometry for Free particles
-        switch (myPlayground->geometry[(i/3)]){
-
+        switch (myPlayground.geometry[(i/3)]){
         case 1 : // Cube
             meshcube(o,L,s,posFree, r);
         break;
@@ -162,21 +159,21 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         break;
         }
     }
+
     // For moving particles
-    for(unsigned int i=0; i<myPlayground->geoMovingCoord.size(); i+=3)
+    for(unsigned int i=0; i<myPlayground.geoMovingCoord.size(); i+=3)
     {
-        double o[3] = { myPlayground->geoMovingCoord[i],
-                        myPlayground->geoMovingCoord[i+1],
-                        myPlayground->geoMovingCoord[i+2]};
-        double L[3] = { myPlayground->geoMovingDimen[i],
-                        myPlayground->geoMovingDimen[i+1],
-                        myPlayground->geoMovingDimen[i+2]};
-        double s = myPlayground->geoMovingParam[i+1];
-        double r = myPlayground->geoMovingParam[i+2];
+        double o[3] = { myPlayground.geoMovingCoord[i],
+                        myPlayground.geoMovingCoord[i+1],
+                        myPlayground.geoMovingCoord[i+2]};
+        double L[3] = { myPlayground.geoMovingDimen[i],
+                        myPlayground.geoMovingDimen[i+1],
+                        myPlayground.geoMovingDimen[i+2]};
+        double s = myPlayground.geoMovingParam[i+1];
+        double r = myPlayground.geoMovingParam[i+2];
 
         //Generate the geometry for Moving particles
-        switch (myPlayground->geometry[(i/3)]){
-
+        switch (myPlayground.geometry[(i/3)]){
         case 1 : // Cube
             meshcube(o,L,s,posMoving, r);
         break;
@@ -188,21 +185,21 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         break;
         }
     }
+
     // For fixed particles
-    for(unsigned int i=0; i<myPlayground->geoFixedCoord.size(); i+=3)
+    for(unsigned int i=0; i<myPlayground.geoFixedCoord.size(); i+=3)
     {
-        double o[3] = { myPlayground->geoFixedCoord[i],
-                        myPlayground->geoFixedCoord[i+1],
-                        myPlayground->geoFixedCoord[i+2]};
-        double L[3] = { myPlayground->geoFixedDimen[i],
-                        myPlayground->geoFixedDimen[i+1],
-                        myPlayground->geoFixedDimen[i+2]};
-        double s = myPlayground->geoFixedParam[i+1];
-        double r = myPlayground->geoFixedParam[i+2];
+        double o[3] = { myPlayground.geoFixedCoord[i],
+                        myPlayground.geoFixedCoord[i+1],
+                        myPlayground.geoFixedCoord[i+2]};
+        double L[3] = { myPlayground.geoFixedDimen[i],
+                        myPlayground.geoFixedDimen[i+1],
+                        myPlayground.geoFixedDimen[i+2]};
+        double s = myPlayground.geoFixedParam[i+1];
+        double r = myPlayground.geoFixedParam[i+2];
 
         //Generate the geometry for Fixed particles
-        switch (myPlayground->geometry[(i/3)]){
-
+        switch (myPlayground.geometry[(i/3)]){
         case 1 : // Cube
             meshcube(o,L,s,posFixed, r);
         break;
@@ -215,6 +212,4 @@ void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posM
         }
     }
 
-    //return myPlayground;
 }
-
