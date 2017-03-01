@@ -9,16 +9,19 @@ FLAGS= -std=c++11  -W -Wall -g --pedantic -DNDEBUG
 all: sph
 
 # Objects used
-sph: SPH.o Geometry.o ParaView.o Neighborhood.o
+sph: Geometry.o ParaView.o Neighborhood.o MemUsage.o Neighborhood_performance.o #SPH.o
 	$(COMP) $^ $(FLAGS) -o $@
 
-SPH.o: SPH.hpp
+#SPH.o: SPH.hpp
+Neighborhood_performance.o: SPH.hpp
 
 Neighborhood.o: SPH.hpp
 
 Geometry.o: SPH.hpp
 
 ParaView.o: SPH.hpp
+
+MemUsage.o: SPH.hpp
 
 # Compilation :
 %.o: %.cpp

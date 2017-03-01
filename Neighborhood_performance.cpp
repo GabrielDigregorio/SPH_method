@@ -7,6 +7,9 @@
 
 int main(int argc, char *argv[])
 {
+    // no stack geometry
+    bool stack = false;
+
     // open a file to write the time (import into matlab) MUST BE REMOVE LATER
     //ofstream myfile;
     //myfile.open("neighborAnalysis.txt", std::ofstream::out | std::ofstream::app);
@@ -22,12 +25,16 @@ int main(int argc, char *argv[])
         std::cout << "\n Parameter list: " << s << ", " << kh << ", " << l << ", " << eps << "\n";
 
         double o[3] = {0.0,0.0,0.0};
-        double L[3] = {l,l,l};
+        double L[3] = {l,5,5};
 
         std::vector<double> pos;
-        std::vector<double> values;
-        std::vector<int> row;
-        std::vector<int> column;
+        std::vector<double> valuesNaive;
+        std::vector<int> rowNaive;
+        std::vector<int> columnNaive;
+
+        std::vector<double> valuesLL;
+        std::vector<int> rowLL;
+        std::vector<int> columnLL;
 
         //Generate cube
         meshcube(o,L,s,pos, eps);
@@ -41,19 +48,29 @@ int main(int argc, char *argv[])
         double duration;
 
         start = std::clock();
-        neighborAllPair(pos, kh, values, row, column);
+        neighborAllPair(pos, kh, valuesNaive, rowNaive, columnNaive);
+
+
+
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-        std::cout<<"Elapsed time AllPair: "<< duration <<" [s]\n";
+        std::cout<<"Elapsed time AllPair: " << duration <<" [s]\n";
         //myfile << duration << " " ;
 
         start = std::clock();
-        neighborLinkedList(pos, ll, uu, kh, values, row, column);
+
+        neighborLinkedList(pos, ll, uu, kh, valuesLL, rowLL, columnLL);
+
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-        std::cout<<"Elapsed time Linked List: "<< duration <<" [s]\n";
+        std::cout<<"Elapsed time Linked List: " << duration <<" [s]\n";
         //myfile << duration << " " << "\n" ;
+
+        std::cout<<"Neighbor pairs for Naive:" << valuesNaive.size() << "\n";
+        std::cout<<"Neighbor pairs for Linked-list:" << valuesLL.size() << "\n";
+
     //}
 
     std::cout << "\n";
     //myfile.close();
+
     return 0;
 }

@@ -1,0 +1,92 @@
+%********************************************
+% PLAYGROUND : Geometry example
+% geometry : #brick, #cylin or #spher
+% #param
+%   c ==> 0=free, 1=moving, 2=fixed
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% #coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% #dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+%********************************************
+
+#geom
+
+    #brick
+        #param
+        c=2
+        s=0.5
+        r=0
+        #coord
+        x=10
+        y=0
+        z=0
+        #dimen
+        L=10
+        W=10
+        H=10
+
+    #brick
+        #param
+        c=2
+        s=0.5
+        r=0
+        #coord
+        x=-10
+        y=0
+        z=0
+        #dimen
+        L=10
+        W=10
+        H=10
+
+    #cylin
+        #param
+        c=2
+        s=0.2
+        r=0
+        #coord
+        x=0
+        y=0
+        z=10
+        #dimen
+        D=7
+        d=4
+        H=20
+
+    #brick
+        #param
+        c=0
+        s=1
+        r=20
+        #coord
+        x=10
+        y=0
+        z=15
+        #dimen
+        L=10
+        W=10
+        H=2
+
+    #brick
+        #param
+        c=0
+        s=1
+        r=20
+        #coord
+        x=-10
+        y=0
+        z=15
+        #dimen
+        L=10
+        W=10
+        H=2
+
+#end
