@@ -20,11 +20,11 @@ Playground :: Playground()
 
 /// Function to fill vectors in ReadPlayground function
 
-void Playground :: fillVector(double *A, double *B, double *C, int i)
+void Playground :: fillVector(std::vector<double> data, int i)
 {
-    DATA[i][0].push_back(A[0]); DATA[i][0].push_back(A[1]); DATA[i][0].push_back(A[2]);
-    DATA[i][1].push_back(B[0]); DATA[i][1].push_back(B[1]); DATA[i][1].push_back(B[2]);
-    DATA[i][2].push_back(C[0]); DATA[i][2].push_back(C[1]); DATA[i][2].push_back(C[2]);
+    DATA[i][0].push_back(data[0]); DATA[i][0].push_back(data[1]); DATA[i][0].push_back(data[2]);
+    DATA[i][1].push_back(data[3]); DATA[i][1].push_back(data[4]); DATA[i][1].push_back(data[5]);
+    DATA[i][2].push_back(data[6]); DATA[i][2].push_back(data[7]); DATA[i][2].push_back(data[8]);
 }
 
 
@@ -32,7 +32,7 @@ void Playground :: fillVector(double *A, double *B, double *C, int i)
 /// ReadPlayground: Read the entire .kzr playground and store all data 
     //                 in separate variables within a structure
     //                 (NO GENERATION OF PARTICLES HERE)
-    //      Input : filename
+    //      Input : filename .kzr
     //      output: structure that contains all data
 
 void Playground :: ReadPlayground(const char *filename)
@@ -42,12 +42,7 @@ void Playground :: ReadPlayground(const char *filename)
     std::string line;
     std::getline(infile, line);
 
-    // tempory parameters
-    int geom;// geometry type (cube, cylinder, sphere), 
-    double coord[3], dimen[3];
-    double param[4];    // param[0]= state of geometry (free, moving, fixed),
-                        // param[1]= s (space interval between particles),  
-                        // param[2]= % of random position
+    int geom;
 
     // Start Reading The Entire File .kzr
     while (std::getline(infile, line))
@@ -56,7 +51,8 @@ void Playground :: ReadPlayground(const char *filename)
         {
             while (std::getline(infile, line)) // skip white space
             {   
-                if(line == "    #brick" || line == "    #cylin" || line == "    #spher")// known geometry
+                // known geometry 
+                if(line == "    #brick" || line == "    #cylin" || line == "    #spher")
                 {
                     if     (line == "    #brick")
                         geom = 1; // Cube identifier
@@ -67,53 +63,25 @@ void Playground :: ReadPlayground(const char *filename)
                     
                     std::getline(infile, line);
 
-                    // check for parameters
-                    if(line == "        #param")
-                    {   
+                    // Load data for a given geometry
+                    for(int i=0; i<nbr_data; ++i)
+                    {
                         std::getline(infile, line);
-                        param[0] = atof(line.erase(0,10).c_str()); // Status of the geometry
-                        std::getline(infile, line);
-                        param[1] = atof(line.erase(0,10).c_str()); // Spacing between particles
-                        std::getline(infile, line);
-                        param[2] = atof(line.erase(0,10).c_str()); // Random particle %
-                    }
-
-                    std::getline(infile, line);
-
-                    // check for coordinate
-                    if(line == "        #coord")
-                    {  
-                        std::getline(infile, line);
-                        coord[0] = atof(line.erase(0,10).c_str()); // X (center) coordinate of the geometry
-                        std::getline(infile, line);
-                        coord[1] = atof(line.erase(0,10).c_str()); // Y (center) coordinate of the geometry
-                        std::getline(infile, line);
-                        coord[2] = atof(line.erase(0,10).c_str()); // Z (center) coordinate of the geometry
-                    }
-
-                    std::getline(infile, line); 
-
-                    // check for dimensions
-                    if(line == "        #dimen")
-                    { 
-                        std::getline(infile, line);
-                        dimen[0] = atof(line.erase(0,10).c_str()); // Length of the geometry
-                        std::getline(infile, line);
-                        dimen[1] = atof(line.erase(0,10).c_str()); // Width of the geometry
-                        std::getline(infile, line);
-                        dimen[2] = atof(line.erase(0,10).c_str()); // Height of the geometry
+                        data.push_back( atof(line.erase(0,10).c_str()) );
+                        if((i+1)%3 == 0)
+                            std::getline(infile, line);
                     }
 
                     // Memorise the brick in vectors (separate vector for each status parameter)
-                    fillVector(param, coord, dimen, param[0]);
-                    geometry[param[0]].push_back(geom);
+                    fillVector(data, data[0]);
+                    geometry[data[0]].push_back(geom);
 
                     if(1) // put 1 to display value in terminal
                     {
-                        std::cout<<"geometry "<<geom<< " , status "<<param[0]<<
-                                   " , s_spacing "<<param[1]<< " , %random "<<param[2]<<"\n";
-                        std::cout<<"coord "<<coord[0]<<" "<<coord[1]<<" "<<coord[2]<<"\n";
-                        std::cout<<"dimen "<<dimen[0]<<" "<<dimen[1]<<" "<<dimen[2]<<"\n";
+                        std::cout<<"geometry "<<geom<< " , status "<<data[0]<<
+                                   " , s_spacing "<<data[1]<< " , %random "<<data[2]<<"\n";
+                        std::cout<<"coord "<<data[3]<<" "<<data[4]<<" "<<data[5]<<"\n";
+                        std::cout<<"dimen "<<data[6]<<" "<<data[7]<<" "<<data[8]<<"\n";
                     }
                 }
             }
