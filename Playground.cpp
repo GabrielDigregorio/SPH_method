@@ -140,10 +140,10 @@ void Playground :: GeneratePlayground(  std::vector<double> &posFree,
         // For free particles
         for(int i=0; i<DATA[c][1].size(); i+=3)
         {
-            double o[3] = { DATA[c][1][i],DATA[c][1][i+1],DATA[c][1][i+2]};
-            double L[3] = { DATA[c][2][i],DATA[c][2][i+1],DATA[c][2][i+2]};
-            double s = DATA[c][0][i+1];
-            double r = DATA[c][0][i+2];
+            double o[3] = { DATA[c][1][i], DATA[c][1][i+1], DATA[c][1][i+2]};
+            double L[3] = { DATA[c][2][i], DATA[c][2][i+1], DATA[c][2][i+2]};
+            double s    =   DATA[c][0][i+1];
+            double r    =   DATA[c][0][i+2];
 
             //Generate the geometry for Free particles
             switch (geometry[c][(i/3)]){
