@@ -14,7 +14,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
     myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
 
     // if we stack the cube:
-    if(stack = true){
+    if(stack == true){
         L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
     }
 
@@ -31,7 +31,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
     std::cout << "of size L=(" <<L[0]<< ","  <<L[1]<< ","  <<L[2]<< ")\n";
     std::cout << "\tparticle spacing s=(" <<dx<< ","  <<dy<< ","  <<dz<< ") [target was s=" << s << "]\n";
     std::cout << "\t=> "<<ni<< "*"  <<nj<< "*"  <<nk<< " = " << ni*nj*nk << " particles to be generated\n";
-    
+
     // memory allocation
     pos.reserve(pos.size() + ni*nj*nk*3);
 
@@ -76,13 +76,13 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
     myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
 
     // if we stack the cylinder:
-    if(stack = true){
+    if(stack == true){
         L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
     }
 
     // ellipse parameter
-    double a=L[0]/2, b=L[1]/2; 
-    
+    double a=L[0]/2, b=L[1]/2;
+
     // calculate nb of particles along the radius from target size "s"
     int nd1 = int(ceil(L[0]/s));
     double dr1 = L[0]/nd1; ++nd1;
@@ -120,15 +120,14 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
                     pos.push_back(x + distribution(generator));
                     pos.push_back(y + distribution(generator));
                     pos.push_back(z + distribution(generator));
-                    myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;  
-                } 
+                    myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
+                }
             }
         }
     }
 
     myfile.close();
 }
-
 
 
 // !!!DOESN't WORK!!! Build a sphere of regulary aligned particles with the center of mass at o(x,y,z).
