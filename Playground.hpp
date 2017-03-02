@@ -27,11 +27,11 @@ class Playground
         // 3D Vector: [Free Moving Fixed ; Param Coord Dimen ; part1 part2 part3 part4 ...]. Store all parameters
         std::vector< std::vector< std::vector<double> > > DATA;
         
-        // Currently read data
-        std::vector<double> data;
-
         // Number of data to read per geometry (3 parameters, 3 coordinates, 3 dimensions)
         int nbr_data = 9;
+
+        // Currently read data
+        std::vector<double> data{0,0,0,0,0,0,0,0,0};
 };
 
 #endif 

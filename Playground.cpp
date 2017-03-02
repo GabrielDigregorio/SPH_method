@@ -67,7 +67,8 @@ void Playground :: ReadPlayground(const char *filename)
                     for(int i=0; i<nbr_data; ++i)
                     {
                         std::getline(infile, line);
-                        data.push_back( atof(line.erase(0,10).c_str()) );
+                        data[i]=atof(line.erase(0,10).c_str());
+                        std::cout<<"data = "<<atof(line.erase(0,10).c_str())<<"\n";
                         if((i+1)%3 == 0)
                             std::getline(infile, line);
                     }
