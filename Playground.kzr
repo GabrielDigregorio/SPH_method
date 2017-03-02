@@ -21,9 +21,9 @@
 
     #brick
         #param
-        c=2
+        c=0
         s=0.5
-        r=0
+        r=5
         #coord
         x=10
         y=0
@@ -35,9 +35,9 @@
 
     #brick
         #param
-        c=2
+        c=1
         s=0.5
-        r=0
+        r=5
         #coord
         x=-10
         y=0
@@ -50,7 +50,7 @@
     #cylin
         #param
         c=2
-        s=0.2
+        s=0.5
         r=0
         #coord
         x=0
@@ -60,7 +60,7 @@
         D=7
         d=4
         H=20
-
+        
     #brick
         #param
         c=0
@@ -77,7 +77,7 @@
 
     #brick
         #param
-        c=0
+        c=1
         s=1
         r=20
         #coord
@@ -89,4 +89,17 @@
         W=10
         H=2
 
+    #spher
+        #param
+        c=2
+        s=0.5
+        r=0
+        #coord
+        x=0
+        y=-10
+        z=15
+        #dimen
+        D=5
+        d=5
+        H=5
 #end

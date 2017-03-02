@@ -13,17 +13,6 @@
 #include <random>
 #include <sstream>
 
-// Structure playground with limited acess to GeneratePlayground function
-struct Playground{
-    //type of geometry
-    std::vector<int> geometry;
-    // free geometry
-    std::vector<double> geoFreeParam, geoFreeCoord, geoFreeDimen;
-    // moving geometry
-    std::vector<double> geoMovingParam, geoMovingCoord, geoMovingDimen;
-    // fixed geometry
-    std::vector<double> geoFixedParam, geoFixedCoord, geoFixedDimen;
-};
 
 
 // Memory and CPU consumption
@@ -34,11 +23,12 @@ size_t GetMemoryProcessPeak(bool screen, bool print);
 // Geometry.cpp
 void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation = 0.0, bool stack = false);
 void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation = 0.0, bool stack = false);
+void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation = 0.0, bool stack = false);
 
 // Playground.cpp
-void fillVector(std::vector<double> &vect, double A, double B, double C);
-Playground ReadPlayground(const char *filename);
-void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed, const char *filename);
+//void fillVector(std::vector<double> &vect, double A, double B, double C);
+//Playground ReadPlayground(const char *filename);
+//void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed, const char *filename);
 
 // Neighborhood.cpp
 void neighborAllPair (std::vector<double> &pos,

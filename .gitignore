@@ -11,3 +11,6 @@ build/
 *.txt
 *.dat
 test.cpp
+test.kzr
+test.m
+test.sh
