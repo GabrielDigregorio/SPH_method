@@ -72,14 +72,6 @@ void Playground :: ReadPlayground(const char *filename)
                     {   
                         std::getline(infile, line);
                         param[0] = atof(line.erase(0,10).c_str()); // Status of the geometry
-
-                        //if(param[0] == 0)
-                            //geoFree.push_back(geom); // Free identifier
-                        //else if(param[0] == 1)
-                            //geoMoving.push_back(geom); // Moving identifier
-                        //else if(param[0] == 2)
-                            //geoFixed.push_back(geom); // Fixed identifier
-
                         std::getline(infile, line);
                         param[1] = atof(line.erase(0,10).c_str()); // Spacing between particles
                         std::getline(infile, line);
@@ -118,7 +110,8 @@ void Playground :: ReadPlayground(const char *filename)
 
                     if(1) // put 1 to display value in terminal
                     {
-                        std::cout<<"geometry "<<geom<< " , status "<<param[0]<< " , s_spacing "<<param[1]<< " , %random "<<param[2]<<"\n";
+                        std::cout<<"geometry "<<geom<< " , status "<<param[0]<<
+                                   " , s_spacing "<<param[1]<< " , %random "<<param[2]<<"\n";
                         std::cout<<"coord "<<coord[0]<<" "<<coord[1]<<" "<<coord[2]<<"\n";
                         std::cout<<"dimen "<<dimen[0]<<" "<<dimen[1]<<" "<<dimen[2]<<"\n";
                     }
@@ -135,7 +128,9 @@ void Playground :: ReadPlayground(const char *filename)
     //      Input : posFree, posMoving, posFixed, filename
     //      output: filled posFree, posMoving, posFixed by structure Playground
 
-void Playground :: GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed)
+void Playground :: GeneratePlayground(  std::vector<double> &posFree, 
+                                        std::vector<double> &posMoving, 
+                                        std::vector<double> &posFixed)
 {
     //Stack all geometries
     bool stack = true;
@@ -145,12 +140,8 @@ void Playground :: GeneratePlayground( std::vector<double> &posFree, std::vector
         // For free particles
         for(int i=0; i<DATA[c][1].size(); i+=3)
         {
-            double o[3] = { DATA[c][1][i],
-                            DATA[c][1][i+1],
-                            DATA[c][1][i+2]};
-            double L[3] = { DATA[c][2][i],
-                            DATA[c][2][i+1],
-                            DATA[c][2][i+2]};
+            double o[3] = { DATA[c][1][i],DATA[c][1][i+1],DATA[c][1][i+2]};
+            double L[3] = { DATA[c][2][i],DATA[c][2][i+1],DATA[c][2][i+2]};
             double s = DATA[c][0][i+1];
             double r = DATA[c][0][i+2];
 
