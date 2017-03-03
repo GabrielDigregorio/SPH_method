@@ -1,9 +1,5 @@
-#include "SPH.hpp"
-#include <fstream>
-#include <vector>
-#include <cstdlib>
-#include <ctime>
-#include <cmath>
+#include "../Headers/SPH.hpp"
+
 
 int main(int argc, char *argv[])
 {

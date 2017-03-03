@@ -6,7 +6,7 @@ class Playground
 {
     public:
 
-        // Constructor: initialize 2D vector and 3D vector, and "print" varliable
+        // Constructor: initialize 2D vector and 3D vector, and "screen" varliable
         Playground(bool s);
 
         // Read the entire file .kzr and store in DATA
