@@ -149,8 +149,8 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
     }
 
     // ellipse parameter
-    double a=L[0]/2, b=L[1]/2, c=L[2]/2; 
-    
+    double a=L[0]/2, b=L[1]/2, c=L[2]/2;
+
     // calculate nb of particles along the radius from target size "s"
     int nd1 = int(ceil(L[0]/s));
     double dr1 = L[0]/nd1; ++nd1;
@@ -191,8 +191,8 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
                         pos.push_back(x + distribution(generator));
                         pos.push_back(y + distribution(generator));
                         pos.push_back(z + distribution(generator));
-                        myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;  
-                    } 
+                        myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
+                    }
                 }
             }
         }
