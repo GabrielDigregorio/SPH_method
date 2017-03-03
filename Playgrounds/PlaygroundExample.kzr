@@ -2,8 +2,7 @@
 % PLAYGROUND : Geometry example
 % #FLUID
 % gra ==> Gravity [m/s^2]
-% cst ==>
-% gam ==>
+% gam ==> Gamma []
 % rho ==> Density [kg/m^3]
 % met ==> Resolution method (Euler or RungeKutta)
 %
@@ -30,12 +29,12 @@
 %********************************************
 
 #FLUID
-    cst=0
-    cst=0
-    cst=0
-    cst=0
-    gam=0
-    rho=1000
+    cst=1
+    cst=2
+    cst=3
+    cst=4
+    cst=5
+    cst=6
     met=RungeKutta
 #END_FLUID
 

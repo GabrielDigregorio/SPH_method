@@ -6,8 +6,8 @@ class Playground
 {
     public:
 
-        // Constructor: initialize 2D vector and 3D vector
-        Playground();
+        // Constructor: initialize 2D vector and 3D vector, and "print" varliable
+        Playground(bool s);
 
         // Read the entire file .kzr and store in DATA
         void ReadPlayground(const char *filename);
@@ -15,16 +15,28 @@ class Playground
         // Generate paricles in each geometries accordingly to DATA
         void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed);
 
-        // Get the Domain of the playground: dom=0 for lower coordinate, dom=1 for upper coordinate
+        // Get the Domain of the playground: dom=false for lower coordinate, dom=true for upper coordinate
         std::vector<double> GetDomain(bool dom);
+
+        // Get parameters of the fluid
+        std::vector<double> GetParam();
+
+        // Get method for the solver (Euler or RungeKutta)
+        std::string GetMethod();
 
     private:
 
+        // Print on terminal
+        bool screen;
+
+        // Parameters of the fluid
+        std::vector<double> param;
+
+        // Method used for the solver (Euler or RungeKutta)
+        std::string method;
+
         // Domain of the Playground
         std::vector<double> l{0,0,0}, u{0,0,0};
-
-        // Fill the 3D matrix DATA with data (current reading)
-        void fillVector(std::vector<double> data, int i);
 
         // 2D Vector: [cube cylinder sphere ; part1 part2 part3 part4 ...]. Store geometry
         std::vector< std::vector<int> > geometry;
@@ -37,6 +49,9 @@ class Playground
 
         // Currently read data
         std::vector<double> data{0,0,0,0,0,0,0,0,0};
+
+        // Fill the 3D matrix DATA with data (current reading)
+        void fillVector(std::vector<double> data, int i);
 };
 
 #endif 
