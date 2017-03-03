@@ -1,5 +1,4 @@
-#include "SPH.hpp"
-#include <cmath>
+#include "../Headers/SPH.hpp"
 
 /// Naive method to find the neighbors of all particles.
 // All-pair search algorithm

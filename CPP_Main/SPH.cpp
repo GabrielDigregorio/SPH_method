@@ -1,4 +1,5 @@
-#include "SPH.hpp"
+#include "../Headers/SPH.hpp"
+#include "../Headers/Playground.hpp"
 
 int main(int argc, char *argv[])
 {

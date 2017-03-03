@@ -1,4 +1,4 @@
-#include "./Headers/SPH.hpp"
+#include "../Headers/SPH.hpp"
 
 
 // Build a brick of regulary aligned particles with the center of mass at o(x,y,z).

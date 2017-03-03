@@ -1,8 +1,7 @@
-#include "./Headers/SPH.hpp"
-#include "./Headers/Playground.hpp"
+#include "../Headers/SPH.hpp"
+#include "../Headers/Playground.hpp"
 
 /// Private Constructor : Initialize a 3D matrix and 2D matrix.
-
 Playground :: Playground( bool s)
 {
     screen = s;
@@ -20,7 +19,6 @@ Playground :: Playground( bool s)
 
 
 /// Private Function to fill vectors in ReadPlayground function
-
 void Playground :: fillVector(std::vector<double> data, int i)
 {
     DATA[i][0].push_back(data[0]); DATA[i][0].push_back(data[1]); DATA[i][0].push_back(data[2]);
@@ -35,7 +33,6 @@ void Playground :: fillVector(std::vector<double> data, int i)
     //                 (NO GENERATION OF PARTICLES HERE)
     //      Input : filename .kzr
     //      output: structure that contains all data
-
 void Playground :: ReadPlayground(const char *filename)
 {
     // open a file geometry.kzr
@@ -128,7 +125,6 @@ void Playground :: ReadPlayground(const char *filename)
 /// Public GeneratePlayground: Generate all particles in all geometries from structure Playground
     //      Input : posFree, posMoving, posFixed, filename
     //      output: filled posFree, posMoving, posFixed by structure Playground
-
 void Playground :: GeneratePlayground(  std::vector<double> &posFree, 
                                         std::vector<double> &posMoving, 
                                         std::vector<double> &posFixed)
@@ -162,21 +158,24 @@ void Playground :: GeneratePlayground(  std::vector<double> &posFree,
     }
 }
 
-// Return the fluid parameters
+
+
+/// Public Return the fluid parameters
 std::vector<double> Playground :: GetParam()
 {
     return param;
 }
 
 
-// Return the method for the solver
+
+/// Public Return the method for the solver
 std::string Playground :: GetMethod()
 {
     return method;
 }
 
 
-// Return the lower coordinate or the upper coordinate of the domain
+/// Public Return the lower coordinate or the upper coordinate of the domain
 std::vector<double> Playground :: GetDomain(bool dom)
 {
     if(dom == false)

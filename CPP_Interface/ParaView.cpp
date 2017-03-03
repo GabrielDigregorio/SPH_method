@@ -1,7 +1,4 @@
-#include "SPH.hpp"
-#include <fstream>
-#include <sstream>
-#include <iomanip>
+#include "../Headers/SPH.hpp"
 
 // export results to paraview (VTK polydata - legacy file fomat)
 //   filename: file name without vtk extension
