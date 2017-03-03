@@ -15,8 +15,13 @@ class Playground
         // Generate paricles in each geometries accordingly to DATA
         void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed);
 
+        // Get the Domain of the playground: dom=0 for lower coordinate, dom=1 for upper coordinate
+        std::vector<double> GetDomain(bool dom);
 
     private:
+
+        // Domain of the Playground
+        std::vector<double> l{0,0,0}, u{0,0,0};
 
         // Fill the 3D matrix DATA with data (current reading)
         void fillVector(std::vector<double> data, int i);

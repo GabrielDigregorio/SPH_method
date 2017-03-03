@@ -1,7 +1,7 @@
 #include "SPH.hpp"
 #include "Playground.hpp"
 
-/// Constructor : Initialize a 3D matrix and 2D matrix.
+/// Private Constructor : Initialize a 3D matrix and 2D matrix.
 
 Playground :: Playground()
 {
@@ -18,7 +18,7 @@ Playground :: Playground()
 
 
 
-/// Function to fill vectors in ReadPlayground function
+/// Private Function to fill vectors in ReadPlayground function
 
 void Playground :: fillVector(std::vector<double> data, int i)
 {
@@ -29,7 +29,7 @@ void Playground :: fillVector(std::vector<double> data, int i)
 
 
 
-/// ReadPlayground: Read the entire .kzr playground and store all data 
+/// Public ReadPlayground: Read the entire .kzr playground and store all data 
     //                 in separate variables within a structure
     //                 (NO GENERATION OF PARTICLES HERE)
     //      Input : filename .kzr
@@ -49,6 +49,16 @@ void Playground :: ReadPlayground(const char *filename)
     {
         if(line == "#geom") // new geometry environement 
         {
+            std::getline(infile, line);
+
+            for(int i=0; i<3; ++i)
+            {
+                std::getline(infile, line);
+                l[i] = atof(line.erase(0,3).c_str());
+                std::getline(infile, line);
+                u[i] = atof(line.erase(0,3).c_str());
+            }
+
             while (std::getline(infile, line)) // skip white space
             {   
                 // known geometry 
@@ -77,11 +87,13 @@ void Playground :: ReadPlayground(const char *filename)
                     geometry[data[0]].push_back(geom);
 
                     if(1) // put 1 to display value in terminal
-                    {
+                    { 
+                        std::cout<<"\n"<< "domain" <<", lx="<<l[0]<<", ly="<<l[1]<<", lz="<<l[2] << 
+                                    " and "<< ", ux=" <<u[0]<<", uy="<<u[1]<<", uz="<<u[2] <<"\n\n";
                         std::cout<<"geometry "<<geom<< " , status "<<data[0]<<
                                    " , s_spacing "<<data[1]<< " , %random "<<data[2]<<"\n";
                         std::cout<<"coord "<<data[3]<<" "<<data[4]<<" "<<data[5]<<"\n";
-                        std::cout<<"dimen "<<data[6]<<" "<<data[7]<<" "<<data[8]<<"\n";
+                        std::cout<<"dimen "<<data[6]<<" "<<data[7]<<" "<<data[8]<<"\n \n";
                     }
                 }
             }
@@ -92,7 +104,7 @@ void Playground :: ReadPlayground(const char *filename)
 
 
 
-/// GeneratePlayground: Generate all particles in all geometries from structure Playground
+/// Public GeneratePlayground: Generate all particles in all geometries from structure Playground
     //      Input : posFree, posMoving, posFixed, filename
     //      output: filled posFree, posMoving, posFixed by structure Playground
 
@@ -128,4 +140,16 @@ void Playground :: GeneratePlayground(  std::vector<double> &posFree,
         }
     }
 
+}
+
+
+
+// Return the lower coordinate or the upper coordinate of the domain
+
+std::vector<double> Playground :: GetDomain(bool dom)
+{
+    if(dom == false)
+        return l;
+    else if (dom == true)
+        return u;
 }

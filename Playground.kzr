@@ -1,5 +1,8 @@
 %********************************************
 % PLAYGROUND : Geometry example
+% #domain
+% lx, ly, lz ==> Lower coordinate of the domain
+% ux, uy, uz ==> Upper coordinate of the domain
 % geometry : #brick, #cylin or #spher
 % #param
 %   c ==> 0=free, 1=moving, 2=fixed
@@ -18,6 +21,13 @@
 %********************************************
 
 #geom
+#domain
+lx=20
+ux=50
+ly=30
+uy=60
+lz=40
+uz=70
 
     #brick
         #param
