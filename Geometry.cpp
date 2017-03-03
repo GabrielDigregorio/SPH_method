@@ -11,7 +11,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
 {
     // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
     std::ofstream myfile;
-    myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
+    myfile.open ("./Results/Playground.txt", std::ofstream::out | std::ofstream::app);
 
     // if we stack the cube:
     if(stack == true){
@@ -73,7 +73,7 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
 {
     // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
     std::ofstream myfile;
-    myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
+    myfile.open ("./Results/Playground.txt", std::ofstream::out | std::ofstream::app);
 
     // if we stack the cylinder:
     if(stack == true){
@@ -141,7 +141,7 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
 {
     // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
     std::ofstream myfile;
-    myfile.open ("Playground.txt", std::ofstream::out | std::ofstream::app);
+    myfile.open ("./Results/Playground.txt", std::ofstream::out | std::ofstream::app);
 
     // if we stack the cylinder:
     if(stack = true){
