@@ -1,5 +1,5 @@
-#include "SPH.hpp"
-#include "Playground.hpp"
+#include "./Headers/SPH.hpp"
+#include "./Headers/Playground.hpp"
 
 /// Private Constructor : Initialize a 3D matrix and 2D matrix.
 
@@ -47,7 +47,7 @@ void Playground :: ReadPlayground(const char *filename)
     // Start Reading The Entire File .kzr
     while (std::getline(infile, line))
     {
-        if(line == "#geom") // new geometry environement 
+        if(line == "#GEOM") // new geometry environement 
         {
             std::getline(infile, line);
 

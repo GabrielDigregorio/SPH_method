@@ -1,8 +1,17 @@
 %********************************************
 % PLAYGROUND : Geometry example
+% #FLUID
+% gra ==> Gravity [m/s^2]
+% cst ==>
+% gam ==>
+% rho ==> Density [kg/m^3]
+% met ==> Resolution method (Euler or RungeKutta)
+%
+% #GEOM
 % #domain
-% lx, ly, lz ==> Lower coordinate of the domain
-% ux, uy, uz ==> Upper coordinate of the domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+% 
 % geometry : #brick, #cylin or #spher
 % #param
 %   c ==> 0=free, 1=moving, 2=fixed
@@ -20,7 +29,17 @@
 %   D ==> Large diameter of the geometry
 %********************************************
 
-#geom
+#FLUID
+    cst=0
+    cst=0
+    cst=0
+    cst=0
+    gam=0
+    rho=1000
+    met=RungeKutta
+#END_FLUID
+
+#GEOM
 #domain
 lx=20
 ux=50
@@ -112,4 +131,4 @@ uz=70
         D=5
         d=5
         H=5
-#end
+#END_GEOM
