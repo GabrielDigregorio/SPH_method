@@ -1,70 +1,121 @@
 #include "../Headers/SPH.hpp"
 #include "../Headers/Playground.hpp"
 
+// Structure qui doit être remplie lors de la lecture du fichier de paramètre (il faudra surement changer la place de cette déclaration)
+/*
+ * s = space interval
+ * h = smothing length
+ * k = time step
+ * T = simulation time
+ * densityRef = density of the fluid at atmospheric pressure
+ * l & u = lower and upper limit of the domain
+ * B & gamma = fluid constants
+ * g = gravity
+ * writeInteval = time interval between two outputs file are generated
+ * integrationMethod = euler ou RK2
+ * densityInitMethod = hydrosatic, etc.
+ * stateEquationMethod = quasiIncompressible, perfectGas, etc.
+ * massInitMethod = violeau2012 (all particles have same volumes), etc.
+ * speedLaw = To be determined, will dictate the behaviour of moving boundaries
+*/
+struct Parameter {
+    double s, h, k, T, densityRef, l, u, B, gamma, g, writeInterval;
+    std::string integrationMethod, densityInitMethod, stateEquationMethod, massInitMethod, speedLaw;
+};
+
+// Structure qui doit être remplie lors de la lecture du fichier de géométrie (il faudra surement changer la place de cette déclaration aussi). Cette structure contient toute l'information utile de nos simulations.
+struct Field {
+    std::vector<double> posFree;
+    std::vector<double> posMoving;
+    std::vector<double> posFixed;
+
+    std::vector<double> speedFree;
+    std::vector<double> speedMoving;
+    //Speed fixed = 0 of course
+
+    std::vector<double> densityFree;
+    std::vector<double> densityMoving;
+    std::vector<double> densityFixed;
+
+    std::vector<double> pressureFree;
+    std::vector<double> pressureMoving;
+    std::vector<double> pressureFixed;
+
+    std::vector<double> massFree;
+    std::vector<double> massMoving;
+    std::vector<double> massFixed;
+};
+
+/*
+ * In: -argv[1]: path to the parameter file
+       -argv[2]: path to the geometry file
+*/
+
 int main(int argc, char *argv[])
 {
-    // creation of a cube of particles
-    bool stack = true;
-    std::vector<double> pos;
-    double o[3] = { 0.0, 0.0, 0.0 };
-    double L[3] = { 2.0, 3.0, 4.0 };
-    double s = 1;
-    meshcube(o, L, s, pos);
-
-    /*
-    double o[3] = { 0.0, 0.0, 0.0 };
-    double L = 10;
-	  double R = 10;
-    double s = 1;
-    meshcylinder(o, L, R, s, pos);
-    */
-
-    // creation of dummy pressure/density/velocity fields &
-    int nbp = pos.size()/3;
-    std::vector<double> pressure(nbp);
-    std::vector<double> density(nbp);
-    std::vector<double> velocity(nbp*3);
-
-    std::map<std::string, std::vector<double> *> scalars;
-    std::map<std::string, std::vector<double> *> vectors;
-    scalars["pressure"] = &pressure;
-    scalars["density"]  = &density;
-    vectors["velocity"] = &velocity;
-
-
-    // time step loop
-    for(int nstep=0; nstep<1; ++nstep)
-    {
-        double a = nstep/20.0*8*atan(1.0);
-
-        /*
-        // generate dummy results
-        for(int i=0; i<nbp; ++i)
+    // READING INPUT FILE
+        // Check argument file
+        char* parameterFilename;
+        char* geometryFilename;
+        if(argc<3)
         {
-            pos[3*i+2] -= 0.5/20;
-
-            double x = pos[3*i+0];
-            double y = pos[3*i+1];
-            double z = pos[3*i+2];
-
-            pressure[i] = z/2+sin(a);
-            density[i] = y+cos(a)+2;
-            velocity[3*i+0] = 0;
-            velocity[3*i+1] = 0;
-            velocity[3*i+2] = 0;
+            std::cout << "Invalid input files.\n";
+            return EXIT_FAILURE;
         }
-        */
-        double l[3] = {o[0], o[1], o[2]};
-        double u[3] = {o[0]+L[0], o[1]+L[1], o[2]+L[2]};
-        double kh = 1.5;
-        std::vector<double> values;
-        std::vector<int> row;
-        std::vector<int> column;
-        neighborLinkedList(pos, l, u, kh, values, row, column);
+        else{parameterFilename = argv[1]; geometryFilename = argv[2];}
 
-        // save results to disk
-        paraview("results", nstep, pos, scalars, vectors);
-    }
+        //Read parameters
+        Parameter* parameter;
 
+        //To implement
+        readParameter(parameterFilename,parameter);
+
+        //Read geometry
+        Field* currentField;
+        //To implement
+        readGeometry(geometryFilename,currentField);
+
+    // INITIALISATION
+        // SPEEDS
+            currentField->speedFree.assign(currentField->posFree.size(),0.0);
+            //On pourrait aussi imaginer implementer une fonction speedInit(currentField,parameter) si on veut pouvoir partir d'un autre état que le repos
+
+
+            //To implement (not to do in a first time because it is much complicated and we must discuss this.
+            // the value 0 correpsonds to time t=0, the function will be reused for later times
+            // On pourrait ne passer que parameter->speedLaw mais le passage par pointeur est tout aussi efficace et on a accès à tous les parametres dans le cas ou on en aurait besoin
+            updateMovingSpeed(currentField,0,parameter);
+
+        // DENSITIES
+            //To implement densityInit, use formula from Goffin p122
+            densityInit(currentField, parameter);
+
+
+        // PRESSURES
+            //(might not be necessary to store them as they only depend on density?)(to discuss)
+            //To implement use formala 3.39 from Goffin
+            pressureComputation(currentField,parameter);
+
+        //MASSES
+            //To implement use formula 3.59 from Goffin
+            massInit(currentField,parameter);
+
+    // UPDATE & WRITTING
+            Field* nextField;
+            unsigned int nMax = (unsigned int) ceil(T/k); //Validité de cette ligne à vérifier
+            //To implement, the value "0" stands for the time a which we write
+            writeField(currentField,0);
+            unsigned int writeCount = 1;
+
+            for(int n = 1;n<=nMax;n++)
+            {
+                timeIntegration(currentField,nextField,parameter,n);
+
+                if(writeCount*parameter->writeInterval <= n*parameter->k)
+                {
+                    writeField(currentField,n*parameter->k);
+                    writeCount++;
+                }
+            }
     return 0;
 }
