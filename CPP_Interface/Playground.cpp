@@ -47,7 +47,7 @@ void Playground :: ReadPlayground(const char *filename)
     if(line == "#FLUID")
     {
         // Read Parameters of the fluid
-        for(int i=0; i<9; ++i)
+        for(int i=0; i<8; ++i)
         {
             std::getline(infile, line);
             param.push_back( atof(line.erase(0,8).c_str()) );
@@ -167,27 +167,23 @@ void Playground :: GeneratePlayground(  std::vector<double> &posFree,
 
 
 /// Public Return the fluid parameters
-std::vector<double> Playground :: GetParam()
-{
-    return param;
-}
-
-
-
-/// Public Return the method for the solver
-std::string Playground :: GetMethod(int i)
-{
-    return method[i];
-}
-
-
-/// Public Return the lower coordinate or the upper coordinate of the domain
-std::vector<double> Playground :: GetDomain(bool dom)
-{
-    if(dom == false)
-        return l;
-    else if (dom == true)
-        return u;
+void Playground :: GetParam(Parameter *myParameter)
+{   
+    myParameter->l[0] = l[0];myParameter->l[1] = l[1];myParameter->l[2] = l[2];
+    myParameter->u[0] = u[0];myParameter->u[1] = u[1];myParameter->u[2] = u[2];
+    myParameter->kh = param[0];
+    myParameter->k = param[1];
+    myParameter->T = param[2];
+    myParameter->densityRef = param[3];
+    myParameter->B = param[4];
+    myParameter->gamma = param[5];
+    myParameter->g = param[6];
+    myParameter->writeInterval = param[7];
+    myParameter->integrationMethod = method[0];
+    myParameter->densityInitMethod = method[1];
+    myParameter->stateEquationMethod = method[2];
+    myParameter->massInitMethod = method[3];
+    myParameter->speedLaw = method[4];
 }
 
 

@@ -1,6 +1,13 @@
 #ifndef PLAYGROUND_H
 #define PLAYGROUND_H
 
+struct Parameter {
+    double kh, k, T, densityRef, B, gamma, g, writeInterval;
+    double l[3];
+    double u[3];
+    std::string integrationMethod, densityInitMethod, stateEquationMethod, massInitMethod, speedLaw;
+};
+
 // Class Playground
 class Playground
 {
@@ -15,14 +22,8 @@ class Playground
         // Generate paricles in each geometries accordingly to DATA
         void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed);
 
-        // Get the Domain of the playground: dom=false for lower coordinate, dom=true for upper coordinate
-        std::vector<double> GetDomain(bool dom);
-
         // Get parameters of the fluid
-        std::vector<double> GetParam();
-
-        // Get method for the solver (Euler or RungeKutta)
-        std::string GetMethod(int i);
+        void GetParam(Parameter *myParameter);
 
         // Destructor: delete all vectors in DATA
         ~Playground();
@@ -36,7 +37,7 @@ class Playground
         std::vector<double> param;
 
         // Method used for the solver (Euler or RungeKutta, ...)
-         std::vector<std::string> method;
+        std::vector<std::string> method;
 
         // Domain of the Playground
         std::vector<double> l{0,0,0}, u{0,0,0};
