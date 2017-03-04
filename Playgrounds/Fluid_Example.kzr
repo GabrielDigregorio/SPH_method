@@ -26,9 +26,9 @@
   gamma=1.1111
       g=9.81
      WI=1.11111
-    met=R
- rhoMet=d
-    SEM=s
-    MIM=m
-   SLaw=s
+    met=RungeKutta
+ rhoMet=blablabla
+    SEM=blablabla
+    MIM=blablabla
+   SLaw=blablabla
 #END_FLUID

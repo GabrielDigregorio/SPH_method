@@ -180,7 +180,7 @@ void Playground :: GeneratePlayground(  std::vector<double> &posFree,
 
 
 
-/// Public Return the fluid parameters
+/// Public Return the Parameters
  Parameter* Playground :: GetParam()
 {   
     Parameter *myParameter = (Parameter*) malloc (sizeof(Parameter));
@@ -194,11 +194,11 @@ void Playground :: GeneratePlayground(  std::vector<double> &posFree,
     myParameter->gamma = param[5];
     myParameter->g = param[6];
     myParameter->writeInterval = param[7];
-    //myParameter->integrationMethod<<method[0];
-    /*myParameter->densityInitMethod = method[1];
-    myParameter->stateEquationMethod = method[2];
-    myParameter->massInitMethod = method[3];
-    myParameter->speedLaw = method[4];*/
+    /*myParameter->integrationMethod = method[0].c_str();
+    myParameter->densityInitMethod = method[1].c_str();
+    myParameter->stateEquationMethod = method[2].c_str();
+    myParameter->massInitMethod = method[3].c_str();
+    myParameter->speedLaw = method[4].c_str();*/
     return myParameter;
 }
 
