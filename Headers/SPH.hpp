@@ -46,6 +46,21 @@ void neighborLinkedList (std::vector<double> &pos,
                          std::vector<int> &column);
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes);
 double distance(std::vector<double> pos, int partA, int partB);
+void findNeighbors(int particleID, std::vector<double> &pos, double kh2,
+                   std::vector<std::vector<int> > &boxes,
+                   std::vector<int> &surrBoxes,
+                   std::vector<int> &neighbors,
+                   std::vector<double> &kernelGradients);
+void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
+                   std::vector<std::vector<int> > &boxes);
+void boxMesh(double l[3], double u[3], double kh,
+             std::vector<std::vector<int> > &boxes,
+             std::vector<std::vector<int> > &surrBoxesAll);
+void boxClear(std::vector<std::vector<int> > &boxes);
+
+// TimeIntegration.cpp
+int timeIntegration(std::vector<double> &pos, double l[3], double u[3], double kh);
+
 
 // Kernel.cpp
 double Wab(std::vector<double> pos, int partA, int partB, double h, size_t choice);

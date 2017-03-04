@@ -144,7 +144,7 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
     myfile.open ("./Results/Playground.txt", std::ofstream::out | std::ofstream::app);
 
     // if we stack the cylinder:
-    if(stack = true){
+    if(stack == true){
         L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
     }
 
