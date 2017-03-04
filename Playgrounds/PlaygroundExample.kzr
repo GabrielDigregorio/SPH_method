@@ -1,11 +1,6 @@
 %********************************************
 % PLAYGROUND : Geometry example
-% #FLUID
-% gra ==> Gravity [m/s^2]
-% gam ==> Gamma []
-% rho ==> Density [kg/m^3]
-% met ==> Resolution method (Euler or RungeKutta)
-%
+% 
 % #GEOM
 % #domain
 %   lx, ly, lz ==> Lower coordinate of the domain
@@ -27,16 +22,6 @@
 %   d ==> Small diameter of the geometry
 %   D ==> Large diameter of the geometry
 %********************************************
-
-#FLUID
-    cst=1
-    cst=2
-    cst=3
-    cst=4
-    cst=5
-    cst=6
-    met=RungeKutta
-#END_FLUID
 
 #GEOM
 #domain

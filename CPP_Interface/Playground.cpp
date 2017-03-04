@@ -40,83 +40,93 @@ void Playground :: ReadPlayground(const char *filename)
     std::string line;
     std::getline(infile, line);
 
-    // Start Reading FLUID in File .kzr
-    while (line != "#FLUID")
-        std::getline(infile, line);
-    
-    // Read Parameters of the fluid
-    for(int i=0; i<6; ++i)
+    // Start Reading File .kzr
+    while (std::getline(infile, line) && (line != "#FLUID" || line != "#GEOM"))
+        // std::getline(infile, line);
+
+    //while (std::getline(infile, line) && (line != "#GEOM"))
+        // std::getline(infile, line);
+
+
+    if(line == "#FLUID")
     {
-        std::getline(infile, line);
-        param.push_back( atof(line.erase(0,8).c_str()) );
-    }
-
-    // Read method of the solver (Euler or RungeKutta)
-    std::getline(infile, line);
-    method = line.erase(0,8).c_str();
-
-    if(screen)
-    {
-        std::cout<<"\n" << "Fluid: " <<", cst1="<<param[0]<<", cst2="<<param[1]<<", cst3="<<param[2]
-                    << ", cst4=" <<param[3]<<", cst5="<<param[4]<<", cst6="<<param[5] <<"\n";
-        std::cout<<"Method: "<< method <<"\n"; 
-    }
-          
-    int geom;
-
-    // Start Reading GEOM in File .kzr
-    while (line != "#GEOM")
-        std::getline(infile, line);
-
-    for(int i=0; i<3; ++i)
-    {
-        std::getline(infile, line);
-        l[i] = atof(line.erase(0,3).c_str());
-        std::getline(infile, line);
-        u[i] = atof(line.erase(0,3).c_str());
-    }
-
-    if(screen)
-        std::cout<<"\n"<< "domain: " <<"lx="<<l[0]<<", ly="<<l[1]<<", lz="<<l[2] << 
-                            " and "<< " ux=" <<u[0]<<", uy="<<u[1]<<", uz="<<u[2] <<"\n\n";
-    
-    // For each geometry
-    while (std::getline(infile, line)) // check for the end of the file
-    {   
-        // known geometry 
-        if(line == "    #brick" || line == "    #cylin" || line == "    #spher")
+        // Read Parameters of the fluid
+        for(int i=0; i<6; ++i)
         {
-            if     (line == "    #brick")
-                geom = 1; // Cube identifier
-            else if(line == "    #cylin")
-                geom = 2; // Cylinder identifier
-            else if(line == "    #spher")
-                geom = 3; // Sphere identifier
-            
             std::getline(infile, line);
-
-            // Load data for a given geometry
-            for(int i=0; i<nbr_data; ++i)
-            {
-                std::getline(infile, line);
-                data[i]=atof(line.erase(0,10).c_str());
-                if((i+1)%3 == 0)
-                    std::getline(infile, line);
-            }
-
-            // Memorise the brick in vectors (separate vector for each status parameter)
-            fillVector(data, data[0]);
-            geometry[data[0]].push_back(geom);
-
-            if(screen) // put 1 to display value in terminal
-            { 
-                std::cout<<"geometry "<<geom<< " , status "<<data[0]<<
-                            " , s_spacing "<<data[1]<< " , %random "<<data[2]<<"\n";
-                std::cout<<"coord "<<data[3]<<" "<<data[4]<<" "<<data[5]<<"\n";
-                std::cout<<"dimen "<<data[6]<<" "<<data[7]<<" "<<data[8]<<"\n \n";
-            }
+            param.push_back( atof(line.erase(0,8).c_str()) );
         }
-    }// End Reading The Entire File .kzr
+
+        // Read method of the solver (Euler or RungeKutta)
+        std::getline(infile, line);
+        method = line.erase(0,8).c_str();
+
+        if(screen)
+        {
+            std::cout<<"\n" << "Fluid: " <<", cst1="<<param[0]<<", cst2="<<param[1]<<", cst3="<<param[2]
+                        << ", cst4=" <<param[3]<<", cst5="<<param[4]<<", cst6="<<param[5] <<"\n";
+            std::cout<<"Method: "<< method <<"\n"; 
+        }
+    }
+    
+    if(line == "#GEOM")
+    {      
+        int geom;
+        std::getline(infile, line);
+        // Start Reading GEOM in File .kzr
+        //while (line != "#GEOM")
+           // std::getline(infile, line);
+
+        for(int i=0; i<3; ++i)
+        {
+            std::getline(infile, line);
+            l[i] = atof(line.erase(0,3).c_str());
+            std::getline(infile, line);
+            u[i] = atof(line.erase(0,3).c_str());
+        }
+
+        if(screen)
+            std::cout<<"\n"<< "domain: " <<"lx="<<l[0]<<", ly="<<l[1]<<", lz="<<l[2] << 
+                                " and "<< " ux=" <<u[0]<<", uy="<<u[1]<<", uz="<<u[2] <<"\n\n";
+        
+        // For each geometry
+        while (std::getline(infile, line)) // check for the end of the file
+        {   
+            // known geometry 
+            if(line == "    #brick" || line == "    #cylin" || line == "    #spher")
+            {
+                if     (line == "    #brick")
+                    geom = 1; // Cube identifier
+                else if(line == "    #cylin")
+                    geom = 2; // Cylinder identifier
+                else if(line == "    #spher")
+                    geom = 3; // Sphere identifier
+                
+                std::getline(infile, line);
+
+                // Load data for a given geometry
+                for(int i=0; i<nbr_data; ++i)
+                {
+                    std::getline(infile, line);
+                    data[i]=atof(line.erase(0,10).c_str());
+                    if((i+1)%3 == 0)
+                        std::getline(infile, line);
+                }
+
+                // Memorise the brick in vectors (separate vector for each status parameter)
+                fillVector(data, data[0]);
+                geometry[data[0]].push_back(geom);
+
+                if(screen) // put 1 to display value in terminal
+                { 
+                    std::cout<<"geometry "<<geom<< " , status "<<data[0]<<
+                                " , s_spacing "<<data[1]<< " , %random "<<data[2]<<"\n";
+                    std::cout<<"coord "<<data[3]<<" "<<data[4]<<" "<<data[5]<<"\n";
+                    std::cout<<"dimen "<<data[6]<<" "<<data[7]<<" "<<data[8]<<"\n \n";
+                }
+            }
+        }// End Reading The Entire File .kzr
+    }
 
 }
 
