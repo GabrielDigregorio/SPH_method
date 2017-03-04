@@ -36,7 +36,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
     pos.reserve(pos.size() + ni*nj*nk*3);
 
     // generates number in the range -s*perturbation % and s*perturbation %
-    std::default_random_engine generator;
+    std::default_random_engine generator; // A SEED MUST BE USE TO CHANGE VALUE AT EACH CALL 
     std::uniform_real_distribution<double> distribution(-s*perturbation/100,s*perturbation/100);
 
     // particle generation

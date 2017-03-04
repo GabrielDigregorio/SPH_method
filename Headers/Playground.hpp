@@ -24,6 +24,9 @@ class Playground
         // Get method for the solver (Euler or RungeKutta)
         std::string GetMethod();
 
+        // Destructor: delete all vectors in DATA
+        ~Playground();
+
     private:
 
         // Print on terminal

@@ -183,3 +183,27 @@ std::vector<double> Playground :: GetDomain(bool dom)
     else if (dom == true)
         return u;
 }
+
+
+
+/// Public Destructor : delete data
+Playground::~Playground()
+{
+    for(int i=0; i<3; ++i)
+    {
+        for(int j=0; j<3; ++j)
+        {
+            //std::cout << "1. capacity of myvector: " << DATA[i][j].capacity() << '\n';
+
+            //DATA.resize(0);
+            //std::cout << "2. capacity of myvector: " << DATA[i][j].capacity() << '\n';
+
+            //DATA.shrink_to_fit();
+            //std::cout << "3. capacity of myvector: " << DATA[i][j].capacity() << '\n';
+        }
+    }
+
+    param.resize(0); l.resize(0); u.resize(0); geometry.resize(0);
+    param.shrink_to_fit(); l.shrink_to_fit(); u.shrink_to_fit(); geometry.shrink_to_fit();
+
+}

@@ -10,7 +10,6 @@ build/
 *.exe
 *.txt
 *.dat
-sph
 test.cpp
 test.kzr
 test.m
