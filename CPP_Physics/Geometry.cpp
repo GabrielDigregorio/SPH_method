@@ -176,12 +176,12 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
     for(int l=(-nd3+1)/2; l<=(nd3-1)/2; ++l)
     {
         double tmpz = l*dr3;
-        double tempo=sqrt(1-pow(tmpz,2)/pow(c,2))
+        double tempo=sqrt(1-pow(tmpz,2)/pow(c,2));
         double borne_y=floor((tempo*b)/(2*dr2));
         for(int j= -borne_y; j<=borne_y; ++j)
             {
                 double tmpy = j*dr2;
-                double tempo2=sqrt(pow(tempo,2)*pow(a,2)-pow(tmpy,2)*pow(a,2)/pow(b,2))
+                double tempo2=sqrt(pow(tempo,2)*pow(a,2)-pow(tmpy,2)*pow(a,2)/pow(b,2));
                 double borne_x=floor(tempo2/(2*dr1));
                 for(int i=-borne_x; i<=borne_x; ++i)
                 {
