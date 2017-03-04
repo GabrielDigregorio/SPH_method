@@ -47,21 +47,24 @@ void Playground :: ReadPlayground(const char *filename)
     if(line == "#FLUID")
     {
         // Read Parameters of the fluid
-        for(int i=0; i<6; ++i)
+        for(int i=0; i<9; ++i)
         {
             std::getline(infile, line);
             param.push_back( atof(line.erase(0,8).c_str()) );
         }
 
         // Read method of the solver (Euler or RungeKutta)
-        std::getline(infile, line);
-        method = line.erase(0,8).c_str();
+        for(int i=0; i<5; ++i)
+        {
+            std::getline(infile, line);
+            method.push_back(line.erase(0,8).c_str());
+        }
 
         if(screen)
         {
             std::cout<<"\n" << "Fluid: " <<", cst1="<<param[0]<<", cst2="<<param[1]<<", cst3="<<param[2]
                         << ", cst4=" <<param[3]<<", cst5="<<param[4]<<", cst6="<<param[5] <<"\n";
-            std::cout<<"Method: "<< method <<"\n\n"; 
+            std::cout<<"Method: "<< method[0]<< " " << method[1] << " "<< method[2]<< " " << method[3] << " " << method[4] << " " <<"\n\n"; 
         }
     }
     
@@ -172,9 +175,9 @@ std::vector<double> Playground :: GetParam()
 
 
 /// Public Return the method for the solver
-std::string Playground :: GetMethod()
+std::string Playground :: GetMethod(int i)
 {
-    return method;
+    return method[i];
 }
 
 

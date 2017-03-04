@@ -22,7 +22,7 @@ class Playground
         std::vector<double> GetParam();
 
         // Get method for the solver (Euler or RungeKutta)
-        std::string GetMethod();
+        std::string GetMethod(int i);
 
         // Destructor: delete all vectors in DATA
         ~Playground();
@@ -35,8 +35,8 @@ class Playground
         // Parameters of the fluid
         std::vector<double> param;
 
-        // Method used for the solver (Euler or RungeKutta)
-        std::string method;
+        // Method used for the solver (Euler or RungeKutta, ...)
+         std::vector<std::string> method;
 
         // Domain of the Playground
         std::vector<double> l{0,0,0}, u{0,0,0};

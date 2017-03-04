@@ -8,11 +8,18 @@
 %********************************************
 
 #FLUID
-    cst=1
-    cst=2
-    cst=3
-    cst=4
-    cst=5
-    cst=6
+      s=1
+     kh=2
+      k=3
+      T=4
+    rho=5
+      B=6
+  gamma=7
+      g=9.81
+     WI=8
     met=RungeKutta
+ rhoMet=densityInitMethod 
+    SEM=stateEquationMethod
+    MIM=massInitMethod 
+   SLaw=speedLaw;
 #END_FLUID
