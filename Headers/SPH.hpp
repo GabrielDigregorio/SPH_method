@@ -27,6 +27,11 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
 void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation = 0.0, bool stack = false);
 
 // Playground.cpp
+
+//********* void readParameter(char* parameterFilename, Parameter* parameter);
+//********* void readGeometry(char* geometryFilename, Field* field);
+
+
 //void fillVector(std::vector<double> &vect, double A, double B, double C);
 //Playground ReadPlayground(const char *filename);
 //void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed, const char *filename);
@@ -60,6 +65,7 @@ void boxClear(std::vector<std::vector<int> > &boxes);
 
 // TimeIntegration.cpp
 int timeIntegration(std::vector<double> &pos, double l[3], double u[3], double kh);
+//********** void updateMovingSpeed(Field* field, Parameter* parameter, double t);
 
 
 // Kernel.cpp
@@ -73,6 +79,12 @@ void paraview(std::string const &filename,
               std::map<std::string, std::vector<double> *> const &scalars,
               std::map<std::string, std::vector<double> *> const &vectors);
 
+// writeField.cpp
+//********** void writeField(Field* field,double t);
 
 
+// Init.cpp
+//********** void densityInit(Field* field,Parameter* parameter);
+//********** void pressureComputation(Field* field,Parameter* parameter);
+//********** void massInit(Field* field,Parameter* parameter);
 #endif

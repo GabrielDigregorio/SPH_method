@@ -4,7 +4,7 @@
 // Structure qui doit être remplie lors de la lecture du fichier de paramètre (il faudra surement changer la place de cette déclaration)
 /*
  * s = space interval
- * h = smothing length
+ * kh = smothing length
  * k = time step
  * T = simulation time
  * densityRef = density of the fluid at atmospheric pressure
@@ -19,7 +19,9 @@
  * speedLaw = To be determined, will dictate the behaviour of moving boundaries
 */
 struct Parameter {
-    double s, h, k, T, densityRef, l, u, B, gamma, g, writeInterval;
+    double s, kh, k, T, densityRef, B, gamma, g, writeInterval;
+    double l[3];
+    double u[3];
     std::string integrationMethod, densityInitMethod, stateEquationMethod, massInitMethod, speedLaw;
 };
 
@@ -84,7 +86,7 @@ int main(int argc, char *argv[])
             //To implement (not to do in a first time because it is much complicated and we must discuss this.
             // the value 0 correpsonds to time t=0, the function will be reused for later times
             // On pourrait ne passer que parameter->speedLaw mais le passage par pointeur est tout aussi efficace et on a accès à tous les parametres dans le cas ou on en aurait besoin
-            updateMovingSpeed(currentField,0,parameter);
+            updateMovingSpeed(currentField,parameter,0.0);
 
         // DENSITIES
             //To implement densityInit, use formula from Goffin p122
