@@ -53,7 +53,7 @@ void Playground :: ReadPlayground(const char *filename)
             param.push_back( atof(line.erase(0,8).c_str()) );
         }
 
-        // Read method of the solver (Euler or RungeKutta)
+        // Read method of the solver (Euler or RungeKutta ...)
         for(int i=0; i<5; ++i)
         {
             std::getline(infile, line);
@@ -123,7 +123,6 @@ void Playground :: ReadPlayground(const char *filename)
             }
         }// End Reading The Entire File .kzr
     }
-
 }
 
 
@@ -138,9 +137,9 @@ void Playground :: GeneratePlayground(  std::vector<double> &posFree,
     //Stack all geometries
     bool stack = true;
 
+    // For free, moving and fixed particles 
     for(int c=0; c<3; ++c)
     {
-        // For free particles
         for(int i=0; i<DATA[c][1].size(); i+=3)
         {
             double o[3] = { DATA[c][1][i], DATA[c][1][i+1], DATA[c][1][i+2]};
@@ -151,13 +150,28 @@ void Playground :: GeneratePlayground(  std::vector<double> &posFree,
             //Generate the geometry for Free particles
             switch (geometry[c][(i/3)]){
             case 1 : // Cube
-                meshcube(o, L, s, posFree, r, stack);
+                if(c==0)
+                    meshcube(o, L, s, posFree, r, stack);
+                else if (c==1)
+                    meshcube(o, L, s, posMoving, r, stack);
+                else if (c==2)
+                    meshcube(o, L, s, posFixed, r, stack);
             break;
             case 2 : // Cylinder
-                meshcylinder(o, L, s, posFree, r, stack);
+                if(c==0)
+                    meshcylinder(o, L, s, posFree, r, stack);
+                else if (c==1)
+                    meshcylinder(o, L, s, posMoving, r, stack);
+                else if (c==2)
+                    meshcylinder(o, L, s, posFixed, r, stack);
             break;
             case 3 : // Sphere
-                meshsphere(o, L, s, posFree, r, stack);
+                if(c==0)
+                    meshsphere(o, L, s, posFree, r, stack);
+                else if (c==1)
+                    meshsphere(o, L, s, posMoving, r, stack);
+                else if (c==2)
+                    meshsphere(o, L, s, posFixed, r, stack);
             break;
             }
         }
@@ -167,8 +181,9 @@ void Playground :: GeneratePlayground(  std::vector<double> &posFree,
 
 
 /// Public Return the fluid parameters
-void Playground :: GetParam(Parameter *myParameter)
+ Parameter* Playground :: GetParam()
 {   
+    Parameter *myParameter = (Parameter*) malloc (sizeof(Parameter));
     myParameter->l[0] = l[0];myParameter->l[1] = l[1];myParameter->l[2] = l[2];
     myParameter->u[0] = u[0];myParameter->u[1] = u[1];myParameter->u[2] = u[2];
     myParameter->kh = param[0];
@@ -179,11 +194,12 @@ void Playground :: GetParam(Parameter *myParameter)
     myParameter->gamma = param[5];
     myParameter->g = param[6];
     myParameter->writeInterval = param[7];
-    myParameter->integrationMethod = method[0];
-    myParameter->densityInitMethod = method[1];
+    //myParameter->integrationMethod<<method[0];
+    /*myParameter->densityInitMethod = method[1];
     myParameter->stateEquationMethod = method[2];
     myParameter->massInitMethod = method[3];
-    myParameter->speedLaw = method[4];
+    myParameter->speedLaw = method[4];*/
+    return myParameter;
 }
 
 

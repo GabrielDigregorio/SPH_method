@@ -1,6 +1,23 @@
 #ifndef PLAYGROUND_H
 #define PLAYGROUND_H
 
+// Structure qui doit être remplie lors de la lecture du fichier de paramètre
+/*
+ * kh = smothing length
+ * k = time step
+ * T = simulation time
+ * densityRef = density of the fluid at atmospheric pressure
+ * l & u = lower and upper limit of the domain
+ * B & gamma = fluid constants
+ * g = gravity
+ * writeInteval = time interval between two outputs file are generated
+ * integrationMethod = euler ou RK2
+ * densityInitMethod = hydrosatic, etc.
+ * stateEquationMethod = quasiIncompressible, perfectGas, etc.
+ * massInitMethod = violeau2012 (all particles have same volumes), etc.
+ * speedLaw = To be determined, will dictate the behaviour of moving boundaries
+*/
+
 struct Parameter {
     double kh, k, T, densityRef, B, gamma, g, writeInterval;
     double l[3];
@@ -23,7 +40,7 @@ class Playground
         void GeneratePlayground( std::vector<double> &posFree, std::vector<double> &posMoving, std::vector<double> &posFixed);
 
         // Get parameters of the fluid
-        void GetParam(Parameter *myParameter);
+        Parameter* GetParam();
 
         // Destructor: delete all vectors in DATA
         ~Playground();
@@ -37,7 +54,7 @@ class Playground
         std::vector<double> param;
 
         // Method used for the solver (Euler or RungeKutta, ...)
-        std::vector<std::string> method;
+        std::vector< std::string > method;
 
         // Domain of the Playground
         std::vector<double> l{0,0,0}, u{0,0,0};

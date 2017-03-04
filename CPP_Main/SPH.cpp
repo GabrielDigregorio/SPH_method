@@ -1,29 +1,6 @@
 #include "../Headers/SPH.hpp"
 #include "../Headers/Playground.hpp"
 
-// Structure qui doit être remplie lors de la lecture du fichier de paramètre (il faudra surement changer la place de cette déclaration)
-/*
- * s = space interval
- * kh = smothing length
- * k = time step
- * T = simulation time
- * densityRef = density of the fluid at atmospheric pressure
- * l & u = lower and upper limit of the domain
- * B & gamma = fluid constants
- * g = gravity
- * writeInteval = time interval between two outputs file are generated
- * integrationMethod = euler ou RK2
- * densityInitMethod = hydrosatic, etc.
- * stateEquationMethod = quasiIncompressible, perfectGas, etc.
- * massInitMethod = violeau2012 (all particles have same volumes), etc.
- * speedLaw = To be determined, will dictate the behaviour of moving boundaries
-*/
-struct Parameter {
-    double s, kh, k, T, densityRef, B, gamma, g, writeInterval;
-    double l[3];
-    double u[3];
-    std::string integrationMethod, densityInitMethod, stateEquationMethod, massInitMethod, speedLaw;
-};
 
 // Structure qui doit être remplie lors de la lecture du fichier de géométrie (il faudra surement changer la place de cette déclaration aussi). Cette structure contient toute l'information utile de nos simulations.
 struct Field {
@@ -66,16 +43,21 @@ int main(int argc, char *argv[])
         }
         else{parameterFilename = argv[1]; geometryFilename = argv[2];}
 
-        //Read parameters
-        Parameter* parameter;
+        // Generate an object Playground and screen results on terminal
+        Playground myPlayground(screen);
 
-        //To implement
-        readParameter(parameterFilename,parameter);
+        // Read GEOM.kzr
+        myPlayground.ReadPlayground(geometryFilename);
 
-        //Read geometry
-        Field* currentField;
-        //To implement
-        readGeometry(geometryFilename,currentField);
+        // Read Fluid.kzr
+        myPlayground.ReadPlayground(parameterFilename);
+
+        // Memory allocation of the structure Parameter
+        Parameter *myParameter = (Parameter*) malloc (sizeof(Parameter));
+
+        // Memorise the parameters in the structure Parameter
+        myPlayground.GetParam(myParameter);
+
 
     // INITIALISATION
         // SPEEDS
