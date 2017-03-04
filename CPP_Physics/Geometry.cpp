@@ -176,15 +176,15 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
     for(int l=(-nd3+1)/2; l<=(nd3-1)/2; ++l)
     {
         double tmpz = l*dr3;
-        if(l*s > -sqrt(pow(a,2)*(1-(pow(tmpz,2)/pow(c,2)))) && l*s<= sqrt( pow(a,2)*(1-(pow(tmpz,2)/pow(c,2)))) )
-        {
-            for(int i=(-nd1+1)/2 ; i<=(nd1-1)/2; ++i)
+        double tempo=sqrt(1-pow(tmpz,2)/pow(c,2))
+        double borne_y=floor((tempo*b)/(2*dr2));
+        for(int j= -borne_y; j<=borne_y; ++j)
             {
-                double tmpx = i*dr1;
-                for(int j= (-nd2+1)/2; j<=(nd2-1)/2; ++j)
+                double tmpy = j*dr2;
+                double tempo2=sqrt(pow(tempo,2)*pow(a,2)-pow(tmpy,2)*pow(a,2)/pow(b,2))
+                double borne_x=floor(tempo2/(2*dr1));
+                for(int i=-borne_x; i<=borne_x; ++i)
                 {
-                    if(j*s > -sqrt(pow(b,2)*(1-(pow(tmpx,2)/pow(a,2)))) && j*s<= sqrt( pow(b,2)*(1-(pow(tmpx,2)/pow(a,2)))) )
-                    {
                         double x = o[0] + i*dr1;
                         double y = o[1] + j*dr2;
                         double z = o[2] + l*dr3;
@@ -192,11 +192,10 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
                         pos.push_back(y + distribution(generator));
                         pos.push_back(z + distribution(generator));
                         myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
-                    }
                 }
             }
-        }
     }
+
 
     myfile.close();
 
