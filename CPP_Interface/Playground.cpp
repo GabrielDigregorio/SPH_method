@@ -41,12 +41,8 @@ void Playground :: ReadPlayground(const char *filename)
     std::getline(infile, line);
 
     // Start Reading File .kzr
-    while (std::getline(infile, line) && (line != "#FLUID" || line != "#GEOM"))
-        // std::getline(infile, line);
-
-    //while (std::getline(infile, line) && (line != "#GEOM"))
-        // std::getline(infile, line);
-
+    while (!(line == "#FLUID" || line == "#GEOM"))
+        std::getline(infile, line);
 
     if(line == "#FLUID")
     {
@@ -65,7 +61,7 @@ void Playground :: ReadPlayground(const char *filename)
         {
             std::cout<<"\n" << "Fluid: " <<", cst1="<<param[0]<<", cst2="<<param[1]<<", cst3="<<param[2]
                         << ", cst4=" <<param[3]<<", cst5="<<param[4]<<", cst6="<<param[5] <<"\n";
-            std::cout<<"Method: "<< method <<"\n"; 
+            std::cout<<"Method: "<< method <<"\n\n"; 
         }
     }
     
@@ -73,9 +69,6 @@ void Playground :: ReadPlayground(const char *filename)
     {      
         int geom;
         std::getline(infile, line);
-        // Start Reading GEOM in File .kzr
-        //while (line != "#GEOM")
-           // std::getline(infile, line);
 
         for(int i=0; i<3; ++i)
         {
