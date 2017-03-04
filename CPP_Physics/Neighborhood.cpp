@@ -122,8 +122,8 @@ void neighborLinkedList(std::vector<double> &pos,
                 {
                     int potNeighborID = boxes[surrBoxes[surrBox]][i];
 
-                    if(potNeighborID >= particleID)
-                    {
+                    //if(potNeighborID >= particleID)
+                    //{
                         double r2 = distance(pos, particleID, potNeighborID);
                         if(r2<kh2)
                         {
@@ -133,7 +133,7 @@ void neighborLinkedList(std::vector<double> &pos,
                             row.push_back(particleID); // The one we search the neighbors of
                             column.push_back(potNeighborID); // The neighbor we have just found
                         }
-                    }
+                    //}
                 }
             }
         }

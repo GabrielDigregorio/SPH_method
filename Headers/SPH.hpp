@@ -59,7 +59,7 @@ void boxMesh(double l[3], double u[3], double kh,
 void boxClear(std::vector<std::vector<int> > &boxes);
 
 // TimeIntegration.cpp
-int timeIntegration(std::vector<double> &pos, double l[3], double u[3], double kh);
+void timeIntegration(std::vector<double> &pos, double l[3], double u[3], double kh);
 
 
 // Kernel.cpp
