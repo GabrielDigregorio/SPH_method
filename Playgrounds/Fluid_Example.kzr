@@ -1,0 +1,34 @@
+%********************************************
+% PLAYGROUND : Fluid example
+% #FLUID
+% 
+% kh = smothing length
+% k = time step
+% T = simulation time
+% densityRef = density of the fluid at atmospheric pressure
+% l & u = lower and upper limit of the domain
+% B & gamma = fluid constants
+% g = gravity
+% writeInteval = time interval between two outputs file are generated
+% integrationMethod = euler ou RK2
+% densityInitMethod = hydrosatic, etc.
+% stateEquationMethod = quasiIncompressible, perfectGas, etc.
+% massInitMethod = violeau2012 (all particles have same volumes), etc.
+% speedLaw = To be determined, will dictate the behaviour of moving boundaries
+%********************************************
+
+#FLUID
+     kh=1
+      k=1.1
+      T=1.11
+    rho=1000
+      B=1.111
+  gamma=1.1111
+      g=9.81
+     WI=1.11111
+    met=RungeKutta
+ rhoMet=blablabla
+    SEM=blablabla
+    MIM=blablabla
+   SLaw=blablabla
+#END_FLUID

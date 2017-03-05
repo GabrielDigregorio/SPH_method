@@ -3,7 +3,6 @@
 
 // Structure qui doit être remplie lors de la lecture du fichier de paramètre (il faudra surement changer la place de cette déclaration)
 /*
- * s = space interval
  * kh = smothing length
  * k = time step
  * T = simulation time
@@ -19,14 +18,19 @@
  * speedLaw = To be determined, will dictate the behaviour of moving boundaries
 */
 struct Parameter {
-    double s, kh, k, T, densityRef, B, gamma, g, writeInterval;
-    double l[3];
-    double u[3];
+    double kh, k, T, densityRef, B, gamma, g, writeInterval;
     std::string integrationMethod, densityInitMethod, stateEquationMethod, massInitMethod, speedLaw;
 };
 
 // Structure qui doit être remplie lors de la lecture du fichier de géométrie (il faudra surement changer la place de cette déclaration aussi). Cette structure contient toute l'information utile de nos simulations.
 struct Field {
+    std::vector<double> sFree;
+    std::vector<double> sMoving;
+    std::vector<double> sFixed;
+
+    double l[3];
+    double u[3];
+
     std::vector<double> posFree;
     std::vector<double> posMoving;
     std::vector<double> posFixed;
