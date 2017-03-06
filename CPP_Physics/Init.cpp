@@ -21,7 +21,7 @@ void densityInit(Field* field,Parameter* parameter)
     for (int i=2; i<field->posFree.size(); i=i+3)
     {
         H = zMax - field->posFree[i];
-        rho = rho_0*(1 + (1/B)*rho_0*g*H);
+       double rho = rho_0*(1 + (1/B)*rho_0*g*H);
 
         field->densityFree.push_back(pow(rho,1/gamma));
     }
@@ -29,7 +29,7 @@ void densityInit(Field* field,Parameter* parameter)
     for (int j=2; j<field->posMoving.size(); j=j+3)
     {
         H = zMax - field->posMoving[j];
-        rho = rho_0*(1 + (1/B)*rho_0*g*H);
+        double rho = rho_0*(1 + (1/B)*rho_0*g*H);
 
         field->densityMoving.push_back(pow(rho,1/gamma));
     }
@@ -37,7 +37,7 @@ void densityInit(Field* field,Parameter* parameter)
     for (int k=2; k<field->posFixed.size(); k=k+3)
     {
         H = zMax - field->posFixed[k];
-        rho = rho_0*(1 + (1/B)*rho_0*g*H);
+       double rho = rho_0*(1 + (1/B)*rho_0*g*H);
 
         field->densityFixed.push_back(pow(rho,1/gamma));
     }
@@ -87,7 +87,7 @@ void pressureComputation(Field* field,Parameter* parameter)
 
     //Cas d'un liquide quasi_incompressible 
 
-    for (int i=0; i<field->posFree/3; i++)
+    for (int i=0; i<field->posFree.size()/3; i++)
     {
         double rho = field->densityFree[i];
         double p = B*(pow(rho/rho_0,gamma)-1);
@@ -95,7 +95,7 @@ void pressureComputation(Field* field,Parameter* parameter)
         field->pressureFree.push_back(p);
     }
 
-    for (int j=0; j<field->posMoving/3; j++)
+    for (int j=0; j<field->posMoving.size()/3; j++)
     {
         double rho = field->densityMoving[j];
         double p = B*(pow(rho/rho_0,gamma)-1);
@@ -103,7 +103,7 @@ void pressureComputation(Field* field,Parameter* parameter)
         field->pressureMoving.push_back(p);
     }
 
-    for (int k=0; k<field->posFixed/3; k++)
+    for (int k=0; k<field->posFixed.size()/3; k++)
     {
         double rho = field->densityFixed[k];
         double p = B*(pow(rho/rho_0,gamma)-1);
