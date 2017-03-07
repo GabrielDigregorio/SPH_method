@@ -1,5 +1,8 @@
-#include "../Headers/SPH.hpp"
-
+#include "Main.h"
+#include "Interface.h"
+#include "Physics.h"
+#include "Tools.h"
+#include <ctime>
 
 int main(int argc, char *argv[])
 {

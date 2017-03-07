@@ -1,4 +1,5 @@
-#include "../Headers/SPH.hpp"
+#include "Main.h"
+#include "Physics.h"
 
 void timeIntegration(std::vector<double> &pos, double l[3], double u[3], double kh){
     // Time step resolution

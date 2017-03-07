@@ -1,56 +1,8 @@
-#include "../Headers/SPH.hpp"
-#include "../Headers/Playground.hpp"
-
-// Structure qui doit être remplie lors de la lecture du fichier de paramètre (il faudra surement changer la place de cette déclaration)
-/*
- * kh = smothing length
- * k = time step
- * T = simulation time
- * densityRef = density of the fluid at atmospheric pressure
- * l & u = lower and upper limit of the domain
- * B & gamma = fluid constants
- * g = gravity
- * writeInteval = time interval between two outputs file are generated
- * integrationMethod = euler ou RK2
- * densityInitMethod = hydrosatic, etc.
- * stateEquationMethod = quasiIncompressible, perfectGas, etc.
- * massInitMethod = violeau2012 (all particles have same volumes), etc.
- * speedLaw = To be determined, will dictate the behaviour of moving boundaries
-*/
-struct Parameter {
-    double kh, k, T, densityRef, B, gamma, g, writeInterval;
-    std::string integrationMethod, densityInitMethod, stateEquationMethod, massInitMethod, speedLaw;
-};
-
-// Structure qui doit être remplie lors de la lecture du fichier de géométrie (il faudra surement changer la place de cette déclaration aussi). Cette structure contient toute l'information utile de nos simulations.
-struct Field {
-    std::vector<double> sFree;
-    std::vector<double> sMoving;
-    std::vector<double> sFixed;
-
-    double l[3];
-    double u[3];
-
-    std::vector<double> posFree;
-    std::vector<double> posMoving;
-    std::vector<double> posFixed;
-
-    std::vector<double> speedFree;
-    std::vector<double> speedMoving;
-    //Speed fixed = 0 of course
-
-    std::vector<double> densityFree;
-    std::vector<double> densityMoving;
-    std::vector<double> densityFixed;
-
-    std::vector<double> pressureFree;
-    std::vector<double> pressureMoving;
-    std::vector<double> pressureFixed;
-
-    std::vector<double> massFree;
-    std::vector<double> massMoving;
-    std::vector<double> massFixed;
-};
+#include "Main.h"
+#include "Interface.h"
+#include "Physics.h"
+#include "Tools.h"
+#include <ctime>
 
 /*
  * In: -argv[1]: path to the parameter file
@@ -78,6 +30,7 @@ int main(int argc, char *argv[])
 
         //Read geometry
         Field* currentField;
+
         //To implement
         readGeometry(geometryFilename,currentField);
 
@@ -108,14 +61,14 @@ int main(int argc, char *argv[])
 
     // UPDATE & WRITTING
             Field* nextField;
-            unsigned int nMax = (unsigned int) ceil(T/k); //Validité de cette ligne à vérifier
+            unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
             //To implement, the value "0" stands for the time a which we write
             writeField(currentField,0);
             unsigned int writeCount = 1;
 
-            for(int n = 1;n<=nMax;n++)
+            for(unsigned int n = 1;n<=nMax;n++)
             {
-                timeIntegration(currentField,nextField,parameter,n);
+                //timeIntegration(currentField,nextField,parameter,n);
 
                 if(writeCount*parameter->writeInterval <= n*parameter->k)
                 {

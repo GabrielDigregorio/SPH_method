@@ -1,5 +1,5 @@
-#include "../Headers/SPH.hpp"
-
+#include "Main.h"
+#include "Physics.h"
 
 // Build a brick of regulary aligned particles with the center of mass at o(x,y,z).
 //  - o[3]: corner of the cube with the lowest (x,y,z) values ??? Center ???
