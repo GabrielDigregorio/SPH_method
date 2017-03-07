@@ -33,7 +33,7 @@ enum IntegrationMethod {euler, RK2};
 enum DensityInitMethod {hydrostatic, homogeneous};
 enum StateEquationMethod {quasiIncompressible, perfectGas};
 enum MassInitMethod {violeau2012};
-enum SpeedLaw {constant,sine, exponential};
+enum SpeedLaw {constant, sine, exponential};
 
 struct Parameter {
     double kh, k, T, densityRef, B, gamma, g, writeInterval, charactTime;
