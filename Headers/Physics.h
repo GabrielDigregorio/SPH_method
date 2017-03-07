@@ -54,4 +54,7 @@ void densityInit(Field* field,Parameter* parameter);
 void pressureComputation(Field* field,Parameter* parameter);
 void massInit(Field* field,Parameter* parameter);
 
+// updateMovingSpeed.cpp
+void updateMovingSpeed(Field* field,Parameter* parameter,double t);
+
 #endif

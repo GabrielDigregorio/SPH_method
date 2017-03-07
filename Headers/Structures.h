@@ -24,12 +24,25 @@ enum Kernel { Gaussian=1, Bell_shaped=2, Cubic_spline=3, Quadratic=4, Quintic=5,
  * densityInitMethod = hydrosatic, etc.
  * stateEquationMethod = quasiIncompressible, perfectGas, etc.
  * massInitMethod = violeau2012 (all particles have same volumes), etc.
- * speedLaw = To be determined, will dictate the behaviour of moving boundaries
+ * speedLaw = Will dictate the behaviour of moving boundaries: constant, sine, exponential
+ * charactTime = characteristic time of movement or period of oscillations
+ * movingDirection = direction de la paroi mouvante
 */
 
+enum IntegrationMethod {euler, RK2};
+enum DensityInitMethod {hydrostatic, homogeneous};
+enum StateEquationMethod {quasiIncompressible, perfectGas};
+enum MassInitMethod {violeau2012};
+enum SpeedLaw {constant,sine, exponential};
+
 struct Parameter {
-    double kh, k, T, densityRef, B, gamma, g, writeInterval;
-    std::string integrationMethod, densityInitMethod, stateEquationMethod, massInitMethod, speedLaw;
+    double kh, k, T, densityRef, B, gamma, g, writeInterval, charactTime;
+    double movingDirection[3];
+    IntegrationMethod integrationMethod;
+    DensityInitMethod densityInitMethod;
+    StateEquationMethod stateEquationMethod;
+    MassInitMethod massInitMethod;
+    SpeedLaw speedLaw;
 };
 
 struct Field {
