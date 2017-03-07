@@ -1,9 +1,10 @@
 #include "Main.h"
 #include "Physics.h"
+# define M_PI           3.14159265358979323846  /* pi */
 
 
 // Smoothing function
-double Wab(std::vector<double> pos, int partA, int partB, double h, size_t choice)
+double Wab(std::vector<double> pos, int partA, int partB, double h, Kernel myKernel)
 {   
     // Constant normalisation
     double alphaD;
@@ -14,7 +15,7 @@ double Wab(std::vector<double> pos, int partA, int partB, double h, size_t choic
     // Compute the distance btween two particle A and B
     double r =  sqrt(distance(pos, partA, partB));
 
-    switch (choice){
+    switch (myKernel){
 
     case 1 : // Gausian Kernel
         alphaD = 1.0/(pow(M_PI,3.0/2.0)*h*h*h);
@@ -25,7 +26,7 @@ double Wab(std::vector<double> pos, int partA, int partB, double h, size_t choic
         alphaD = 105.0/(16.0*M_PI*h*h*h);
         k = 1;
         if(r/h <= 1.0)
-            return alphaD*((1.0+3.0*(r/h)) * ((1.0-(r/h))*(1.0-(r/h))*(1.0-(r/h)));
+            return alphaD*((1.0+3.0*(r/h)) * ((1.0-(r/h))*(1.0-(r/h))*(1.0-(r/h))));
         else
             return 0.0;
     break;
@@ -81,7 +82,7 @@ double Wab(std::vector<double> pos, int partA, int partB, double h, size_t choic
 
 
 // Darivative of the smoothing function
-double grad_Wab(std::vector<double> pos, int partA, int partB, double h, size_t choice)
+double grad_Wab(std::vector<double> pos, int partA, int partB, double h, Kernel myKernel)
 {   
     // Constant normalisation
     double alphaD;
@@ -92,11 +93,10 @@ double grad_Wab(std::vector<double> pos, int partA, int partB, double h, size_t 
     // Compute the distance btween two particle A and B
     double r =  sqrt(distance(pos, partA, partB));
 
-    switch (choice){
+    switch (myKernel){
 
     case 1 : // Gausian Kernel
         alphaD = 1.0/(pow(M_PI,3.0/2.0)*h*h*h);
-        k = DBL_MAX;
         return (alphaD/h)*(-2.0*(r/h))*exp(-(r/h)*(r/h));
     break;
 
