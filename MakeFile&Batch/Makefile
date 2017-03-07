@@ -4,7 +4,7 @@
 
 # Compile parameters
 COMP=g++
-FLAGS= -std=c++11  -W -Wall -g --pedantic -DNDEBUG
+FLAGS= -std=c++11  -W -Wall -g --pedantic
 
 all: sph
 
