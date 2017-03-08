@@ -4,7 +4,7 @@
 
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
-
+#include "Main.h"
 
 // Kernel Types
 enum Kernel { Gaussian=1, Bell_shaped=2, Cubic_spline=3, Quadratic=4, Quintic=5, Quintic_spline=6 };

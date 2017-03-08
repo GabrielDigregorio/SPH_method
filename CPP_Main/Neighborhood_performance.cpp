@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
         // LINKED LIST
         start = std::clock();
-        for(int i=0; i<10 ; i++)
+        //for(int i=0; i<10 ; i++)
             neighborLinkedList(pos, ll, uu, kh, valuesLL, rowLL, columnLL);
 
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
         // SPLITTED NEIGHBORS
         start = std::clock();
-        timeIntegration(pos, ll, uu, kh);
+        //timeIntegration(pos, ll, uu, kh);
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout<<"Elapsed time Splitted: " << duration <<" [s]\n";
 

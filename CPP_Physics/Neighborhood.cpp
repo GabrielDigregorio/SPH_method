@@ -233,54 +233,30 @@ void boxClear(std::vector<std::vector<int> > &boxes){
 // Gives the list of the surrounding boxes
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes)
 {
-    int nx=nBoxesX;
-    int ny=nBoxesY;
-    int nz=nBoxesZ;
-    int index_x;
-    int index_y;
-    int index_z;
-    index_z=box/(nBoxesX*nBoxesY);
-    index_y=(box-index_z*nBoxesX*nBoxesY)/nBoxesX;
-    index_x=box-index_z*nBoxesX*nBoxesY-index_y*nBoxesX;
+    int index_x, index_y, index_z;
+    index_z = box/(nBoxesX*nBoxesY);
+    index_y = (box-index_z*nBoxesX*nBoxesY)/nBoxesX;
+    index_x = box-index_z*nBoxesX*nBoxesY-index_y*nBoxesX;
+
     std::vector<int> tab(6, 1);
-    std::vector<int> value(9, 0);
-    value[0]=-1;
-    value[1]=0;
-    value[2]=1;
-    value[3]=-nx;
-    value[4]=0;
-    value[5]=nx;
-    value[6]=-nx*ny;
-    value[7]=0;
-    value[8]=nx*ny;
+    std::vector<int> value(9, 0); // Initialized to 0
+    value[0]=-1; value[2]=1;
+    value[3]=-nBoxesX; value[5]=nBoxesX;
+    value[6]=-nBoxesX*nBoxesY; value[8]=nBoxesX*nBoxesY;
 
     // Filling of the tab vector.
     if (index_x>0){tab[0]=0;}
-    if (index_x<nx-1){tab[1]=2;}
+    if (index_x<nBoxesX-1){tab[1]=2;}
     if (index_y>0){tab[2]=0;}
-    if (index_y<ny-1){tab[3]=2;}
+    if (index_y<nBoxesY-1){tab[3]=2;}
     if (index_z>0){tab[4]=0;}
-    if (index_z<nz-1){tab[5]=2;}
+    if (index_z<nBoxesZ-1){tab[5]=2;}
 
-    for (int k = tab[4]; k <= tab[5]; k++)
-    {
-        for (int j = tab[2]; j <= tab[3]; j++)
-        {
-            for (int i = tab[0]; i <= tab[1]; i++)
-            {
-                        // given i j k , we have the block to push
-                        // i: 0->-1
-                        //    1->0
-                        //    2->+1
-                        // j: 0->-nx
-                        //    1->0
-                        //    2->+nx
-                        // k: 0->-nx*ny
-                        //    1->0
-                        //    2->+nx*ny
-                        // surrBoxes.push_back(box+...);
-                        surrBoxes.push_back(box+value[i]+value[j+3]+value[k+6]);
-                        //std::cout<< box << " " << box+value[i]+value[j+3]+value[k+6]<< "\n";
+    // Finding the neighbors
+    for (int k = tab[4]; k <= tab[5]; k++){
+        for (int j = tab[2]; j <= tab[3]; j++){
+            for (int i = tab[0]; i <= tab[1]; i++){
+                surrBoxes.push_back(box+value[i]+value[j+3]+value[k+6]);
             }
         }
     }
@@ -291,7 +267,8 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
 // Gives the distance between two particles
 double distance(std::vector<double> pos, int partA, int partB)
 {
-    return pow(pos[partA*3]-pos[partB*3],2)
-               + pow(pos[partA*3+1]-pos[partB*3+1],2)
-               + pow(pos[partA*3+2]-pos[partB*3+2],2);
+    return (pos[partA*3]-pos[partB*3])*(pos[partA*3]-pos[partB*3])
+             + (pos[partA*3+1]-pos[partB*3+1])*(pos[partA*3+1]-pos[partB*3+1])
+             + (pos[partA*3+2]-pos[partB*3+2])*(pos[partA*3+2]-pos[partB*3+2]);
+
 }

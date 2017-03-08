@@ -14,7 +14,7 @@ ENDIF()
 #FILE(GLOB SRCS1 CPP_Interface/*.h CPP_Interface/*.cpp)
 FILE(GLOB SRCS1 CPP_Interface/Paraview.cpp CPP_Interface/writeField.cpp)
 FILE(GLOB SRCS2 CPP_Physics/*.h CPP_Physics/*.cpp)
-FILE(GLOB SRCS3 CPP_Tools/*.h CPP_Tools/*.cpp)
+#FILE(GLOB SRCS3 CPP_Tools/*.h CPP_Tools/*.cpp)
 FILE(GLOB SRCS4 Headers/*.h Headers/*.cpp)
 
 INCLUDE_DIRECTORIES(CPP_Interface CPP_Physics CPP_Tools Headers)

@@ -1,9 +1,10 @@
 #include "Main.h"
 #include "Physics.h"
 
-void timeIntegration(std::vector<double> &pos, double l[3], double u[3], double kh){
+void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, unsigned int n){
+    /*
     // Time step resolution
-    double kh2 = pow(kh,2); // More efficient to compare distance^2
+    double kh2 = kh*kh; // More efficient to compare distance^2
 
     // Creates the box mesh and describes their adjacent relations
     std::vector<std::vector<int> > boxes;
@@ -38,5 +39,5 @@ void timeIntegration(std::vector<double> &pos, double l[3], double u[3], double 
 
     }
     return;
+    */
 }
-
