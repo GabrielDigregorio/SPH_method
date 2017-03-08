@@ -11,3 +11,4 @@ build/
 *.txt
 *.dat
 test.*
+.DS_Store
