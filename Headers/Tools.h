@@ -24,7 +24,7 @@
 #include <stdio.h>
     #include "sys/types.h"
     #include "sys/sysinfo.h"
-    struct sysinfo memInfo;
+    extern struct sysinfo memInfo;
     
 #endif
 
