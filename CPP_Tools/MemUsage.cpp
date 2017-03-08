@@ -1,35 +1,15 @@
-#include "../Headers/SPH.hpp"
+#include "Main.h"
+#include "Tools.h"
+
+#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+struct sysinfo memInfo;   
+#endif
 
 ///*************************************************************************************
 // The "Resident set size" (RSS) ("Working set size" on Windows) is the amount of physical 
 // memory (RAM) used by a process's code and data.
 //**************************************************************************************
 
-#if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-#include <windows.h>
-#include <psapi.h>
-    #pragma comment( lib, "psapi.lib" )
-
-#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
-#include <unistd.h>
-#include <sys/resource.h>
-    #include "sys/types.h"
-    #include "sys/sysinfo.h"
-
-#if defined(__APPLE__) && defined(__MACH__)
-#include <mach/mach.h>
-
-#elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
-#include <stdio.h>
-    #include "sys/types.h"
-    #include "sys/sysinfo.h"
-    struct sysinfo memInfo;
-    
-#endif
-
-#else
-#error "Cannot define GetMemory( ) or GetMemoryProcessPeak( ) or GetMemoryProcess() for an unknown OS."
-#endif
 
 /*
  * Returns the Physical Memory currently used in all processes in bits, or zero if the value cannot be
