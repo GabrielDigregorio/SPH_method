@@ -26,13 +26,13 @@ int main(int argc, char *argv[])
         Parameter* parameter;
 
         //To implement
-        readParameter(parameterFilename,parameter);
+        //readParameter(parameterFilename,parameter);
 
         //Read geometry
         Field* currentField;
 
         //To implement
-        readGeometry(geometryFilename,currentField);
+        //readGeometry(geometryFilename,currentField);
 
     // INITIALISATION
         // SPEEDS
