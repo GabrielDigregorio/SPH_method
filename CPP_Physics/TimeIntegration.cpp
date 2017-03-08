@@ -39,3 +39,12 @@ void timeIntegration(std::vector<double> &pos, double l[3], double u[3], double 
     }
     return;
 }
+
+
+void updateMovingSpeed(Field* field, Parameter* parameter, double t)
+{
+
+
+
+    
+}

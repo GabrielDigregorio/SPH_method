@@ -5,7 +5,13 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
-/* STRUCTURE
+
+// Kernel Types
+enum Kernel { Gaussian=1, Bell_shaped=2, Cubic_spline=3, Quadratic=4, Quintic=5, Quintic_spline=6 };
+
+
+
+/* Parameter Structure
  * kh = smothing length
  * k = time step
  * T = simulation time
@@ -27,7 +33,7 @@ enum IntegrationMethod {euler, RK2};
 enum DensityInitMethod {hydrostatic, homogeneous};
 enum StateEquationMethod {quasiIncompressible, perfectGas};
 enum MassInitMethod {violeau2012};
-enum SpeedLaw {constant,sine, exponential};
+enum SpeedLaw {constant, sine, exponential};
 
 struct Parameter {
     double kh, k, T, densityRef, B, gamma, g, writeInterval, charactTime;
