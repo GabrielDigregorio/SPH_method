@@ -10,4 +10,4 @@ build/
 *.exe
 *.txt
 *.dat
-test.cpp
+test.*

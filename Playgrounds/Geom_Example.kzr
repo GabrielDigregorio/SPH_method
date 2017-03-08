@@ -1,5 +1,11 @@
 %********************************************
 % PLAYGROUND : Geometry example
+% 
+% #GEOM
+% #domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+% 
 % geometry : #brick, #cylin or #spher
 % #param
 %   c ==> 0=free, 1=moving, 2=fixed
@@ -17,13 +23,20 @@
 %   D ==> Large diameter of the geometry
 %********************************************
 
-#geom
+#GEOM
+#domain
+lx=20
+ux=50
+ly=30
+uy=60
+lz=40
+uz=70
 
     #brick
         #param
-        c=2
+        c=0
         s=0.5
-        r=0
+        r=5
         #coord
         x=10
         y=0
@@ -35,9 +48,9 @@
 
     #brick
         #param
-        c=2
+        c=1
         s=0.5
-        r=0
+        r=5
         #coord
         x=-10
         y=0
@@ -50,7 +63,7 @@
     #cylin
         #param
         c=2
-        s=0.2
+        s=0.5
         r=0
         #coord
         x=0
@@ -60,7 +73,7 @@
         D=7
         d=4
         H=20
-
+        
     #brick
         #param
         c=0
@@ -77,7 +90,7 @@
 
     #brick
         #param
-        c=0
+        c=1
         s=1
         r=20
         #coord
@@ -89,4 +102,17 @@
         W=10
         H=2
 
-#end
+    #spher
+        #param
+        c=2
+        s=0.5
+        r=0
+        #coord
+        x=0
+        y=-10
+        z=15
+        #dimen
+        D=5
+        d=5
+        H=5
+#END_GEOM

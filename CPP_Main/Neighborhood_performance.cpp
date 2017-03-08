@@ -1,9 +1,8 @@
-#include "SPH.hpp"
-#include <fstream>
-#include <vector>
-#include <cstdlib>
+#include "Main.h"
+#include "Interface.h"
+#include "Physics.h"
+#include "Tools.h"
 #include <ctime>
-#include <cmath>
 
 int main(int argc, char *argv[])
 {
@@ -25,7 +24,7 @@ int main(int argc, char *argv[])
         std::cout << "\n Parameter list: " << s << ", " << kh << ", " << l << ", " << eps << "\n";
 
         double o[3] = {0.0,0.0,0.0};
-        double L[3] = {l,5,5};
+        double L[3] = {l,4,5};
 
         std::vector<double> pos;
         std::vector<double> valuesNaive;
@@ -44,29 +43,39 @@ int main(int argc, char *argv[])
         double uu[3] = {L[0]/2, L[1]/2, L[2]/2};
 
         //Record algorithm performance
+
+        // ALL PAIRS
         std::clock_t start;
         double duration;
 
         start = std::clock();
+
         neighborAllPair(pos, kh, valuesNaive, rowNaive, columnNaive);
-
-
 
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout<<"Elapsed time AllPair: " << duration <<" [s]\n";
         //myfile << duration << " " ;
 
-        start = std::clock();
 
-        neighborLinkedList(pos, ll, uu, kh, valuesLL, rowLL, columnLL);
+        // LINKED LIST
+        start = std::clock();
+        for(int i=0; i<10 ; i++)
+            neighborLinkedList(pos, ll, uu, kh, valuesLL, rowLL, columnLL);
 
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout<<"Elapsed time Linked List: " << duration <<" [s]\n";
         //myfile << duration << " " << "\n" ;
 
+        // SPLITTED NEIGHBORS
+        start = std::clock();
+        timeIntegration(pos, ll, uu, kh);
+        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+        std::cout<<"Elapsed time Splitted: " << duration <<" [s]\n";
+
+
         std::cout<<"Neighbor pairs for Naive:" << valuesNaive.size() << "\n";
         std::cout<<"Neighbor pairs for Linked-list:" << valuesLL.size() << "\n";
-
+        //std::cout<<"Neighbor pairs for Splitted:" << nPairs << "\n"; OLD FEATURE
     //}
 
     std::cout << "\n";
