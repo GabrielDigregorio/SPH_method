@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
             for(unsigned int n = 1;n<=nMax;n++)
             {
-                //timeIntegration(currentField,nextField,parameter,n);
+                timeIntegration(currentField,nextField,parameter,n);
 
                 if(writeCount*parameter->writeInterval <= n*parameter->k)
                 {
