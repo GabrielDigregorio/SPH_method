@@ -123,26 +123,26 @@ void pressureComputation(Field* field,Parameter* parameter)
  */
 void massInit(Field* field,Parameter* parameter)
 {
-    for (int i=0; i<field->sFree.size(); i=i+3)
+    for (int i=0; i<field->sFree.size(); i++)
     {
-        double V = field->sFree[i]*field->sFree[i+1]*field->sFree[i+2];
-        double m = field->densityFree[i/3]*V;
+        double V = field->sFree[i]*field->sFree[i]*field->sFree[i];
+        double m = field->densityFree[i]*V;
         
         field->massFree.push_back(m);
     }
 
-    for (int j=0; j<field->sMoving.size(); j=j+3)
+    for (int j=0; j<field->sMoving.size(); j++)
     {
-        double V = field->sMoving[j]*field->sMoving[j+1]*field->sMoving[j+2];
-        double m = field->densityMoving[j/3]*V;
+        double V = field->sMoving[j]*field->sMoving[j]*field->sMoving[j];
+        double m = field->densityMoving[j]*V;
         
         field->massMoving.push_back(m);
     }
 
-    for (int k=0; k<field->sFixed.size(); k=k+3)
+    for (int k=0; k<field->sFixed.size(); k++)
     {
-        double V = field->sFixed[k]*field->sFixed[k+1]*field->sFixed[k+2];
-        double m = field->densityFixed[k/3]*V;
+        double V = field->sFixed[k]*field->sFixed[k]*field->sFixed[k];
+        double m = field->densityFixed[k]*V;
         
         field->massFixed.push_back(m);
     }
