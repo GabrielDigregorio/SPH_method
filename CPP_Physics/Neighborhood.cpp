@@ -15,21 +15,17 @@ Output:
 */
 void neighborAllPair (std::vector<double> &pos,
                          double kh,
-                         std::vector<double> &values,
-                         std::vector<int> &row,
-                         std::vector<int> &column)
+                         std::vector<std::vector<int> > &neighborsAll,
+                         std::vector<std::vector<double> > &kernelGradientsAll)
 {
-    double kh2 = pow(kh,2);
-
+    double kh2 = kh*kh;
     // For each particle, browse all other particles and compute the distance
-    for(unsigned int i=0; i<pos.size(); i=i+3){
-        for(unsigned int j=i; j<pos.size(); j=j+3){
-            double r2 = distance(pos, i/3, j/3);
+    for(unsigned int i=0; i<pos.size()/3; i++){
+        for(unsigned int j=0; j<pos.size()/3; j++){
+            double r2 = distance(pos, i, j);
             if( r2 < kh2 ){
-
-                values.push_back(r2); // The distance bewteen the two found neighbors
-                row.push_back(i); // The one we search the neighbors of
-                column.push_back(j); // The neighbor we have just found
+                neighborsAll[i].push_back(j); // The neighbor ID
+                kernelGradientsAll[i].push_back(2.0); // The kernel grandient with this neighbor
             }
         }
     }
@@ -56,11 +52,10 @@ void neighborLinkedList(std::vector<double> &pos,
                          double l[3],
                          double u[3],
                          double kh,
-                         std::vector<double> &values,
-                         std::vector<int> &row,
-                         std::vector<int> &column)
+                         std::vector<std::vector<int> > &neighborsAll,
+                         std::vector<std::vector<double> > &kernelGradientsAll)
 {
-    double kh2 = pow(kh,2); // More efficient to compare distance^2
+    double kh2 = kh*kh; // More efficient to compare distance^2
 
     // Box definition
     std::vector<std::vector<int> > boxes;
@@ -110,9 +105,8 @@ void neighborLinkedList(std::vector<double> &pos,
                     int potNeighborID = boxes[surrBoxes[surrBox]][i];
                     double r2 = distance(pos, particleID, potNeighborID);
                     if(r2<kh2){
-                        values.push_back(r2); // The distance bewteen the two found neighbors
-                        row.push_back(particleID); // The one we search the neighbors of
-                        column.push_back(potNeighborID); // The neighbor we have just found
+                        neighborsAll[particleID].push_back(potNeighborID);
+                        kernelGradientsAll[particleID].push_back(2.0);
                     }
                 }
             }

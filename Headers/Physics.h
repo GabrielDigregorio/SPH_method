@@ -16,9 +16,14 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
 // Neighborhood.cpp
 void neighborAllPair (std::vector<double> &pos,
                          double kh,
-                         std::vector<double> &values,
-                         std::vector<int> &row,
-                         std::vector<int> &column);
+                         std::vector<std::vector<int> > &neighborsAll,
+                         std::vector<std::vector<double> > &kernelGradientsAll);
+void neighborLinkedList(std::vector<double> &pos,
+                          double l[3],
+                          double u[3],
+                          double kh,
+                          std::vector<std::vector<int> > &neighborsAll,
+                          std::vector<std::vector<double> > &kernelGradientsAll);
 void neighborLinkedList (std::vector<double> &pos,
                          double l[3],
                          double u[3],
