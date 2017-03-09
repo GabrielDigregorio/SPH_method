@@ -32,7 +32,7 @@ void neighborLinkedList (std::vector<double> &pos,
                          std::vector<int> &row,
                          std::vector<int> &column);
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes);
-double distance(std::vector<double> pos, int partA, int partB);
+double distance(std::vector<double> &pos, int partA, int partB);
 void findNeighbors(int particleID, std::vector<double> &pos, double kh2,
                    std::vector<std::vector<int> > &boxes,
                    std::vector<int> &surrBoxes,
