@@ -9,7 +9,7 @@
 //   scalars: scalar fields defined on particles (map linking [field name] <=> [vector of results v1, v2, v3, v4, ...]
 //   vectors: vector fields defined on particles (map linking [field name] <=> [vector of results v1x, v1y, v1z, v2x, v2y, ...]
 
-void paraview(std::string const &filename, 
+void paraView(std::string const &filename, 
               double t,
               std::vector<double> const &posFree,
               std::map<std::string, std::vector<double> *> const &scalarsFree,
@@ -38,7 +38,7 @@ void paraview(std::string const &filename,
 
     // vertices
     f << "VERTICES " << nbpFree << " " << 2*nbpFree << "\n";
-    for(int i=0; i<nbp; ++i)
+    for(int i=0; i<nbpFree; ++i)
         f << "1 " << i << '\n';
     f << '\n'; // empty line (required)
 

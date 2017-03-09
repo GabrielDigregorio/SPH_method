@@ -11,25 +11,24 @@ void writeField(Field* field, double t)
     // Map Free particules
     std::map<std::string, std::vector<double> *> scalarsFree;
     std::map<std::string, std::vector<double> *> vectorsFree;
-    scalars["pressureFree"] = &Field->pressureFree;
-    scalars["densityFree"]  = &Field->densityFree;
-    vectors["velocityFree"] = &Field->speedFree;
+    scalarsFree["pressureFree"] = &field->pressureFree;
+    scalarsFree["densityFree"]  = &field->densityFree;
+    vectorsFree["velocityFree"] = &field->speedFree;
 
     // Map Moving particules
     std::map<std::string, std::vector<double> *> scalarsMoving;
     std::map<std::string, std::vector<double> *> vectorsMoving;
-    scalars["pressureMoving"] = &Field->pressureMoving;
-    scalars["densityMoving"]  = &Field->densityMoving;
-    vectors["velocityMoving"] = &Field->velocityMoving;
+    scalarsMoving["pressureMoving"] = &field->pressureMoving;
+    scalarsMoving["densityMoving"]  = &field->densityMoving;
+    vectorsMoving["velocityMoving"] = &field->speedMoving;
 
     // Map Fixed particules
     std::map<std::string, std::vector<double> *> scalarsFixed;
     std::map<std::string, std::vector<double> *> vectorsFixed;
-    scalars["pressureFixed"] = &Field->pressureFixed;
-    scalars["densityFixed"]  = &Field->densityFixed;
-    vectors["velocityFixed"] = &Field->velocityFixed;
+    scalarsFixed["pressureFixed"] = &field->pressureFixed;
+    scalarsFixed["densityFixed"]  = &field->densityFixed;
 
     // Save results to disk
-    paraview("resultsFree", t, posFree, scalarsFree, vectorsFree);
+    paraView("resultsFree", t, field->posFree, scalarsFree, vectorsFree);
 
 }

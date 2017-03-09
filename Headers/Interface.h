@@ -17,10 +17,10 @@ void writeField(Field* field,double t);
 
 // ParaView.cpp
 #include <map>
-void paraview(std::string const &filename,
-              int step,
-              std::vector<double> const &pos,
-              std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors);
+void paraView(std::string const &filename,
+              int t,
+              std::vector<double> const &posFree,
+              std::map<std::string, std::vector<double> *> const &scalarsFree,
+              std::map<std::string, std::vector<double> *> const &vectorsFree);
 
 #endif

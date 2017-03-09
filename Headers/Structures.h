@@ -46,32 +46,22 @@ struct Parameter {
 };
 
 struct Field {
-    std::vector<double> sFree;
-    std::vector<double> sMoving;
-    std::vector<double> sFixed;
+    int nFree, nFixed, nMoving;
+
+    std::vector<double> s;
 
     double l[3];
     double u[3];
 
-    std::vector<double> posFree;
-    std::vector<double> posMoving;
-    std::vector<double> posFixed;
+    std::vector<double> pos;
 
-    std::vector<double> speedFree;
-    std::vector<double> speedMoving;
-    //Speed fixed = 0 of course
+    std::vector<double> speed;
 
-    std::vector<double> densityFree;
-    std::vector<double> densityMoving;
-    std::vector<double> densityFixed;
+    std::vector<double> density;
 
-    std::vector<double> pressureFree;
-    std::vector<double> pressureMoving;
-    std::vector<double> pressureFixed;
+    std::vector<double> pressure;
 
-    std::vector<double> massFree;
-    std::vector<double> massMoving;
-    std::vector<double> massFixed;
+    std::vector<double> mass;
 
 };
 
