@@ -5,21 +5,21 @@
 // export results to paraview (VTK polydata - legacy file fomat)
 //   filename: file name without vtk extension
 //   pos:     positions (vector of size 3*number of particles)
-//   step:    time step number
+//   t:       time number
 //   scalars: scalar fields defined on particles (map linking [field name] <=> [vector of results v1, v2, v3, v4, ...]
 //   vectors: vector fields defined on particles (map linking [field name] <=> [vector of results v1x, v1y, v1z, v2x, v2y, ...]
 
 void paraview(std::string const &filename, 
-              int step,
-              std::vector<double> const &pos,
-              std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors)
+              double t,
+              std::vector<double> const &posFree,
+              std::map<std::string, std::vector<double> *> const &scalarsFree,
+              std::map<std::string, std::vector<double> *> const &vectorsFree)
 {
-    int nbp = pos.size()/3;
-    assert(pos.size()==nbp*3); // should be multiple of 3
+    int nbpFree = posFree.size()/3;
+    assert(posFree.size()==nbpFree*3); // should be multiple of 3
     
-    // build file name + stepno + vtk extension
-    std::stringstream s; s << filename << std::setw(8) << std::setfill('0') << step << ".vtk";
+    // build file name + time_no + vtk extension
+    std::stringstream s; s << filename << std::setw(8) << std::setfill('0') << t << ".vtk";
 
     // open file
     std::cout << "writing results to " << s.str() << '\n';
@@ -32,37 +32,37 @@ void paraview(std::string const &filename,
     f << "DATASET POLYDATA\n";
 
     // points
-    f << "POINTS " << nbp << " float\n";
-    for(int i=0; i<nbp; ++i)
-        f << pos[3*i+0] << " " << pos[3*i+1] << " " << pos[3*i+2] << '\n';
+    f << "POINTS " << nbpFree << " float\n";
+    for(int i=0; i<nbpFree; ++i)
+        f << posFree[3*i+0] << " " << posFree[3*i+1] << " " << posFree[3*i+2] << '\n';
 
     // vertices
-    f << "VERTICES " << nbp << " " << 2*nbp << "\n";
+    f << "VERTICES " << nbpFree << " " << 2*nbpFree << "\n";
     for(int i=0; i<nbp; ++i)
         f << "1 " << i << '\n';
     f << '\n'; // empty line (required)
 
     // fields
-    f << "POINT_DATA " << nbp << '\n';
-    f << "FIELD FieldData " << scalars.size()+vectors.size() << '\n';
+    f << "POINT_DATA " << nbpFree << '\n';
+    f << "FIELD FieldData " << scalarsFree.size()+vectorsFree.size() << '\n';
 
     // scalar fields
-    std::map<std::string, std::vector<double> *>::const_iterator it=scalars.begin();
-    for(; it!=scalars.end(); ++it)
+    std::map<std::string, std::vector<double> *>::const_iterator it=scalarsFree.begin();
+    for(; it!=scalarsFree.end(); ++it)
     {
-        assert(it->second->size()==nbp);
-        f << it->first << " 1 " << nbp << " float\n";
-        for(int i=0; i<nbp; ++i)
+        assert(it->second->size()==nbpFree);
+        f << it->first << " 1 " << nbpFree << " float\n";
+        for(int i=0; i<nbpFree; ++i)
             f << (*it->second)[i] << '\n';
     }
 
     // vector fields
-    it = vectors.begin();
-    for(; it!=vectors.end(); ++it)
+    it = vectorsFree.begin();
+    for(; it!=vectorsFree.end(); ++it)
     {
-        assert(it->second->size()==3*nbp);
-        f << it->first << " 3 " << nbp << " float\n";
-        for(int i=0; i<nbp; ++i)
+        assert(it->second->size()==3*nbpFree);
+        f << it->first << " 3 " << nbpFree << " float\n";
+        for(int i=0; i<nbpFree; ++i)
             f << (*it->second)[3*i+0] << " " << (*it->second)[3*i+1] << " " << (*it->second)[3*i+2] << '\n';
     }
     f.close();

@@ -72,6 +72,7 @@ struct Field {
     std::vector<double> massFree;
     std::vector<double> massMoving;
     std::vector<double> massFixed;
+
 };
 
 #endif
