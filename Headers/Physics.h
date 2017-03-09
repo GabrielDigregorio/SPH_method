@@ -41,7 +41,7 @@ void boxMesh(double l[3], double u[3], double kh,
 void boxClear(std::vector<std::vector<int> > &boxes);
 
 // TimeIntegration.cpp
-void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, unsigned int n);
+bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, unsigned int n);
 
 
 // Kernel.cpp

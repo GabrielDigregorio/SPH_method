@@ -4,6 +4,8 @@
 #include "Tools.h"
 #include <ctime>
 
+
+#include "Structure.h" //*****************************************************************
 /*
  * In: -argv[1]: path to the parameter file
        -argv[2]: path to the geometry file
@@ -36,7 +38,7 @@ int main(int argc, char *argv[])
 
     // INITIALISATION
         // SPEEDS
-            currentField->speedFree.assign(currentField->posFree.size(),0.0);
+            //currentField->speedFree.assign(currentField->posFree.size(),0.0);
             //On pourrait aussi imaginer implementer une fonction speedInit(currentField,parameter) si on veut pouvoir partir d'un autre état que le repos
 
 
@@ -66,9 +68,19 @@ int main(int argc, char *argv[])
             writeField(currentField,0);
             unsigned int writeCount = 1;
 
+            bool reBoxing = true;
+
+            // Creates the box mesh and describes their adjacent relations
+            std::vector<std::vector<int> > boxes;
+            std::vector<std::vector<int> > surrBoxesAll;
+
             for(unsigned int n = 1;n<=nMax;n++)
             {
-                timeIntegration(currentField,nextField,parameter,n);
+                if(reBoxing == true)
+                {
+                    boxMesh(parameter->l, parameter->u, parameter->kh, boxes, surrBoxesAll);
+                }
+                reBoxing = timeIntegration(currentField,nextField,parameter,n);
 
                 if(writeCount*parameter->writeInterval <= n*parameter->k)
                 {
