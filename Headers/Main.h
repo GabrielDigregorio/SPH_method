@@ -13,6 +13,7 @@
 #include <cassert>
 #include <fstream>
 #include <ctime>
+#include <algorithm>
 
 
 #endif
