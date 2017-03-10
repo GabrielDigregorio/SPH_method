@@ -2,10 +2,8 @@
 #include "Interface.h"
 #include "Physics.h"
 #include "Tools.h"
-#include <ctime>
 
 
-#include "Structure.h" //*****************************************************************
 /*
  * In: -argv[1]: path to the parameter file
        -argv[2]: path to the geometry file
@@ -65,7 +63,7 @@ int main(int argc, char *argv[])
             Field* nextField;
             unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
             //To implement, the value "0" stands for the time a which we write
-            writeField(currentField,0);
+            writeField(currentField, 0, Matlab);
             unsigned int writeCount = 1;
 
             bool reBoxing = true;
@@ -84,7 +82,7 @@ int main(int argc, char *argv[])
 
                 if(writeCount*parameter->writeInterval <= n*parameter->k)
                 {
-                    writeField(currentField,n*parameter->k);
+                    writeField(currentField, n*parameter->k, Matlab);
                     writeCount++;
                 }
             }

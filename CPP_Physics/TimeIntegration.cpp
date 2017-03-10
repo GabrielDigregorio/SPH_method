@@ -2,7 +2,7 @@
 #include "Physics.h"
 
 bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, unsigned int n){
-    // Time step resolution
+  /*  // Time step resolution
     double kh2 = parameter->kh*parameter->kh; // More efficient to compare distance^2
 
     // Sort the particles at the current time step
@@ -26,4 +26,5 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
     }
     bool reBoxing = false; // A fonction should be implemented to choose if we rebox or not
     return reBoxing;
+    */
 }

@@ -11,12 +11,8 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
-
-// I don't remember where exactly those library are used
-#include <cstdlib>
 #include <fstream>
-#include <sstream>
-#include <iomanip>
+#include <ctime>
 
 
 #endif
