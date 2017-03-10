@@ -10,7 +10,7 @@
 void densityInit(Field* field,Parameter* parameter)
 {
     //Récupération des paramètres
-    double rho_0 = parameter->densityRef;
+	double rho_0 = parameter->densityRef;
     double B = parameter->B;
     double gamma = parameter->gamma;
     double g = parameter->g; 
@@ -19,54 +19,42 @@ void densityInit(Field* field,Parameter* parameter)
     double zMax = field->u[2];
    
     //Initialistation of density for each particles(Case of quasiIncompressible)
-    for (int i=2; i<field->posFree.size(); i=i+3)
-    {
-        H = zMax - field->posFree[i];
-       double rho = rho_0*(1 + (1/B)*rho_0*g*H);
+	if (parameter->densityInitMethod == hydrostatic)
+	{
 
-        field->densityFree.push_back(pow(rho,1/gamma));
-    }
+		for (int i = 2; i < field->pos.size(); i = i + 3)
+		{
+			H = zMax - field->pos[i];
+			double rho = rho_0*(1 + (1 / B)*rho_0*g*H);
 
-    for (int j=2; j<field->posMoving.size(); j=j+3)
-    {
-        H = zMax - field->posMoving[j];
-        double rho = rho_0*(1 + (1/B)*rho_0*g*H);
+			field->density.push_back(pow(rho, 1.0 / gamma));
+		}
 
-        field->densityMoving.push_back(pow(rho,1/gamma));
-    }
+	}
+	else
+	{
+		for (int i = 2; i < field->pos.size(); i = i + 3)
+		{
+			field->density.push_back(rho_0);
+		}
+	}
 
-    for (int k=2; k<field->posFixed.size(); k=k+3)
-    {
-        H = zMax - field->posFixed[k];
-       double rho = rho_0*(1 + (1/B)*rho_0*g*H);
-
-        field->densityFixed.push_back(pow(rho,1/gamma));
-    }
+   
 
 
     
 
  // A voir si on considère le cas d'un gas pft, nécéssite des parametres supplémentaires(T°,M)   
 /*
-    if (parameter->stateEquationMethod == "perfectGas")
+    if (parameter->stateEquationMethod == perfectGas)
     {
-        for (int i=0; i<field->posFree.size()/3; i++)
-        {
-            double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H_free[i]); 
-            field->densityFree.push_back(rho)
+        for (int i=2; i<field->pos.size(); i=i+3)
+        {	
+			H = z_max - field->pos[i];
+            double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H); 
+            field->density.push_back(rho)
         } 
 
-        for (int j=0; j<field->posMoving.size()/3; j++)
-        {
-            double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H_moving[i]); 
-            field->densityFree.push_back(rho)
-        } 
-
-        for (int k=0; k<field->posFixed.size()/3; k++)
-        {
-            double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H_fixed[i]); 
-            field->densityFree.push_back(rho)
-        } 
     }
 */ 
 
@@ -88,30 +76,15 @@ void pressureComputation(Field* field,Parameter* parameter)
 
     //Cas d'un liquide quasi_incompressible 
 
-    for (int i=0; i<field->posFree.size()/3; i++)
+    for (int i=0; i<field->pos.size()/3; i++)
     {
-        double rho = field->densityFree[i];
+        double rho = field->density[i];
         double p = B*(pow(rho/rho_0,gamma)-1);
 
-        field->pressureFree.push_back(p);
+        field->pressure.push_back(p);
     }
 
-    for (int j=0; j<field->posMoving.size()/3; j++)
-    {
-        double rho = field->densityMoving[j];
-        double p = B*(pow(rho/rho_0,gamma)-1);
-
-        field->pressureMoving.push_back(p);
-    }
-
-    for (int k=0; k<field->posFixed.size()/3; k++)
-    {
-        double rho = field->densityFixed[k];
-        double p = B*(pow(rho/rho_0,gamma)-1);
-
-        field->pressureFixed.push_back(p);
-    }
-
+   
     // + cas gaz parfait ?
 }
 
@@ -124,28 +97,13 @@ void pressureComputation(Field* field,Parameter* parameter)
  */
 void massInit(Field* field,Parameter* parameter)
 {
-    for (int i=0; i<field->sFree.size(); i++)
+    for (int i=0; i<field->s.size(); i++)
     {
-        double V = field->sFree[i]*field->sFree[i]*field->sFree[i];
-        double m = field->densityFree[i]*V;
+        double V = field->s[i]*field->s[i]*field->s[i];
+        double m = field->density[i]*V;
         
-        field->massFree.push_back(m);
+        field->mass.push_back(m);
     }
 
-    for (int j=0; j<field->sMoving.size(); j++)
-    {
-        double V = field->sMoving[j]*field->sMoving[j]*field->sMoving[j];
-        double m = field->densityMoving[j]*V;
-        
-        field->massMoving.push_back(m);
-    }
-
-    for (int k=0; k<field->sFixed.size(); k++)
-    {
-        double V = field->sFixed[k]*field->sFixed[k]*field->sFixed[k];
-        double m = field->densityFixed[k]*V;
-        
-        field->massFixed.push_back(m);
-    }
-
+    
 }
