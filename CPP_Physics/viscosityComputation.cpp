@@ -13,10 +13,10 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
   // For each neighbor of the particleID
   for (int i = 0; i < neighbors.size(); i++)
   {
-      U_ij = currentField->speed[neighbors[i]] * currentField->speed[particleID]
+      double U_ij = currentField->speed[neighbors[i]] * currentField->speed[particleID]
              + currentField->speed[neighbors[i]] * currentField->speed[particleID]
              + currentField->speed[neighbors[i]]*currentField->speed[particleID]; // velocity
-      R_ij = sqrt(distance(currentField->pos, int particleID, int neighbors[i])); // distance
+      double R_ij = sqrt(distance(currentField->pos, particleID, neighbors[i])); // distance
 
       if(U_ij * R_ij < 0)
       {
