@@ -46,7 +46,8 @@ void boxMesh(double l[3], double u[3], double kh,
 void boxClear(std::vector<std::vector<int> > &boxes);
 
 // TimeIntegration.cpp
-bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, unsigned int n);
+bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, std::vector<std::vector<int> >& boxes,
+std::vector<std::vector<int> >& surrBoxesAll, unsigned int n);
 
 
 // Kernel.cpp
@@ -60,5 +61,12 @@ void massInit(Field* field,Parameter* parameter);
 
 // updateMovingSpeed.cpp
 void updateMovingSpeed(Field* field,Parameter* parameter,double t);
+
+// navierStokes.cpp
+double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
+void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
+
+// viscosityComputation.cpp
+void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter, std::vector<double>& viscosity);
 
 #endif

@@ -4,8 +4,6 @@
 #include "Tools.h"
 #include <ctime>
 
-
-#include "Structure.h" //*****************************************************************
 /*
  * In: -argv[1]: path to the parameter file
        -argv[2]: path to the geometry file
@@ -45,7 +43,7 @@ int main(int argc, char *argv[])
             //To implement (not to do in a first time because it is much complicated and we must discuss this.
             // the value 0 correpsonds to time t=0, the function will be reused for later times
             // On pourrait ne passer que parameter->speedLaw mais le passage par pointeur est tout aussi efficace et on a accès à tous les parametres dans le cas ou on en aurait besoin
-            updateMovingSpeed(currentField,parameter,0.0);
+            if(currentField->nMoving != 0){updateMovingSpeed(currentField,parameter,0.0);}
 
         // DENSITIES
             //To implement densityInit, use formula from Goffin p122
@@ -62,7 +60,7 @@ int main(int argc, char *argv[])
             massInit(currentField,parameter);
 
     // UPDATE & WRITTING
-            Field* nextField;
+            Field *nextField, *tmpField;
             unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
             //To implement, the value "0" stands for the time a which we write
             writeField(currentField,0);
@@ -76,17 +74,22 @@ int main(int argc, char *argv[])
 
             for(unsigned int n = 1;n<=nMax;n++)
             {
+                std::cout << "----BEGIN time step #----" << n << "\n \n";
                 if(reBoxing == true)
                 {
-                    boxMesh(parameter->l, parameter->u, parameter->kh, boxes, surrBoxesAll);
+                    boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
                 }
-                reBoxing = timeIntegration(currentField,nextField,parameter,n);
+                reBoxing = timeIntegration(currentField,nextField,parameter,boxes,surrBoxesAll,n);
 
                 if(writeCount*parameter->writeInterval <= n*parameter->k)
                 {
                     writeField(currentField,n*parameter->k);
                     writeCount++;
                 }
+              tmpField = currentField;
+              currentField = nextField;
+              nextField = tmpField;
+              std::cout << "----END time step #----" << n << "\n \n";
             }
     return 0;
 }
