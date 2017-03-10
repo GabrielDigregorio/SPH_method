@@ -160,7 +160,7 @@ void matlab(std::string const &filename,
 
     // header
     f << "#EXPERIMENT: " << filename << "\n";
-    f << "Date : " << std::ctime(&Date);
+    f << "Date : " << std::put_time(std::localtime(&Date), "%c") << "\n";
     #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
     f << "Computer Name : "<< getenv("COMPUTERNAME") <<"\n";
     f << "Username : "<< getenv("USERNAME") <<"\n";
@@ -173,7 +173,7 @@ void matlab(std::string const &filename,
     f << "File Used: " << geometryFilename << " & " << parameterFilename << "\n";
     f << "CPU Time : \n";
     f << "Memory Usage : \n";
-    f << "\n \n";
+    f << "\n";
     f << "posX\t posY\t posZ\t velocityX\t velocityY\t velocityZ\t pressure\t density\t \n";
 
     // Fill f:
