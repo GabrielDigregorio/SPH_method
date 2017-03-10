@@ -1,6 +1,10 @@
 #include "Main.h"
 #include "Tools.h"
 
+#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+struct sysinfo memInfo;   
+#endif
+
 ///*************************************************************************************
 // The "Resident set size" (RSS) ("Working set size" on Windows) is the amount of physical 
 // memory (RAM) used by a process's code and data.

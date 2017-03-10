@@ -16,9 +16,14 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
 // Neighborhood.cpp
 void neighborAllPair (std::vector<double> &pos,
                          double kh,
-                         std::vector<double> &values,
-                         std::vector<int> &row,
-                         std::vector<int> &column);
+                         std::vector<std::vector<int> > &neighborsAll,
+                         std::vector<std::vector<double> > &kernelGradientsAll);
+void neighborLinkedList(std::vector<double> &pos,
+                          double l[3],
+                          double u[3],
+                          double kh,
+                          std::vector<std::vector<int> > &neighborsAll,
+                          std::vector<std::vector<double> > &kernelGradientsAll);
 void neighborLinkedList (std::vector<double> &pos,
                          double l[3],
                          double u[3],
@@ -27,7 +32,7 @@ void neighborLinkedList (std::vector<double> &pos,
                          std::vector<int> &row,
                          std::vector<int> &column);
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes);
-double distance(std::vector<double> pos, int partA, int partB);
+double distance(std::vector<double> &pos, int partA, int partB);
 void findNeighbors(int particleID, std::vector<double> &pos, double kh2,
                    std::vector<std::vector<int> > &boxes,
                    std::vector<int> &surrBoxes,
@@ -41,8 +46,8 @@ void boxMesh(double l[3], double u[3], double kh,
 void boxClear(std::vector<std::vector<int> > &boxes);
 
 // TimeIntegration.cpp
-void timeIntegration(std::vector<double> &pos, double l[3], double u[3], double kh);
-void updateMovingSpeed(Field* field, Parameter* parameter, double t);
+bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, std::vector<std::vector<int> >& boxes,
+std::vector<std::vector<int> >& surrBoxesAll, unsigned int n);
 
 
 // Kernel.cpp
@@ -56,5 +61,12 @@ void massInit(Field* field,Parameter* parameter);
 
 // updateMovingSpeed.cpp
 void updateMovingSpeed(Field* field,Parameter* parameter,double t);
+
+// navierStokes.cpp
+double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
+void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
+
+// viscosityComputation.cpp
+void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter, std::vector<double>& viscosity);
 
 #endif

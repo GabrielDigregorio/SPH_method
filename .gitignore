@@ -10,4 +10,8 @@ build/
 *.exe
 *.txt
 *.dat
+*.asv
+*.eps
 test.*
+.DS_Store
+!CMakeLists.txt

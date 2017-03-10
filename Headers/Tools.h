@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <sys/resource.h>
     #include "sys/types.h"
-    #include "sys/sysinfo.h"
+    //#include "sys/sysinfo.h"
 
 #if defined(__APPLE__) && defined(__MACH__)
 #include <mach/mach.h>
@@ -24,8 +24,8 @@
 #include <stdio.h>
     #include "sys/types.h"
     #include "sys/sysinfo.h"
-    struct sysinfo memInfo;
-    
+    extern struct sysinfo memInfo;
+
 #endif
 
 #else
