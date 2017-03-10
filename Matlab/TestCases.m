@@ -27,7 +27,6 @@ filename=strcat('../Results/FreeFallingCube_0.txt')
 InitExperiment = importdata(filename);
     
 for i=1 : nstep 
-    disp('ok\n')
     filename=strcat('../Results/FreeFallingCube_',num2str(i),'.txt')
     Experiment(i) = importdata(filename);
     time(i) = (i-1)*timeStep;

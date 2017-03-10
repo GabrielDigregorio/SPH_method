@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
     if(writeCount*parameter->writeInterval <= n*parameter->k)
     {
-      writeField(currentField, n*parameter->k, Matlab);
+      writeField(currentField, n, Matlab);
       writeCount++;
     }
     tmpField = currentField;
