@@ -4,45 +4,15 @@
 %                 - Stationary tank
 %                 - Crashed Cube
 %**************************************************************************
-clc; clear all; close all;
+function sucess = TestCases(n, path)
+
+close all;
 set(groot,'defaultLineLineWidth',2)
 
-% Get Environement:
-name = getenv('COMPUTERNAME');
-if (strcmp(name,'DESKTOP-31TT348')) 
-     
-     path = 'C:\Users\gabri\Dropbox\Applications\ShareLaTeX\SPH_PROJECT\';
-     disp(['Welcome GabyGab: ']);
-else path = ''; 
+% Check path (optional arument)
+if nargin < 2
+   path = '';
 end
-
-% Compile:
-disp(['Would you like to compile ? ']);
-c = input('(y/n): ');
-if(strcmp(name,'DESKTOP-31TT348')&&(c=='y' || c=='Y'))
-   cd ..; cd build\; system('mingw32-make')
-   cd ..; cd Matlab\;
-else disp(['You are not allowed to compile... ']);
-end
-
-disp(['Would you like to launch an experiment? ']);
-e = input('(y/n): ');
-if(strcmp(name,'DESKTOP-31TT348')&&(e=='y' || e=='Y'))
-   p = input('Parameter file name: '); p = strcat(p, 'txt')
-   g = input('Geometry file name: '); g = strcat(g, 'txt')
-   strcat('"../build/sph.exe" ',p, ' ',g, ' FreeFallingCube')
-   system('"../build/sph.exe" a.txt b.txt FreeFallingCube')
-else disp(['You are not allowed to launch an experiment... ']);
-end
-
-
-
-% Display Possibilities
-disp(['Experiments: ']);
-disp(['1) Free Falling Cube']);
-disp(['2) Free Falling Cube with random particules']);
-disp(['3) Stationary Tank']);disp([' ']);
-n = input('Enter the number of the experiment: ');
 
 switch n
 
@@ -195,6 +165,8 @@ otherwise
         disp('Not Valid Experiment')
 end
 
+sucess = 0;
+end
 
 
 
