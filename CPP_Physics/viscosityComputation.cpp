@@ -5,7 +5,7 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
 {
   //viscosity.assign(neighbors.size(),0.0); // To be changed to fit formula of Goffin
 
-  double alpha= 2.0;
+  double alpha= 1.0;
   double beta = 0.0;
   double epsilon = 0.01; // See in litterature
   double c    = 0.0; // ??? average speed of sound
