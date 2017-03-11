@@ -1,4 +1,5 @@
-#include "Structures.h"
+#include "Main.h"
+#include "Physics.h"
 
 /*
  * In: field = structure containing the speed of particules (among others)

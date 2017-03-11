@@ -3,149 +3,113 @@
 
 //-----------------------------------------------------------------------------------------
 /*
- * In: field = structure containing the position of particules (among others)
- *     parameter = structure containing the parameter usefull to compute the densities
- * Out: Initialisation of the density for the field
- */
+* In: field = structure containing the position of particules (among others)
+*     parameter = structure containing the parameter usefull to compute the densities
+* Out: Initialisation of the density for the field
+*/
 void densityInit(Field* field,Parameter* parameter)
 {
-    //Récupération des paramètres
-    double rho_0 = parameter->densityRef;
-    double B = parameter->B;
-    double gamma = parameter->gamma;
-    double g = parameter->g; 
+	std::cout << "----BEGIN density initialitation---- \n \n";
+	//Récupération des paramètres
+	double rho_0 = parameter->densityRef;
+	double B = parameter->B;
+	double gamma = parameter->gamma;
+	double g = parameter->g;
+	switch (parameter->densityInitMethod)
+	{
+		case hydrostatic:
 
-    double H;
-    double zMax = field->u[2];
-   
-    //Initialistation of density for each particles(Case of quasiIncompressible)
-    for (int i=2; i<field->posFree.size(); i=i+3)
-    {
-        H = zMax - field->posFree[i];
-       double rho = rho_0*(1 + (1/B)*rho_0*g*H);
+		double H;
+		// Find height of free surface.
+		double zMax;
+		zMax = *(std::max_element(&field->pos[0],&field->pos[field->nFree+1]));
 
-        field->densityFree.push_back(pow(rho,1/gamma));
-    }
+		for (int i = 2; i < field->pos.size()/3; i = i + 3)
+		{
+			H = zMax - field->pos[i];
+			double rho = rho_0*(1 + (1 / B)*rho_0*g*H);
 
-    for (int j=2; j<field->posMoving.size(); j=j+3)
-    {
-        H = zMax - field->posMoving[j];
-        double rho = rho_0*(1 + (1/B)*rho_0*g*H);
+			field->density.push_back(pow(rho, 1.0 / gamma));
+		}
+		break;
+		case homogeneous:
+		for (int i = 2; i < field->pos.size()/3; i = i + 3)
+		{
+			field->density.push_back(rho_0);
+		}
 
-        field->densityMoving.push_back(pow(rho,1/gamma));
-    }
+		break;
+		// A voir si on considère le cas d'un gas pft, nécéssite des parametres supplémentaires(T°,M)
+		/*
+		if (parameter->stateEquationMethod == perfectGas)
+		{
+		for (int i=2; i<field->pos.size(); i=i+3)
+		{
+		H = z_max - field->pos[i];
+		double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H);
+		field->density.push_back(rho)
+	}
 
-    for (int k=2; k<field->posFixed.size(); k=k+3)
-    {
-        H = zMax - field->posFixed[k];
-       double rho = rho_0*(1 + (1/B)*rho_0*g*H);
-
-        field->densityFixed.push_back(pow(rho,1/gamma));
-    }
-
-
-    
-
- // A voir si on considère le cas d'un gas pft, nécéssite des parametres supplémentaires(T°,M)   
-/*
-    if (parameter->stateEquationMethod == "perfectGas")
-    {
-        for (int i=0; i<field->posFree.size()/3; i++)
-        {
-            double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H_free[i]); 
-            field->densityFree.push_back(rho)
-        } 
-
-        for (int j=0; j<field->posMoving.size()/3; j++)
-        {
-            double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H_moving[i]); 
-            field->densityFree.push_back(rho)
-        } 
-
-        for (int k=0; k<field->posFixed.size()/3; k++)
-        {
-            double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H_fixed[i]); 
-            field->densityFree.push_back(rho)
-        } 
-    }
-*/ 
-
+}
+*/
+}
+std::cout << "----END density initialitation---- \n \n";
 }
 
 //-----------------------------------------------------------------------------------------
 /*
- * In: field = structure containing the density of particules (among others)
- *     parameter = structure containing the parameter usefull to compute the pressures
- * Out: Computation of the pressure for the field
- */
+* In: field = structure containing the density of particules (among others)
+*     parameter = structure containing the parameter usefull to compute the pressures
+* Out: Computation of the pressure for the field
+*/
 void pressureComputation(Field* field,Parameter* parameter)
 {
-    //Récupération des paramètres
-    double rho_0 = parameter->densityRef;
-    double B = parameter->B;
-    double gamma = parameter->gamma;
-    double g = parameter->g;
 
-    //Cas d'un liquide quasi_incompressible 
+	std::cout << "----BEGIN density initialitation---- \n \n";
+	//Récupération des paramètres
+	double rho_0 = parameter->densityRef;
+	double B = parameter->B;
+	double gamma = parameter->gamma;
+	double g = parameter->g;
 
-    for (int i=0; i<field->posFree.size()/3; i++)
-    {
-        double rho = field->densityFree[i];
-        double p = B*(pow(rho/rho_0,gamma)-1);
+	switch (parameter->stateEquationMethod)
+	{
+		case quasiIncompressible:
 
-        field->pressureFree.push_back(p);
-    }
 
-    for (int j=0; j<field->posMoving.size()/3; j++)
-    {
-        double rho = field->densityMoving[j];
-        double p = B*(pow(rho/rho_0,gamma)-1);
+		for (int i=0; i<field->pos.size()/3; i++)
+		{
+			double rho = field->density[i];
+			double p = B*(pow(rho/rho_0,gamma)-1);
 
-        field->pressureMoving.push_back(p);
-    }
+			field->pressure.push_back(p);
+		}
+		break;
+	}
 
-    for (int k=0; k<field->posFixed.size()/3; k++)
-    {
-        double rho = field->densityFixed[k];
-        double p = B*(pow(rho/rho_0,gamma)-1);
-
-        field->pressureFixed.push_back(p);
-    }
-
-    // + cas gaz parfait ?
+	std::cout << "----END pressure computation---- \n \n";
+	// + cas gaz parfait ?
 }
 
 
 //-----------------------------------------------------------------------------------------
 /*
- * In: field = structure containing the density of particules (among others)
- *     parameter = structure containing the parameter s with is needed to compute the masses
- * Out: Computation of the masses for the field
- */
+* In: field = structure containing the density of particules (among others)
+*     parameter = structure containing the parameter s with is needed to compute the masses
+* Out: Computation of the masses for the field
+*/
 void massInit(Field* field,Parameter* parameter)
 {
-    for (int i=0; i<field->sFree.size(); i++)
-    {
-        double V = field->sFree[i]*field->sFree[i]*field->sFree[i];
-        double m = field->densityFree[i]*V;
-        
-        field->massFree.push_back(m);
-    }
 
-    for (int j=0; j<field->sMoving.size(); j++)
-    {
-        double V = field->sMoving[j]*field->sMoving[j]*field->sMoving[j];
-        double m = field->densityMoving[j]*V;
-        
-        field->massMoving.push_back(m);
-    }
+	std::cout << "----BEGIN mass initialitation---- \n \n";
+	for (int i=0; i<field->s.size(); i++)
+	{
+		double V = field->s[i]*field->s[i]*field->s[i];
+		double m = field->density[i]*V;
 
-    for (int k=0; k<field->sFixed.size(); k++)
-    {
-        double V = field->sFixed[k]*field->sFixed[k]*field->sFixed[k];
-        double m = field->densityFixed[k]*V;
-        
-        field->massFixed.push_back(m);
-    }
+		field->mass.push_back(m);
+	}
+
+	std::cout << "----END mass initialitation---- \n \n";
 
 }

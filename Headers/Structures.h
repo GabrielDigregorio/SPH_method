@@ -6,6 +6,7 @@
 #define STRUCTURES_H
 #include "Main.h"
 
+
 // Kernel Types
 enum Kernel { Gaussian=1, Bell_shaped=2, Cubic_spline=3, Quadratic=4, Quintic=5, Quintic_spline=6 };
 
@@ -64,6 +65,13 @@ struct Field {
     std::vector<double> pressure;
 
     std::vector<double> mass;
+
 };
+
+
+
+// Write Format output
+enum Format { ParaView=1, Matlab=2, Both=3 };
+
 
 #endif
