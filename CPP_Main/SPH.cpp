@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
 
   // Initialisation des moving boundaries
-  if(currentField->nMoving != 0){updateMovingSpeed(currentField,parameter,0.0);}
+  //if(currentField->nMoving != 0){updateMovingSpeed(currentField,parameter,0.0);}
 
   // DENSITIES
   //To implement densityInit, use formula from Goffin p122

@@ -6,6 +6,7 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
 {
     // Time step resolution
     //double kh2 = parameter->kh*parameter->kh; // More efficient to compare distance^2
+    Kernel kernelType = Quintic_spline; // TO CHANGE !!!!!!!!!!!
 
     // Sort the particles at the current time step
     boxClear(boxes); // Clear the sorting to restart it...
@@ -24,7 +25,7 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
       // Spans the particles in the box
       for(unsigned int part=0 ; part<boxes[box].size() ; part++){
         particleID = boxes[box][part];
-        findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients);
+        findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, kernelType);
 
         densityDerivative = continuity(particleID, neighbors, kernelGradients,currentField); // also for fixed particles !
         if(particleID < currentField->nFree)
