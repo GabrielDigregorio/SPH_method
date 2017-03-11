@@ -5,7 +5,6 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
-
 #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <windows.h>
 #include <psapi.h>

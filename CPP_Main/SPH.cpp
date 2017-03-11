@@ -2,91 +2,99 @@
 #include "Interface.h"
 #include "Physics.h"
 #include "Tools.h"
-#include <ctime>
 
+#include "Structures.h"
 
-#include "Structures.h" //*****************************************************************
 /*
- * In: -argv[1]: path to the parameter file
-       -argv[2]: path to the geometry file
+* In: -argv[1]: path to the parameter file
+-argv[2]: path to the geometry file
 */
-
 int main(int argc, char *argv[])
 {
-    // READING INPUT FILE
-        // Check argument file
-        char* parameterFilename;
-        char* geometryFilename;
-        if(argc<3)
-        {
-            std::cout << "Invalid input files.\n";
-            return EXIT_FAILURE;
-        }
-        else{parameterFilename = argv[1]; geometryFilename = argv[2];}
+  // READING INPUT FILE
+  // Check argument file
+  char* parameterFilename;
+  char* geometryFilename;
+  std::string experimentFilename = "result"; // default name
 
-        //Read parameters
-        Parameter* parameter;
+  // Check the arguments
+  if(argc<3) // Not enough argument
+  {
+    std::cout << "Invalid input files.\n";
+    return EXIT_FAILURE;
+  }
+  else if (argc<4) // Use default name for the experiment (result)
+    {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename;}
+  else // Use default name for the experiment (result)
+    {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = argv[3];}
 
-        //To implement
-        //readParameter(parameterFilename,parameter);
+  //Read parameters
+  Parameter* parameter =  new Parameter();
 
-        //Read geometry
-        Field* currentField;
+  //To implement
+  //readParameter(parameterFilename,parameter);
 
-        //To implement
-        //readGeometry(geometryFilename,currentField);
+  //Read geometry
+  Field* currentField =  new Field();
 
-    // INITIALISATION
-        // SPEEDS
-            //currentField->speedFree.assign(currentField->posFree.size(),0.0);
-            //On pourrait aussi imaginer implementer une fonction speedInit(currentField,parameter) si on veut pouvoir partir d'un autre état que le repos
+  //To implement
+  //readGeometry(geometryFilename,currentField);
 
-
-            //To implement (not to do in a first time because it is much complicated and we must discuss this.
-            // the value 0 correpsonds to time t=0, the function will be reused for later times
-            // On pourrait ne passer que parameter->speedLaw mais le passage par pointeur est tout aussi efficace et on a accès à tous les parametres dans le cas ou on en aurait besoin
-            updateMovingSpeed(currentField,parameter,0.0);
-
-        // DENSITIES
-            //To implement densityInit, use formula from Goffin p122
-            densityInit(currentField, parameter);
+  // INITIALISATION
+  // SPEEDS
+  currentField->speed.assign(currentField->nFree+currentField->nFixed+currentField->nMoving,0.0);
+  //On pourrait aussi imaginer implementer une fonction speedInit(currentField,parameter) si on veut pouvoir partir d'un autre état que le repos, ici on initialise toutes les vitesses à zeros et seul les moving boundaries seront éventuellement modifiées
 
 
-        // PRESSURES
-            //(might not be necessary to store them as they only depend on density?)(to discuss)
-            //To implement use formala 3.39 from Goffin
-            pressureComputation(currentField,parameter);
+  // Initialisation des moving boundaries
+  if(currentField->nMoving != 0){updateMovingSpeed(currentField,parameter,0.0);}
 
-        //MASSES
-            //To implement use formula 3.59 from Goffin
-            massInit(currentField,parameter);
+  // DENSITIES
+  //To implement densityInit, use formula from Goffin p122
+  densityInit(currentField, parameter);
 
-    // UPDATE & WRITTING
-            Field* nextField;
-            unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
-            //To implement, the value "0" stands for the time a which we write
-            writeField(currentField,0);
-            unsigned int writeCount = 1;
 
-            bool reBoxing = true;
+  // PRESSURES
+  //(might not be necessary to store them as they only depend on density?)(to discuss)
+  //To implement use formala 3.39 from Goffin
+  pressureComputation(currentField,parameter);
 
-            // Creates the box mesh and describes their adjacent relations
-            std::vector<std::vector<int> > boxes;
-            std::vector<std::vector<int> > surrBoxesAll;
+  //MASSES
+  //To implement use formula 3.59 from Goffin
+  massInit(currentField,parameter);
 
-            for(unsigned int n = 1;n<=nMax;n++)
-            {
-                if(reBoxing == true)
-                {
-                    boxMesh(parameter->l, parameter->u, parameter->kh, boxes, surrBoxesAll);
-                }
-                reBoxing = timeIntegration(currentField,nextField,parameter,n);
+  // UPDATE & WRITTING
+  Field *nextField, *tmpField;
+  unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
+  //To implement, the value "0" stands for the time a which we write
+  writeField(currentField, 0, Matlab);
+  unsigned int writeCount = 1;
 
-                if(writeCount*parameter->writeInterval <= n*parameter->k)
-                {
-                    writeField(currentField,n*parameter->k);
-                    writeCount++;
-                }
-            }
-    return 0;
+  bool reBoxing = true;
+
+  // Creates the box mesh and describes their adjacent relations
+  std::vector<std::vector<int> > boxes;
+  std::vector<std::vector<int> > surrBoxesAll;
+
+  for(unsigned int n = 1;n<=nMax;n++)
+  {
+    std::cout << "----BEGIN time step #----" << n << "\n \n";
+    if(reBoxing == true)
+    {
+      boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
+    }
+    reBoxing = timeIntegration(currentField,nextField,parameter,boxes,surrBoxesAll,n);
+
+    if(writeCount*parameter->writeInterval <= n*parameter->k)
+    {
+      writeField(currentField, n, Matlab);
+      writeCount++;
+    }
+    tmpField = currentField;
+    currentField = nextField;
+    nextField = tmpField;
+    std::cout << "----END time step #----" << n << "\n \n";
+  }
+
+  return 0;
 }
