@@ -67,7 +67,7 @@ void pressureComputation(Field* field,Parameter* parameter);
 void massInit(Field* field,Parameter* parameter);
 
 // updateMovingSpeed.cpp
-void updateMovingSpeed(Field* field, Parameter* parameter, double t, MoveMod myMod);
+void updateMovingSpeed(Field* field, Parameter* parameter, double t);
 
 // navierStokes.cpp
 double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
@@ -78,6 +78,6 @@ double continuity(int particleID, std::vector<int>& neighbors, std::vector<doubl
 void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
 
 // viscosityComputation.cpp
-void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity, double c, double h, ViscoMod myViscoMod);
+void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity, double c, double h);
 
 #endif

@@ -11,7 +11,7 @@
 */
 int main(int argc, char *argv[])
 {
-  // READING INPUT FILE
+  /// READING INPUT FILE
   // Check argument file
   char* parameterFilename;
   char* geometryFilename;
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
   else if (argc<4) // Use default name for the experiment (result)
-    {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename;}
+    {parameterFilename = argv[1]; geometryFilename = argv[2];}
   else // Use default name for the experiment (result)
     {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = argv[3];}
 
@@ -66,19 +66,19 @@ int main(int argc, char *argv[])
 
   // Reserv Memory for each field of nextField and tmpField
   nextField->pos.reserve(currentField->pos.size()); 
-  tmpField->pos.reserve(currentField->pos.size()); 
+   tmpField->pos.reserve(currentField->pos.size()); 
   nextField->speed.reserve(currentField->speed.size()); 
-  tmpField->speed.reserve(currentField->speed.size());
+   tmpField->speed.reserve(currentField->speed.size());
   nextField->density.reserve(currentField->density.size()); 
-  tmpField->density.reserve(currentField->density.size());
+   tmpField->density.reserve(currentField->density.size());
   nextField->pressure.reserve(currentField->pressure.size()); 
-  tmpField->pressure.reserve(currentField->pressure.size());
+   tmpField->pressure.reserve(currentField->pressure.size());
   nextField->mass.reserve(currentField->mass.size()); 
-  tmpField->mass.reserve(currentField->mass.size());
+   tmpField->mass.reserve(currentField->mass.size());
 
   unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
   //To implement, the value "0" stands for the time a which we write
-  writeField(currentField, 0, Matlab);
+  writeField(currentField, 0, parameter->format);
   unsigned int writeCount = 1;
 
   bool reBoxing = true;
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 
     if(writeCount*parameter->writeInterval <= n*parameter->k)
     {
-      writeField(currentField, n, Matlab);
+      writeField(currentField, n,  parameter->format);
       writeCount++;
     }
     tmpField = currentField;
