@@ -1,5 +1,6 @@
 #include "Main.h"
 #include "Physics.h"
+#include "Tools.h"
 #include "Structures.h"
 
 /// Naive method to find the neighbors of all particles.
@@ -215,11 +216,6 @@ void findNeighbors(int particleID, std::vector<double> &pos, double kh,
     }
 }
 
-// Clear the boxes content
-void boxClear(std::vector<std::vector<int> > &boxes){
-    for(int i=0 ; i<boxes.size() ; i++)
-        boxes[i].clear();
-}
 
 
 // Gives the list of the surrounding boxes

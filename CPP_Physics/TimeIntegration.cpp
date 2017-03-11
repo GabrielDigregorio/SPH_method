@@ -1,5 +1,6 @@
 #include "Main.h"
 #include "Physics.h"
+#include "Tools.h"
 
 
 bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll, unsigned int n)

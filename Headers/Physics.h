@@ -47,7 +47,7 @@ void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh
 void boxMesh(double l[3], double u[3], double kh,
              std::vector<std::vector<int> > &boxes,
              std::vector<std::vector<int> > &surrBoxesAll);
-void boxClear(std::vector<std::vector<int> > &boxes);
+
 
 // TimeIntegration.cpp
 bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, std::vector<std::vector<int> >& boxes,
