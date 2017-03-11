@@ -19,15 +19,16 @@ void updateMovingSpeed(Field* field,Parameter* parameter,double t,Mode_move mymo
         int nb_mov;
         nb_free=field->nFree;
         nb_fixed=field->nFixed;
-        nb_mov=fied->nMoving;
+        nb_mov=field->nMoving;
         int start=nb_fixed+nb_free;
-        int end =nb_fixed+nb_free+nb_mov
+        int end =nb_fixed+nb_free+nb_mov;
         // maybe put this in a vector of parameter ?
         double A1=1; 
         double A2=1;
         double A3=1;
         double w1=1;
         double w2=1;
+        double w3=1;
         for(int i=start ; i<end ; i=i+3)
         {
             // x
