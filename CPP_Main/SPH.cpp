@@ -5,7 +5,7 @@
 #include <ctime>
 
 
-#include "Structure.h" //*****************************************************************
+#include "Structures.h" //*****************************************************************
 /*
  * In: -argv[1]: path to the parameter file
        -argv[2]: path to the geometry file

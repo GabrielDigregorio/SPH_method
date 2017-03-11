@@ -24,13 +24,6 @@ void neighborLinkedList(std::vector<double> &pos,
                           double kh,
                           std::vector<std::vector<int> > &neighborsAll,
                           std::vector<std::vector<double> > &kernelGradientsAll);
-void neighborLinkedList (std::vector<double> &pos,
-                         double l[3],
-                         double u[3],
-                         double kh,
-                         std::vector<double> &values,
-                         std::vector<int> &row,
-                         std::vector<int> &column);
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes);
 double distance(std::vector<double> &pos, int partA, int partB);
 void findNeighbors(int particleID, std::vector<double> &pos, double kh2,
@@ -50,8 +43,11 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
 
 
 // Kernel.cpp
-double Wab(std::vector<double> pos, int partA, int partB, double h, size_t choice);
-double grad_Wab(std::vector<double> pos, int partA, int partB, double h, size_t choice);
+void kernelGradientsPrecomputation(Kernel myKernel, int resolution, double kh,
+        std::vector<double> kernelGradientsSamples);
+int indexSamples(int resolution, double r, double kh);
+double Wab(double r, double kh, Kernel choice);
+double grad_Wab(double r, double kh, Kernel choice);
 
 // Init.cpp
 void densityInit(Field* field,Parameter* parameter);
