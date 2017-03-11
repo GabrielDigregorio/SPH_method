@@ -4,14 +4,17 @@
 
 
 // kernelGradientsPrecomputation
-// Precomputes discrete values of the kernel gradient.
+// Precomputes discrete values of the kernel gradient:
+// - discrete values : {0, kh/(resolution-1), 2*kh/(resolution-1), ..., kh}
 void kernelGradientsPrecomputation(Kernel myKernel, int resolution, double kh,
         std::vector<double> kernelGradientsSamples){
     // Loop on the values
-
-
-
-
+    double r = 0;
+    double increment = kh/((double) R);
+    for(int i=0 ; i<resolution ; i++){
+        kernelGradientsSamples.push_back();
+        r += increment;
+    }
 }
 
 // Gives the index of the closest sample value of the kernel gradient for a given resolution
