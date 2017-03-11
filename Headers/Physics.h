@@ -56,7 +56,7 @@ void pressureComputation(Field* field,Parameter* parameter);
 void massInit(Field* field,Parameter* parameter);
 
 // updateMovingSpeed.cpp
-void updateMovingSpeed(Field* field,Parameter* parameter,double t,Mode_move mymode);
+void updateMovingSpeed(Field* field,Parameter* parameter,double t,Mode_move myMode);
 
 // navierStokes.cpp
 double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);

@@ -6,11 +6,11 @@
  *     parameter = structure containing the parameter usefull to know the movement of the wall
  * Out: Mise à jour des vitesses des parois mobiles
  */
-void updateMovingSpeed(Field* field,Parameter* parameter,double t,Mode_move mymode)
+void updateMovingSpeed(Field* field,Parameter* parameter,double t,Mode_move myMode)
 {   
-    
-    
-    
+    switch(myMode){
+
+    case 1 :
         // uniforme periodic mouvement in each direction
         // case 1: simple translation right to left ( x direction ) ( sin pour tout )
         // depending on the parameter choose
@@ -39,8 +39,12 @@ void updateMovingSpeed(Field* field,Parameter* parameter,double t,Mode_move mymo
             field->speed[i+2]=A3*sin(w3*t);
         }
  
-    
+    break;
 
-    // case 2: mouvement levier avec le point le plus bas fixe.
+    case 2 : // case 2: mouvement levier avec le point le plus bas fixe.
 
+    break;
+
+    default :
+    }
 }
