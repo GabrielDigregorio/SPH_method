@@ -5,24 +5,25 @@
 
 // kernelGradientsPrecomputation
 // Precomputes discrete values of the kernel gradient:
-// - discrete values : {0, kh/(resolution-1), 2*kh/(resolution-1), ..., kh}
+// -> discrete values : {0, kh/(resolution-1), 2*kh/(resolution-1), ..., kh}
 void kernelGradientsPrecomputation(Kernel myKernel, int resolution, double kh,
-        std::vector<double> kernelGradientsSamples){
+        std::vector<double> &kernelGradientsSamples){
+    // Consistency verification
+    assert(resolution > 1);
     // Loop on the values
-    double r = 0;
-    double increment = kh/((double) R);
+    double r = 0.0;
+    double increment = kh/((double) resolution - 1.0);
     for(int i=0 ; i<resolution ; i++){
-        kernelGradientsSamples.push_back();
+        kernelGradientsSamples.push_back(gradWab(r, kh, myKernel));
         r += increment;
     }
 }
 
 // Gives the index of the closest sample value of the kernel gradient for a given resolution
+// The index goes from 0 (r=0) to resolution-1 (r=kh)
 int indexSamples(int resolution, double r, double kh){
-
-    return 0;
+    return round(r * (resolution-1) / kh);
 }
-
 
 // Smoothing function
 // (For the gaussian kernel, kh is the size of the boxes)
@@ -93,7 +94,7 @@ double Wab(double r, double kh, Kernel myKernel)
 }
 
 // Derivative of the smoothing function
-double grad_Wab(double r, double kh, Kernel myKernel)
+double gradWab(double r, double kh, Kernel myKernel)
 {
     // Normalisation constant
     double alphaD;

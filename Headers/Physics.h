@@ -48,7 +48,7 @@ void kernelGradientsPrecomputation(Kernel myKernel, int resolution, double kh,
         std::vector<double> kernelGradientsSamples);
 int indexSamples(int resolution, double r, double kh);
 double Wab(double r, double kh, Kernel choice);
-double grad_Wab(double r, double kh, Kernel choice);
+double gradWab(double r, double kh, Kernel choice);
 
 // Init.cpp
 void densityInit(Field* field,Parameter* parameter);
