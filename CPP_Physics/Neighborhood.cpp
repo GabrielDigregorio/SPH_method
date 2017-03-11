@@ -1,5 +1,6 @@
 #include "Main.h"
 #include "Physics.h"
+#include "Structures.h"
 
 /// Naive method to find the neighbors of all particles.
 // All-pair search algorithm
@@ -14,9 +15,10 @@ Output:
 /
 */
 void neighborAllPair (std::vector<double> &pos,
-                         double kh,
-                         std::vector<std::vector<int> > &neighborsAll,
-                         std::vector<std::vector<double> > &kernelGradientsAll)
+                        double kh,
+                        std::vector<std::vector<int> > &neighborsAll,
+                        std::vector<std::vector<double> > &kernelGradientsAll,
+                        Kernel myKernel)
 {
     double kh2 = kh*kh;
     // For each particle, browse all other particles and compute the distance
@@ -25,7 +27,7 @@ void neighborAllPair (std::vector<double> &pos,
             double r2 = distance(pos, i, j);
             if( r2 < kh2 ){
                 neighborsAll[i].push_back(j); // The neighbor ID
-                kernelGradientsAll[i].push_back(2.0); // The kernel grandient with this neighbor
+                kernelGradientsAll[i].push_back(gradWab(sqrt(r2), kh, myKernel)); // The kernel grandient with this neighbor
             }
         }
     }
@@ -49,11 +51,12 @@ Output:
 /
 */
 void neighborLinkedList(std::vector<double> &pos,
-                         double l[3],
-                         double u[3],
-                         double kh,
-                         std::vector<std::vector<int> > &neighborsAll,
-                         std::vector<std::vector<double> > &kernelGradientsAll)
+                        double l[3],
+                        double u[3],
+                        double kh,
+                        std::vector<std::vector<int> > &neighborsAll,
+                        std::vector<std::vector<double> > &kernelGradientsAll,
+                        Kernel myKernel)
 {
     double kh2 = kh*kh; // More efficient to compare distance^2
 
@@ -106,7 +109,7 @@ void neighborLinkedList(std::vector<double> &pos,
                     double r2 = distance(pos, particleID, potNeighborID);
                     if(r2<kh2){
                         neighborsAll[particleID].push_back(potNeighborID);
-                        kernelGradientsAll[particleID].push_back(2.0);
+                        kernelGradientsAll[particleID].push_back(gradWab(sqrt(r2), kh, myKernel));
                     }
                 }
             }
@@ -164,11 +167,14 @@ void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh
 Fills the neighbors/kernelGradients vectors with the neighbors and the associated
 values of the kernel gradient for the given particleID.
 */
-void findNeighbors(int particleID, std::vector<double> &pos, double kh2,
-                   std::vector<std::vector<int> > &boxes,
-                   std::vector<int> &surrBoxes,
-                   std::vector<int> &neighbors,
-                   std::vector<double> &kernelGradients){
+void findNeighbors(int particleID, std::vector<double> &pos, double kh,
+                    std::vector<std::vector<int> > &boxes,
+                    std::vector<int> &surrBoxes,
+                    std::vector<int> &neighbors,
+                    std::vector<double> &kernelGradients,
+                    Kernel myKernel){
+    double kh2 = kh*kh;
+    double currentKernelGradient;
     // Spans the surrounding boxes
     for(unsigned int surrBox = 0 ; surrBox < surrBoxes.size() ; surrBox++){
         // Spans the particles in the box (all particles!)
@@ -177,8 +183,33 @@ void findNeighbors(int particleID, std::vector<double> &pos, double kh2,
             double r2 = distance(pos, particleID, potNeighborID);
             if(r2<kh2){
                 neighbors.push_back(potNeighborID);
-                double kernelGradient = 1.0; // TO CHANGE !!!!!!!
-                kernelGradients.push_back(kernelGradient);
+                kernelGradients.push_back(gradWab(sqrt(r2), kh, myKernel));
+            }
+        }
+    }
+}
+
+/* Overload with tabulated values */
+void findNeighbors(int particleID, std::vector<double> &pos, double kh,
+                    std::vector<std::vector<int> > &boxes,
+                    std::vector<int> &surrBoxes,
+                    std::vector<int> &neighbors,
+                    std::vector<double> &kernelGradients,
+                    Kernel myKernel,
+                    std::vector<double> &kernelGradientsSamples,
+                    int resolution){
+    double kh2 = kh*kh;
+    double currentKernelGradient;
+    // Spans the surrounding boxes
+    for(unsigned int surrBox = 0 ; surrBox < surrBoxes.size() ; surrBox++){
+        // Spans the particles in the box (all particles!)
+        for(unsigned int i=0 ; i<boxes[surrBoxes[surrBox]].size() ; i++){
+            int potNeighborID = boxes[surrBoxes[surrBox]][i];
+            double r2 = distance(pos, particleID, potNeighborID);
+            if(r2<kh2){
+                neighbors.push_back(potNeighborID);
+                currentKernelGradient = kernelGradientsSamples[indexSamples(resolution, sqrt(r2), kh)];
+                kernelGradients.push_back(currentKernelGradient);
             }
         }
     }

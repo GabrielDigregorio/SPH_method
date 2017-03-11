@@ -1,12 +1,13 @@
 #include "Main.h"
 #include "Physics.h"
-#define M_PI           3.14159265358979323846  /* pi */
+#include "Structures.h"
+//#define M_PI           3.14159265358979323846  /* pi */
 
 
 // kernelGradientsPrecomputation
 // Precomputes discrete values of the kernel gradient:
 // -> discrete values : {0, kh/(resolution-1), 2*kh/(resolution-1), ..., kh}
-void kernelGradientsPrecomputation(Kernel myKernel, int resolution, double kh,
+void kernelGradPre(Kernel myKernel, int resolution, double kh,
         std::vector<double> &kernelGradientsSamples){
     // Consistency verification
     assert(resolution > 1);
@@ -22,7 +23,7 @@ void kernelGradientsPrecomputation(Kernel myKernel, int resolution, double kh,
 // Gives the index of the closest sample value of the kernel gradient for a given resolution
 // The index goes from 0 (r=0) to resolution-1 (r=kh)
 int indexSamples(int resolution, double r, double kh){
-    return round(r * (resolution-1) / kh);
+    return round(r * (resolution-1) / kh); // ATTENTION
 }
 
 // Smoothing function

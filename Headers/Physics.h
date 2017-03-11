@@ -15,22 +15,33 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
 
 // Neighborhood.cpp
 void neighborAllPair (std::vector<double> &pos,
-                         double kh,
-                         std::vector<std::vector<int> > &neighborsAll,
-                         std::vector<std::vector<double> > &kernelGradientsAll);
+                        double kh,
+                        std::vector<std::vector<int> > &neighborsAll,
+                        std::vector<std::vector<double> > &kernelGradientsAll,
+                        Kernel myKernel);
 void neighborLinkedList(std::vector<double> &pos,
-                          double l[3],
-                          double u[3],
-                          double kh,
-                          std::vector<std::vector<int> > &neighborsAll,
-                          std::vector<std::vector<double> > &kernelGradientsAll);
+                        double l[3],
+                        double u[3],
+                        double kh,
+                        std::vector<std::vector<int> > &neighborsAll,
+                        std::vector<std::vector<double> > &kernelGradientsAll,
+                        Kernel myKernel);
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes);
 double distance(std::vector<double> &pos, int partA, int partB);
-void findNeighbors(int particleID, std::vector<double> &pos, double kh2,
-                   std::vector<std::vector<int> > &boxes,
-                   std::vector<int> &surrBoxes,
-                   std::vector<int> &neighbors,
-                   std::vector<double> &kernelGradients);
+void findNeighbors(int particleID, std::vector<double> &pos, double kh,
+                    std::vector<std::vector<int> > &boxes,
+                    std::vector<int> &surrBoxes,
+                    std::vector<int> &neighbors,
+                    std::vector<double> &kernelGradients,
+                    Kernel myKernel);
+void findNeighbors(int particleID, std::vector<double> &pos, double kh,
+                    std::vector<std::vector<int> > &boxes,
+                    std::vector<int> &surrBoxes,
+                    std::vector<int> &neighbors,
+                    std::vector<double> &kernelGradients,
+                    Kernel myKernel,
+                    std::vector<double> &kernelGradientsSamples,
+                    int resolution);
 void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
                    std::vector<std::vector<int> > &boxes);
 void boxMesh(double l[3], double u[3], double kh,
@@ -44,8 +55,8 @@ std::vector<std::vector<int> >& surrBoxesAll, unsigned int n);
 
 
 // Kernel.cpp
-void kernelGradientsPrecomputation(Kernel myKernel, int resolution, double kh,
-        std::vector<double> kernelGradientsSamples);
+void kernelGradPre(Kernel myKernel, int resolution, double kh,
+        std::vector<double> &kernelGradientsSamples);
 int indexSamples(int resolution, double r, double kh);
 double Wab(double r, double kh, Kernel choice);
 double gradWab(double r, double kh, Kernel choice);

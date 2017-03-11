@@ -2,6 +2,7 @@
 #include "Interface.h"
 #include "Physics.h"
 #include "Tools.h"
+#include "Structures.h"
 #include <ctime>
 
 int main(int argc, char *argv[])
@@ -31,21 +32,34 @@ int main(int argc, char *argv[])
     double ll[3] = {-L[0]/2, -L[1]/2, -L[2]/2};
     double uu[3] = {L[0]/2, L[1]/2, L[2]/2};
 
+    // Kernel type
+    Kernel kernelType = Quintic_spline;
+
     // Vectors declaration
     std::vector<std::vector<int> > neighborsAll_naive;
     std::vector<std::vector<int> > neighborsAll_linked;
     std::vector<std::vector<int> > neighborsAll_splitted;
+    std::vector<std::vector<int> > neighborsAll_splitted_s;
     std::vector<std::vector<double> > kernelGradientsAll;
+    std::vector<std::vector<double> > kernelGradientsAll_splitted;
+    std::vector<std::vector<double> > kernelGradientsAll_splitted_s;
+
     for(int i=0 ; i<pos.size()/3 ; i++){
         std::vector<int> A;
         std::vector<int> B;
         std::vector<int> C;
+        std::vector<int> C2;
         neighborsAll_naive.push_back(A);
         neighborsAll_linked.push_back(B);
         neighborsAll_splitted.push_back(C);
+        neighborsAll_splitted_s.push_back(C2);
 
         std::vector<double> D;
         kernelGradientsAll.push_back(D);
+        std::vector<double> E;
+        kernelGradientsAll_splitted.push_back(E);
+        std::vector<double> F;
+        kernelGradientsAll_splitted_s.push_back(E);
     }
 
     //Record algorithm performance
@@ -55,15 +69,16 @@ int main(int argc, char *argv[])
     // ALL PAIRS - NAIVE
     start = std::clock();
 
-    neighborAllPair(pos, kh, neighborsAll_naive, kernelGradientsAll);
+    //neighborAllPair(pos, kh, neighborsAll_naive, kernelGradientsAll, kernelType);
 
     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     std::cout<<"\nElapsed time AllPair: " << duration <<" [s]\n";
 
+
     // LINKED LIST
     start = std::clock();
 
-    neighborLinkedList(pos, ll, uu, kh, neighborsAll_linked, kernelGradientsAll);
+    neighborLinkedList(pos, ll, uu, kh, neighborsAll_linked, kernelGradientsAll, kernelType);
 
     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     std::cout<<"Elapsed time Linked List: " << duration <<" [s]\n";
@@ -72,7 +87,6 @@ int main(int argc, char *argv[])
     // SPLITTED NEIGHBORS
     start = std::clock();
 
-    double kh2 = kh*kh;
     std::vector<std::vector<int> > boxes;
     std::vector<std::vector<int> > surrBoxesAll;
     boxMesh(ll, uu, kh, boxes, surrBoxesAll);
@@ -82,7 +96,9 @@ int main(int argc, char *argv[])
             std::vector<int> neighbors;
             std::vector<double> kernelGradients;
             int particleID = boxes[box][part];
-            findNeighbors(particleID, pos, kh2, boxes, surrBoxesAll[box], neighbors, kernelGradients);
+            findNeighbors(particleID, pos, kh, boxes, surrBoxesAll[box],
+                neighbors, kernelGradients, kernelType);
+            kernelGradientsAll_splitted[particleID] = kernelGradients;
             neighborsAll_splitted[particleID] = neighbors; // TO COMPARE...
         }
     }
@@ -90,6 +106,33 @@ int main(int argc, char *argv[])
     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     std::cout<<"Elapsed time Splitted: " << duration <<" [s]\n";
 
+    // SPLITTED WITH SAMPLING
+
+    start = std::clock();
+
+    std::vector<double> kernelGradientsSamples;
+    int resolution = 200;
+    kernelGradPre(kernelType, resolution, kh, kernelGradientsSamples);
+
+    std::vector<std::vector<int> > boxes_s;
+    std::vector<std::vector<int> > surrBoxesAll_s;
+    boxMesh(ll, uu, kh, boxes_s, surrBoxesAll_s);
+    sortParticles(pos, ll, uu, kh, boxes_s); // At each time step (to optimize?)
+    for(int box=0 ; box<boxes_s.size() ; box++){
+        for(unsigned int part=0 ; part<boxes_s[box].size() ; part++){
+            std::vector<int> neighbors;
+            std::vector<double> kernelGradients;
+            int particleID = boxes[box][part];
+            findNeighbors(particleID, pos, kh, boxes_s, surrBoxesAll_s[box],
+                neighbors, kernelGradients, kernelType,
+                kernelGradientsSamples, resolution);
+            kernelGradientsAll_splitted_s[particleID] = kernelGradients;
+            neighborsAll_splitted_s[particleID] = neighbors; // TO COMPARE...
+        }
+    }
+
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"Elapsed time sampled Splitted: " << duration <<" [s]\n\n";
 
     // Comparison of the neighbors
     bool naive_ll = true;
@@ -100,15 +143,14 @@ int main(int argc, char *argv[])
     int nbSplitted = 0;
 
     for(int i=0 ; i<pos.size()/3 ; i++){
-        if(neighborsAll_naive[i].size() != neighborsAll_linked[i].size()){
+        //std::cout << kernelGradientsAll[i][1] << " and " << kernelGradientsAll_splitted[i][1] << "\n";
+        if(neighborsAll_naive[i].size() != neighborsAll_linked[i].size() && naive_ll == true){
             naive_ll = false;
             std::cout<<"Difference for " << i << "th particle between naive and linked\n";
-            break;
         }
-        if(neighborsAll_naive[i].size() != neighborsAll_splitted[i].size()){
+        if(neighborsAll_naive[i].size() != neighborsAll_splitted[i].size() && naive_splitted == true){
             naive_splitted = false;
             std::cout<<"Difference for " << i << "th particle between naive and splitted\n";
-            break;
         }
 
         nbNaive += neighborsAll_naive[i].size();
@@ -120,26 +162,21 @@ int main(int argc, char *argv[])
         std::sort(neighborsAll_splitted[i].begin(), neighborsAll_splitted[i].end());
 
         for(int j=0 ; j<neighborsAll_naive[i].size() ; j++){
-            if(neighborsAll_naive[i][j] != neighborsAll_linked[i][j]){
+            if(neighborsAll_naive[i][j] != neighborsAll_linked[i][j] && naive_ll == true){
                 naive_ll = false;
                 std::cout<<"Difference for " << i << "th particle between naive and linked\n";
-                break;
             }
-            if(neighborsAll_naive[i][j] != neighborsAll_splitted[i][j]){
+            if(neighborsAll_naive[i][j] != neighborsAll_splitted[i][j] && naive_splitted == true){
                 naive_splitted = false;
                 std::cout<<"Difference for " << i << "th particle between naive and splitted\n";
-                break;
             }
 
-        }
-        if(naive_ll == false || naive_splitted == false){
-            break;
         }
 
     }
 
     if(naive_ll == true && naive_splitted == true){
-        std::cout << "\nAll functions lead to the same neighbors!\n";
+        std::cout << "All functions lead to the same neighbors!\n";
     }
 
     std::cout<<"\nNeighbor pairs for Naive: " << nbNaive << "\n";
