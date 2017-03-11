@@ -73,7 +73,7 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
     }
 
     //Update speed of all moving particles
-    updateMovingSpeed(nextField,parameter,n*parameter->k);
+    updateMovingSpeed(nextField,parameter,n*parameter->k,none);
 
     bool reBoxing = false; // A fonction should be implemented to choose if we rebox or not
     return reBoxing;
