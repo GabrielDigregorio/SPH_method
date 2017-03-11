@@ -24,7 +24,9 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 {
   speedDerivative.assign(3,0.0);
   std::vector<double> viscosity;
-  viscosityComputation(particleID, neighbors, currentField, parameter, viscosity, c, h, violeau2012);
+
+  // ATTENTION !!! ON DOIT ENVOYER LA VRAI VITESSE DU SON ET LE VRAI H !!! (j'ai mis en attendant, 300m/s et h=kh/2')
+  viscosityComputation(particleID, neighbors, currentField, parameter, viscosity, 300.0, parameter->kh/2, violeau); 
 
   for (int j = 0; j <= 2; j++)
   {

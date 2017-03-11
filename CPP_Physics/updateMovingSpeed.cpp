@@ -41,10 +41,10 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t, MoveMod myM
  
     break;
 
-    case 2 : // case 2: mouvement levier avec le point le plus bas fixe.
+    //case 2 : // mouvement levier avec le point le plus bas fixe.
 
-    break;
+    //break;
 
-    default :
+    //default :
     }
 }
