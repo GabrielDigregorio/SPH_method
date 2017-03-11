@@ -10,10 +10,32 @@ set(groot,'defaultLineLineWidth',2)
 % Get Environement:
 name = getenv('COMPUTERNAME');
 if (strcmp(name,'DESKTOP-31TT348')) 
+     
      path = 'C:\Users\gabri\Dropbox\Applications\ShareLaTeX\SPH_PROJECT\';
      disp(['Welcome GabyGab: ']);
-else path = '';
+else path = ''; 
 end
+
+% Compile:
+disp(['Would you like to compile ? ']);
+c = input('(y/n): ');
+if(strcmp(name,'DESKTOP-31TT348')&&(c=='y' || c=='Y'))
+   cd ..; cd build\; system('mingw32-make')
+   cd ..; cd Matlab\;
+else disp(['You are not allowed to compile... ']);
+end
+
+disp(['Would you like to launch an experiment? ']);
+e = input('(y/n): ');
+if(strcmp(name,'DESKTOP-31TT348')&&(e=='y' || e=='Y'))
+   p = input('Parameter file name: '); p = strcat(p, 'txt')
+   g = input('Geometry file name: '); g = strcat(g, 'txt')
+   strcat('"../build/sph.exe" ',p, ' ',g, ' FreeFallingCube')
+   system('"../build/sph.exe" a.txt b.txt FreeFallingCube')
+else disp(['You are not allowed to launch an experiment... ']);
+end
+
+
 
 % Display Possibilities
 disp(['Experiments: ']);
@@ -61,8 +83,8 @@ case 1
         Str1 = char(Experiment.textdata(7)); Key1 = 'Memory Usage :';
         Str2 = char(Experiment.textdata(8)); Key2 = 'Peak :';
         Index1 = strfind(Str1, Key1); Index2 = strfind(Str2, Key2);
-        Memory(i)      = sscanf(Str1(Index1(1) + length(Key1):end), '%g', 1)
-        Memory_Peak(i) = sscanf(Str2(Index2(1) + length(Key2):end), '%g', 1)
+        Memory(i)      = sscanf(Str1(Index1(1) + length(Key1):end), '%g', 1);
+        Memory_Peak(i) = sscanf(Str2(Index2(1) + length(Key2):end), '%g', 1);
     
     end
 
