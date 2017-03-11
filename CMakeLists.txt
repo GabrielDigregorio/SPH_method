@@ -25,8 +25,10 @@ INCLUDE_DIRECTORIES(CPP_Interface CPP_Physics CPP_Tools Headers)
 ADD_EXECUTABLE(sph ${SRCS1} ${SRCS2} ${SRCS3} ${SRCS4} CPP_Main/SPH.cpp)
 ADD_EXECUTABLE(neighbors ${SRCS1} ${SRCS2} ${SRCS3} ${SRCS4} CPP_Main/Neighborhood_performance.cpp)
 
-
-
+IF(MINGW)
+    TARGET_LINK_LIBRARIES(sph psapi) # for "GetProcessMemoryInfo"
+    TARGET_LINK_LIBRARIES(neighbors psapi)
+ENDIF(MINGW)
 
 # - OpenMP --
 find_package(OpenMP)
