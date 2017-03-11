@@ -15,15 +15,17 @@ int main(int argc, char *argv[])
   char* parameterFilename;
   char* geometryFilename;
   std::string experimentFilename = "result"; // default name
-  if(argc<3)
+
+  // Check the arguments
+  if(argc<3) // Not enough argument
   {
     std::cout << "Invalid input files.\n";
     return EXIT_FAILURE;
   }
-  else if (argc<4)
-  {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename;}
-  else
-  {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = argv[3];}
+  else if (argc<4) // Use default name for the experiment (result)
+    {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename;}
+  else // Use default name for the experiment (result)
+    {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = argv[3];}
 
   //Read parameters
   Parameter* parameter =  new Parameter();
