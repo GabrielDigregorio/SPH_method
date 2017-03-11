@@ -1,5 +1,6 @@
 #include "Main.h"
 #include "Interface.h"
+#include "Tools.h"
 
 /*
  * In: field = stucture containing value to write
@@ -10,9 +11,9 @@
  * Out: speed_t.vtk, pos_t.vtk, or .txt
  */
 void writeField(Field* field, double t, Format myFormat, 
-                std::string const &filename,
                 std::string const &parameterFilename,
-                std::string const &geometryFilename)
+                std::string const &geometryFilename,
+                std::string const &filename)
 {
 
     std::map<std::string, std::vector<double> *> scalars;
@@ -170,11 +171,12 @@ void matlab(std::string const &filename,
     #else
     #error "Cannot define GetMemory( ) or GetMemoryProcessPeak( ) or GetMemoryProcess() for an unknown OS."
     #endif
-    f << "File Used: " << geometryFilename << " & " << parameterFilename << "\n";
-    f << "CPU Time : \n";
-    f << "Memory Usage : \n";
+    f << "File Used : " << geometryFilename << " & " << parameterFilename << "\n";
+    f << "CPU Time : " << "- [s]" << "\n";
+    f << "Memory Usage : " << GetMemoryProcess(false, false)<< " [kB]" <<"\n";
+    f << "Memory Usage Peak : " << GetMemoryProcessPeak(false, false)<< " [kB]" <<"\n";
     f << "\n";
-    f << "posX\t posY\t posZ\t velocityX\t velocityY\t velocityZ\t pressure\t density\t \n";
+    f << " posX\t\t\t posY\t\t\t posZ\t\t\t velocityX\t\t velocityY\t\t velocityZ\t\t density\t\t pressure\t\t mass\n";
 
     // Fill f:
     for(int i=0; i<nbp; ++i)

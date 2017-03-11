@@ -14,21 +14,25 @@ int main(int argc, char *argv[])
   // Check argument file
   char* parameterFilename;
   char* geometryFilename;
+  std::string experimentFilename = "result"; // default name
   if(argc<3)
   {
     std::cout << "Invalid input files.\n";
     return EXIT_FAILURE;
   }
-  else{parameterFilename = argv[1]; geometryFilename = argv[2];}
+  else if (argc<4)
+  {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename;}
+  else
+  {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = argv[3];}
 
   //Read parameters
-  Parameter* parameter;
+  Parameter* parameter =  new Parameter();
 
   //To implement
   //readParameter(parameterFilename,parameter);
 
   //Read geometry
-  Field* currentField;
+  Field* currentField =  new Field();
 
   //To implement
   //readGeometry(geometryFilename,currentField);
@@ -88,5 +92,6 @@ int main(int argc, char *argv[])
     nextField = tmpField;
     std::cout << "----END time step #----" << n << "\n \n";
   }
+
   return 0;
 }

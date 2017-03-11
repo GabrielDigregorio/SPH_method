@@ -19,9 +19,9 @@ void readGeometry(char* geometryFilename, Field* field);
 
 // writeField.cpp
 void writeField(Field* field, double t, Format myFormat, 
-                std::string const &filename="result",
                 std::string const &parameterFilename="Undefined",
-                std::string const &geometryFilename="Undefined");
+                std::string const &geometryFilename="Undefined",
+                std::string const &filename="result");
 
 
 // ParaView.cpp
