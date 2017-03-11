@@ -9,6 +9,8 @@
 // Kernel Types
 enum Kernel { Gaussian=1, Bell_shaped=2, Cubic_spline=3, Quadratic=4, Quintic=5, Quintic_spline=6 };
 
+// mode of the moveing particle 
+enum Mode_move { none=1, uni_sin=2, expon=3, levier=4 };
 
 
 /* Parameter Structure
