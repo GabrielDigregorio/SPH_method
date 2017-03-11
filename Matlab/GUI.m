@@ -14,11 +14,16 @@ if (strcmp(name,'DESKTOP-31TT348'))
 else path = ''; 
 end
 
+loop=1;
+
+while (loop==1)
 % Choices
 disp(['Would you like to:']);
 disp(['    1) Compile the project; ']);
 disp(['    2) Run an experiment; ']);
-disp(['    3) Analyse an experiment; ', ' ']);
+disp(['    3) Analyse an experiment; ']);
+disp(['    4) Edit a new experiment; ']);
+disp(['    5) Exit; ', ' ']);
 choice = input('Enter your choice number: ' ); disp(' ');
 
 switch(choice)
@@ -32,8 +37,9 @@ switch(choice)
         
     case 2 % Run:
         if(strcmp(name,'DESKTOP-31TT348'))
-           p = input('Parameter file name: ','s'); p = strcat(p, '.txt ')
-           g = input('Geometry file name: ','s'); g = strcat(g, '.txt ')
+           disp(['Choose among the list of Playgrounds: ']); dir('..\Playgrounds')
+           p = input('Parameter file name (w/ .kzr): ','s'); p = strcat(p, '.kzr ');
+           g = input('Geometry file name (w/ .kzr): ','s'); g = strcat(g, '.kzr ');
            system(char(strcat({'"../build/sph.exe"'},{' '},p,{' '},g,{' '}, {'FreeFallingCube'})))
         else disp(['You are not allowed to launch an experiment... ']);
         end
@@ -45,8 +51,27 @@ switch(choice)
         disp(['3) Stationary Tank']);disp([' ']);
         n = input('Enter the number of the experiment: ');
         exit = TestCases(n, path)
+    
+    case 4 % Edit File
+        cd ..; cd Playgrounds\;
+        p = input('NEW Parameter file name: ','s'); p = strcat(p, '.kzr ');
+        if (exist(p, 'file')==0) 
+            fid = fopen( p, 'wt' );
+            edit(p);
+        end
+        g = input('NEW Geometry file name: ','s'); g = strcat(g, '.kzr ');
+        if (exist(g, 'file')==0) 
+            fid = fopen( g, 'wt' );
+            edit(g);
+        end
+        input('Enter: '); fclose(p); fclose(g);
+        cd ..; cd Matlab\;
         
-    otherwise disp(['Not valid choice']);
+    case 5 % Exit
+        loop=0;
+    otherwise disp(['Not valid choice']); disp(' ');
+end
+
 end
 
 

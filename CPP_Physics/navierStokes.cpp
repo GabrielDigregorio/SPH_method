@@ -24,7 +24,7 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 {
   speedDerivative.assign(3,0.0);
   std::vector<double> viscosity;
-  viscosityComputation(particleID, neighbors, currentField, parameter, viscosity);
+  viscosityComputation(particleID, neighbors, currentField, parameter, viscosity, c, h, violeau2012);
 
   for (int j = 0; j <= 2; j++)
   {

@@ -6,9 +6,9 @@
  *     parameter = structure containing the parameter usefull to know the movement of the wall
  * Out: Mise à jour des vitesses des parois mobiles
  */
-void updateMovingSpeed(Field* field,Parameter* parameter,double t,Mode_move myMode)
+void updateMovingSpeed(Field* field, Parameter* parameter, double t, MoveMod myMod)
 {   
-    switch(myMode){
+    switch(myMod){
 
     case 1 :
         // uniforme periodic mouvement in each direction
