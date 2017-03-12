@@ -17,14 +17,14 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
         int start = field->nFixed + field->nFree;
         int end = field->nTotal;
 
-        for(int i=start ; i<end-2 ; i=i+3)
+        for(int i=start ; i<end ; i++)
         {
             // x
-            field->speed[i]=parameter->movingDirection[1]*sin(parameter->charactTime*t);
+            field->speed[3*i]=parameter->movingDirection[0]*sin(parameter->charactTime*t);
             // y
-            field->speed[i+1]=parameter->movingDirection[2]*sin(parameter->charactTime*t);
+            field->speed[3*i+1]=parameter->movingDirection[1]*sin(parameter->charactTime*t);
             // z
-            field->speed[i+2]=parameter->movingDirection[3]*sin(parameter->charactTime*t);
+            field->speed[3*i+2]=parameter->movingDirection[2]*sin(parameter->charactTime*t);
         }
 
     break;
