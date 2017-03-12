@@ -7,14 +7,16 @@
 #include "Structures.h"
 #include <map>
 #include <chrono>
+#include <ctime>
 #include <cstdlib>
 #include <sstream>
 #include <iomanip>
 
 
-// Playground.cpp
+// inputReader.cpp
 void readParameter(char* parameterFilename, Parameter* parameter);
 void readGeometry(char* geometryFilename, Field* field);
+void readBrick(int type, std::ifstream* inFile, Field* currentField);
 
 // writeField.cpp
 void writeField(Field* field, double t, Format myFormat, 
