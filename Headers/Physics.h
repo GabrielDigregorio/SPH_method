@@ -60,6 +60,7 @@ void kernelGradPre(Kernel myKernel, int resolution, double kh,
 int indexSamples(int resolution, double r, double kh);
 double Wab(double r, double kh, Kernel choice);
 double gradWab(double r, double kh, Kernel choice);
+double gethFromkh(Kernel kernelType, double kh);
 
 // Init.cpp
 void densityInit(Field* field,Parameter* parameter);

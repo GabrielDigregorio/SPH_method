@@ -161,3 +161,23 @@ double gradWab(double r, double kh, Kernel myKernel)
     }
 
 }
+
+double gethFromkh(Kernel kernelType, double kh){
+    switch (kernelType){
+    case 1 : // Gausian Kernel
+        return kh; // Attention, different signification for Gaussian!
+    case 2 : // Bell-shaped Kernel
+        return kh;
+    case 3 : // Cubic spline Kernel
+        return kh/2.0;
+    case 4 : // Quadratic Kernel
+        return kh/2.0;
+    case 5 : // Quintic Kernel
+        return kh/2.0;
+    case 6 : // Quintic spline Kernel
+        return kh/3.0;
+    default :
+        std::cout<< "Non existing kernel.\n";
+        return 0.0;
+    }
+}
