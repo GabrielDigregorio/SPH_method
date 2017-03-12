@@ -42,4 +42,7 @@ void cleanField(Field* field);
 void cleanParameter(Parameter* parameter);
 void boxClear(std::vector<std::vector<int> > &boxes);
 
+//sizeField
+void sizeField(Field *field, int nTotal);
+
 #endif

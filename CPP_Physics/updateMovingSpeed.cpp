@@ -9,40 +9,27 @@
 
 void updateMovingSpeed(Field* field, Parameter* parameter, double t)
 {
-    switch(parameter->moveMod){
+    switch(parameter->speedLaw){
 
-    case 1 :
+    case sine :
         // uniforme periodic mouvement in each direction
-        // case 1: simple translation right to left ( x direction ) ( sin pour tout )
-        // depending on the parameter choose
-        int nb_free;
-        int nb_fixed;
-        int nb_mov;
-        nb_free=field->nFree;
-        nb_fixed=field->nFixed;
-        nb_mov=field->nMoving;
-        int start=nb_fixed+nb_free;
-        int end =nb_fixed+nb_free+nb_mov;
-        // maybe put this in a vector of parameter ?
-        double A1=1;
-        double A2=1;
-        double A3=1;
-        double w1=1;
-        double w2=1;
-        double w3=1;
-        for(int i=start ; i<end ; i=i+3)
+
+        int start = field->nFixed + field->nFree;
+        int end = field->nTotal;
+
+        for(int i=start ; i<end-2 ; i=i+3)
         {
             // x
-            field->speed[i]=A1*sin(w1*t);
+            field->speed[i]=parameter->movingDirection[1]*sin(parameter->charactTime*t);
             // y
-            field->speed[i+1]=A2*sin(w2*t);
+            field->speed[i+1]=parameter->movingDirection[2]*sin(parameter->charactTime*t);
             // z
-            field->speed[i+2]=A3*sin(w3*t);
+            field->speed[i+2]=parameter->movingDirection[3]*sin(parameter->charactTime*t);
         }
 
     break;
 
-    //case 2 : // mouvement levier avec le point le plus bas fixe.
+    //case 2 :
 
     //break;
 

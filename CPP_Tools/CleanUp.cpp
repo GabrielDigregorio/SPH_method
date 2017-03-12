@@ -9,6 +9,7 @@ void cleanField(Field* field)
     field->density.clear();
     field->pressure.clear();
     field->mass.clear();
+    field->s.clear();
     delete field;
 }
 

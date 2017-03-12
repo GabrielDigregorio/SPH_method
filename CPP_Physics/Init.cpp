@@ -1,6 +1,17 @@
 #include "Main.h"
 #include "Physics.h"
 
+void speedInit(Field* field,Parameter* parameter)
+{
+	std::cout << "----BEGIN speed initialitation---- \n \n";
+	// On démarre du repos, d'autres choix pourraient être fait.
+	field->speed.assign(field->nTotal,0.0);
+
+  // Initialisation des moving boundaries
+  if(field->nMoving != 0){updateMovingSpeed(field,parameter,0.0);}
+
+	std::cout << "----END speed initialitation---- \n \n";
+}
 //-----------------------------------------------------------------------------------------
 /*
 * In: field = structure containing the position of particules (among others)
@@ -24,18 +35,18 @@ void densityInit(Field* field,Parameter* parameter)
 		double zMax;
 		zMax = *(std::max_element(&field->pos[0],&field->pos[field->nFree+1]));
 
-		for (int i = 2; i < field->pos.size()/3; i = i + 3)
+		for (int i = 0; i < field->nTotal; i++)
 		{
-			H = zMax - field->pos[i];
+			H = zMax - field->pos[3*i+2];
 			double rho = rho_0*(1 + (1 / B)*rho_0*g*H);
 
-			field->density.push_back(pow(rho, 1.0 / gamma));
+			field->density[i] = pow(rho, 1.0 / gamma);
 		}
 		break;
 		case homogeneous:
-		for (int i = 2; i < field->pos.size()/3; i = i + 3)
+		for (int i = 0; i < field->nTotal; i++)
 		{
-			field->density.push_back(rho_0);
+			field->density[i] = rho_0;
 		}
 
 		break;
@@ -65,7 +76,7 @@ std::cout << "----END density initialitation---- \n \n";
 void pressureComputation(Field* field,Parameter* parameter)
 {
 
-	std::cout << "----BEGIN density initialitation---- \n \n";
+	std::cout << "----BEGIN pressure computation---- \n \n";
 	//Récupération des paramètres
 	double rho_0 = parameter->densityRef;
 	double B = parameter->B;
@@ -77,12 +88,12 @@ void pressureComputation(Field* field,Parameter* parameter)
 		case quasiIncompressible:
 
 
-		for (int i=0; i<field->pos.size()/3; i++)
+		for (int i=0; i<field->nTotal; i++)
 		{
 			double rho = field->density[i];
 			double p = B*(pow(rho/rho_0,gamma)-1);
 
-			field->pressure.push_back(p);
+			field->pressure[i] = p;
 		}
 		break;
 	}
@@ -102,12 +113,12 @@ void massInit(Field* field,Parameter* parameter)
 {
 
 	std::cout << "----BEGIN mass initialitation---- \n \n";
-	for (int i=0; i<field->s.size(); i++)
+	for (int i=0; i<field->nTotal; i++)
 	{
 		double V = field->s[i]*field->s[i]*field->s[i];
 		double m = field->density[i]*V;
 
-		field->mass.push_back(m);
+		field->mass[i] = m;
 	}
 
 	std::cout << "----END mass initialitation---- \n \n";
