@@ -26,9 +26,17 @@
     gamma=1.1111
     g=9.81
     WI=1.11111
-    met=RungeKutta
-    rhoMet=bla1
-    SEM=bla2
-    MIM=bla3
-    SLaw=bla4
+    charactTime=1.0
+    movDirX=2.1
+    movDirY=2.2
+    movDirZ=2.3
+    kernel=1
+    viscoMod=1
+    intMet=0
+    densMet=0
+    SEMet=0
+    MIMet=0
+    SLaw=0
+    MoveMod=1
+    Format=1
 #END_F
