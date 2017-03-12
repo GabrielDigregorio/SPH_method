@@ -1,7 +1,8 @@
+#PARA1
 %********************************************
 % PLAYGROUND : Fluid example
 % #FLUID
-% 
+%
 % kh = smothing length
 % k = time step
 % T = simulation time
@@ -16,19 +17,18 @@
 % massInitMethod = violeau2012 (all particles have same volumes), etc.
 % speedLaw = To be determined, will dictate the behaviour of moving boundaries
 %********************************************
-
-#FLUID
-     kh=1
-      k=1.1
-      T=1.11
-    rho=1000
-      B=1.111
-  gamma=1.1111
-      g=9.81
-     WI=1.11111
+#param
+    kh=1.0
+    k=1.1
+    T=1.11
+    rho=1000.0
+    B=1.111
+    gamma=1.1111
+    g=9.81
+    WI=1.11111
     met=RungeKutta
- rhoMet=blablabla
-    SEM=blablabla
-    MIM=blablabla
-   SLaw=blablabla
-#END_FLUID
+    rhoMet=bla1
+    SEM=bla2
+    MIM=bla3
+    SLaw=bla4
+#END_F
