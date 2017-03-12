@@ -1,7 +1,7 @@
 #PARA1
 %********************************************
-% PLAYGROUND : Fluid example
-% #FLUID
+% PLAYGROUND : Parameter example
+% #param
 %
 % kh = smothing length
 % k = time step

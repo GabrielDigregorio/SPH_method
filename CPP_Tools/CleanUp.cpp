@@ -25,7 +25,7 @@ void boxClear(std::vector<std::vector<int> > &boxes){
         boxes[i].clear();
 }
 
-// Allocate memory
+// Memory allocation for structure Field
 void sizeField(Field *field, int nTotal)
 {
   field->pos.resize(3*nTotal);

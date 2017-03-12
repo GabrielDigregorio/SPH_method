@@ -1,5 +1,5 @@
 ///**************************************************************************
-/// HEADER: Function Used As Tools (Memory, CPU,...)
+/// HEADER: Function Used As Tools (Memory, CPU, Clean,...)
 ///**************************************************************************
 
 #ifndef TOOLS_H
