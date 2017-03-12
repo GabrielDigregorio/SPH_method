@@ -167,28 +167,34 @@ void readParameter(std::string filename, Parameter* parameter){
                                                         if(cnt==8)
                                                                 parameter->charactTime=atof(valueArray);
                                                         if(cnt==9)
-                                                                parameter->movingDirection[0]=atof(valueArray);
+                                                                parameter->c=atof(valueArray);
                                                         if(cnt==10)
-                                                                parameter->movingDirection[1]=atof(valueArray);
+                                                                parameter->alpha=atof(valueArray);
                                                         if(cnt==11)
-                                                                parameter->movingDirection[2]=atof(valueArray);
+                                                                parameter->beta=atof(valueArray);
                                                         if(cnt==12)
-                                                                parameter->kernel=(Kernel) atoi(valueArray);
+                                                                parameter->epsilon=atof(valueArray);
                                                         if(cnt==13)
-                                                                parameter->viscoMod=(ViscoMod) atoi(valueArray);
+                                                                parameter->movingDirection[0]=atof(valueArray);
                                                         if(cnt==14)
-                                                                parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
+                                                                parameter->movingDirection[1]=atof(valueArray);
                                                         if(cnt==15)
-                                                                parameter->densityInitMethod=(DensityInitMethod) atoi(valueArray);
+                                                                parameter->movingDirection[2]=atof(valueArray);
                                                         if(cnt==16)
-                                                                parameter->stateEquationMethod=(StateEquationMethod) atoi(valueArray);
+                                                                parameter->kernel=(Kernel) atoi(valueArray);
                                                         if(cnt==17)
-                                                                parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
+                                                                parameter->viscoMod=(ViscoMod) atoi(valueArray);
                                                         if(cnt==18)
-                                                                parameter->speedLaw=(SpeedLaw) atoi(valueArray);
+                                                                parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
                                                         if(cnt==19)
-                                                                parameter->moveMod=(MoveMod) atoi(valueArray);
+                                                                parameter->densityInitMethod=(DensityInitMethod) atoi(valueArray);
                                                         if(cnt==20)
+                                                                parameter->stateEquationMethod=(StateEquationMethod) atoi(valueArray);
+                                                        if(cnt==21)
+                                                                parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
+                                                        if(cnt==22)
+                                                                parameter->speedLaw=(SpeedLaw) atoi(valueArray);
+                                                        if(cnt==23)
                                                                 parameter->format=(Format) atoi(valueArray);
                                                         ++cnt;
                                                 }
