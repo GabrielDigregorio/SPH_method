@@ -41,7 +41,7 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
         // Integration
         switch ( parameter->integrationMethod )
         {
-          case euler: // u_(n+1) = u_n + k * du/dt
+          case euler: // u_n = u_(n-1) + k * du/dt
           nextField->density[particleID] = currentField->density[particleID] + parameter->k*densityDerivative;
 
           // Uptade speed only for Free particles

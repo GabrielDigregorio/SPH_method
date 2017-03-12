@@ -1,5 +1,5 @@
 ///**************************************************************************
-/// HEADER: Function Used As Tools (Memory, CPU,...)
+/// HEADER: Function Used As Tools (Memory, CPU, Clean,...)
 ///**************************************************************************
 
 #ifndef TOOLS_H
@@ -41,5 +41,8 @@ size_t GetMemoryProcessPeak(bool screen, bool print);
 void cleanField(Field* field);
 void cleanParameter(Parameter* parameter);
 void boxClear(std::vector<std::vector<int> > &boxes);
+
+//sizeField
+void sizeField(Field *field, int nTotal);
 
 #endif

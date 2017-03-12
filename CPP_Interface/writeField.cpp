@@ -2,6 +2,7 @@
 #include "Interface.h"
 #include "Tools.h"
 
+
 /*
  * In: field = stucture containing value to write
  *     t = time corresponding to the file to write
@@ -10,12 +11,11 @@
  *     geometryFilename = geometry file used
  * Out: speed_t.vtk, pos_t.vtk, or .txt
  */
-void writeField(Field* field, double t, Format myFormat, 
+void writeField(Field* field, double t, Format myFormat,
                 std::string const &parameterFilename,
                 std::string const &geometryFilename,
                 std::string const &filename)
 {
-
     std::map<std::string, std::vector<double> *> scalars;
     std::map<std::string, std::vector<double> *> vectors;
 
@@ -60,7 +60,7 @@ void writeField(Field* field, double t, Format myFormat,
 //   step:    time step number
 //   scalars: scalar fields defined on particles (map linking [field name] <=> [vector of results v1, v2, v3, v4, ...]
 //   vectors: vector fields defined on particles (map linking [field name] <=> [vector of results v1x, v1y, v1z, v2x, v2y, ...]
-void paraView(std::string const &filename, 
+void paraView(std::string const &filename,
               int step,
               std::vector<double> const &pos,
               std::map<std::string, std::vector<double> *> const &scalars,
@@ -68,7 +68,7 @@ void paraView(std::string const &filename,
 {
     int nbp = pos.size()/3;
     assert(pos.size()==nbp*3); // should be multiple of 3
-    
+
     // build file name + stepno + vtk extension
     std::stringstream s; s <<  "../Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtk";
 
@@ -116,6 +116,7 @@ void paraView(std::string const &filename,
         for(int i=0; i<nbp; ++i)
             f << (*it->second)[3*i+0] << " " << (*it->second)[3*i+1] << " " << (*it->second)[3*i+2] << '\n';
     }
+
     f.close();
 }
 
@@ -150,7 +151,8 @@ void matlab(std::string const &filename,
 
     // Date
     std::time_t Date = std::chrono::system_clock::to_time_t(start);
- 
+    time_t rawtime; struct tm * timeinfo; time (&rawtime); timeinfo = localtime (&rawtime);
+
     // build file name + stepno + vtk extension
     std::stringstream s; s << "../Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".txt";
 
@@ -161,7 +163,7 @@ void matlab(std::string const &filename,
 
     // header
     f << "#EXPERIMENT: " << filename << "\n";
-    f << "Date : " << std::put_time(std::localtime(&Date), "%c") << "\n";
+    f << "Date : " << asctime(timeinfo);
     #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
     f << "Computer Name : "<< getenv("COMPUTERNAME") <<"\n";
     f << "Username : "<< getenv("USERNAME") <<"\n";
@@ -191,11 +193,12 @@ void matlab(std::string const &filename,
 
     // End Chrono
     end = std::chrono::system_clock::now();
- 
+
     // Write result on file
     std::chrono::duration<double> elapsed_seconds = end-start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
     //std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
     f.close();
+
     }

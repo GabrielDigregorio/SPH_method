@@ -1,17 +1,18 @@
 #include "Main.h"
 #include "Physics.h"
 
-void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity, double c, double h)
+void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity)
 {
-  //viscosity.assign(neighbors.size(),0.0); // To be changed to fit formula of Goffin
+  double alpha   = parameter->alpha;
+  double beta    = parameter->beta;
+  double epsilon = parameter->epsilon;
+  double c = parameter->c;
+  double h = gethFromkh(parameter->kernel ,parameter->kh);
 
-  double alpha   = 1.0;
-  double beta    = 0.0;
-  double epsilon = 0.01; // See in litterature
-
-  switch( parameter->viscoMod){
-  case 1 :
+  switch(parameter->viscosityModel){
+  case violeauArtificial :
       // For each neighbor of the particleID
+      /* FAUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUX !!!!!!!!!!
       for (int i = 0; i < neighbors.size(); i++)
       {
           double U_ij = currentField->speed[neighbors[i]] * currentField->speed[particleID]
@@ -29,11 +30,12 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
           }
           else viscosity[i] = 0.0;
       }
+      */
 
     break;
 
     default :
       std::cout<< "Non existing Viscosity.\n";
   }
- 
+
 }

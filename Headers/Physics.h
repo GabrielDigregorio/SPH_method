@@ -63,6 +63,7 @@ double gradWab(double r, double kh, Kernel choice);
 double gethFromkh(Kernel kernelType, double kh);
 
 // Init.cpp
+void speedInit(Field* field,Parameter* parameter);
 void densityInit(Field* field,Parameter* parameter);
 void pressureComputation(Field* field,Parameter* parameter);
 void massInit(Field* field,Parameter* parameter);
@@ -79,6 +80,6 @@ double continuity(int particleID, std::vector<int>& neighbors, std::vector<doubl
 void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
 
 // viscosityComputation.cpp
-void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity, double c, double h);
+void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity);
 
 #endif

@@ -9,6 +9,7 @@ void cleanField(Field* field)
     field->density.clear();
     field->pressure.clear();
     field->mass.clear();
+    field->s.clear();
     delete field;
 }
 
@@ -22,4 +23,15 @@ void cleanParameter(Parameter* parameter)
 void boxClear(std::vector<std::vector<int> > &boxes){
     for(int i=0 ; i<boxes.size() ; i++)
         boxes[i].clear();
+}
+
+// Memory allocation for structure Field
+void sizeField(Field *field, int nTotal)
+{
+  field->pos.resize(3*nTotal);
+  field->speed.resize(3*nTotal);
+  field->mass.resize(nTotal);
+  field->pressure.resize(nTotal);
+  field->density.resize(nTotal);
+  field->s.resize(nTotal);
 }
