@@ -12,6 +12,7 @@ build/
 *.dat
 *.asv
 *.eps
+*h.gch
 test.*
 .DS_Store
 !CMakeLists.txt

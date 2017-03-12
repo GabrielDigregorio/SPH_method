@@ -1,10 +1,24 @@
-#include "inputReader.h"
+#include "Physics.h"
+#include "Main.h"
 
-void readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector<int>* sValues){
+
+#include <sstream>
+#include <algorithm>
+
+#define N_UL 3
+#define N_DATA 9
+#define N_PARAM 13
+
+enum geomType{cube,cylinder,sphere};
+enum boundCondition{freePart, movingPart, fixedPart};
+
+void readBrick(int type, std::ifstream* inFile, Field* currentField,
+                std::vector<double>* posFree, std::vector<double>* posMoving, std::vector<double>* posFixed){
         std::string buf;
         int cnt=0;
         char valueArray[1024];
         float brickData[N_DATA];
+
         while(cnt!=N_DATA){
                 std::getline(*inFile, buf);
                 if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray)){
@@ -21,34 +35,34 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector
         switch(type){
                 case cube :
                         if(c==freePart)
-                                meshcube(o, L, s, currentField->posFree, r, true);
+                                meshcube(o, L, s, *posFree, r, true);
                         else if(c==movingPart)
-                                meshcube(o, L, s, currentField->posMoving, r, true);
+                                meshcube(o, L, s, *posMoving, r, true);
                         else if(c==fixedPart)
-                                meshcube(o, L, s, currentField->posFixed, r, true);
+                                meshcube(o, L, s, *posFixed, r, true);
                 break;
                 case cylinder :
                         if(c==freePart)
-                                meshcylinder(o, L, s, currentField->posFree, r, true);
+                                meshcylinder(o, L, s, *posFree, r, true);
                         else if(c==movingPart)
-                                meshcylinder(o, L, s, currentField->posMoving, r, true);
+                                meshcylinder(o, L, s, *posMoving, r, true);
                         else if(c==fixedPart)
-                                meshcylinder(o, L, s, currentField->posFixed, r, true);
+                                meshcylinder(o, L, s, *posFixed, r, true);
                 break;
                 case sphere :
                         if(c==freePart)
-                                meshsphere(o, L, s, currentField->posFree, r, true);
+                                meshsphere(o, L, s, *posFree, r, true);
                         else if(c==movingPart)
-                                meshsphere(o, L, s, currentField->posMoving, r, true);
+                                meshsphere(o, L, s, *posMoving, r, true);
                         else if(c==fixedPart)
-                                meshsphere(o, L, s, currentField->posFixed, r, true);
+                                meshsphere(o, L, s, *posFixed, r, true);
                 break;
         }
-        sValues->push_back(s); // TO BE USED IF S VALUES ARE NEEDED
+        (currentField->s).push_back(s);
 }
 
 void readGeometry(std::string filename, Field* currentField){
-        std::vector<int> sValues; // TO BE USED IF S VALUES ARE NEEDED
+        std::vector<double> posFree, posFixed, posMoving; // TO BE USED IF S VALUES ARE NEEDED
         std::ifstream inFile(filename);
         std::string buf;
         char valueArray[1024];
@@ -85,12 +99,21 @@ void readGeometry(std::string filename, Field* currentField){
                                         }
                                 }
                                 else if(buf=="brick")
-                                        readBrick(cube,&inFile, currentField, &sValues);
+                                        readBrick(cube,&inFile, currentField,
+                                                &posFree, &posFixed, &posMoving);
                                 else if(buf=="cylin")
-                                        readBrick(cylinder,&inFile, currentField, &sValues);
+                                        readBrick(cylinder,&inFile, currentField,
+                                                &posFree, &posFixed, &posMoving);
                                 else if(buf=="spher")
-                                        readBrick(sphere,&inFile, currentField, &sValues);
+                                        readBrick(sphere,&inFile, currentField,
+                                                &posFree, &posFixed, &posMoving);
                                 else if(buf=="END_G"){
+                                        currentField->nFree=posFree.size();
+                                        currentField->nFixed=posFixed.size();
+                                        currentField->nMoving=posMoving.size();
+                                        posFree.insert(posFree.end(), posFixed.begin(), posFixed.end());
+                                        posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
+                                        currentField->pos=posFree;
                                         return; // REPLACE BY return(0);
                                 }
                                 else{
@@ -142,15 +165,31 @@ void readParameter(std::string filename, Parameter* parameter){
                                                         if(cnt==7)
                                                                 parameter->writeInterval=atof(valueArray);
                                                         if(cnt==8)
-                                                                parameter->integrationMethod=valueArray;
+                                                                parameter->charactTime=atof(valueArray);
                                                         if(cnt==9)
-                                                                parameter->densityInitMethod=valueArray;
+                                                                parameter->movingDirection[0]=atof(valueArray);
                                                         if(cnt==10)
-                                                                parameter->stateEquationMethod=valueArray;
+                                                                parameter->movingDirection[1]=atof(valueArray);
                                                         if(cnt==11)
-                                                                parameter->massInitMethod=valueArray;
+                                                                parameter->movingDirection[2]=atof(valueArray);
                                                         if(cnt==12)
-                                                                parameter->speedLaw=valueArray;
+                                                                parameter->kernel=(Kernel) atoi(valueArray);
+                                                        if(cnt==13)
+                                                                parameter->viscoMod=(ViscoMod) atoi(valueArray);
+                                                        if(cnt==14)
+                                                                parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
+                                                        if(cnt==15)
+                                                                parameter->densityInitMethod=(DensityInitMethod) atoi(valueArray);
+                                                        if(cnt==16)
+                                                                parameter->stateEquationMethod=(StateEquationMethod) atoi(valueArray);
+                                                        if(cnt==17)
+                                                                parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
+                                                        if(cnt==18)
+                                                                parameter->speedLaw=(SpeedLaw) atoi(valueArray);
+                                                        if(cnt==19)
+                                                                parameter->moveMod=(MoveMod) atoi(valueArray);
+                                                        if(cnt==20)
+                                                                parameter->format=(Format) atoi(valueArray);
                                                         ++cnt;
                                                 }
                                                 else{continue;}
