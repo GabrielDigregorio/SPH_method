@@ -1,160 +1,183 @@
-#include "../Headers/SPH.hpp"
-# define M_PI           3.14159265358979323846  /* pi */
+#include "Main.h"
+#include "Physics.h"
+#include "Structures.h"
+#define M_PI           3.14159265358979323846  /* pi */
 
+
+// kernelGradientsPrecomputation
+// Precomputes discrete values of the kernel gradient:
+// -> discrete values : {0, kh/(resolution-1), 2*kh/(resolution-1), ..., kh}
+void kernelGradPre(Kernel myKernel, int resolution, double kh,
+        std::vector<double> &kernelGradientsSamples){
+    // Consistency verification
+    assert(resolution > 1);
+    // Loop on the values
+    double r = 0.0;
+    double increment = kh/((double) resolution - 1.0);
+    for(int i=0 ; i<resolution ; i++){
+        kernelGradientsSamples.push_back(gradWab(r, kh, myKernel));
+        r += increment;
+    }
+}
+
+// Gives the index of the closest sample value of the kernel gradient for a given resolution
+// The index goes from 0 (r=0) to resolution-1 (r=kh)
+int indexSamples(int resolution, double r, double kh){
+    return round(r * (resolution-1) / kh); // ATTENTION
+}
 
 // Smoothing function
-double Wab(std::vector<double> pos, int partA, int partB, double h, size_t choice)
-{   
-    // Constant normalisation
+// (For the gaussian kernel, kh is the size of the boxes)
+double Wab(double r, double kh, Kernel myKernel)
+{
+    // Normalisation constant
     double alphaD;
 
-    // Support domain
-    double k; 
+    double h;
 
-    // Compute the distance btween two particle A and B
-    double r =  sqrt(distance(pos, partA, partB));
-
-    switch (choice){
-
+    switch (myKernel){
     case 1 : // Gausian Kernel
-        alphaD = 1.0/(pow(M_PI,3/2)*pow(h,3));
-        k = DBL_MAX;
-        return alphaD*exp(-pow(r/h,2));
+        h = kh;
+        alphaD = 1.0/(pow(M_PI,1.5)*h*h*h);
+        return alphaD*exp(-(r/h)*(r/h));
     break;
-
     case 2 : // Bell-shaped Kernel
-        alphaD = 105.0/(16.0*M_PI*pow(h,3));
-        k = 1;
-        if(r/h <= 1.0)
-            return alphaD*((1.0+3.0*(r/h)) * pow((1.0-(r/h)),3));
+        h = kh;
+        alphaD = 6.5625/(M_PI*h*h*h);
+        if(r < h)
+            return alphaD*((1.0+3.0*(r/h)) * ((1.0-(r/h))*(1.0-(r/h))*(1.0-(r/h))));
         else
             return 0.0;
     break;
-
     case 3 : // Cubic spline Kernel
-        alphaD = 3.0/(2.0*M_PI*pow(h,3)); 
-        k = 2;
-        if(0.0 <= r/h && r/h < 1.0)
-            return alphaD*((2.0/3.0) - pow((r/h),2) + (1.0/2.0)*pow((r/h),3));
-        else if (1.0 <= r/h && r/h < 2.0)
-            return alphaD*((1.0/6.0) * pow((1.0-(r/h)),3));
+        h = kh/2.0;
+        alphaD = 1.5/(M_PI*h*h*h);
+        if(r < h) // never negative...
+            return alphaD*(1.5 - r*r/(h*h) + 0.5*r*r*r/(h*h*h) );
+        else if (r < 2*h)
+            return alphaD*((1.0/6.0) * (1.0-(r/h))*(1.0-(r/h))*(1.0-(r/h)));
         else
             return 0.0;
     break;
-
     case 4 : // Quadratic Kernel
-        alphaD = 5.0/(4.0*M_PI*pow(h,3)); 
-        k = 2;
-        if(0.0 <= r/h && r/h <= 2.0)
-            return alphaD*((3.0/16.0)*pow((r/h),2) - (3.0/4.0)*(r/h) + (3.0/4.0));
+        h = kh/2.0;
+        alphaD = 1.25/(M_PI*h*h*h);
+        if(r < 2*h)
+            return alphaD*(0.0625*r*r/(h*h) - 0.75*(r/h) + 0.75);
         else
             return 0.0;
     break;
-
     case 5 : // Quintic Kernel
-        alphaD = 21.0/(16.0*M_PI*pow(h,3)); 
-        k = 2;
-        if(0.0 <= r/h && r/h <= 2.0)
-            return alphaD*(pow((1.0-(1.0/2.0)*(r/h)),4) * (2.0*(r/h) + 1.0));
+        h = kh/2.0;
+        alphaD = 1.3125/(M_PI*h*h*h);
+        if(r < 2*h)
+            return alphaD*((1-0.5*(r/h))*(1-0.5*(r/h))*(1-0.5*(r/h))*(1-0.5*(r/h)) * (2*r/h + 1));
         else
             return 0.0;
     break;
-
     case 6 : // Quintic spline Kernel
-        alphaD = 3.0/(359.0*M_PI*pow(h,3)); 
-        k = 3;
-        if(0.0 <= r/h && r/h < 1.0)
-            return alphaD*(pow((3.0-(r/h)),5) - 6.0*pow((2.0-(r/h)),5) + 15.0*pow((1.0-(r/h)),5));
-        else if (1.0 <= r/h && r/h < 2.0)
-            return alphaD*(pow((3.0-(r/h)),5) - 6.0*pow((2.0-(r/h)),5));
-        else if (2.0 <= r/h && r/h < 3.0)
-            return alphaD*(pow((3.0-(r/h)),5));
+        h = kh/3.0;
+        alphaD = 3.0/(359.0*M_PI*h*h*h);
+        if(r < h)
+            return alphaD*(pow((3-(r/h)),5) - 6*pow((2-(r/h)),5) + 15*pow((1-(r/h)),5));
+        else if (r < 2*h)
+            return alphaD*(pow((3-(r/h)),5) - 6*pow((2-(r/h)),5));
+        else if (r < 3*h)
+            return alphaD*(pow((3-(r/h)),5));
         else
             return 0.0;
     break;
-
-    default: return 0.0;
-
+    default :
+        std::cout<< "Non existing kernel.\n";
+        return 0.0;
     }
 
 }
 
-
-
-// Darivative of the smoothing function
-double grad_Wab(std::vector<double> pos, int partA, int partB, double h, size_t choice)
-{   
-    // Constant normalisation
+// Derivative of the smoothing function
+double gradWab(double r, double kh, Kernel myKernel)
+{
+    // Normalisation constant
     double alphaD;
 
-    // Support domain
-    double k; 
+    double h;
 
-    // Compute the distance btween two particle A and B
-    double r =  sqrt(distance(pos, partA, partB));
-
-    switch (choice){
-
+    switch (myKernel){
     case 1 : // Gausian Kernel
-        alphaD = 1.0/(pow(M_PI,3/2)*pow(h,3));
-        k = DBL_MAX;
-        return (alphaD/h)*(-2.0*(r/h))*exp(-pow(r/h,2));
+        h = kh;
+        alphaD = 1.0/(pow(M_PI,3.0/2.0)*h*h*h);
+        return (alphaD/h)*(-2.0*(r/h))*exp(-(r/h)*(r/h));
     break;
-
     case 2 : // Bell-shaped Kernel
-        alphaD = 105.0/(16.0*M_PI*pow(h,3));
-        k = 1;
-        if(r/h <= 1.0)
-            return (alphaD/h)*3*(pow((1.0-(r/h)),3) - ((1.0+3.0*(r/h)) * pow((1.0-(r/h)),2)));
+        h = kh;
+        alphaD = 6.5625/(M_PI*h*h*h);
+        if(r < h)
+            return (alphaD/h)*3*((1-(r/h))*(1-(r/h))*(1-(r/h)) - ((1+3*(r/h)) * (1-(r/h))*(1-(r/h))));
         else
             return 0.0;
     break;
-
     case 3 : // Cubic spline Kernel
-        alphaD = 3.0/(2.0*M_PI*pow(h,3)); 
-        k = 2;
-        if(0.0 <= r/h && r/h < 1.0)
-            return (alphaD/h)*((2.0/3.0)*pow((r/h),2) - 2.0*(r/h));
-        else if (1.0 <= r/h && r/h < 2.0)
-            return (alphaD/h)*((-1.0/2.0) * pow((2.0-(r/h)),2));
+        h = kh/2.0;
+        alphaD = 1.5/(M_PI*h*h*h);
+        if(r < h)
+            return (alphaD/h)*(1.5*(r/h)*(r/h) - 2*r/h);
+        else if (r < 2*h)
+            return (alphaD/h)*(-0.5 * (2.0-(r/h))*(2.0-(r/h)));
         else
             return 0.0;
     break;
-
     case 4 : // Quadratic Kernel
-        alphaD = 5.0/(4.0*M_PI*pow(h,3)); 
-        k = 2;
-        if(0.0 <= r/h && r/h <= 2.0)
-            return (alphaD/h)*((3.0/8.0)*(r/h) - (3.0/4.0));
+        h = kh/2.0;
+        alphaD = 1.25/(M_PI*h*h*h);
+        if(r < 2*h)
+            return (alphaD/h)*(0.375*(r/h) - 0.75);
         else
             return 0.0;
     break;
-
     case 5 : // Quintic Kernel
-        alphaD = 21.0/(16.0*M_PI*pow(h,3)); 
-        k = 2;
-        if(0.0 <= r/h && r/h <= 2.0)
-            return (alphaD/h)*((-5.0*(r/h))*pow((1.0-(1.0/2.0)*(r/h)),3));
+        h = kh/2.0;
+        alphaD = 1.3125/(M_PI*h*h*h);
+        if(r < 2*h)
+            return (alphaD/h)*((-5.0*(r/h))*(1-0.5*(r/h))*(1-0.5*(r/h))*(1-0.5*(r/h)));
         else
             return 0.0;
     break;
-
     case 6 : // Quintic spline Kernel
-        alphaD = 3.0/(359.0*M_PI*pow(h,3)); 
-        k = 3;
-        if(0.0 <= r/h && r/h < 1.0)
+        h = kh/3.0;
+        alphaD = 3.0/(359.0*M_PI*h*h*h);
+        if(r < h)
             return (alphaD/h)*((-5.0)*pow((3.0-(r/h)),4) + 30.0*pow((2.0-(r/h)),4) - 75.0*pow((1.0-(r/h)),4));
-        else if (1.0 <= r/h && r/h < 2.0)
+        else if (r < 2*h)
             return (alphaD/h)*((-5.0)*pow((3.0-(r/h)),4) + 30.0*pow((2.0-(r/h)),4));
-        else if (2.0 <= r/h && r/h < 3.0)
+        else if (r < 3*h)
             return (alphaD/h)*((-5.0)*pow((3.0-(r/h)),4));
         else
             return 0.0;
     break;
-
-    default: return 0.0;
+    default :
+        std::cout<< "Non existing kernel.\n";
+        return 0.0;
 
     }
 
 }
 
+double gethFromkh(Kernel kernelType, double kh){
+    switch (kernelType){
+    case 1 : // Gausian Kernel
+        return kh; // Attention, different signification for Gaussian!
+    case 2 : // Bell-shaped Kernel
+        return kh;
+    case 3 : // Cubic spline Kernel
+        return kh/2.0;
+    case 4 : // Quadratic Kernel
+        return kh/2.0;
+    case 5 : // Quintic Kernel
+        return kh/2.0;
+    case 6 : // Quintic spline Kernel
+        return kh/3.0;
+    default :
+        std::cout<< "Non existing kernel.\n";
+        return 0.0;
+    }
+}

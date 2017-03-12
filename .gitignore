@@ -10,7 +10,8 @@ build/
 *.exe
 *.txt
 *.dat
-test.cpp
-test.kzr
-test.m
-test.sh
+*.asv
+*.eps
+test.*
+.DS_Store
+!CMakeLists.txt

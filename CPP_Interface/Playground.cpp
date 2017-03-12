@@ -1,5 +1,5 @@
-#include "../Headers/SPH.hpp"
-#include "../Headers/Playground.hpp"
+#include "Main.h"
+#include "Interface.h"
 
 /// Private Constructor : Initialize a 3D matrix and 2D matrix.
 Playground :: Playground( bool s)

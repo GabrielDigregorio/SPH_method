@@ -1,127 +1,119 @@
-#include "../Headers/SPH.hpp"
-#include "../Headers/Playground.hpp"
+#include "Main.h"
+#include "Interface.h"
+#include "Physics.h"
+#include "Tools.h"
 
-// Structure qui doit être remplie lors de la lecture du fichier de paramètre (il faudra surement changer la place de cette déclaration)
-/*
- * kh = smothing length
- * k = time step
- * T = simulation time
- * densityRef = density of the fluid at atmospheric pressure
- * l & u = lower and upper limit of the domain
- * B & gamma = fluid constants
- * g = gravity
- * writeInteval = time interval between two outputs file are generated
- * integrationMethod = euler ou RK2
- * densityInitMethod = hydrosatic, etc.
- * stateEquationMethod = quasiIncompressible, perfectGas, etc.
- * massInitMethod = violeau2012 (all particles have same volumes), etc.
- * speedLaw = To be determined, will dictate the behaviour of moving boundaries
-*/
-struct Parameter {
-    double kh, k, T, densityRef, B, gamma, g, writeInterval;
-    std::string integrationMethod, densityInitMethod, stateEquationMethod, massInitMethod, speedLaw;
-};
-
-// Structure qui doit être remplie lors de la lecture du fichier de géométrie (il faudra surement changer la place de cette déclaration aussi). Cette structure contient toute l'information utile de nos simulations.
-struct Field {
-    std::vector<double> sFree;
-    std::vector<double> sMoving;
-    std::vector<double> sFixed;
-
-    double l[3];
-    double u[3];
-
-    std::vector<double> posFree;
-    std::vector<double> posMoving;
-    std::vector<double> posFixed;
-
-    std::vector<double> speedFree;
-    std::vector<double> speedMoving;
-    //Speed fixed = 0 of course
-
-    std::vector<double> densityFree;
-    std::vector<double> densityMoving;
-    std::vector<double> densityFixed;
-
-    std::vector<double> pressureFree;
-    std::vector<double> pressureMoving;
-    std::vector<double> pressureFixed;
-
-    std::vector<double> massFree;
-    std::vector<double> massMoving;
-    std::vector<double> massFixed;
-};
+#include "Structures.h"
 
 /*
- * In: -argv[1]: path to the parameter file
-       -argv[2]: path to the geometry file
+* In: -argv[1]: path to the parameter file
+-argv[2]: path to the geometry file
 */
-
 int main(int argc, char *argv[])
 {
-    // READING INPUT FILE
-        // Check argument file
-        char* parameterFilename;
-        char* geometryFilename;
-        if(argc<3)
-        {
-            std::cout << "Invalid input files.\n";
-            return EXIT_FAILURE;
-        }
-        else{parameterFilename = argv[1]; geometryFilename = argv[2];}
+  /// READING INPUT FILE
+  // Check argument file
+  char* parameterFilename;
+  char* geometryFilename;
+  std::string experimentFilename = "result"; // default name
 
-        //Read parameters
-        Parameter* parameter;
+  // Check the arguments
+  if(argc<3) // Not enough argument
+  {
+    std::cout << "Invalid input files.\n";
+    return EXIT_FAILURE;
+  }
+  else if (argc<4) // Use default name for the experiment (result)
+    {parameterFilename = argv[1]; geometryFilename = argv[2];}
+  else // Use default name for the experiment (result)
+    {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = argv[3];}
 
-        //To implement
-        readParameter(parameterFilename,parameter);
+  //Read parameters
+  Parameter* parameter =  new Parameter();
 
-        //Read geometry
-        Field* currentField;
-        //To implement
-        readGeometry(geometryFilename,currentField);
+  //To implement
+  //readParameter(parameterFilename,parameter);
 
-    // INITIALISATION
-        // SPEEDS
-            currentField->speedFree.assign(currentField->posFree.size(),0.0);
-            //On pourrait aussi imaginer implementer une fonction speedInit(currentField,parameter) si on veut pouvoir partir d'un autre état que le repos
+  //Read geometry
+  Field* currentField =  new Field();
 
+  //To implement
+  //readGeometry(geometryFilename,currentField);
 
-            //To implement (not to do in a first time because it is much complicated and we must discuss this.
-            // the value 0 correpsonds to time t=0, the function will be reused for later times
-            // On pourrait ne passer que parameter->speedLaw mais le passage par pointeur est tout aussi efficace et on a accès à tous les parametres dans le cas ou on en aurait besoin
-            updateMovingSpeed(currentField,parameter,0.0);
+  // INITIALISATION
+  // SPEEDS
+  currentField->speed.assign(currentField->nFree+currentField->nFixed+currentField->nMoving,0.0);
+  //On pourrait aussi imaginer implementer une fonction speedInit(currentField,parameter) si on veut pouvoir partir d'un autre état que le repos, ici on initialise toutes les vitesses à zeros et seul les moving boundaries seront éventuellement modifiées
 
-        // DENSITIES
-            //To implement densityInit, use formula from Goffin p122
-            densityInit(currentField, parameter);
+  // Initialisation des moving boundaries
+  //if(currentField->nMoving != 0){updateMovingSpeed(currentField,parameter,0.0);}
 
+  // DENSITIES
+  //To implement densityInit, use formula from Goffin p122
+  densityInit(currentField, parameter);
 
-        // PRESSURES
-            //(might not be necessary to store them as they only depend on density?)(to discuss)
-            //To implement use formala 3.39 from Goffin
-            pressureComputation(currentField,parameter);
+  // PRESSURES
+  //(might not be necessary to store them as they only depend on density?)(to discuss)
+  //To implement use formula 3.39 from Goffin
+  pressureComputation(currentField,parameter);
 
-        //MASSES
-            //To implement use formula 3.59 from Goffin
-            massInit(currentField,parameter);
+  //MASSES
+  //To implement use formula 3.59 from Goffin
+  massInit(currentField,parameter);
 
-    // UPDATE & WRITTING
-            Field* nextField;
-            unsigned int nMax = (unsigned int) ceil(T/k); //Validité de cette ligne à vérifier
-            //To implement, the value "0" stands for the time a which we write
-            writeField(currentField,0);
-            unsigned int writeCount = 1;
+  // UPDATE & WRITTING
+  Field *nextField = new Field(), *tmpField = new Field();
 
-            for(int n = 1;n<=nMax;n++)
-            {
-                timeIntegration(currentField,nextField,parameter,n);
+  // Reserv Memory for each field of nextField and tmpField
+  nextField->pos.reserve(currentField->pos.size()); 
+   tmpField->pos.reserve(currentField->pos.size()); 
+  nextField->speed.reserve(currentField->speed.size()); 
+   tmpField->speed.reserve(currentField->speed.size());
+  nextField->density.reserve(currentField->density.size()); 
+   tmpField->density.reserve(currentField->density.size());
+  nextField->pressure.reserve(currentField->pressure.size()); 
+   tmpField->pressure.reserve(currentField->pressure.size());
+  nextField->mass.reserve(currentField->mass.size()); 
+   tmpField->mass.reserve(currentField->mass.size());
 
-                if(writeCount*parameter->writeInterval <= n*parameter->k)
-                {
-                    writeField(currentField,n*parameter->k);
-                    writeCount++;
-                }
-            }
-    return 0;
+  unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
+  //To implement, the value "0" stands for the time a which we write
+  writeField(currentField, 0, parameter->format);
+  unsigned int writeCount = 1;
+
+  bool reBoxing = true;
+
+  // Creates the box mesh and describes their adjacent relations
+  std::vector<std::vector<int> > boxes;
+  std::vector<std::vector<int> > surrBoxesAll;
+
+  for(unsigned int n = 1;n<=nMax;n++)
+  {
+    std::cout << "----BEGIN time step #----" << n << "\n \n";
+    if(reBoxing == true)
+    {
+      boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
+    }
+    reBoxing = timeIntegration(currentField,nextField,parameter,boxes,surrBoxesAll,n);
+
+    if(writeCount*parameter->writeInterval <= n*parameter->k)
+    {
+      writeField(currentField, n,  parameter->format);
+      writeCount++;
+    }
+    tmpField = currentField;
+    currentField = nextField;
+    nextField = tmpField;
+    std::cout << "----END time step #----" << n << "\n \n";
+  }
+
+  // Free all vectors and structurs
+  cleanField(currentField);
+  cleanField(nextField);
+  cleanField(tmpField);
+  cleanParameter(parameter);
+  boxClear(boxes);
+  boxClear(surrBoxesAll);
+
+  return 0;
 }
