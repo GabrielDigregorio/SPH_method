@@ -10,7 +10,7 @@
 // Kernel Types
 enum Kernel { Gaussian=1, Bell_shaped=2, Cubic_spline=3, Quadratic=4, Quintic=5, Quintic_spline=6 };
 
-// mode of the moveing particle 
+// mode of the moveing particle
 enum MoveMod { none=1, uni_sin=2, expon=3, levier=4 };
 
 // model of viscosity formulation
@@ -37,7 +37,7 @@ enum ViscoMod { violeau2012=1};
 enum IntegrationMethod {euler, RK2};
 enum DensityInitMethod {hydrostatic, homogeneous};
 enum StateEquationMethod {quasiIncompressible, perfectGas};
-enum MassInitMethod {violeau2012};
+enum MassInitMethod {violeau2012MOD};
 enum SpeedLaw {constant, sine, exponential};
 
 struct Parameter {

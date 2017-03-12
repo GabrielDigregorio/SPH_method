@@ -7,7 +7,7 @@
  * Out: Mise à jour des vitesses des parois mobiles
  */
 void updateMovingSpeed(Field* field, Parameter* parameter, double t, MoveMod myMod)
-{   
+{
     switch(myMod){
 
     case 1 :
@@ -23,7 +23,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t, MoveMod myM
         int start=nb_fixed+nb_free;
         int end =nb_fixed+nb_free+nb_mov;
         // maybe put this in a vector of parameter ?
-        double A1=1; 
+        double A1=1;
         double A2=1;
         double A3=1;
         double w1=1;
@@ -38,7 +38,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t, MoveMod myM
             // z
             field->speed[i+2]=A3*sin(w3*t);
         }
- 
+
     break;
 
     case 2 : // case 2: mouvement levier avec le point le plus bas fixe.
