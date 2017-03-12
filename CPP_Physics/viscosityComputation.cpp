@@ -1,7 +1,7 @@
 #include "Main.h"
 #include "Physics.h"
 
-void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity, double c, double h, ViscoMod myViscoMod)
+void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity, double c, double h)
 {
   //viscosity.assign(neighbors.size(),0.0); // To be changed to fit formula of Goffin
 
@@ -9,7 +9,7 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
   double beta    = 0.0;
   double epsilon = 0.01; // See in litterature
 
-  switch(myViscoMod){
+  switch( parameter->viscoMod){
   case 1 :
       // For each neighbor of the particleID
       for (int i = 0; i < neighbors.size(); i++)

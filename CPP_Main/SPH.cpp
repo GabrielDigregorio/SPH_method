@@ -11,7 +11,7 @@
 */
 int main(int argc, char *argv[])
 {
-  // READING INPUT FILE
+  /// READING INPUT FILE
   // Check argument file
   char* parameterFilename;
   char* geometryFilename;
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
   else if (argc<4) // Use default name for the experiment (result)
-    {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename;}
+    {parameterFilename = argv[1]; geometryFilename = argv[2];}
   else // Use default name for the experiment (result)
     {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = argv[3];}
 
@@ -45,7 +45,6 @@ int main(int argc, char *argv[])
   currentField->speed.assign(currentField->nFree+currentField->nFixed+currentField->nMoving,0.0);
   //On pourrait aussi imaginer implementer une fonction speedInit(currentField,parameter) si on veut pouvoir partir d'un autre état que le repos, ici on initialise toutes les vitesses à zeros et seul les moving boundaries seront éventuellement modifiées
 
-
   // Initialisation des moving boundaries
   //if(currentField->nMoving != 0){updateMovingSpeed(currentField,parameter,0.0);}
 
@@ -53,10 +52,9 @@ int main(int argc, char *argv[])
   //To implement densityInit, use formula from Goffin p122
   densityInit(currentField, parameter);
 
-
   // PRESSURES
   //(might not be necessary to store them as they only depend on density?)(to discuss)
-  //To implement use formala 3.39 from Goffin
+  //To implement use formula 3.39 from Goffin
   pressureComputation(currentField,parameter);
 
   //MASSES
@@ -64,10 +62,23 @@ int main(int argc, char *argv[])
   massInit(currentField,parameter);
 
   // UPDATE & WRITTING
-  Field *nextField, *tmpField;
+  Field *nextField = new Field(), *tmpField = new Field();
+
+  // Reserv Memory for each field of nextField and tmpField
+  nextField->pos.reserve(currentField->pos.size()); 
+   tmpField->pos.reserve(currentField->pos.size()); 
+  nextField->speed.reserve(currentField->speed.size()); 
+   tmpField->speed.reserve(currentField->speed.size());
+  nextField->density.reserve(currentField->density.size()); 
+   tmpField->density.reserve(currentField->density.size());
+  nextField->pressure.reserve(currentField->pressure.size()); 
+   tmpField->pressure.reserve(currentField->pressure.size());
+  nextField->mass.reserve(currentField->mass.size()); 
+   tmpField->mass.reserve(currentField->mass.size());
+
   unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
   //To implement, the value "0" stands for the time a which we write
-  writeField(currentField, 0, Matlab);
+  writeField(currentField, 0, parameter->format);
   unsigned int writeCount = 1;
 
   bool reBoxing = true;
@@ -87,7 +98,7 @@ int main(int argc, char *argv[])
 
     if(writeCount*parameter->writeInterval <= n*parameter->k)
     {
-      writeField(currentField, n, Matlab);
+      writeField(currentField, n,  parameter->format);
       writeCount++;
     }
     tmpField = currentField;
@@ -95,6 +106,14 @@ int main(int argc, char *argv[])
     nextField = tmpField;
     std::cout << "----END time step #----" << n << "\n \n";
   }
+
+  // Free all vectors and structurs
+  cleanField(currentField);
+  cleanField(nextField);
+  cleanField(tmpField);
+  cleanParameter(parameter);
+  boxClear(boxes);
+  boxClear(surrBoxesAll);
 
   return 0;
 }

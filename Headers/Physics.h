@@ -47,7 +47,7 @@ void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh
 void boxMesh(double l[3], double u[3], double kh,
              std::vector<std::vector<int> > &boxes,
              std::vector<std::vector<int> > &surrBoxesAll);
-void boxClear(std::vector<std::vector<int> > &boxes);
+
 
 // TimeIntegration.cpp
 bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, std::vector<std::vector<int> >& boxes,
@@ -67,20 +67,17 @@ void pressureComputation(Field* field,Parameter* parameter);
 void massInit(Field* field,Parameter* parameter);
 
 // updateMovingSpeed.cpp
-void updateMovingSpeed(Field* field, Parameter* parameter, double t, MoveMod myMod);
+void updateMovingSpeed(Field* field, Parameter* parameter, double t);
+
+// navierStokes.cpp
+double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
+void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
 
 // navierStokes.cpp
 double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
 void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
 
 // viscosityComputation.cpp
-void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter, std::vector<double>& viscosity);
-
-// navierStokes.cpp
-double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
-void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
-
-// viscosityComputation.cpp
-void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity, double c, double h, ViscoMod myViscoMod);
+void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity, double c, double h);
 
 #endif
