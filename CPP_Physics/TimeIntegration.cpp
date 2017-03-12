@@ -30,7 +30,7 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
 
         // Continuity equation
         densityDerivative = continuity(particleID, neighbors, kernelGradients,currentField); // also for fixed particles !
-        
+
         // Momentum equation only for free particles
         if(particleID < currentField->nFree)
         {

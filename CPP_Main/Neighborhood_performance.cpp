@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
         for(unsigned int part=0 ; part<boxes_s[box].size() ; part++){
             std::vector<int> neighbors;
             std::vector<double> kernelGradients;
-            int particleID = boxes[box][part];
+            int particleID = boxes_s[box][part];
             findNeighbors(particleID, pos, kh, boxes_s, surrBoxesAll_s[box],
                 neighbors, kernelGradients, kernelType,
                 kernelGradientsSamples, resolution);
