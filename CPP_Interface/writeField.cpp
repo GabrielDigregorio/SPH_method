@@ -150,7 +150,8 @@ void matlab(std::string const &filename,
 
     // Date
     std::time_t Date = std::chrono::system_clock::to_time_t(start);
- 
+    time_t rawtime; struct tm * timeinfo; time (&rawtime); timeinfo = localtime (&rawtime);
+
     // build file name + stepno + vtk extension
     std::stringstream s; s << "../Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".txt";
 
@@ -161,7 +162,7 @@ void matlab(std::string const &filename,
 
     // header
     f << "#EXPERIMENT: " << filename << "\n";
-    f << "Date : " << std::put_time(std::localtime(&Date), "%c") << "\n";
+    f << "Date : " << asctime(timeinfo);
     #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
     f << "Computer Name : "<< getenv("COMPUTERNAME") <<"\n";
     f << "Username : "<< getenv("USERNAME") <<"\n";
