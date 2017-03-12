@@ -40,6 +40,37 @@ int main(int argc, char *argv[])
   //To implement
   //readGeometry(geometryFilename,currentField);
 
+      // JUST TO CHECK IF ALL IS OK: MUST BE REMOVED
+      std::ofstream myfile;
+      myfile.open ("CheckParam&Geom.txt", std::ofstream::out | std::ofstream::app);
+      myfile << "kh = "<< parameter->kh <<"\n"
+            << "k = "<< parameter->k<<"\n"
+            << "T = "<< parameter->T<<"\n"
+            << "densityRef = "<< parameter->densityRef<<"\n"
+            << "B = "<< parameter->B<<"\n"
+            << "gamma = "<< parameter->gamma<<"\n"
+            << "g = "<< parameter->g<<"\n"
+            << "writeInterval = "<< parameter->writeInterval<<"\n"
+            << "charactTime = "<< parameter->charactTime<<"\n"
+            << "movingDirection = "<< parameter->movingDirection[0]<< parameter->movingDirection[1]<< parameter->movingDirection[2]<<"\n"
+            << "kernel = "<< parameter->kernel<<"\n"
+            << "viscoMod = "<< parameter->viscoMod<<"\n"
+            << "integrationMethod = "<< parameter->integrationMethod<<"\n"
+            << "densityInitMethod = "<< parameter->densityInitMethod<<"\n"
+            << "stateEquationMethod = "<< parameter->stateEquationMethod<<"\n"
+            << "massInitMethod = "<< parameter->massInitMethod<<"\n"
+            << "speedLaw = "<< parameter->speedLaw<<"\n"
+            << "moveMod = "<< parameter->moveMod<<"\n"
+            << "format = "<< parameter->format <<"\n" ;
+      myfile << "l = "<< parameter->l[0]<< parameter->l[1]<< parameter->l[2] <<"\n"       
+            << "u = "<< parameter->u[0]<< parameter->u[1]<< parameter->u[2] <<"\n"
+            << "nFree = "<< parameter->nFree<<"\n"
+            << "nFixed = "<< parameter->nFixed<<"\n"
+            << "nMoving = "<< parameter->nMoving<<"\n" ;
+      for(int i=0; i<parameter->s.size(); ++i) myfile<<"s["<<i<<"] = "<< parameter->s[i]"\n" ;
+      myfile.close();
+
+
   // INITIALISATION
   // SPEEDS
   currentField->speed.assign(currentField->nFree+currentField->nFixed+currentField->nMoving,0.0);
