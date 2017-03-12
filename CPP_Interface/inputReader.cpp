@@ -1,7 +1,6 @@
 #include "Physics.h"
 #include "Main.h"
 
-
 #include <sstream>
 #include <algorithm>
 
@@ -114,6 +113,7 @@ void readGeometry(std::string filename, Field* currentField){
                                         posFree.insert(posFree.end(), posFixed.begin(), posFixed.end());
                                         posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
                                         currentField->pos=posFree;
+                                        currentField->nTotal=(currentField->pos).size();
                                         return; // REPLACE BY return(0);
                                 }
                                 else{
