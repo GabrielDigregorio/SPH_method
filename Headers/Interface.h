@@ -6,7 +6,6 @@
 #define INTERFACE_H
 #include "Structures.h"
 #include <map>
-#include <ctime>
 #include <chrono>
 #include <cstdlib>
 #include <sstream>
