@@ -7,7 +7,7 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
 {
     // Time step resolution
     //double kh2 = parameter->kh*parameter->kh; // More efficient to compare distance^2
-    Kernel kernelType = Quintic_spline; // TO CHANGE !!!!!!!!!!!
+    Kernel kernelType = parameter->kernel;
 
     // Sort the particles at the current time step
     boxClear(boxes); // Clear the sorting to restart it...
@@ -28,20 +28,23 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
         particleID = boxes[box][part];
         findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, kernelType);
 
+        // Continuity equation
         densityDerivative = continuity(particleID, neighbors, kernelGradients,currentField); // also for fixed particles !
+        
+        // Momentum equation only for free particles
         if(particleID < currentField->nFree)
         {
           momentum(particleID, neighbors, kernelGradients,currentField,parameter, speedDerivative);
         }
 
 
-
         // Integration
         switch ( parameter->integrationMethod )
         {
-          case euler:
+          case euler: // u_(n+1) = u_n + k * du/dt
           nextField->density[particleID] = currentField->density[particleID] + parameter->k*densityDerivative;
 
+          // Uptade speed only for Free particles
           if(particleID < currentField->nFree)
           {
             for (int i = 0; i <= 2; i++)
