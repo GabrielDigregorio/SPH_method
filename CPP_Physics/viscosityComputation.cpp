@@ -11,6 +11,7 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
 
   switch(parameter->viscosityModel){
   case violeauArtificial :
+
       // For each neighbor of the particleID
       for (int i = 0; i < neighbors.size(); i++)
       {
@@ -33,7 +34,8 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
     break;
 
     default :
-      std::cout<< "Non existing Viscosity.\n";
+      viscosity.assign(neighbors.size(),0.0);
+      std::cout<< "\t \t Non existing Viscosity. Viscosity set to zero.\n";
   }
 
 }

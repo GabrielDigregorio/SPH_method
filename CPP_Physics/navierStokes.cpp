@@ -22,7 +22,6 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 {
   speedDerivative.assign(3,0.0);
   std::vector<double> viscosity;
-  
   viscosity.resize(neighbors.size());
 
   viscosityComputation(particleID, neighbors, currentField, parameter, viscosity);
