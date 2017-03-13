@@ -1,0 +1,50 @@
+#GEOM1
+%********************************************
+% PLAYGROUND : Geometry TEST
+%
+% #GEOM
+% #domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+%
+% geometry : #brick, #cylin or #spher
+% #param
+%   c ==> 0=free, 1=moving, 2=fixed
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% #coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% #dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+%********************************************
+
+#domsz
+ux = -10
+uy = -10
+uz = -10
+lx = 10
+ly = 10
+lz = 10
+
+    #brick
+        %param
+        c=0
+        s=0.5
+        r=0
+        %coord
+        x=0
+        y=0
+        z=0
+        %dimen
+        L=5
+        W=5
+        H=5
+
+
+#END_G
