@@ -70,39 +70,39 @@ void paraView(std::string const &filename,
     assert(pos.size()==nbp*3); // should be multiple of 3
 
     // build file name + stepno + vtk extension
-    std::stringstream s; s <<  "../Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtk";
+    std::stringstream s; s <<"Results/"<< filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtk";
 
     // open file
-    std::cout << "writing results to " << s.str() << '\n';
+    std::cout << "writing results to " << s.str() << std::endl;
     std::ofstream f(s.str().c_str());
     f << std::scientific;
     // header
-    f << "# vtk DataFile Version 3.0\n";
-    f << "file written by sph.exe\n";
-    f << "ASCII\n";
-    f << "DATASET POLYDATA\n";
+    f << "# vtk DataFile Version 3.0"<<std::endl;
+    f << "file written by sph.exe"<<std::endl;
+    f << "ASCII"<<std::endl;
+    f << "DATASET POLYDATA"<<std::endl;
 
     // points
-    f << "POINTS " << nbp << " float\n";
+    f << "POINTS " << nbp << " float"<<std::endl;
     for(int i=0; i<nbp; ++i)
-        f << pos[3*i+0] << " " << pos[3*i+1] << " " << pos[3*i+2] << '\n';
+        f << pos[3*i+0] << " " << pos[3*i+1] << " " << pos[3*i+2] << std::endl;
 
     // vertices
-    f << "VERTICES " << nbp << " " << 2*nbp << "\n";
+    f << "VERTICES " << nbp << " " << 2*nbp << std::endl;
     for(int i=0; i<nbp; ++i)
-        f << "1 " << i << '\n';
+        f << "1 " << i << std::endl;
     f << '\n'; // empty line (required)
 
     // fields
     f << "POINT_DATA " << nbp << '\n';
-    f << "FIELD FieldData " << scalars.size()+vectors.size() << '\n';
+    f << "FIELD FieldData " << scalars.size()+vectors.size() << std::endl;
 
     // scalar fields
     std::map<std::string, std::vector<double> *>::const_iterator it=scalars.begin();
     for(; it!=scalars.end(); ++it)
     {
         assert(it->second->size()==nbp);
-        f << it->first << " 1 " << nbp << " float\n";
+        f << it->first << " 1 " << nbp << " float"<<std::endl;
         for(int i=0; i<nbp; ++i)
             f << (*it->second)[i] << '\n';
     }
@@ -112,9 +112,9 @@ void paraView(std::string const &filename,
     for(; it!=vectors.end(); ++it)
     {
         assert(it->second->size()==3*nbp);
-        f << it->first << " 3 " << nbp << " float\n";
+        f << it->first << " 3 " << nbp << " float"<<std::endl;
         for(int i=0; i<nbp; ++i)
-            f << (*it->second)[3*i+0] << " " << (*it->second)[3*i+1] << " " << (*it->second)[3*i+2] << '\n';
+            f << (*it->second)[3*i+0] << " " << (*it->second)[3*i+1] << " " << (*it->second)[3*i+2] << std::endl;
     }
 
     f.close();
@@ -154,31 +154,31 @@ void matlab(std::string const &filename,
     time_t rawtime; struct tm * timeinfo; time (&rawtime); timeinfo = localtime (&rawtime);
 
     // build file name + stepno + vtk extension
-    std::stringstream s; s << "../Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".txt";
+    std::stringstream s; s << "Results/"<< filename << "_" << std::setw(8) << std::setfill('0') << step << ".txt";
 
     // open file
-    std::cout << "Writing results to " << s.str() << '\n';
+    std::cout << "Writing results to " << s.str() << std::endl;
     std::ofstream f(s.str().c_str());
     f << std::scientific;
 
     // header
-    f << "#EXPERIMENT: " << filename << "\n";
+    f << "#EXPERIMENT: " << filename << std::endl;
     f << "Date : " << asctime(timeinfo);
     #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-    f << "Computer Name : "<< getenv("COMPUTERNAME") <<"\n";
-    f << "Username : "<< getenv("USERNAME") <<"\n";
+    f << "Computer Name : "<< getenv("COMPUTERNAME") <<std::endl;
+    f << "Username : "<< getenv("USERNAME") <<std::endl;
     #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
-    f << "Computer Name : "<< getenv("HOSTNAME") <<"\n";
-    f << "Username : "<< getenv("USER") <<"\n";
+    f << "Computer Name : "<< getenv("HOSTNAME") <<std::endl;
+    f << "Username : "<< getenv("USER") <<std::endl;
     #else
     #error "Cannot define GetMemory( ) or GetMemoryProcessPeak( ) or GetMemoryProcess() for an unknown OS."
     #endif
-    f << "File Used : " << geometryFilename << " & " << parameterFilename << "\n";
-    f << "CPU Time : " << "- [s]" << "\n";
-    f << "Memory Usage : " << GetMemoryProcess(false, false)<< " [kB]" <<"\n";
-    f << "Memory Usage Peak : " << GetMemoryProcessPeak(false, false)<< " [kB]" <<"\n";
+    f << "File Used : " << geometryFilename << " & " << parameterFilename << std::endl;
+    f << "CPU Time : " << "- [s]" << std::endl;
+    f << "Memory Usage : " << GetMemoryProcess(false, false)<< " [kB]" <<std::endl;
+    f << "Memory Usage Peak : " << GetMemoryProcessPeak(false, false)<< " [kB]" <<std::endl;
     f << "\n";
-    f << " posX\t\t\t posY\t\t\t posZ\t\t\t velocityX\t\t velocityY\t\t velocityZ\t\t density\t\t pressure\t\t mass\n";
+    f << " posX\t\t\t posY\t\t\t posZ\t\t\t velocityX\t\t velocityY\t\t velocityZ\t\t density\t\t pressure\t\t mass"<<std::endl;
 
     // Fill f:
     for(int i=0; i<nbp; ++i)
@@ -187,7 +187,7 @@ void matlab(std::string const &filename,
         <<speed[3*i+0]<<"\t"<<speed[3*i+1]<<"\t"<<speed[3*i+2]<<"\t"
         <<density[i]<<"\t"
         <<pressure[i]<<"\t"
-        <<mass[i]<<"\t"<<"\n";
+        <<mass[i]<<"\t"<<std::endl;
     }
 
 
@@ -202,5 +202,3 @@ void matlab(std::string const &filename,
     f.close();
 
     }
-
-
