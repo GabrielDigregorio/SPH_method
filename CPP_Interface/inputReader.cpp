@@ -183,7 +183,7 @@ void readParameter(std::string filename, Parameter* parameter){
                                                         if(cnt==16)
                                                                 parameter->kernel=(Kernel) atoi(valueArray);
                                                         if(cnt==17)
-                                                                parameter->viscoMod=(ViscoMod) atoi(valueArray);
+                                                                parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
                                                         if(cnt==18)
                                                                 parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
                                                         if(cnt==19)

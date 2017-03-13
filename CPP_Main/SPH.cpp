@@ -31,13 +31,13 @@ int main(int argc, char *argv[])
   Parameter* parameter =  new Parameter();
 
   //To implement
-  //readParameter(parameterFilename,parameter);
+  readParameter(parameterFilename,parameter);
 
   //Read geometry
   Field* currentField =  new Field();
 
   //To implement
-  //readGeometry(geometryFilename,currentField);
+  readGeometry(geometryFilename,currentField);
 
   // INITIALISATION (all the vectors should have the right size here!)
   // SPEEDS
@@ -100,3 +100,4 @@ int main(int argc, char *argv[])
 
   return 0;
 }
+
