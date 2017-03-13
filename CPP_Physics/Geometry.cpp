@@ -9,10 +9,6 @@
 
 void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack)
 {
-    // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
-    std::ofstream myfile;
-    myfile.open ("./Results/Playground.txt", std::ofstream::out | std::ofstream::app);
-
     // if we stack the cube:
     if(stack == true){
         L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
@@ -36,7 +32,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
     pos.reserve(pos.size() + ni*nj*nk*3);
 
     // generates number in the range -s*perturbation % and s*perturbation %
-    std::default_random_engine generator; // A SEED MUST BE USE TO CHANGE VALUE AT EACH CALL 
+    std::default_random_engine generator; // A SEED MUST BE USE TO CHANGE VALUE AT EACH CALL
     std::uniform_real_distribution<double> distribution(-s*perturbation/100,s*perturbation/100);
 
     // particle generation
@@ -52,12 +48,9 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
                 pos.push_back(x + distribution(generator));
                 pos.push_back(y + distribution(generator));
                 pos.push_back(z + distribution(generator));
-                myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
             }
         }
     }
-
-    myfile.close();
 }
 
 
@@ -71,10 +64,6 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
 
 void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack)
 {
-    // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
-    std::ofstream myfile;
-    myfile.open ("./Results/Playground.txt", std::ofstream::out | std::ofstream::app);
-
     // if we stack the cylinder:
     if(stack == true){
         L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
@@ -120,13 +109,10 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
                     pos.push_back(x + distribution(generator));
                     pos.push_back(y + distribution(generator));
                     pos.push_back(z + distribution(generator));
-                    myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
                 }
             }
         }
     }
-
-    myfile.close();
 }
 
 
@@ -139,10 +125,6 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
 
 void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack)
 {
-    // open a file to write the geometry (check for valydity) MUST BE REMOVE LATER
-    std::ofstream myfile;
-    myfile.open ("./Results/Playground.txt", std::ofstream::out | std::ofstream::app);
-
     // if we stack the cylinder:
     if(stack == true){
         L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
@@ -191,12 +173,7 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
                         pos.push_back(x + distribution(generator));
                         pos.push_back(y + distribution(generator));
                         pos.push_back(z + distribution(generator));
-                        myfile << pos.end()[-3] << " " << pos.end()[-2]  << " " << pos.end()[-1]  << "\n" ;
                 }
             }
     }
-
-
-    myfile.close();
-
 }
