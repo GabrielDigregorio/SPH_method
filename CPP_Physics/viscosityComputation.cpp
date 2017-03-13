@@ -30,6 +30,10 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
           double rho  = 0.5 * (currentField->density[particleID] + currentField->density[neighbors[i]]);
           viscosity[i] = ( -alpha*c*mu + beta*mu*mu ) / (rho);
         }
+        else
+        {
+          viscosity[i]=0;
+        }
       }
     break;
 
