@@ -1,10 +1,10 @@
 ///**************************************************************************
-/// HEADER: Function Used As Tools (Memory, CPU,...)
+/// HEADER: Function Used As Tools (Memory, CPU, Clean,...)
 ///**************************************************************************
 
 #ifndef TOOLS_H
 #define TOOLS_H
-
+#include "Structures.h"
 
 #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <windows.h>
@@ -36,5 +36,13 @@
 size_t GetMemory(bool screen, bool print);
 size_t GetMemoryProcess(bool screen, bool print);
 size_t GetMemoryProcessPeak(bool screen, bool print);
+
+// CleanUp.cpp
+void cleanField(Field* field);
+void cleanParameter(Parameter* parameter);
+void boxClear(std::vector<std::vector<int> > &boxes);
+
+//sizeField
+void sizeField(Field *field, int nTotal);
 
 #endif

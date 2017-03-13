@@ -6,16 +6,16 @@
 #define INTERFACE_H
 #include "Structures.h"
 #include <map>
-#include <chrono>
 #include <ctime>
+#include <chrono>
 #include <cstdlib>
 #include <sstream>
 #include <iomanip>
 
 
 // inputReader.cpp
-void readParameter(std::string filename, Parameter* parameter);
-void readGeometry(std::string filename, Field* currentField);
+void readParameter(char* parameterFilename, Parameter* parameter);
+void readGeometry(char* geometryFilename, Field* field);
 void readBrick(int type, std::ifstream* inFile, Field* currentField);
 
 // writeField.cpp

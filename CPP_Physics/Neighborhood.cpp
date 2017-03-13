@@ -1,5 +1,7 @@
 #include "Main.h"
 #include "Physics.h"
+#include "Tools.h"
+#include "Structures.h"
 
 /// Naive method to find the neighbors of all particles.
 // All-pair search algorithm
@@ -14,18 +16,30 @@ Output:
 /
 */
 void neighborAllPair (std::vector<double> &pos,
-                         double kh,
-                         std::vector<std::vector<int> > &neighborsAll,
-                         std::vector<std::vector<double> > &kernelGradientsAll)
+                        double kh,
+                        std::vector<std::vector<int> > &neighborsAll,
+                        std::vector<std::vector<double> > &kernelGradientsAll,
+                        Kernel myKernel)
 {
     double kh2 = kh*kh;
+    double r;
+    double r2;
+    double direction;
+    double currentKernelGradientMag;
     // For each particle, browse all other particles and compute the distance
     for(unsigned int i=0; i<pos.size()/3; i++){
         for(unsigned int j=0; j<pos.size()/3; j++){
-            double r2 = distance(pos, i, j);
-            if( r2 < kh2 ){
-                neighborsAll[i].push_back(j); // The neighbor ID
-                kernelGradientsAll[i].push_back(2.0); // The kernel grandient with this neighbor
+            r2 = distance(pos, i, j);
+            if( r2 < kh2 && i != j){
+                // Neighbor saving
+                neighborsAll[i].push_back(j);
+                // Kernel gradient saving
+                r = sqrt(r2);
+                currentKernelGradientMag = gradWab(r, kh, myKernel);
+                for(int coord=0 ; coord<3 ; coord++){
+                    direction = (pos[i*3+coord]-pos[j*3+coord]) / r;
+                    kernelGradientsAll[i].push_back(direction * currentKernelGradientMag);
+                }
             }
         }
     }
@@ -49,14 +63,18 @@ Output:
 /
 */
 void neighborLinkedList(std::vector<double> &pos,
-                         double l[3],
-                         double u[3],
-                         double kh,
-                         std::vector<std::vector<int> > &neighborsAll,
-                         std::vector<std::vector<double> > &kernelGradientsAll)
+                        double l[3],
+                        double u[3],
+                        double kh,
+                        std::vector<std::vector<int> > &neighborsAll,
+                        std::vector<std::vector<double> > &kernelGradientsAll,
+                        Kernel myKernel)
 {
     double kh2 = kh*kh; // More efficient to compare distance^2
-
+    double r2;
+    double r;
+    double direction;
+    double currentKernelGradientMag;
     // Box definition
     std::vector<std::vector<int> > boxes;
     int nBoxesX = ceil((u[0] - l[0])/kh); // Extra box if non integer quotient
@@ -103,10 +121,17 @@ void neighborLinkedList(std::vector<double> &pos,
                 // Spans the higher index particles in the box (symmetry)
                 for(unsigned int i=0 ; i<boxes[surrBoxes[surrBox]].size() ; i++){
                     int potNeighborID = boxes[surrBoxes[surrBox]][i];
-                    double r2 = distance(pos, particleID, potNeighborID);
-                    if(r2<kh2){
+                    r2 = distance(pos, particleID, potNeighborID);
+                    if(r2<kh2 && particleID != potNeighborID){
+                        // Neighbor saving
                         neighborsAll[particleID].push_back(potNeighborID);
-                        kernelGradientsAll[particleID].push_back(2.0);
+                        // Kernel gradient saving
+                        r = sqrt(r2);
+                        currentKernelGradientMag = gradWab(r, kh, myKernel);
+                        for(int coord=0 ; coord<3 ; coord++){
+                            direction = (pos[particleID*3+coord]-pos[potNeighborID*3+coord]) / r;
+                            kernelGradientsAll[particleID].push_back(direction * currentKernelGradientMag);
+                        }
                     }
                 }
             }
@@ -164,31 +189,71 @@ void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh
 Fills the neighbors/kernelGradients vectors with the neighbors and the associated
 values of the kernel gradient for the given particleID.
 */
-void findNeighbors(int particleID, std::vector<double> &pos, double kh2,
-                   std::vector<std::vector<int> > &boxes,
-                   std::vector<int> &surrBoxes,
-                   std::vector<int> &neighbors,
-                   std::vector<double> &kernelGradients){
+void findNeighbors(int particleID, std::vector<double> &pos, double kh,
+                    std::vector<std::vector<int> > &boxes,
+                    std::vector<int> &surrBoxes,
+                    std::vector<int> &neighbors,
+                    std::vector<double> &kernelGradients,
+                    Kernel myKernel){
+    double kh2 = kh*kh;
+    double r;
+    double currentKernelGradientMag;
+    double direction;
     // Spans the surrounding boxes
     for(unsigned int surrBox = 0 ; surrBox < surrBoxes.size() ; surrBox++){
         // Spans the particles in the box (all particles!)
         for(unsigned int i=0 ; i<boxes[surrBoxes[surrBox]].size() ; i++){
             int potNeighborID = boxes[surrBoxes[surrBox]][i];
             double r2 = distance(pos, particleID, potNeighborID);
-            if(r2<kh2){
+            if(r2<kh2 && particleID != potNeighborID){
+                // Neighbor saving
                 neighbors.push_back(potNeighborID);
-                double kernelGradient = 1.0; // TO CHANGE !!!!!!!
-                kernelGradients.push_back(kernelGradient);
+                // Kernel gradient saving
+                r = sqrt(r2);
+                currentKernelGradientMag = gradWab(r, kh, myKernel);
+                for(int coord=0 ; coord<3 ; coord++){
+                    direction = (pos[particleID*3+coord]-pos[potNeighborID*3+coord]) / r;
+                    kernelGradients.push_back(direction * currentKernelGradientMag);
+                }
             }
         }
     }
 }
 
-// Clear the boxes content
-void boxClear(std::vector<std::vector<int> > &boxes){
-    for(int i=0 ; i<boxes.size() ; i++)
-        boxes[i].clear();
+/* Overload with tabulated values */
+void findNeighbors(int particleID, std::vector<double> &pos, double kh,
+                    std::vector<std::vector<int> > &boxes,
+                    std::vector<int> &surrBoxes,
+                    std::vector<int> &neighbors,
+                    std::vector<double> &kernelGradients,
+                    Kernel myKernel,
+                    std::vector<double> &kernelGradientsSamples,
+                    int resolution){
+    double kh2 = kh*kh;
+    double r;
+    double currentKernelGradientMag;
+    double direction; // will contain (x_a-x_b)/r_ab (or y, z)
+    // Spans the surrounding boxes
+    for(unsigned int surrBox = 0 ; surrBox < surrBoxes.size() ; surrBox++){
+        // Spans the particles in the box (all particles!)
+        for(unsigned int i=0 ; i<boxes[surrBoxes[surrBox]].size() ; i++){
+            int potNeighborID = boxes[surrBoxes[surrBox]][i];
+            double r2 = distance(pos, particleID, potNeighborID);
+            if(r2<kh2 && particleID != potNeighborID){
+                // Neighbor saving
+                neighbors.push_back(potNeighborID);
+                // Kernel gradient saving
+                r = sqrt(r2);
+                currentKernelGradientMag = kernelGradientsSamples[indexSamples(resolution, r, kh)];
+                for(int coord=0 ; coord<3 ; coord++){
+                    direction = (pos[particleID*3+coord]-pos[potNeighborID*3+coord]) / r;
+                    kernelGradients.push_back(direction * currentKernelGradientMag);
+                }
+            }
+        }
+    }
 }
+
 
 
 // Gives the list of the surrounding boxes
@@ -224,7 +289,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
 }
 
 
-// Gives the distance between two particles
+// Gives the distance to the square between two particles
 double distance(std::vector<double> &pos, int partA, int partB){
     return (pos[partA*3]-pos[partB*3])*(pos[partA*3]-pos[partB*3])
              + (pos[partA*3+1]-pos[partB*3+1])*(pos[partA*3+1]-pos[partB*3+1])

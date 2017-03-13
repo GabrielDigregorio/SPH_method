@@ -1,0 +1,44 @@
+#PARA1
+%********************************************
+% PLAYGROUND : Parameter example
+% #param
+%
+% kh = smothing length
+% k = time step
+% T = simulation time
+% densityRef = density of the fluid at atmospheric pressure
+% l & u = lower and upper limit of the domain
+% B & gamma = fluid constants
+% g = gravity
+% writeInteval = time interval between two outputs file are generated
+% integrationMethod = euler ou RK2
+% densityInitMethod = hydrosatic, etc.
+% stateEquationMethod = quasiIncompressible, perfectGas, etc.
+% massInitMethod = violeau2012 (all particles have same volumes), etc.
+% speedLaw = To be determined, will dictate the behaviour of moving boundaries
+%********************************************
+#param
+    kh=1.0
+    k=1.1
+    T=1.11
+    densityRef=1000.0
+    B=1.111
+    gamma=1.1111
+    g=9.81
+    writeInterval=1.11111
+    charactTime=1.0
+    c=1.0
+    alphabeta=1.0
+    epsilon=1.0
+    movingDirectionX=2.1
+    movingDirectionY=2.2
+    movingDirectionZ=2.3
+    kernel=1
+    viscosityModel=1
+    integrationMethod=0
+    densityInitMethod=0
+    stateEquationMethod=0
+    massInitMethod=0
+    speedLaw=0
+    format=1
+#END_F
