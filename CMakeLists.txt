@@ -15,11 +15,7 @@ ENDIF()
 
 FILE(GLOB SRCS1  CPP_Interface/*.cpp)
 #FILE(GLOB SRCS1 CPP_Interface/ParaView.cpp CPP_Interface/writeField.cpp)
-<<<<<<< HEAD
-#FILE(GLOB SRCS1 CPP_Interface/writeField.cpp)
-=======
 FILE(GLOB SRCS1 CPP_Interface/*.h CPP_Interface/*.cpp)
->>>>>>> 65213001d870e779dc21b8d05a95bd1e2adee7bb
 FILE(GLOB SRCS2 CPP_Physics/*.h CPP_Physics/*.cpp)
 FILE(GLOB SRCS3 CPP_Tools/*.h CPP_Tools/*.cpp)
 FILE(GLOB SRCS4 Headers/*.h Headers/*.cpp)
@@ -31,7 +27,7 @@ ADD_EXECUTABLE(sph ${SRCS1} ${SRCS2} ${SRCS3} ${SRCS4} CPP_Main/SPH.cpp)
 
 IF(MINGW)
     TARGET_LINK_LIBRARIES(sph psapi) # for "GetProcessMemoryInfo"
-    TARGET_LINK_LIBRARIES(neighbors psapi)
+    #TARGET_LINK_LIBRARIES(neighbors psapi)
 ENDIF(MINGW)
 
 # - OpenMP --

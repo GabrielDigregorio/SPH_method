@@ -11,8 +11,8 @@
 int main(int argc, char *argv[])
 {
   /// READING INPUT FILE
-  char* parameterFilename;
-  char* geometryFilename;
+  std::string parameterFilename;
+ std::string geometryFilename;
   std::string experimentFilename = "result"; // default name
 
   // Check the arguments

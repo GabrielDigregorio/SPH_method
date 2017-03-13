@@ -14,8 +14,8 @@
 
 
 // inputReader.cpp
-void readParameter(char* parameterFilename, Parameter* parameter);
-void readGeometry(char* geometryFilename, Field* field);
+void readParameter(std::string parameterFilename, Parameter* parameter);
+void readGeometry(std::string geometryFilename, Field* field);
 void readBrick(int type, std::ifstream* inFile, Field* currentField);
 
 // writeField.cpp
