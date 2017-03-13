@@ -1,5 +1,7 @@
 #include "Physics.h"
 #include "Main.h"
+#include "Interface.h"
+
 
 #include <sstream>
 #include <algorithm>
