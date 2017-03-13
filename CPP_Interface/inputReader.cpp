@@ -8,7 +8,7 @@
 
 #define N_UL 3
 #define N_DATA 9
-#define N_PARAM 13
+#define N_PARAM 24
 
 enum geomType{cube,cylinder,sphere};
 enum boundCondition{freePart, movingPart, fixedPart};
@@ -59,10 +59,13 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField,
                                 meshsphere(o, L, s, *posFixed, r, true);
                 break;
         }
-        (currentField->s).push_back(s);
+        // Only one of the 3 vectors is filled. Here there is a problem because s is not defined by the user but rather by the function meshcube !!!!!!!
+        (currentField->s).insert((currentField->s).end(),(*posFree).size() + (*posFixed).size() + (*posMoving).size(), s);
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 void readGeometry(std::string filename, Field* currentField){
+        std::cout << "----BEGIN geometry reading----\n" << std::endl;
         std::vector<double> posFree, posFixed, posMoving; // TO BE USED IF S VALUES ARE NEEDED
         std::ifstream inFile(filename);
         std::string buf;
@@ -109,13 +112,21 @@ void readGeometry(std::string filename, Field* currentField){
                                         readBrick(sphere,&inFile, currentField,
                                                 &posFree, &posFixed, &posMoving);
                                 else if(buf=="END_G"){
-                                        currentField->nFree=posFree.size();
-                                        currentField->nFixed=posFixed.size();
-                                        currentField->nMoving=posMoving.size();
+                                        currentField->nFree=posFree.size()/3;
+                                        currentField->nFixed=posFixed.size()/3;
+                                        currentField->nMoving=posMoving.size()/3;
                                         posFree.insert(posFree.end(), posFixed.begin(), posFixed.end());
                                         posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
                                         currentField->pos=posFree;
-                                        currentField->nTotal=(currentField->pos).size();
+                                        currentField->nTotal= currentField->nFree + currentField->nFixed + currentField->nMoving;
+                                        std::cout << "\t Position vector:\n" << std::endl;
+                                        for (int i = 0; i < 3*currentField->nTotal; i+=3)
+                                        {
+                                            std::cout <<"\t" << currentField->pos[i] << "\n"<< std::endl;
+                                            std::cout <<"\t" << currentField->pos[i+1] << "\n"<< std::endl;
+                                            std::cout <<"\t" << currentField->pos[i+2] << "\n\n"<< std::endl;
+                                        }
+                                        std::cout << "----END geometry reading----\n" << std::endl;
                                         return; // REPLACE BY return(0);
                                 }
                                 else{
@@ -130,6 +141,7 @@ void readGeometry(std::string filename, Field* currentField){
 }
 
 void readParameter(std::string filename, Parameter* parameter){
+        std::cout << "----BEGIN parameter reading----\n" << std::endl;
         // open a file geometry.kzr
         std::ifstream inFile(filename);
         std::string buf;
@@ -150,8 +162,10 @@ void readParameter(std::string filename, Parameter* parameter){
                                         while(cnt!=N_PARAM){
                                                 std::getline(inFile, buf);
                                                 if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray)){
-                                                        if(cnt==0)
-                                                                parameter->kh=atof(valueArray);
+                                                        if(cnt==0){
+                                                          parameter->kh=atof(valueArray);
+                                                          std::cout << "\t kh = "<< parameter->kh << "\n" << std::endl;
+                                                        }
                                                         if(cnt==1)
                                                                 parameter->k=atof(valueArray);
                                                         if(cnt==2)
@@ -196,14 +210,17 @@ void readParameter(std::string filename, Parameter* parameter){
                                                                 parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
                                                         if(cnt==22)
                                                                 parameter->speedLaw=(SpeedLaw) atoi(valueArray);
-                                                        if(cnt==23)
-                                                                parameter->format=(Format) atoi(valueArray);
+                                                        if(cnt==23){
+                                                          parameter->format = (Format) atoi(valueArray);
+                                                          std::cout << "\t format = "<< parameter->format << "\n" << std::endl;
+                                                        }
                                                         ++cnt;
                                                 }
                                                 else{continue;}
                                         }
                                 }
                                 else if(buf=="END_F"){
+                                        std::cout << "----END parameter reading----\n \n" << std::endl;
                                         return; // REPLACE BY return(0);
                                 }
                                 else{

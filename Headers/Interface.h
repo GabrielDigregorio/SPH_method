@@ -14,12 +14,12 @@
 
 
 // inputReader.cpp
-void readParameter(char* parameterFilename, Parameter* parameter);
-void readGeometry(char* geometryFilename, Field* field);
+void readParameter(std::string filename, Parameter* parameter);
+void readGeometry(std::string filename, Field* currentField);
 void readBrick(int type, std::ifstream* inFile, Field* currentField);
 
 // writeField.cpp
-void writeField(Field* field, double t, Format myFormat, 
+void writeField(Field* field, double t, Format myFormat,
                 std::string const &parameterFilename="Undefined",
                 std::string const &geometryFilename="Undefined",
                 std::string const &filename="result");
