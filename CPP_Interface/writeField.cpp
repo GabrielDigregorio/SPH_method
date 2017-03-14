@@ -2,6 +2,33 @@
 #include "Interface.h"
 #include "Tools.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <string> 
+
+// Creat directory to store data 
+// In: name of the directory
+std::string creatDirectory(std::string dirname){
+
+    std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
+    DIR* dir = opendir(newdir.str().c_str());
+    int i=1; 
+
+    while(dir)
+    {
+        /* Directory exists. */
+        closedir(dir);
+        newdir << i;
+        outdir << i;
+        dir = opendir(newdir.str().c_str());
+        i++;
+    }
+    mkdir(newdir.str().c_str());
+    outdir<< "/"<<dirname;
+    std::cout <<"\n"<<  outdir.str()<<"\n";
+    return outdir.str();
+}
 
 /*
  * In: field = stucture containing value to write
@@ -11,7 +38,7 @@
  *     geometryFilename = geometry file used
  * Out: speed_t.vtk, pos_t.vtk, or .txt
  */
-void writeField(Field* field, double t, Format myFormat,
+void writeField(Field* field, double t, Parameter* parameter,
                 std::string const &parameterFilename,
                 std::string const &geometryFilename,
                 std::string const &filename)
@@ -20,7 +47,7 @@ void writeField(Field* field, double t, Format myFormat,
     std::map<std::string, std::vector<double> *> vectors;
 
     // Map particules
-    if(myFormat==1 || myFormat==3)
+    if(parameter->format==1 || parameter->format==3)
     {
         scalars["pressure"] = &field->pressure;
         scalars["density"]  = &field->density;
@@ -28,7 +55,7 @@ void writeField(Field* field, double t, Format myFormat,
     }
 
     // Save results to disk (ParaView or Matlab)
-    switch (myFormat){
+    switch (parameter->format){
 
     case 1 : // .vtk in ParaView
         paraView(filename, t, field->pos, scalars, vectors);
@@ -36,14 +63,14 @@ void writeField(Field* field, double t, Format myFormat,
     break;
 
     case 2 : // .txt in Matlab
-        matlab(filename, parameterFilename, geometryFilename,  t,
+        matlab(filename, parameterFilename, geometryFilename,  t, parameter,
                field->pos, field->speed, field->density, field->pressure, field->mass);
         //return ;
     break;
 
     case 3 : // .vtk in ParaView and .txt in Matlab
         paraView(filename, t, field->pos, scalars, vectors);
-        matlab(filename, parameterFilename, geometryFilename, t,
+        matlab(filename, parameterFilename, geometryFilename, t, parameter,
                field->pos, field->speed, field->density, field->pressure, field->mass);
         //return ;
     break;
@@ -133,7 +160,7 @@ void paraView(std::string const &filename,
 void matlab(std::string const &filename,
               std::string const &parameterFilename,
               std::string const &geometryFilename,
-              int step,
+              int step, Parameter* parameter,
               std::vector<double> const &pos,
               std::vector<double> const &speed,
               std::vector<double> const &density,
@@ -163,6 +190,7 @@ void matlab(std::string const &filename,
 
     // header
     f << "#EXPERIMENT: " << filename << std::endl;
+    f << std::endl;
     f << "Date : " << asctime(timeinfo);
     #if defined(_WIN32) || defined(WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
     f << "Computer Name : "<< getenv("COMPUTERNAME") <<std::endl;
@@ -173,12 +201,16 @@ void matlab(std::string const &filename,
     #else
     #error "Cannot define GetMemory( ) or GetMemoryProcessPeak( ) or GetMemoryProcess() for an unknown OS."
     #endif
-    f << "File Used : " << geometryFilename << " & " << parameterFilename << std::endl;
+    f << "File Used : " << geometryFilename << "   &   " << parameterFilename << std::endl;
+    f << std::endl;
     f << "CPU Time : " << "- [s]" << std::endl;
     f << "Memory Usage : " << GetMemoryProcess(false, false)<< " [kB]" <<std::endl;
     f << "Memory Usage Peak : " << GetMemoryProcessPeak(false, false)<< " [kB]" <<std::endl;
+    f << std::endl;
+    f << "step time (k) : "<< parameter->k << " [s]" << std::endl;
+    f << "Simulation Time (T) : "<< parameter->T << " [s]" << std::endl;
     f << "\n";
-    f << " posX\t\t\t posY\t\t\t posZ\t\t\t velocityX\t\t velocityY\t\t velocityZ\t\t density\t\t pressure\t\t mass"<<std::endl;
+    f << " posX\t\t posY\t\t posZ\t\t velocityX\t velocityY\t velocityZ\t density\t pressure\t mass"<<std::endl;
 
     // Fill f:
     for(int i=0; i<nbp; ++i)

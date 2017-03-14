@@ -36,7 +36,7 @@ lz = 0
         %param
         c=0
         s=0.1
-        r=0
+        r=30
         %coord
         x=0
         y=0

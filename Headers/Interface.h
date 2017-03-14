@@ -11,21 +11,23 @@
 #include <cstdlib>
 #include <sstream>
 #include <iomanip>
-
+#include <direct.h>
 
 // inputReader.cpp
 void readParameter(std::string filename, Parameter* parameter);
 void readGeometry(std::string filename, Field* currentField);
 void readBrick(int type, std::ifstream* inFile, Field* currentField);
 
+
+
 // writeField.cpp
-void writeField(Field* field, double t, Format myFormat,
+std::string creatDirectory(std::string dirname);
+
+void writeField(Field* field, double t, Parameter* parameter,
                 std::string const &parameterFilename="Undefined",
                 std::string const &geometryFilename="Undefined",
                 std::string const &filename="result");
 
-
-// ParaView.cpp
 void paraView(std::string const &filename,
               int step,
               std::vector<double> const &pos,
@@ -35,7 +37,7 @@ void paraView(std::string const &filename,
 void matlab(std::string const &filename,
               std::string const &parameterFilename,
               std::string const &geometryFilename,
-              int step,
+              int step, Parameter* parameter,
               std::vector<double> const &pos,
               std::vector<double> const &speed,
               std::vector<double> const &density,
