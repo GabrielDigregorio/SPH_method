@@ -20,7 +20,7 @@
 #param
     kh=0.12
     k=0.05
-    T=1
+    T=0.1
     densityRef=1000.0
     B=12800000.0
     gamma=7.0
@@ -30,7 +30,7 @@
     c=300.0
     alpha=1.0
     beta=1.0
-    epsilon=1.0
+    epsilon=0.01
     movingDirectionX=2.1
     movingDirectionY=2.2
     movingDirectionZ=2.3

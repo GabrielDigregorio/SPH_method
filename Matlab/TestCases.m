@@ -24,8 +24,8 @@ case 1
     % Parameters
           g = 9.81;
 %         z0_center = 100; %[m]
-          nstep = 20; %[-]
-          timeStep = 0.1; %[s]
+          nstep = length(dir(['../build/Results/', '\*.txt']))-1; %[-]
+          timeStep = 0.05; %[s]
     % Cube:
 %         L=10;
 %         W=10;
@@ -59,7 +59,13 @@ case 1
     
     end
     
-
+    % Put file in a new directory
+%     if(input('MoveFile to an other folder (1 for yes, 0 for no): ' ))
+%     mkdir ../build/Results/FreeFallingCube
+%     movefile ../build/Results/FreeFallingCube_*.txt ../build/Results/FreeFallingCube
+%     movefile ../build/Results/FreeFallingCube_*.vtk ../build/Results/FreeFallingCube
+%     end
+    
     % Plot
     figure(1)
     hold on
