@@ -9,16 +9,16 @@
 
 void updateMovingSpeed(Field* field, Parameter* parameter, double t)
 {
+    int start;
+    int end;
+
     switch(parameter->speedLaw){
+    case sine:
+        // uniform periodic movement in each direction
+        start = field->nFixed + field->nFree;
+        end = field->nTotal;
 
-    case sine :
-        // uniforme periodic mouvement in each direction
-
-        int start = field->nFixed + field->nFree;
-        int end = field->nTotal;
-
-        for(int i=start ; i<end ; i++)
-        {
+        for(int i=start ; i<end ; i++){
             // x
             field->speed[3*i]=parameter->movingDirection[0]*sin(parameter->charactTime*t);
             // y
@@ -26,13 +26,12 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
             // z
             field->speed[3*i+2]=parameter->movingDirection[2]*sin(parameter->charactTime*t);
         }
-
-    break;
-
-    //case 2 :
-
-    //break;
-
-    //default :
+        break;
+    case constant:
+        std::cout << "Constant moving not yet implemented\n"; // ATTENTION !!!
+        break;
+    case exponential:
+        std::cout << "Exponential moving not yet implemented\n"; // ATTENTION !!!
+        break;
     }
 }

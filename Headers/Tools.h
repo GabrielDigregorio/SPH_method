@@ -14,6 +14,7 @@
 #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
 #include <unistd.h>
 #include <sys/resource.h>
+#include <sys/stat.h>
     #include "sys/types.h"
     //#include "sys/sysinfo.h"
 
