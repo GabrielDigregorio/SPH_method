@@ -21,17 +21,16 @@ std::string creatDirectory(std::string dirname){
         i++;
     }
 
-
-mode_t nMode = 0733; // UNIX style permissions
-int nError = 0;
-#if defined(_WIN32)
-  nError = _mkdir(newdir.str().c_str()); // can be used on Windows
-#else 
-  nError = mkdir(newdir.str().c_str(),nMode); // can be used on non-Windows
-#endif
-if (nError != 0) {
-  // handle your error here
-}
+    mode_t nMode = 0733; // UNIX style permissions
+    int nError = 0;
+    #if defined(_WIN32)
+    nError = _mkdir(newdir.str().c_str()); // can be used on Windows
+    #else 
+    nError = mkdir(newdir.str().c_str(),nMode); // can be used on non-Windows
+    #endif
+    if (nError != 0) {
+    // handle your error here
+    }
 
     //mkdir(newdir.str().c_str());
     outdir<< "/"<<dirname;
