@@ -95,8 +95,8 @@ int main(int argc, char *argv[])
     if(reBoxing == true)
     {
       std::cout << "\t Reboxing...\n" << std::endl;
-      boxes.resize(0);
-      surrBoxesAll.resize(0);
+      boxes.resize(0);// VERY BAD
+      surrBoxesAll.resize(0);// VERY BAD 
       boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
     }
     reBoxing = timeIntegration(currentField,nextField,parameter,boxes,surrBoxesAll,n);
