@@ -104,8 +104,9 @@ int main(int argc, char *argv[])
       surrBoxesAll.resize(0);// VERY BAD
       boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
     }
-    std::cout << "Mass: " << nextField->mass[0]<<"\n";
+    //std::cout << "Mass: " << nextField->mass[0]<<"\n";
     reBoxing = timeIntegration(currentField,nextField,parameter,boxes,surrBoxesAll,n);
+
     if(writeCount*parameter->writeInterval <= n*parameter->k)
     {
       writeField(nextField, n, parameter, parameterFilename, geometryFilename, experimentFilename);

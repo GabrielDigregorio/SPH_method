@@ -13,7 +13,7 @@ enum geomType{cube,cylinder,sphere};
 enum boundCondition{freePart, movingPart, fixedPart};
 
 void readBrick(int type, std::ifstream* inFile, Field* currentField,
-                std::vector<double>* posFree, std::vector<double>* posFixed, std::vector<double>* posMoving){
+                std::vector<double>* posFree, std::vector<double>* posMoving, std::vector<double>* posFixed){
         std::string buf;
         int cnt=0;
         char valueArray[1024];
@@ -133,12 +133,12 @@ void readGeometry(std::string filename, Field* currentField){
                                         posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
                                         currentField->pos=posFree;
                                         currentField->nTotal= currentField->nFree + currentField->nFixed + currentField->nMoving;
-                                        std::cout << "\t Position vector:\n" << std::endl;
+                                        //std::cout << "\t Position vector:\n" << std::endl;
                                         for (int i = 0; i < 3*currentField->nTotal; i+=3)
                                         {
-                                            std::cout <<"\t" << currentField->pos[i] << "\n"<< std::endl;
-                                            std::cout <<"\t" << currentField->pos[i+1] << "\n"<< std::endl;
-                                            std::cout <<"\t" << currentField->pos[i+2] << "\n\n"<< std::endl;
+                                            //std::cout <<"\t" << currentField->pos[i] << "\n"<< std::endl;
+                                            //std::cout <<"\t" << currentField->pos[i+1] << "\n"<< std::endl;
+                                            //std::cout <<"\t" << currentField->pos[i+2] << "\n\n"<< std::endl;
                                         }
                                         std::cout << "----END geometry reading----\n" << std::endl;
                                         return; // REPLACE BY return(0);

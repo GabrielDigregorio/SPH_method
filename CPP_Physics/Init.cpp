@@ -100,7 +100,6 @@ void pressureComputation(Field* field,Parameter* parameter)
 		{
 			double rho = field->density[i];
 			double p = B*(pow(rho/rho_0,gamma)-1);
-
 			field->pressure[i] = p;
 			//std::cout << "\t" << field->pressure[i] << "\n" << std::endl;
 		}
