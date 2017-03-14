@@ -10,12 +10,12 @@ void speedInit(Field* field,Parameter* parameter)
   // Initialisation des moving boundaries
   if(field->nMoving != 0){updateMovingSpeed(field,parameter,0.0);}
 
-	std::cout << "\t Speed vector:\n" << std::endl;
+	//std::cout << "\t Speed vector:\n" << std::endl;
 	for (int i = 0; i < 3*field->nTotal; i+=3)
 	{
-			std::cout <<"\t" << field->speed[i] << "\n"<< std::endl;
-			std::cout <<"\t" << field->speed[i+1] << "\n"<< std::endl;
-			std::cout <<"\t" << field->speed[i+2] << "\n\n"<< std::endl;
+			//std::cout <<"\t" << field->speed[i] << "\n"<< std::endl;
+			//std::cout <<"\t" << field->speed[i+1] << "\n"<< std::endl;
+			//std::cout <<"\t" << field->speed[i+2] << "\n\n"<< std::endl;
 	}
 
 	std::cout << "----END speed initialitation---- \n \n";
@@ -42,13 +42,13 @@ void densityInit(Field* field,Parameter* parameter)
 		// Find height of free surface.
 		double zMax;
 		zMax = *(std::max_element(&field->pos[0],&field->pos[field->nFree+1]));
-		std::cout << "\t Density vector\n" <<std::endl;
+		//std::cout << "\t Density vector\n" <<std::endl;
 		for (int i = 0; i < field->nTotal; i++)
 		{
 			H = zMax - field->pos[3*i+2];
 			double rho = (1 + (1 / B)*rho_0*g*H);
 			field->density[i] = rho_0*pow(rho, 1.0 / gamma);
-			std::cout << "\t" << field->density[i] << "\n" << std::endl;
+			//std::cout << "\t" << field->density[i] << "\n" << std::endl;
 		}
 		break;
 		case homogeneous:
@@ -127,14 +127,14 @@ void massInit(Field* field,Parameter* parameter)
 {
 
 	std::cout << "----BEGIN mass initialitation---- \n \n";
-	std::cout << "\t Mass vector \n" << std::endl;
+	//std::cout << "\t Mass vector \n" << std::endl;
 	for (int i=0; i<field->nTotal; i++)
 	{
 		double V = field->s[i]*field->s[i]*field->s[i];
 		double m = field->density[i]*V;
 
 		field->mass[i] = m;
-		std::cout << "\t" << field->mass[i] << "\n" << std::endl;
+		//std::cout << "\t" << field->mass[i] << "\n" << std::endl;
 	}
 
 	std::cout << "----END mass initialitation---- \n \n";

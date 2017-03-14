@@ -2,7 +2,6 @@
 #include "Main.h"
 #include "Interface.h"
 
-
 #include <sstream>
 #include <algorithm>
 
@@ -35,28 +34,43 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField,
         double L[3] = {brickData[6],brickData[7],brickData[8]};
         switch(type){
                 case cube :
-                        if(c==freePart)
-                                meshcube(o, L, s, *posFree, r, true);
-                        else if(c==movingPart)
-                                meshcube(o, L, s, *posMoving, r, true);
-                        else if(c==fixedPart)
-                                meshcube(o, L, s, *posFixed, r, true);
+                        switch(c){
+                                case freePart :
+                                        meshcube(o, L, s, *posFree, r, true);
+                                break;
+                                case movingPart :
+                                        meshcube(o, L, s, *posMoving, r, true);
+                                break;
+                                case fixedPart :
+                                        meshcube(o, L, s, *posFixed, r, true);
+                                break;
+                        }
                 break;
                 case cylinder :
-                        if(c==freePart)
-                                meshcylinder(o, L, s, *posFree, r, true);
-                        else if(c==movingPart)
-                                meshcylinder(o, L, s, *posMoving, r, true);
-                        else if(c==fixedPart)
-                                meshcylinder(o, L, s, *posFixed, r, true);
+                        switch(c){
+                                case freePart :
+                                        meshcylinder(o, L, s, *posFree, r, true);
+                                break;
+                                case movingPart :
+                                        meshcylinder(o, L, s, *posMoving, r, true);
+                                break;
+                                case fixedPart :
+                                        meshcylinder(o, L, s, *posFixed, r, true);
+                                break;
+                        }
                 break;
                 case sphere :
-                        if(c==freePart)
-                                meshsphere(o, L, s, *posFree, r, true);
-                        else if(c==movingPart)
-                                meshsphere(o, L, s, *posMoving, r, true);
-                        else if(c==fixedPart)
-                                meshsphere(o, L, s, *posFixed, r, true);
+                        switch(c){
+                                case freePart :
+                                        meshsphere(o, L, s, *posFree, r, true);
+                                break;
+                                case movingPart :
+                                        meshsphere(o, L, s, *posMoving, r, true);
+                                break;
+                                case fixedPart :
+                                        meshsphere(o, L, s, *posFixed, r, true);
+                                break;
+                        }
                 break;
         }
         // Only one of the 3 vectors is filled. Here there is a problem because s is not defined by the user but rather by the function meshcube !!!!!!!
@@ -104,13 +118,13 @@ void readGeometry(std::string filename, Field* currentField){
                                 }
                                 else if(buf=="brick")
                                         readBrick(cube,&inFile, currentField,
-                                                &posFree, &posFixed, &posMoving);
+                                                &posFree, &posMoving, &posFixed);
                                 else if(buf=="cylin")
                                         readBrick(cylinder,&inFile, currentField,
-                                                &posFree, &posFixed, &posMoving);
+                                                &posFree, &posMoving, &posFixed);
                                 else if(buf=="spher")
                                         readBrick(sphere,&inFile, currentField,
-                                                &posFree, &posFixed, &posMoving);
+                                                &posFree, &posMoving, &posFixed);
                                 else if(buf=="END_G"){
                                         currentField->nFree=posFree.size()/3;
                                         currentField->nFixed=posFixed.size()/3;
@@ -162,10 +176,8 @@ void readParameter(std::string filename, Parameter* parameter){
                                         while(cnt!=N_PARAM){
                                                 std::getline(inFile, buf);
                                                 if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray)){
-                                                        if(cnt==0){
+                                                        if(cnt==0)
                                                           parameter->kh=atof(valueArray);
-                                                          std::cout << "\t kh = "<< parameter->kh << "\n" << std::endl;
-                                                        }
                                                         if(cnt==1)
                                                                 parameter->k=atof(valueArray);
                                                         if(cnt==2)
@@ -210,10 +222,8 @@ void readParameter(std::string filename, Parameter* parameter){
                                                                 parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
                                                         if(cnt==22)
                                                                 parameter->speedLaw=(SpeedLaw) atoi(valueArray);
-                                                        if(cnt==23){
+                                                        if(cnt==23)
                                                           parameter->format = (Format) atoi(valueArray);
-                                                          std::cout << "\t format = "<< parameter->format << "\n" << std::endl;
-                                                        }
                                                         ++cnt;
                                                 }
                                                 else{continue;}

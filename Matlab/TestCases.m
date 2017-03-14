@@ -24,8 +24,8 @@ case 1
     % Parameters
           g = 9.81;
 %         z0_center = 100; %[m]
-          nstep = 1; %[-]
-          timeStep = 0.1; %[s]
+          nstep = length(dir(['../build/Results/', '\*.txt']))-1; %[-]
+          timeStep = 0.05; %[s]
     % Cube:
 %         L=10;
 %         W=10;
@@ -33,22 +33,23 @@ case 1
 %         r=0;
 
     % Import data at t=0
-    filename=strcat('../Results/FreeFallingCube_',num2str(0,'%08i'),'.txt')
+    filename=strcat('../build/Results/FreeFallingCube_',num2str(0,'%08i'),'.txt')
     InitExperiment = importdata(filename);
         
     for i=1 : nstep 
         
         % Open File nbr i
-        filename=strcat('../Results/FreeFallingCube_',num2str(i,'%08i'),'.txt')
+        filename=strcat('../build/Results/FreeFallingCube_',num2str(i,'%08i'),'.txt')
         Experiment = importdata(filename); % Import Data
         
         % Compute the error to analytical solution
         time(i) = (i-1)*timeStep; % Time 
-        Analytic = InitExperiment.data(:,3) - g*(time(i)^2)/2; % MRUA
-        error(i) = mean(abs(((Experiment.data(:,3)-Analytic)./Analytic)))*100; % error [%]
+        Analytic(i) = mean(InitExperiment.data(:,3)) - g*(time(i)^2)/2; % MRUA
+        error(i) = mean(abs(((Experiment.data(:,3)-Analytic(i))./Analytic(i))))*100; % error [%]
         XY_move(i) = sqrt(mean(  (InitExperiment.data(:,1) - Experiment.data(:,1)).^2  ...
                               +  (InitExperiment.data(:,2) - Experiment.data(:,2)).^2   ));
-    
+        MeanZ_experiment(i) = mean(abs(Experiment.data(:,3)));
+        
         % Get memory consumption
         Str1 = char(Experiment.textdata(7)); Key1 = 'Memory Usage :';
         Str2 = char(Experiment.textdata(8)); Key2 = 'Peak :';
@@ -57,9 +58,31 @@ case 1
         Memory_Peak(i) = sscanf(Str2(Index2(1) + length(Key2):end), '%g', 1);
     
     end
-
+    
+    % Put file in a new directory
+%     if(input('MoveFile to an other folder (1 for yes, 0 for no): ' ))
+%     mkdir ../build/Results/FreeFallingCube
+%     movefile ../build/Results/FreeFallingCube_*.txt ../build/Results/FreeFallingCube
+%     movefile ../build/Results/FreeFallingCube_*.vtk ../build/Results/FreeFallingCube
+%     end
+    
     % Plot
     figure(1)
+    hold on
+    plot(time, Analytic, time, MeanZ_experiment);
+    % polyfit...
+        %axis([0 0 0 0])
+        title('')
+        xlabel('Time [s]')
+        ylabel('Z')
+        legend('Analytic', 'Simulation')
+        grid
+        print('FreeFallingCube_error', '-depsc')
+    hold off  
+    
+
+    % Plot
+    figure(2)
     hold on
     plot(time, error, '*');
     % polyfit...
@@ -72,7 +95,7 @@ case 1
         print('FreeFallingCube_error', '-depsc')
     hold off  
     
-    figure(2)
+    figure(3)
     hold on
     plot(time, XY_move, '*');
         %axis([0 0 0 0])
@@ -167,6 +190,7 @@ end
 
 sucess = 0;
 end
+
 
 
 

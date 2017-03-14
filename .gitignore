@@ -18,4 +18,6 @@ Makefile
 test.*
 .DS_Store
 !CMakeLists.txt
-CMakeFiles/*
+
+
+
