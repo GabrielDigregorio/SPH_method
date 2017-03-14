@@ -7,13 +7,13 @@
 // In: name of the directory
 std::string creatDirectory(std::string dirname){
 
-    std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
+   /* std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
     DIR* dir = opendir(newdir.str().c_str());
     int i=1; 
 
     while(dir)
     {
-        /* Directory exists. */
+         Directory exists.
         closedir(dir);
         newdir << i;
         outdir << i;
@@ -35,7 +35,7 @@ std::string creatDirectory(std::string dirname){
     //mkdir(newdir.str().c_str());
     outdir<< "/"<<dirname;
     std::cout <<"\n"<<  outdir.str()<<"\n";
-    return outdir.str();
+    return outdir.str();*/
 }
 
 /*
