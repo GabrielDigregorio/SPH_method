@@ -104,13 +104,13 @@ void readGeometry(std::string filename, Field* currentField){
                                 }
                                 else if(buf=="brick")
                                         readBrick(cube,&inFile, currentField,
-                                                &posFree, &posFixed, &posMoving);
+                                                &posFree, &posMoving, &posFixed);
                                 else if(buf=="cylin")
                                         readBrick(cylinder,&inFile, currentField,
-                                                &posFree, &posFixed, &posMoving);
+                                                &posFree, &posMoving, &posFixed);
                                 else if(buf=="spher")
                                         readBrick(sphere,&inFile, currentField,
-                                                &posFree, &posFixed, &posMoving);
+                                                &posFree, &posMoving, &posFixed);
                                 else if(buf=="END_G"){
                                         currentField->nFree=posFree.size()/3;
                                         currentField->nFixed=posFixed.size()/3;
@@ -162,10 +162,8 @@ void readParameter(std::string filename, Parameter* parameter){
                                         while(cnt!=N_PARAM){
                                                 std::getline(inFile, buf);
                                                 if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray)){
-                                                        if(cnt==0){
+                                                        if(cnt==0)
                                                           parameter->kh=atof(valueArray);
-                                                          std::cout << "\t kh = "<< parameter->kh << "\n" << std::endl;
-                                                        }
                                                         if(cnt==1)
                                                                 parameter->k=atof(valueArray);
                                                         if(cnt==2)
@@ -210,10 +208,8 @@ void readParameter(std::string filename, Parameter* parameter){
                                                                 parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
                                                         if(cnt==22)
                                                                 parameter->speedLaw=(SpeedLaw) atoi(valueArray);
-                                                        if(cnt==23){
+                                                        if(cnt==23)
                                                           parameter->format = (Format) atoi(valueArray);
-                                                          std::cout << "\t format = "<< parameter->format << "\n" << std::endl;
-                                                        }
                                                         ++cnt;
                                                 }
                                                 else{continue;}
