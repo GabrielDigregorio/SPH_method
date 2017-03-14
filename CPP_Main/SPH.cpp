@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
   std::cout << "\t Number of time steps = " << nMax << "\n" << std::endl;
 
   // Creat directory to store data
-  experimentFilename = creatDirectory(experimentFilename);
+  //experimentFilename = creatDirectory(experimentFilename);
   writeField(currentField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);
   unsigned int writeCount = 1;
 

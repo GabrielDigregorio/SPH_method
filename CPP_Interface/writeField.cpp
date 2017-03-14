@@ -2,32 +2,40 @@
 #include "Interface.h"
 #include "Tools.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <string> 
 
 // Creat directory to store data 
 // In: name of the directory
 std::string creatDirectory(std::string dirname){
 
-    std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
+   /* std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
     DIR* dir = opendir(newdir.str().c_str());
     int i=1; 
 
     while(dir)
     {
-        /* Directory exists. */
+         Directory exists.
         closedir(dir);
         newdir << i;
         outdir << i;
         dir = opendir(newdir.str().c_str());
         i++;
     }
-    mkdir(newdir.str().c_str());
+
+    mode_t nMode = 0733; // UNIX style permissions
+    int nError = 0;
+    #if defined(_WIN32)
+    nError = _mkdir(newdir.str().c_str()); // can be used on Windows
+    #else 
+    nError = mkdir(newdir.str().c_str(),nMode); // can be used on non-Windows
+    #endif
+    if (nError != 0) {
+    // handle your error here
+    }
+
+    //mkdir(newdir.str().c_str());
     outdir<< "/"<<dirname;
     std::cout <<"\n"<<  outdir.str()<<"\n";
-    return outdir.str();
+    return outdir.str();*/
 }
 
 /*

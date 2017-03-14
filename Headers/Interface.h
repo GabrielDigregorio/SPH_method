@@ -11,7 +11,6 @@
 #include <cstdlib>
 #include <sstream>
 #include <iomanip>
-#include <direct.h>
 
 // inputReader.cpp
 void readParameter(std::string filename, Parameter* parameter);
