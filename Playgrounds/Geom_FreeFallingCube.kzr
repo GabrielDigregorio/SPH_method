@@ -25,35 +25,22 @@
 %********************************************
 
 #domsz
-ux = 40
-uy = 40
-uz = 40
-lx = 0
-ly = 0
+ux = 2
+uy = 2
+uz = 20
+lx = -2
+ly = -2
 lz = 0
 
     #brick
         %param
         c=0
-        s=1
-        r=0
+        s=0.1
+        r=30
         %coord
-        x=3
-        y=3
-        z=20
-        %dimen
-        L=1
-        W=1
-        H=1
-    #brick
-        %param
-        c=2
-        s=1
-        r=0
-        %coord
-        x=3
-        y=3
-        z=10
+        x=0
+        y=0
+        z=19
         %dimen
         L=1
         W=1

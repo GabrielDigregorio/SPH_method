@@ -31,21 +31,23 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
       {
         particleID = boxes[box][part];
 
-        std::cout << "\t particleID = " << particleID <<":\n"<<std::endl;
+        //std::cout << "\t particleID = " << particleID <<":\n";
 
-        std::cout << "\t \t Finding neighbors...\n" << std::endl;
+        //std::cout << "\t \t Finding neighbors..." << std::endl;
+        neighbors.resize(0);// VERY BAD
+        kernelGradients.resize(0);// VERY BAD 
         findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, kernelType);
-
+        //std::cout << neighbors.size() << " neighbors found... \n" << std::endl;
         // Continuity equation
         densityDerivative = continuity(particleID, neighbors, kernelGradients,currentField); // also for fixed particles !
-        std::cout << "\t \t Density derivative = " << densityDerivative << "\n";
+        //std::cout << "\t \t Density derivative = " << densityDerivative << "\n";
         // Momentum equation only for free particles
         if(particleID < currentField->nFree)
         {
           momentum(particleID, neighbors, kernelGradients,currentField,parameter, speedDerivative);
-          std::cout << "\t \t Speed derivative = " << speedDerivative[0] << "\n";
-          std::cout << "\t \t Speed derivative = " << speedDerivative[1] << "\n";
-          std::cout << "\t \t Speed derivative = " << speedDerivative[2] << "\n";
+          //std::cout << "\t \t Speed derivative = " << speedDerivative[0] << "\n";
+          //std::cout << "\t \t Speed derivative = " << speedDerivative[1] << "\n";
+          //std::cout << "\t \t Speed derivative = " << speedDerivative[2] << "\n";
         }
 
 

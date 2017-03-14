@@ -38,8 +38,8 @@ switch(choice)
     case 2 % Run:
         if(strcmp(name,'DESKTOP-31TT348'))
            disp(['Choose among the list of Playgrounds: ']); dir('..\Playgrounds')
-           p = input('Parameter file name (w/ .kzr): ','s'); p = strcat(p, '.kzr ');
-           g = input('Geometry file name (w/ .kzr): ','s'); g = strcat(g, '.kzr ');
+           p = input('Parameter file name (w/ .kzr): ','s'); p = strcat('..\Playgrounds\',p, '.kzr ')
+           g = input('Geometry file name (w/ .kzr): ','s'); g = strcat('..\Playgrounds\',g, '.kzr ')
            system(char(strcat({'"../build/sph.exe"'},{' '},p,{' '},g,{' '}, {'FreeFallingCube'})))
         else disp(['You are not allowed to launch an experiment... ']);
         end

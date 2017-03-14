@@ -18,19 +18,19 @@
 % speedLaw = To be determined, will dictate the behaviour of moving boundaries
 %********************************************
 #param
-    kh=1
-    k=0.01
-    T=2.0
+    kh=0.12
+    k=0.05
+    T=0.1
     densityRef=1000.0
     B=12800000.0
     gamma=7.0
     g=9.81
-    writeInterval=0.01
+    writeInterval=0.05
     charactTime=1.0
     c=300.0
     alpha=1.0
-    beta=0.1
-    epsilon=0.001
+    beta=1.0
+    epsilon=0.01
     movingDirectionX=2.1
     movingDirectionY=2.2
     movingDirectionZ=2.3
@@ -41,5 +41,5 @@
     stateEquationMethod=0
     massInitMethod=0
     speedLaw=0
-    format=1
+    format=3
 #END_F

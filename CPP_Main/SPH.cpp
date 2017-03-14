@@ -4,6 +4,7 @@
 #include "Tools.h"
 #include "Structures.h"
 
+
 /*
 * In: -argv[1]: path to the parameter file
 -argv[2]: path to the geometry file
@@ -79,7 +80,9 @@ int main(int argc, char *argv[])
 
   std::cout << "\t Number of time steps = " << nMax << "\n" << std::endl;
 
-  writeField(currentField, 0.0, parameter->format);
+  // Creat directory to store data
+  experimentFilename = creatDirectory(experimentFilename);
+  writeField(currentField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);
   unsigned int writeCount = 1;
 
   bool reBoxing = true;
@@ -95,14 +98,14 @@ int main(int argc, char *argv[])
     if(reBoxing == true)
     {
       std::cout << "\t Reboxing...\n" << std::endl;
-      boxes.resize(0);
-      surrBoxesAll.resize(0);
+      boxes.resize(0);// VERY BAD
+      surrBoxesAll.resize(0);// VERY BAD 
       boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
     }
     reBoxing = timeIntegration(currentField,nextField,parameter,boxes,surrBoxesAll,n);
     if(writeCount*parameter->writeInterval <= n*parameter->k)
     {
-      writeField(nextField, n,  parameter->format);
+      writeField(nextField, n, parameter, parameterFilename, geometryFilename, experimentFilename);
       writeCount++;
     }
     tmpField = currentField;
