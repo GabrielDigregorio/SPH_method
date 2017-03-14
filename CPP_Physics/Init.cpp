@@ -105,6 +105,11 @@ void pressureComputation(Field* field,Parameter* parameter)
 			std::cout << "\t" << field->pressure[i] << "\n" << std::endl;
 		}
 		break;
+
+		case perfectGas:
+		std::cout << "Perfect gas not yet implemented\n"; // ATTENTION !!!
+		break;
+
 	}
 
 	std::cout << "----END pressure computation---- \n \n";
