@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 
   std::cout << "\t Number of time steps = " << nMax << "\n" << std::endl;
 
-  writeField(currentField, 0.0, parameter->format);
+  writeField(currentField, 0.0, parameter->format, parameterFilename, geometryFilename, experimentFilename);
   unsigned int writeCount = 1;
 
   bool reBoxing = true;
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     reBoxing = timeIntegration(currentField,nextField,parameter,boxes,surrBoxesAll,n);
     if(writeCount*parameter->writeInterval <= n*parameter->k)
     {
-      writeField(nextField, n,  parameter->format);
+      writeField(nextField, n,  parameter->format, parameterFilename, geometryFilename, experimentFilename);
       writeCount++;
     }
     tmpField = currentField;

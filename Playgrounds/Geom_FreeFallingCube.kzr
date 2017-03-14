@@ -1,6 +1,6 @@
 #GEOM1
 %********************************************
-% PLAYGROUND : Geometry TEST
+% PLAYGROUND : Geometry example
 %
 % #GEOM
 % #domain
@@ -25,26 +25,24 @@
 %********************************************
 
 #domsz
-ux = -10
-uy = -10
-uz = -10
-lx = 10
-ly = 10
-lz = 10
+ux = 2
+uy = 2
+uz = 20
+lx = -2
+ly = -2
+lz = 0
 
     #brick
         %param
         c=0
-        s=0.5
+        s=0.1
         r=0
         %coord
         x=0
         y=0
-        z=0
+        z=19
         %dimen
-        L=5
-        W=5
-        H=5
-
-
+        L=1
+        W=1
+        H=1
 #END_G
