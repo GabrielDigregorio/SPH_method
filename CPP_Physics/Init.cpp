@@ -84,7 +84,7 @@ std::cout << "----END density initialitation---- \n \n";
 void pressureComputation(Field* field,Parameter* parameter)
 {
 
-	std::cout << "----BEGIN pressure computation---- \n \n";
+	//std::cout << "----BEGIN pressure computation---- \n \n";
 	//Récupération des paramètres
 	double rho_0 = parameter->densityRef;
 	double B = parameter->B;
@@ -95,14 +95,14 @@ void pressureComputation(Field* field,Parameter* parameter)
 	{
 		case quasiIncompressible:
 
-		std::cout << "\t Pressure vector \n" << std::endl;
+		//std::cout << "\t Pressure vector \n" << std::endl;
 		for (int i=0; i<field->nTotal; i++)
 		{
 			double rho = field->density[i];
 			double p = B*(pow(rho/rho_0,gamma)-1);
 
 			field->pressure[i] = p;
-			std::cout << "\t" << field->pressure[i] << "\n" << std::endl;
+			//std::cout << "\t" << field->pressure[i] << "\n" << std::endl;
 		}
 		break;
 
@@ -112,7 +112,7 @@ void pressureComputation(Field* field,Parameter* parameter)
 
 	}
 
-	std::cout << "----END pressure computation---- \n \n";
+	//std::cout << "----END pressure computation---- \n \n";
 	// + cas gaz parfait ?
 }
 

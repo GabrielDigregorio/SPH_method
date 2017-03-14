@@ -12,7 +12,7 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
     Kernel kernelType = parameter->kernel;
 
     // Sort the particles at the current time step
-    std::cout << "\t Sorting particles...\n" << std::endl;
+    //std::cout << "\t Sorting particles...\n" << std::endl;
     boxClear(boxes); // Clear the sorting to restart it...
     sortParticles(currentField->pos, currentField->l, currentField->u, parameter->kh, boxes); // At each time step (to optimize?)
 
@@ -31,23 +31,23 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
       {
         particleID = boxes[box][part];
 
-        std::cout << "\t particleID = " << particleID <<":\n";
+        //std::cout << "\t particleID = " << particleID <<":\n";
 
-        std::cout << "\t \t Finding neighbors..." << std::endl;
+        //std::cout << "\t \t Finding neighbors..." << std::endl;
         neighbors.resize(0);// VERY BAD
-        kernelGradients.resize(0);// VERY BAD 
+        kernelGradients.resize(0);// VERY BAD
         findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, kernelType);
-        std::cout << neighbors.size() << " neighbors found... \n" << std::endl;
+        //std::cout << neighbors.size() << " neighbors found... \n" << std::endl;
         // Continuity equation
         densityDerivative = continuity(particleID, neighbors, kernelGradients,currentField); // also for fixed particles !
-        std::cout << "\t \t Density derivative = " << densityDerivative << "\n";
+        //std::cout << "\t \t Density derivative = " << densityDerivative << "\n";
         // Momentum equation only for free particles
         if(particleID < currentField->nFree)
         {
           momentum(particleID, neighbors, kernelGradients,currentField,parameter, speedDerivative);
-          std::cout << "\t \t Speed derivative = " << speedDerivative[0] << "\n";
-          std::cout << "\t \t Speed derivative = " << speedDerivative[1] << "\n";
-          std::cout << "\t \t Speed derivative = " << speedDerivative[2] << "\n";
+          //std::cout << "\t \t Speed derivative = " << speedDerivative[0] << "\n";
+          //std::cout << "\t \t Speed derivative = " << speedDerivative[1] << "\n";
+          //std::cout << "\t \t Speed derivative = " << speedDerivative[2] << "\n";
         }
 
 
@@ -77,6 +77,8 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
         }
         // MAJ of different Field
         //Position ( MAJ only for non Fixed particles )
+        //std::cout << currentField->nFree << ", " << currentField->nFixed << ", " << currentField->nMoving <<"\n";
+
         if( (particleID < currentField->nFree) || (particleID >= currentField->nFree + currentField->nFixed) )
         {
           for (int i = 0; i <= 2; i++)
@@ -84,7 +86,12 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
             nextField->pos[3*particleID + i] = currentField->pos[3*particleID + i] + parameter->k*currentField->speed[3*particleID + i];
           }
         }
-
+        else{
+            for (int i = 0; i <= 2; i++)
+            {
+              nextField->pos[3*particleID + i] = currentField->pos[3*particleID + i];
+            }
+        }
       }
     }
     //pressure

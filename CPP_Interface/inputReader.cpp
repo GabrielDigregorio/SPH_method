@@ -14,7 +14,7 @@ enum geomType{cube,cylinder,sphere};
 enum boundCondition{freePart, movingPart, fixedPart};
 
 void readBrick(int type, std::ifstream* inFile, Field* currentField,
-                std::vector<double>* posFree, std::vector<double>* posMoving, std::vector<double>* posFixed){
+                std::vector<double>* posFree, std::vector<double>* posFixed, std::vector<double>* posMoving){
         std::string buf;
         int cnt=0;
         char valueArray[1024];
