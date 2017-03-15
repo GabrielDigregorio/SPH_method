@@ -106,6 +106,7 @@ void readGeometry(std::string filename, Field* currentField){
                                                 else
                                                         continue;
                                         }
+                                        cnt = 0;
                                         while(cnt!=N_UL){
                                                 std::getline(inFile, buf);
                                                 if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray)){
