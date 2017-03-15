@@ -31,17 +31,13 @@ int main(int argc, char *argv[])
   std::cout << "----END argument checking----\n" << std::endl;
 
   //Read parameters
-
-
   Parameter* parameter =  new Parameter();
   readParameter(parameterFilename, parameter);
 
   //Read geometry
-
-
-
   Field* currentField =  new Field();
   readGeometry(geometryFilename, currentField);
+
 
   sizeField(currentField, currentField->nTotal);
 

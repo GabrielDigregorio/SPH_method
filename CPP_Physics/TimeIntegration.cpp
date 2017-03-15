@@ -23,6 +23,10 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
     double densityDerivative;
     std::vector<double> speedDerivative;
 
+    // runge kutta 2 parameters
+    double k1_rho, k2_rho;
+    std::vector<double> k1_U, k2_U;
+
     // Spans the boxes
     for(int box=0 ; box<boxes.size() ; box++)
     {
@@ -57,6 +61,8 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           case euler: // u_n = u_(n-1) + k * du/dt
           nextField->density[particleID] = currentField->density[particleID] + parameter->k*densityDerivative;
 
+
+
           // Uptade speed only for Free particles
           if(particleID < currentField->nFree)
           {
@@ -70,6 +76,7 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           case RK2:
           std::cout << "Runge Kutta 2 not coded.\n";
           break;
+
           default:
           std::cout << "Integration method not coded.\n";
           return EXIT_FAILURE;
