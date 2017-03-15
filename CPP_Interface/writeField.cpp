@@ -222,13 +222,13 @@ void matlab(std::string const &filename,
 
     // Fill f:
     for(int i=0; i<nbp; ++i)
-    {
-        f <<pos[3*i+0]<<"\t"<<pos[3*i+1]<<"\t"<<pos[3*i+2]<<"\t"
-        <<speed[3*i+0]<<"\t"<<speed[3*i+1]<<"\t"<<speed[3*i+2]<<"\t"
-        <<density[i]<<"\t"
-        <<pressure[i]<<"\t"
-        <<mass[i]<<"\t"<<std::endl;
-    }
+        {
+            f <<pos[3*i+0]<<"\t"<<pos[3*i+1]<<"\t"<<pos[3*i+2]<<"\t"
+            <<speed[3*i+0]<<"\t"<<speed[3*i+1]<<"\t"<<speed[3*i+2]<<"\t"
+            <<density[i]<<"\t"
+            <<pressure[i]<<"\t"
+            <<mass[i]<<"\t"<<std::endl;
+        }
 
 
     // End Chrono
