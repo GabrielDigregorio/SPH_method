@@ -44,8 +44,8 @@ case 1
         time(i) = (i-1)*timeStep; % Time 
         Analytic(i) = mean(InitExperiment.data(:,3)) - g*(time(i)^2)/2; % MRUA
         error(i) = mean(abs(((Experiment.data(:,3)-Analytic(i))./Analytic(i))))*100; % error [%]
-        XY_move(i) = sqrt(mean(  (InitExperiment.data(:,1) - Experiment.data(:,1)).^2  ...
-                              +  (InitExperiment.data(:,2) - Experiment.data(:,2)).^2   ));
+        %XY_move(i) = sqrt(mean(  (InitExperiment.data(:,1) - Experiment.data(:,1)).^2  ...
+                             % +  (InitExperiment.data(:,2) - Experiment.data(:,2)).^2   ));
         MeanZ_experiment(i) = mean(abs(Experiment.data(:,3)));
         
         % Get memory consumption
@@ -94,18 +94,29 @@ case 1
         print('FreeFallingCube_error', '-depsc')
     hold off  
     
-    figure(3)
+%     figure(3)
+%     hold on
+%     plot(time, XY_move, '*');
+%         %axis([0 0 0 0])
+%         title('')
+%         xlabel('Time [s]')
+%         ylabel('Error in %')
+%         legend('')
+%         grid
+%         %print(strcat(path,'FreeFallingCube_XY_move'), '-depsc')
+%     hold off  
+    
+    figure(4)
     hold on
-    plot(time, XY_move, '*');
-        %axis([0 0 0 0])
+    plot(time, Memory*1.25e-7, time, Memory_Peak*1.25e-7);
+        axis([0 1 2 3])
         title('')
         xlabel('Time [s]')
-        ylabel('Error in %')
-        legend('')
+        ylabel('Memory Consumption [MB]')
+        legend('RSS Memory', 'RSS Memory Peak')
         grid
-        %print(strcat(path,'FreeFallingCube_XY_move'), '-depsc')
-    hold off  
-
+        %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
+    hold off 
 
 
 
