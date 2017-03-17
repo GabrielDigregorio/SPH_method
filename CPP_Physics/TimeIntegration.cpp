@@ -5,11 +5,6 @@
 
 bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll, unsigned int n)
 {
-
-
-    // Time step resolution
-    Kernel kernelType = parameter->kernel;
-
     // Sort the particles at the current time step
     //std::cout << "\t Sorting particles...\n" << std::endl;
     boxClear(boxes); // Clear the sorting to restart it...
@@ -29,12 +24,12 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
             std::vector<double> kernelGradients;
             std::vector<double> speedDerivative;
             // Neighbor search
-            findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, kernelType);
+            findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, parameter->kernel);
             // Continuity equation
             double densityDerivative = continuity(particleID, neighbors, kernelGradients,currentField); // also for fixed particles!
             // Momentum equation only for free particles
             if(particleID < currentField->nFree)
-                momentum(particleID, neighbors, kernelGradients,currentField,parameter, speedDerivative);
+                momentum(particleID, neighbors, kernelGradients, currentField, parameter, speedDerivative);
             // Integration
             switch(parameter->integrationMethod){
                 case euler: // u_n = u_(n-1) + k * du/dt

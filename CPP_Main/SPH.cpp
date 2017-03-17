@@ -25,36 +25,28 @@ int main(int argc, char *argv[])
     {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = "result";} // default name
   else // Use default name for the experiment (result)
     {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = argv[3];}
-
   std::cout << "----END argument checking----\n" << std::endl;
 
   //Read parameters
   Parameter* parameter =  new Parameter();
   readParameter(parameterFilename, parameter);
-
   //Read geometry
   Field* currentField =  new Field();
   readGeometry(geometryFilename, currentField);
-
   sizeField(currentField, currentField->nTotal);
 
   // INITIALISATION (all the vectors should have the right size here!)
   // SPEEDS
   speedInit(currentField,parameter);
-
   // DENSITIES
   densityInit(currentField, parameter);
-
   // PRESSURES
   pressureComputation(currentField,parameter);
-
   //MASSES
   massInit(currentField,parameter);
-
   // UPDATE & WRITTING
   Field *nextField = new Field();
   Field *tmpField;
-
   // Reserv Memory for each field of nextField and copy const parameters of currentField
   sizeField(nextField, currentField->nTotal);
   for (int i = 0; i < 3; i++){
@@ -65,32 +57,30 @@ int main(int argc, char *argv[])
   nextField->nFixed = currentField->nFixed;
   nextField->nMoving = currentField->nMoving;
   nextField->nTotal = currentField->nTotal;
-
   for(int i=0 ; i<currentField->nTotal ; i++)
     nextField->mass[i] = currentField->mass[i];
-
-  std::cout << "----BEGIN time step #0"<< std::endl;
-  unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
-
+  unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k);
   std::cout << "\t Number of time steps = " << nMax << "\n" << std::endl;
 
   // Writes the initial configuration
   writeField(currentField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);
   unsigned int writeCount = 1;
 
+  // To mesh at least at the first time step
   bool reBoxing = true;
-  std::cout << "----END time step #0"<< std::endl;
 
   // Creates the box mesh and describes their adjacent relations
   std::vector<std::vector<int> > boxes;
   std::vector<std::vector<int> > surrBoxesAll;
 
   // Loop on time
+  std::cout << "----BEGIN time integration----\n"<< std::endl;
+  std::cout << "0%----------------------------------------------100%\n[";
+
   for(unsigned int n = 1;n<=nMax;n++){
-    std::cout << "----BEGIN time step #" << n << "----" <<"\n \n";
     // Rebox the domain if h has sufficiently changed
     if(reBoxing == true){
-      std::cout << "\t Reboxing...\n" << std::endl;
+      //std::cout << "\t Reboxing...\n" << std::endl;
       boxes.resize(0);// VERY BAD, TO CHANGE !!!
       surrBoxesAll.resize(0);// VERY BAD, TO CHANGE !!!
       boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
@@ -105,8 +95,12 @@ int main(int argc, char *argv[])
     tmpField = currentField;
     currentField = nextField;
     nextField = tmpField;
-    std::cout << "----END time step #" << n << "----" <<"\n \n";
+    // Fancy progress boxClear
+    if(!((50*n)%nMax))
+        std::cout << ">" << std::flush;
   }
+  std::cout << "]\n" << std::endl;
+
   // Free all vectors and structurs
   cleanField(currentField);
   cleanField(nextField);
