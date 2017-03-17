@@ -4,8 +4,9 @@
 double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField)
 {
   double densityDerivative = 0.0;
-  double scalarProduct = 0.0;
+  double scalarProduct;
   for (int i = 0; i < neighbors.size(); i++){
+    scalarProduct = 0.0;
     //Compute scalar product present in the formula
     for (int j = 0; j <= 2; j++){
       scalarProduct += (currentField->speed[3*particleID + j] - currentField->speed[3*neighbors[i] + j])
@@ -13,7 +14,6 @@ double continuity(int particleID, std::vector<int>& neighbors, std::vector<doubl
     }
     densityDerivative += currentField->mass[neighbors[i]]  * scalarProduct;
   }
-
   return densityDerivative;
 }
 
@@ -25,7 +25,6 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
   speedDerivative.assign(3,0.0);
   std::vector<double> viscosity;
   viscosity.resize(neighbors.size()); // VERY BAD
-
 
   viscosityComputation(particleID, neighbors, currentField, parameter, viscosity);
 

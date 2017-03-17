@@ -91,8 +91,7 @@ void pressureComputation(Field* field,Parameter* parameter)
 	double gamma = parameter->gamma;
 	double g = parameter->g;
 
-	switch (parameter->stateEquationMethod)
-	{
+	switch (parameter->stateEquationMethod){
 		case quasiIncompressible:
 
 		//std::cout << "\t Pressure vector \n" << std::endl;

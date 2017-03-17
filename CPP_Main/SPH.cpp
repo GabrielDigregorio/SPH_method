@@ -111,6 +111,8 @@ int main(int argc, char *argv[])
     tmpField = currentField;
     currentField = nextField;
     nextField = tmpField;
+
+    std::cout << currentField->nFree << " " << currentField->nFixed;
     std::cout << "----END time step #" << n << "----" <<"\n \n";
   }
 

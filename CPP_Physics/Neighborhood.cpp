@@ -220,6 +220,7 @@ void findNeighbors(int particleID, std::vector<double> &pos, double kh,
                 for(int coord=0 ; coord<3 ; coord++){
                     direction = (pos[particleID*3+coord]-pos[potNeighborID*3+coord]) / r;
                     kernelGradients.push_back(direction * currentKernelGradientMag);
+                    //std::cout << direction << " " << currentKernelGradientMag << "\n";
                 }
             }
         }
