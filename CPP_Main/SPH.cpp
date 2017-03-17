@@ -12,14 +12,12 @@
 int main(int argc, char *argv[])
 {
   std::cout << "----BEGIN argument checking----\n" << std::endl;
-
   std::string parameterFilename;
   std::string geometryFilename;
   std::string experimentFilename;
 
   // Check the arguments
-  if(argc<3) // Not enough argument
-  {
+  if(argc<3){ // Not enough argument
     std::cout << "\t Invalid input files.\n";
     return EXIT_FAILURE;
   }
@@ -37,7 +35,6 @@ int main(int argc, char *argv[])
   //Read geometry
   Field* currentField =  new Field();
   readGeometry(geometryFilename, currentField);
-
 
   sizeField(currentField, currentField->nTotal);
 
@@ -60,8 +57,7 @@ int main(int argc, char *argv[])
 
   // Reserv Memory for each field of nextField and copy const parameters of currentField
   sizeField(nextField, currentField->nTotal);
-  for (int i = 0; i < 3; i++)
-  {
+  for (int i = 0; i < 3; i++){
     nextField->l[i] = currentField->l[i];
     nextField->u[i] = currentField->u[i];
   }
@@ -70,7 +66,7 @@ int main(int argc, char *argv[])
   nextField->nMoving = currentField->nMoving;
   nextField->nTotal = currentField->nTotal;
 
- for(int i=0 ; i<currentField->nTotal ; i++)
+  for(int i=0 ; i<currentField->nTotal ; i++)
     nextField->mass[i] = currentField->mass[i];
 
   std::cout << "----BEGIN time step #0"<< std::endl;
@@ -78,8 +74,7 @@ int main(int argc, char *argv[])
 
   std::cout << "\t Number of time steps = " << nMax << "\n" << std::endl;
 
-  // Creat directory to store data
-  //experimentFilename = creatDirectory(experimentFilename);
+  // Writes the initial configuration
   writeField(currentField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);
   unsigned int writeCount = 1;
 
@@ -90,32 +85,28 @@ int main(int argc, char *argv[])
   std::vector<std::vector<int> > boxes;
   std::vector<std::vector<int> > surrBoxesAll;
 
-  for(unsigned int n = 1;n<=nMax;n++)
-  {
+  // Loop on time
+  for(unsigned int n = 1;n<=nMax;n++){
     std::cout << "----BEGIN time step #" << n << "----" <<"\n \n";
-    if(reBoxing == true)
-    {
+    // Rebox the domain if h has sufficiently changed
+    if(reBoxing == true){
       std::cout << "\t Reboxing...\n" << std::endl;
-      boxes.resize(0);// VERY BAD
-      surrBoxesAll.resize(0);// VERY BAD
+      boxes.resize(0);// VERY BAD, TO CHANGE !!!
+      surrBoxesAll.resize(0);// VERY BAD, TO CHANGE !!!
       boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
     }
-    //std::cout << "Mass: " << nextField->mass[0]<<"\n";
-    reBoxing = timeIntegration(currentField,nextField,parameter,boxes,surrBoxesAll,n);
-
-    if(writeCount*parameter->writeInterval <= n*parameter->k)
-    {
+    // Time integration
+    reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, n);
+    // Write field when needed
+    if(writeCount*parameter->writeInterval <= n*parameter->k){
       writeField(nextField, n, parameter, parameterFilename, geometryFilename, experimentFilename);
       writeCount++;
     }
     tmpField = currentField;
     currentField = nextField;
     nextField = tmpField;
-
-    std::cout << currentField->nFree << " " << currentField->nFixed;
     std::cout << "----END time step #" << n << "----" <<"\n \n";
   }
-
   // Free all vectors and structurs
   cleanField(currentField);
   cleanField(nextField);

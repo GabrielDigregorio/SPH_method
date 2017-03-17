@@ -62,6 +62,7 @@ Inputs:
 Output:
 /
 */
+/* USELESS FUNCTION
 void neighborLinkedList(std::vector<double> &pos,
                         double l[3],
                         double u[3],
@@ -138,7 +139,7 @@ void neighborLinkedList(std::vector<double> &pos,
         }
     }
 }
-
+*/
 
 /* ----------------------- UPDATE ----------------------*/
 
@@ -220,7 +221,6 @@ void findNeighbors(int particleID, std::vector<double> &pos, double kh,
                 for(int coord=0 ; coord<3 ; coord++){
                     direction = (pos[particleID*3+coord]-pos[potNeighborID*3+coord]) / r;
                     kernelGradients.push_back(direction * currentKernelGradientMag);
-                    //std::cout << direction << " " << currentKernelGradientMag << "\n";
                 }
             }
         }
@@ -270,7 +270,7 @@ void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vecto
     index_y = (box-index_z*nBoxesX*nBoxesY)/nBoxesX;
     index_x = box-index_z*nBoxesX*nBoxesY-index_y*nBoxesX;
 
-    std::vector<int> tab(6, 1); // Initializes to 1
+    std::vector<int> tab(6, 1); // Initialized to 1
     std::vector<int> value(9, 0); // Initialized to 0
     value[0]=-1; value[2]=1;
     value[3]=-nBoxesX; value[5]=nBoxesX;

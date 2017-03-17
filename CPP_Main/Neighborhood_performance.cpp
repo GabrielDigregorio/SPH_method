@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 
     // Vectors declaration
     std::vector<std::vector<int> > neighborsAll_naive;
-    std::vector<std::vector<int> > neighborsAll_linked;
+    //std::vector<std::vector<int> > neighborsAll_linked;
     std::vector<std::vector<int> > neighborsAll_splitted;
     std::vector<std::vector<int> > neighborsAll_splitted_s;
     std::vector<std::vector<double> > kernelGradientsAll;
@@ -46,11 +46,11 @@ int main(int argc, char *argv[])
 
     for(int i=0 ; i<pos.size()/3 ; i++){
         std::vector<int> A;
-        std::vector<int> B;
+        //std::vector<int> B;
         std::vector<int> C;
         std::vector<int> C2;
         neighborsAll_naive.push_back(A);
-        neighborsAll_linked.push_back(B);
+        //neighborsAll_linked.push_back(B);
         neighborsAll_splitted.push_back(C);
         neighborsAll_splitted_s.push_back(C2);
 
@@ -76,13 +76,14 @@ int main(int argc, char *argv[])
 
 
     // LINKED LIST
+    /*
     start = std::clock();
 
     neighborLinkedList(pos, ll, uu, kh, neighborsAll_linked, kernelGradientsAll, kernelType);
 
     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     std::cout<<"Elapsed time Linked List: " << duration <<" [s]\n";
-
+    */
 
     // SPLITTED NEIGHBORS
     start = std::clock();
@@ -144,28 +145,32 @@ int main(int argc, char *argv[])
 
     for(int i=0 ; i<pos.size()/3 ; i++){
         //std::cout << kernelGradientsAll[i][1] << " and " << kernelGradientsAll_splitted[i][1] << "\n";
+        /*
         if(neighborsAll_naive[i].size() != neighborsAll_linked[i].size() && naive_ll == true){
             naive_ll = false;
             std::cout<<"Difference for " << i << "th particle between naive and linked\n";
         }
+        */
         if(neighborsAll_naive[i].size() != neighborsAll_splitted[i].size() && naive_splitted == true){
             naive_splitted = false;
             std::cout<<"Difference for " << i << "th particle between naive and splitted\n";
         }
 
         nbNaive += neighborsAll_naive[i].size();
-        nbLinked += neighborsAll_linked[i].size();
+        //nbLinked += neighborsAll_linked[i].size();
         nbSplitted += neighborsAll_splitted[i].size();
 
         std::sort(neighborsAll_naive[i].begin(), neighborsAll_naive[i].end());
-        std::sort(neighborsAll_linked[i].begin(), neighborsAll_linked[i].end());
+        //std::sort(neighborsAll_linked[i].begin(), neighborsAll_linked[i].end());
         std::sort(neighborsAll_splitted[i].begin(), neighborsAll_splitted[i].end());
 
         for(int j=0 ; j<neighborsAll_naive[i].size() ; j++){
+            /*
             if(neighborsAll_naive[i][j] != neighborsAll_linked[i][j] && naive_ll == true){
                 naive_ll = false;
                 std::cout<<"Difference for " << i << "th particle between naive and linked\n";
             }
+            */
             if(neighborsAll_naive[i][j] != neighborsAll_splitted[i][j] && naive_splitted == true){
                 naive_splitted = false;
                 std::cout<<"Difference for " << i << "th particle between naive and splitted\n";
@@ -175,12 +180,12 @@ int main(int argc, char *argv[])
 
     }
 
-    if(naive_ll == true && naive_splitted == true){
+    if(naive_splitted == true){
         std::cout << "All functions lead to the same neighbors!\n";
     }
 
     std::cout<<"\nNeighbor pairs for Naive: " << nbNaive << "\n";
-    std::cout<<"Neighbor pairs for Linked-list: " << nbLinked << "\n";
+    //std::cout<<"Neighbor pairs for Linked-list: " << nbLinked << "\n";
     std::cout<<"Neighbor pairs for Splitted: " << nbSplitted << "\n";
 
     std::cout << "\n";
