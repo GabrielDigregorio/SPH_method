@@ -36,12 +36,7 @@ void paraView(std::string const &filename,
 void matlab(std::string const &filename,
               std::string const &parameterFilename,
               std::string const &geometryFilename,
-              int step, Parameter* parameter,
-              std::vector<double> const &pos,
-              std::vector<double> const &speed,
-              std::vector<double> const &density,
-              std::vector<double> const &pressure,
-              std::vector<double> const &mass);
+              int step, Parameter* parameter, Field* field);
 
 
 #endif

@@ -52,7 +52,7 @@ lz = 0
         r=0
         %coord
         x=5
-	y=5
+	    y=5
         z=4
         %dimen
         L=9
