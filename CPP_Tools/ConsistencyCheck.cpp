@@ -48,7 +48,7 @@ double writeInterval=param->writeInterval;
 double alpha=param->alpha; 
 double beta=param->beta;
 double epsilon=param->epsilon;
-double 
+
 // // check of struture "Parameter"
 // check kh >0 (and kh>1.2*s ??)
 assert(kh>0.0 );
