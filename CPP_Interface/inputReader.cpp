@@ -2,6 +2,7 @@
 #include "Main.h"
 #include "Interface.h"
 
+
 #include <sstream>
 #include <algorithm>
 
@@ -34,43 +35,28 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField,
         double L[3] = {brickData[6],brickData[7],brickData[8]};
         switch(type){
                 case cube :
-                        switch(c){
-                                case freePart :
-                                        meshcube(o, L, s, *posFree, r, true);
-                                break;
-                                case movingPart :
-                                        meshcube(o, L, s, *posMoving, r, true);
-                                break;
-                                case fixedPart :
-                                        meshcube(o, L, s, *posFixed, r, true);
-                                break;
-                        }
+                        if(c==freePart)
+                                meshcube(o, L, s, *posFree, r, true);
+                        else if(c==movingPart)
+                                meshcube(o, L, s, *posMoving, r, true);
+                        else if(c==fixedPart)
+                                meshcube(o, L, s, *posFixed, r, true);
                 break;
                 case cylinder :
-                        switch(c){
-                                case freePart :
-                                        meshcylinder(o, L, s, *posFree, r, true);
-                                break;
-                                case movingPart :
-                                        meshcylinder(o, L, s, *posMoving, r, true);
-                                break;
-                                case fixedPart :
-                                        meshcylinder(o, L, s, *posFixed, r, true);
-                                break;
-                        }
+                        if(c==freePart)
+                                meshcylinder(o, L, s, *posFree, r, true);
+                        else if(c==movingPart)
+                                meshcylinder(o, L, s, *posMoving, r, true);
+                        else if(c==fixedPart)
+                                meshcylinder(o, L, s, *posFixed, r, true);
                 break;
                 case sphere :
-                        switch(c){
-                                case freePart :
-                                        meshsphere(o, L, s, *posFree, r, true);
-                                break;
-                                case movingPart :
-                                        meshsphere(o, L, s, *posMoving, r, true);
-                                break;
-                                case fixedPart :
-                                        meshsphere(o, L, s, *posFixed, r, true);
-                                break;
-                        }
+                        if(c==freePart)
+                                meshsphere(o, L, s, *posFree, r, true);
+                        else if(c==movingPart)
+                                meshsphere(o, L, s, *posMoving, r, true);
+                        else if(c==fixedPart)
+                                meshsphere(o, L, s, *posFixed, r, true);
                 break;
         }
         // Only one of the 3 vectors is filled. Here there is a problem because s is not defined by the user but rather by the function meshcube !!!!!!!
@@ -106,7 +92,6 @@ void readGeometry(std::string filename, Field* currentField){
                                                 else
                                                         continue;
                                         }
-                                        cnt = 0;
                                         while(cnt!=N_UL){
                                                 std::getline(inFile, buf);
                                                 if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray)){
@@ -134,12 +119,12 @@ void readGeometry(std::string filename, Field* currentField){
                                         posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
                                         currentField->pos=posFree;
                                         currentField->nTotal= currentField->nFree + currentField->nFixed + currentField->nMoving;
-                                        //std::cout << "\t Position vector:\n" << std::endl;
+                                        std::cout << "\t Position vector:\n" << std::endl;
                                         for (int i = 0; i < 3*currentField->nTotal; i+=3)
                                         {
-                                            //std::cout <<"\t" << currentField->pos[i] << "\n"<< std::endl;
-                                            //std::cout <<"\t" << currentField->pos[i+1] << "\n"<< std::endl;
-                                            //std::cout <<"\t" << currentField->pos[i+2] << "\n\n"<< std::endl;
+                                            std::cout <<"\t" << currentField->pos[i] << "\n"<< std::endl;
+                                            std::cout <<"\t" << currentField->pos[i+1] << "\n"<< std::endl;
+                                            std::cout <<"\t" << currentField->pos[i+2] << "\n\n"<< std::endl;
                                         }
                                         std::cout << "----END geometry reading----\n" << std::endl;
                                         return; // REPLACE BY return(0);

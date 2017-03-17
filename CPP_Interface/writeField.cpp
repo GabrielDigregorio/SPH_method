@@ -28,6 +28,7 @@ std::string creatDirectory(std::string dirname){
     #else 
     nError = mkdir(newdir.str().c_str(),nMode); // can be used on non-Windows
     #endif
+    if (nError != 0) {
     // handle your error here
     }
 
@@ -70,13 +71,15 @@ void writeField(Field* field, double t, Parameter* parameter,
     break;
 
     case 2 : // .txt in Matlab
-        matlab(filename, parameterFilename, geometryFilename,  t, parameter, field);
+        matlab(filename, parameterFilename, geometryFilename,  t, parameter,
+               field->pos, field->speed, field->density, field->pressure, field->mass);
         //return ;
     break;
 
     case 3 : // .vtk in ParaView and .txt in Matlab
         paraView(filename, t, field->pos, scalars, vectors);
-        matlab(filename, parameterFilename, geometryFilename, t, parameter, field);
+        matlab(filename, parameterFilename, geometryFilename, t, parameter,
+               field->pos, field->speed, field->density, field->pressure, field->mass);
         //return ;
     break;
 
@@ -165,10 +168,15 @@ void paraView(std::string const &filename,
 void matlab(std::string const &filename,
               std::string const &parameterFilename,
               std::string const &geometryFilename,
-              int step, Parameter* parameter,Field* field)
+              int step, Parameter* parameter,
+              std::vector<double> const &pos,
+              std::vector<double> const &speed,
+              std::vector<double> const &density,
+              std::vector<double> const &pressure,
+              std::vector<double> const &mass)
 {
-    int nbp = field->pos.size()/3;
-    assert(field->pos.size()==nbp*3); // should be multiple of 3
+    int nbp = pos.size()/3;
+    assert(pos.size()==nbp*3); // should be multiple of 3
 
     // Set Chronos and time variable
     std::chrono::time_point<std::chrono::system_clock> start, end;
@@ -207,24 +215,20 @@ void matlab(std::string const &filename,
     f << "Memory Usage : " << GetMemoryProcess(false, false)<< " [kB]" <<std::endl;
     f << "Memory Usage Peak : " << GetMemoryProcessPeak(false, false)<< " [kB]" <<std::endl;
     f << std::endl;
-    f << "Step Time (k) : "<< parameter->k << " [s]" << std::endl;
+    f << "step time (k) : "<< parameter->k << " [s]" << std::endl;
     f << "Simulation Time (T) : "<< parameter->T << " [s]" << std::endl;
-    f << std::endl;
-    f << "Domain (lower l) : "<< field->l[0] << "   " << field->l[1] << "   " << field->l[2] << "    [m]" << std::endl;
-    f << "Domain (upper u) : "<< field->u[0] << "   " << field->u[1] << "   " << field->u[2] << "    [m]" << std::endl;
-    f << "Number of Particules (nFree/nMoving/nFixed) : "<< field->nFree << "   "<< field->nMoving<< "   "<< field->nFixed <<  std::endl;
     f << "\n";
-    f << " posX\t\t     posY\t\t     posZ\t\t     velocityX\t     velocityY\t     velocityZ\t     density\t     pressure\t     mass"<<std::endl;
+    f << " posX\t\t posY\t\t posZ\t\t velocityX\t velocityY\t velocityZ\t density\t pressure\t mass"<<std::endl;
 
     // Fill f:
     for(int i=0; i<nbp; ++i)
-    {
-        f <<field->pos[3*i+0]<<"\t"<<field->pos[3*i+1]<<"\t"<<field->pos[3*i+2]<<"\t"
-        <<field->speed[3*i+0]<<"\t"<<field->speed[3*i+1]<<"\t"<<field->speed[3*i+2]<<"\t"
-        <<field->density[i]<<"\t"
-        <<field->pressure[i]<<"\t"
-        <<field->mass[i]<<"\t"<<std::endl;
-    }
+        {
+            f <<pos[3*i+0]<<"\t"<<pos[3*i+1]<<"\t"<<pos[3*i+2]<<"\t"
+            <<speed[3*i+0]<<"\t"<<speed[3*i+1]<<"\t"<<speed[3*i+2]<<"\t"
+            <<density[i]<<"\t"
+            <<pressure[i]<<"\t"
+            <<mass[i]<<"\t"<<std::endl;
+        }
 
 
     // End Chrono

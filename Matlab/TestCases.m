@@ -4,7 +4,7 @@
 %                 - Stationary tank
 %                 - Crashed Cube
 %**************************************************************************
-function sucess = TestCases(nameExperiment, n, path)
+function sucess = TestCases(n, path)
 
 close all;
 set(groot,'defaultLineLineWidth',2)
@@ -25,19 +25,21 @@ case 1
           g = 9.81;
 %         z0_center = 100; %[m]
           nstep = length(dir(['../build/Results/', '\*.txt']))-1; %[-]
+          timeStep = 0.05; %[s]
+    % Cube:
+%         L=10;
+%         W=10;
+%         H=10;
+%         r=0;
 
     % Import data at t=0
-    filename=strcat('../build/Results/',nameExperiment,'_',num2str(0,'%08i'),'.txt')
+    filename=strcat('../build/Results/FreeFallingCube_',num2str(0,'%08i'),'.txt')
     InitExperiment = importdata(filename);
-    
-    Str = char(InitExperiment.textdata(9));Key = 'Step Time (k) :';
-    Index = strfind(Str, Key);
-    timeStep = sscanf(Str(Index(1) + length(Key):end), '%g', 1); %[s]
         
     for i=1 : nstep 
         
         % Open File nbr i
-        filename=strcat('../build/Results/',nameExperiment,'_',num2str(i,'%08i'),'.txt')
+        filename=strcat('../build/Results/FreeFallingCube_',num2str(i,'%08i'),'.txt')
         Experiment = importdata(filename); % Import Data
         
         % Compute the error to analytical solution
@@ -73,8 +75,7 @@ case 1
         title('')
         xlabel('Time [s]')
         ylabel('Z')
-        text =  strcat('Simulation (time step = ', num2str(timeStep), ')');
-        legend('Analytic', text)
+        legend('Analytic', 'Simulation')
         grid
         print('FreeFallingCube_error', '-depsc')
     hold off  

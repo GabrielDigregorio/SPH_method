@@ -174,18 +174,12 @@ void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh
     int boxX; int boxY; int boxZ;
     double temp;
     for(int i=0 ; i<pos.size()/3 ; i++){
-        // Box coordinate along X
         temp = (pos[3*i] - l[0])/kh; // Integer division
-        if(temp < 0){boxX = 0;}
-        else{boxX = (temp < nBoxesX-1) ? temp : nBoxesX-1;}
-        // Box coordinate along Y
+        boxX = (temp < nBoxesX-1) ? temp : nBoxesX-1;
         temp = (pos[3*i+1] - l[1])/kh;
-        if(temp < 0){boxY = 0;}
-        else{boxY = (temp < nBoxesY-1) ? temp : nBoxesY-1;}
-        // Box coordinate along Z
+        boxY = (temp < nBoxesY-1) ? temp : nBoxesY-1;
         temp = (pos[3*i+2] - l[2])/kh;
-        if(temp < 0){boxZ = 0;}
-        else{boxZ = (temp < nBoxesZ-1) ? temp : nBoxesZ-1;}
+        boxZ = (temp < nBoxesZ-1) ? temp : nBoxesZ-1;
         // Put the particle identifier in the corresponding box array
         boxes[boxX + boxY*nBoxesX + boxZ*nBoxesX*nBoxesY].push_back(i);
     }

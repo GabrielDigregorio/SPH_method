@@ -31,13 +31,17 @@ int main(int argc, char *argv[])
   std::cout << "----END argument checking----\n" << std::endl;
 
   //Read parameters
+
+
   Parameter* parameter =  new Parameter();
   readParameter(parameterFilename, parameter);
 
   //Read geometry
+
+
+
   Field* currentField =  new Field();
   readGeometry(geometryFilename, currentField);
-
 
   sizeField(currentField, currentField->nTotal);
 
@@ -70,8 +74,6 @@ int main(int argc, char *argv[])
   nextField->nMoving = currentField->nMoving;
   nextField->nTotal = currentField->nTotal;
 
- for(int i=0 ; i<currentField->nTotal ; i++)
-    nextField->mass[i] = currentField->mass[i];
 
   std::cout << "----BEGIN time step #0"<< std::endl;
   unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k); //Validité de cette ligne à vérifier
@@ -97,12 +99,10 @@ int main(int argc, char *argv[])
     {
       std::cout << "\t Reboxing...\n" << std::endl;
       boxes.resize(0);// VERY BAD
-      surrBoxesAll.resize(0);// VERY BAD
+      surrBoxesAll.resize(0);// VERY BAD 
       boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
     }
-    //std::cout << "Mass: " << nextField->mass[0]<<"\n";
     reBoxing = timeIntegration(currentField,nextField,parameter,boxes,surrBoxesAll,n);
-
     if(writeCount*parameter->writeInterval <= n*parameter->k)
     {
       writeField(nextField, n, parameter, parameterFilename, geometryFilename, experimentFilename);

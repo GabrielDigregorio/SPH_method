@@ -21,10 +21,9 @@ while (loop==1)
 disp(['Would you like to:']);
 disp(['    1) Compile the project; ']);
 disp(['    2) Run an experiment; ']);
-disp(['    3) Plot the Playground of an experiment; ']);
-disp(['    4) Analyse an experiment; ']);
-disp(['    5) Edit a new experiment; ']);
-disp(['    6) Exit; ', ' ']);
+disp(['    3) Analyse an experiment; ']);
+disp(['    4) Edit a new experiment; ']);
+disp(['    5) Exit; ', ' ']);
 choice = input('Enter your choice number: ' ); disp(' ');
 
 switch(choice)
@@ -44,22 +43,16 @@ switch(choice)
            system(char(strcat({'"../build/sph.exe"'},{' '},p,{' '},g,{' '}, {'FreeFallingCube'})))
         else disp(['You are not allowed to launch an experiment... ']);
         end
-        
-    case 3 % Playground:
-        disp(['Choose an experiment : ']);
-        nameExperiment = input('Enter the name of the experiment: ','s');
-        Playground(nameExperiment, 1, path);
-        
-    case 4 % Analyse:
+
+    case 3 % Analyse:
         disp(['Experiments: ']); % Display Possibilities
         disp(['1) Free Falling Cube']);
         disp(['2) Free Falling Cube with random particules']);
         disp(['3) Stationary Tank']);disp([' ']);
-        n = input('Enter the TYPE of the experiment: ');disp([' ']);
-        nameExperiment = input('Enter the NAME of the experiment: ','s');
-        exit = TestCases(nameExperiment, n, path);
+        n = input('Enter the number of the experiment: ');
+        exit = TestCases(n, path)
     
-    case 5 % Edit File
+    case 4 % Edit File
         cd ..; cd Playgrounds\;
         p = input('NEW Parameter file name: ','s'); p = strcat(p, '.kzr ');
         if (exist(p, 'file')==0) 
@@ -74,7 +67,7 @@ switch(choice)
         input('Enter: '); fclose(p); fclose(g);
         cd ..; cd Matlab\;
         
-    case 6 % Exit
+    case 5 % Exit
         loop=0;
     otherwise disp(['Not valid choice']); disp(' ');
 end
