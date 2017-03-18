@@ -5,6 +5,8 @@
 #include "Structures.h"
 #include <ctime>
 
+std::clock_t startExperimentTimeClock;
+
 int main(int argc, char *argv[])
 {
     // no stack geometry

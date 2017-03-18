@@ -14,6 +14,7 @@
 #include <fstream>
 #include <ctime>
 #include <algorithm>
+extern std::clock_t startExperimentTimeClock;
 
 
 #endif

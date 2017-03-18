@@ -31,7 +31,7 @@ ADD_EXECUTABLE(neighbors ${SRCS1} ${SRCS2} ${SRCS3} ${SRCS4} CPP_Main/Neighborho
 
 IF(MINGW)
     TARGET_LINK_LIBRARIES(sph psapi) # for "GetProcessMemoryInfo"
-    #TARGET_LINK_LIBRARIES(neighbors psapi)
+    TARGET_LINK_LIBRARIES(neighbors psapi)
 ENDIF(MINGW)
 
 # - OpenMP --

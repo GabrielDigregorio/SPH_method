@@ -37,26 +37,42 @@ switch(choice)
         cd ..; cd Matlab\;
         
     case 2 % Run:
-        if(strcmp(name,'DESKTOP-31TT348'))
-           disp(['Choose among the list of Playgrounds: ']); dir('..\Playgrounds')
-           p = input('Parameter file name (w/ .kzr): ','s'); p = strcat('..\Playgrounds\',p, '.kzr ')
-           g = input('Geometry file name (w/ .kzr): ','s'); g = strcat('..\Playgrounds\',g, '.kzr ')
-           system(char(strcat({'"../build/sph.exe"'},{' '},p,{' '},g,{' '}, {'FreeFallingCube'})))
-        else disp(['You are not allowed to launch an experiment... ']);
-        end
+        %if(strcmp(name,'DESKTOP-31TT348'))
+           disp(['Choose among the list of Playgrounds: ']);
+           cd ..\Playgrounds\
+           
+           disp(['Clic on Parameter file: ']);
+           [p, pathname] = uigetfile({'*.kzr'},'\Playgrounds\');
+           
+           disp(['Clic on Geometry file: ']);
+           [g, pathname] = uigetfile({'*.kzr'},'\Playgrounds\');
+           
+           p = strcat('..\Playgrounds\',p)
+           g = strcat('..\Playgrounds\',g)
+           
+           cd ../build/Results
+           nameExperiment = input('Enter the name of the experiment: ','s');
+           mkdir(nameExperiment);
+           nameExperiment = strcat(nameExperiment,'/', nameExperiment);
+           cd ..
+           system(char(strcat({'"sph.exe"'},{' '},p,{' '},g,{' '}, {nameExperiment})))
+           cd ..\Matlab\;
+        %else disp(['You are not allowed to launch an experiment... ']);
+        %end
         
     case 3 % Playground:
         disp(['Choose an experiment : ']);
-        nameExperiment = input('Enter the name of the experiment: ','s');
+        nameExperiment = uigetdir('../build/Results/');
         Playground(nameExperiment, 1, path);
         
     case 4 % Analyse:
-        disp(['Experiments: ']); % Display Possibilities
+        disp(['Experiments Types: ']); % Display Possibilities
         disp(['1) Free Falling Cube']);
         disp(['2) Free Falling Cube with random particules']);
         disp(['3) Stationary Tank']);disp([' ']);
         n = input('Enter the TYPE of the experiment: ');disp([' ']);
-        nameExperiment = input('Enter the NAME of the experiment: ','s');
+        disp(['Clic on directory: ']);
+        nameExperiment = uigetdir('../build/Results/');
         exit = TestCases(nameExperiment, n, path);
     
     case 5 % Edit File

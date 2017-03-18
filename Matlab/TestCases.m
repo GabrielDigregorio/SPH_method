@@ -14,39 +14,46 @@ if nargin < 2
    path = '';
 end
 
-switch n
+%addpath(genpath('../build/Results/'))
 
-
-%% Free Falling cube
-%  ************************************************************************
-case 1
-
-    % Parameters
-          g = 9.81;
-%         z0_center = 100; %[m]
-          nstep = length(dir(['../build/Results/', '\*.txt']))-1; %[-]
+    % Number of files to read
+    dirName = dir([nameExperiment, '\*.txt']) %list all directory with.txt
+    nstep = length(dir([nameExperiment, '\*.txt']))-1 %[-]
 
     % Import data at t=0
-    filename=strcat('../build/Results/',nameExperiment,'_',num2str(0,'%08i'),'.txt')
+    filename=strcat(nameExperiment,'/',dirName(1).name)
     InitExperiment = importdata(filename);
     
+    % time step
     Str = char(InitExperiment.textdata(9));Key = 'Step Time (k) :';
     Index = strfind(Str, Key);
     timeStep = sscanf(Str(Index(1) + length(Key):end), '%g', 1); %[s]
-        
+    
+    % write step
+    Str = char(InitExperiment.textdata(10));Key = 'Write interval : ';
+    Index = strfind(Str, Key);
+    timeWrite = sscanf(Str(Index(1) + length(Key):end), '%g', 1); %[s]
+    
+    % Simulation time
+    Str = char(InitExperiment.textdata(11));Key = 'Simulation Time (T) : ';
+    Index = strfind(Str, Key);
+    timeSimu = sscanf(Str(Index(1) + length(Key):end), '%g', 1); %[s]
+
+    
     for i=1 : nstep 
         
         % Open File nbr i
-        filename=strcat('../build/Results/',nameExperiment,'_',num2str(i,'%08i'),'.txt')
+        disp(dirName(i+1).name)
+        filename=strcat(nameExperiment,'/',dirName(i+1).name);
         Experiment = importdata(filename); % Import Data
         
-        % Compute the error to analytical solution
-        time(i) = (i-1)*timeStep; % Time 
-        Analytic(i) = mean(InitExperiment.data(:,3)) - g*(time(i)^2)/2; % MRUA
-        error(i) = mean(abs(((Experiment.data(:,3)-Analytic(i))./Analytic(i))))*100; % error [%]
-        %XY_move(i) = sqrt(mean(  (InitExperiment.data(:,1) - Experiment.data(:,1)).^2  ...
-                             % +  (InitExperiment.data(:,2) - Experiment.data(:,2)).^2   ));
-        MeanZ_experiment(i) = mean(abs(Experiment.data(:,3)));
+        % Compute time of the experiment
+        time(i) = (i-1)*timeWrite; % Time 
+        
+        % Get time consumption
+        Str = char(Experiment.textdata(6)); Key = 'CPU Time : ';
+        Index = strfind(Str, Key);
+        CPU_Time(i) = sscanf(Str(Index(1) + length(Key):end), '%g', 1);
         
         % Get memory consumption
         Str1 = char(Experiment.textdata(7)); Key1 = 'Memory Usage :';
@@ -57,12 +64,44 @@ case 1
     
     end
     
+    
     % Put file in a new directory
 %     if(input('MoveFile to an other folder (1 for yes, 0 for no): ' ))
 %     mkdir ../build/Results/FreeFallingCube
 %     movefile ../build/Results/FreeFallingCube_*.txt ../build/Results/FreeFallingCube
 %     movefile ../build/Results/FreeFallingCube_*.vtk ../build/Results/FreeFallingCube
 %     end
+
+
+
+switch n
+
+
+%% Free Falling cube
+%  ************************************************************************
+case 1
+
+    
+    % Parameters
+    g = 9.81;
+    z0_center = 100; %[m]
+    
+    for i=1 : nstep 
+        
+        % Open File nbr i
+        disp(dirName(i+1).name)
+        filename=strcat(nameExperiment,'/',dirName(i+1).name);
+        Experiment = importdata(filename); % Import Data
+        
+        % Compute the error to analytical solution 
+        Analytic(i) = mean(InitExperiment.data(:,3)) - g*(time(i)^2)/2; % MRUA
+        error(i) = mean(abs(((Experiment.data(:,3)-Analytic(i))./Analytic(i))))*100; % error [%]
+        %XY_move(i) = sqrt(mean(  (InitExperiment.data(:,1) - Experiment.data(:,1)).^2  ...
+                             % +  (InitExperiment.data(:,2) - Experiment.data(:,2)).^2   ));
+        MeanZ_experiment(i) = mean(abs(Experiment.data(:,3)));
+     
+    end
+
     
     % Plot
     figure(1)
@@ -76,7 +115,7 @@ case 1
         text =  strcat('Simulation (time step = ', num2str(timeStep), ')');
         legend('Analytic', text)
         grid
-        print('FreeFallingCube_error', '-depsc')
+        %print('FreeFallingCube_error', '-depsc')
     hold off  
     
 
@@ -91,7 +130,7 @@ case 1
         ylabel('Error in %')
         legend('')
         grid
-        print('FreeFallingCube_error', '-depsc')
+        %print('FreeFallingCube_error', '-depsc')
     hold off  
     
 %     figure(3)
@@ -109,15 +148,42 @@ case 1
     figure(4)
     hold on
     plot(time, Memory*1.25e-7, time, Memory_Peak*1.25e-7);
-        axis([0 1 2 3])
-        title('')
+        %axis([0 1 2 3])
+        title('Memory Consumption')
         xlabel('Time [s]')
         ylabel('Memory Consumption [MB]')
         legend('RSS Memory', 'RSS Memory Peak')
         grid
         %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
     hold off 
+    
+    figure(5)
+    hold on
+    plot(time, CPU_Time);
+        %axis([0 1 2 3])
+        title('Time Consumption')
+        xlabel('Time Experiment[s]')
+        ylabel('CPU Time [s]')
+        grid
+        %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
+    hold off 
 
+% Save data
+DATA.name = dirName(1).name;
+DATA.path = nameExperiment;
+DATA.nbrFiles = nstep;
+DATA.timeStep = timeStep;
+DATA.timeWrite = timeWrite;
+DATA.timeSimu = timeSimu;
+DATA.CPUtime = CPU_Time;
+DATA.memory = Memory;
+DATA.memoryPeak = Memory_Peak;
+DATA.time = time;
+DATA.analytic = Analytic;
+DATA.meanZexperiment = MeanZ_experiment;
+DATA.error = error;
+
+save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
 
 %% Free Falling cube Random
@@ -127,44 +193,31 @@ case 2
     % Parameters
     g = 9.81;
     z0_center = 100; %[m]
-    nstep = 1; %[-]
-    timeStep = 0.1; %[s]
+
     % Cube:
-    L=10;
-    W=10;
-    H=10;
-    r=20;
 
 
-    % Import data at t=0
-    filename=strcat('../Results/FreeFallingCube_',num2str(0,'%010i'),'.txt')
-    InitExperiment = importdata(filename);
-        
-    for i=1 : nstep 
-        filename=strcat('../Results/FreeFallingCube_',num2str(i,'%010i'),'.txt')
-        Experiment(i) = importdata(filename);
-        time(i) = (i-1)*timeStep;
-        Analytic = InitExperiment.data(:,3) - g*(time(i)^2)/2; % MRUA
-        error(i) = mean(abs(((Experiment(i).data(:,3)-Analytic)./Analytic)))*100; % [%]
-        XY_move(i) = sqrt(mean(  (InitExperiment.data(:,1) - Experiment(i).data(:,1)).^2  ...
-                              +  (InitExperiment.data(:,2) - Experiment(i).data(:,2)).^2   ));
-    end
+  
 
-    % Plot
-    figure(10)
-    hold on
-    plot(time, error, '*');
-        %axis([0 0 0 0])
-        title('')
-        xlabel('Time [s]')
-        ylabel('Error in %')
-        legend('')
-        grid
-        %print(strcat(path,'FreeFallingCubeRandom'), '-depsc')
-    hold off  
+
 
     
     
+% Save data
+DATA.name = dirName(1).name;
+DATA.path = nameExperiment;
+DATA.nbrFiles = nstep;
+DATA.timeStep = timeStep;
+DATA.timeWrite = timeWrite;
+DATA.timeSimu = timeSimu;
+DATA.CPUtime = CPU_Time;
+DATA.memory = Memory;
+DATA.memoryPeak = Memory_Peak;
+DATA.time = time;
+
+save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
+
+
 
 %% Stationary tank
 %  ************************************************************************
@@ -190,7 +243,20 @@ case 3
         %print(strcat(path,'StationaryTank'), '-depsc')
     hold off  
 
-    
+% Save data
+DATA.name = dirName(1).name;
+DATA.path = nameExperiment;
+DATA.nbrFiles = nstep;
+DATA.timeStep = timeStep;
+DATA.timeWrite = timeWrite;
+DATA.timeSimu = timeSimu;
+DATA.CPUtime = CPU_Time;
+DATA.memory = Memory;
+DATA.memoryPeak = Memory_Peak;
+DATA.time = time;
+
+save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
+
     
 %% Not Valid Experiment
 %  ************************************************************************

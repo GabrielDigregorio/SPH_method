@@ -1,7 +1,7 @@
 %**************************************************************************
 % Plot Playground:
 %**************************************************************************
-function sucess = Playground(filename, n, path)
+function sucess = Playground(nameExperiment, n, path)
 
 
 close all;
@@ -13,15 +13,19 @@ if nargin < 2
 end
 
 % Import data at t=0
-i=0;
-filename=strcat('../build/Results/', filename,'_',num2str(0,'%08i'),'.txt')
-InitExperiment = importdata(filename);
+    % Number of files to read
+    dirName = dir([nameExperiment, '\*.txt']) %list all directory with.txt
+    nstep = length(dir([nameExperiment, '\*.txt']))-1 %[-]
 
-        Str1 = char(InitExperiment.textdata(11));
+    % Import data at t=0
+    filename=strcat(nameExperiment,'/',dirName(1).name)
+    InitExperiment = importdata(filename);
+
+        Str1 = char(InitExperiment.textdata(12));
              Key1 = 'Domain (lower l) : ';
-        Str2 = char(InitExperiment.textdata(12));
+        Str2 = char(InitExperiment.textdata(13));
              Key2 = 'Domain (upper u) : ';
-        Str3 = char(InitExperiment.textdata(13));
+        Str3 = char(InitExperiment.textdata(14));
              Key3 = 'Number of Particules (nFree/nMoving/nFixed) : ';             
         Index1 = strfind(Str1, Key1); Index2 = strfind(Str2, Key2); Index3 = strfind(Str3, Key3);
         l     = sscanf(Str1(Index1(1) + length(Key1):end), '%g %g %g', 3);

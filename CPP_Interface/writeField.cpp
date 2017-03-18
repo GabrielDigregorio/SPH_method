@@ -188,6 +188,9 @@ void matlab(std::string const &filename,
     std::ofstream f(s.str().c_str());
     f << std::scientific;
 
+    //Record Time
+    double duration = ( std::clock() - startExperimentTimeClock ) / (double) CLOCKS_PER_SEC;;
+
     // header
     f << "#EXPERIMENT: " << filename << std::endl;
     f << std::endl;
@@ -203,18 +206,19 @@ void matlab(std::string const &filename,
     #endif
     f << "File Used : " << geometryFilename << "   &   " << parameterFilename << std::endl;
     f << std::endl;
-    f << "CPU Time : " << "- [s]" << std::endl;
+    f << "CPU Time : " << duration << " [s]" << std::endl;
     f << "Memory Usage : " << GetMemoryProcess(false, false)<< " [kB]" <<std::endl;
     f << "Memory Usage Peak : " << GetMemoryProcessPeak(false, false)<< " [kB]" <<std::endl;
     f << std::endl;
     f << "Step Time (k) : "<< parameter->k << " [s]" << std::endl;
+    f << "Write interval : "<< parameter->writeInterval << " [s]" << std::endl;
     f << "Simulation Time (T) : "<< parameter->T << " [s]" << std::endl;
     f << std::endl;
     f << "Domain (lower l) : "<< field->l[0] << "   " << field->l[1] << "   " << field->l[2] << "    [m]" << std::endl;
     f << "Domain (upper u) : "<< field->u[0] << "   " << field->u[1] << "   " << field->u[2] << "    [m]" << std::endl;
     f << "Number of Particules (nFree/nMoving/nFixed) : "<< field->nFree << "   "<< field->nMoving<< "   "<< field->nFixed <<  std::endl;
     f << "\n";
-    f << " posX\t\t     posY\t\t     posZ\t\t     velocityX\t     velocityY\t     velocityZ\t     density\t     pressure\t     mass"<<std::endl;
+    f << " posX\t     posY\t     posZ\t     velocityX\t     velocityY\t     velocityZ\t     density\t     pressure\t     mass"<<std::endl;
 
     // Fill f:
     for(int i=0; i<nbp; ++i)

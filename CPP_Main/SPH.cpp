@@ -4,6 +4,7 @@
 #include "Tools.h"
 #include "Structures.h"
 
+std::clock_t startExperimentTimeClock;
 
 /*
 * In: -argv[1]: path to the parameter file
@@ -11,6 +12,10 @@
 */
 int main(int argc, char *argv[])
 {
+    //Record algorithm performance
+    startExperimentTimeClock = std::clock();
+    double duration;
+
   std::cout << "----BEGIN argument checking----\n" << std::endl;
   std::string parameterFilename;
   std::string geometryFilename;
