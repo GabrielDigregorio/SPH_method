@@ -3,13 +3,13 @@
 #include "Tools.h"
 
 
-// Creat directory to store data 
+// Creat directory to store data
 // In: name of the directory
 std::string creatDirectory(std::string dirname){
 
    /* std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
     DIR* dir = opendir(newdir.str().c_str());
-    int i=1; 
+    int i=1;
 
     while(dir)
     {
@@ -25,7 +25,7 @@ std::string creatDirectory(std::string dirname){
     int nError = 0;
     #if defined(_WIN32)
     nError = _mkdir(newdir.str().c_str()); // can be used on Windows
-    #else 
+    #else
     nError = mkdir(newdir.str().c_str(),nMode); // can be used on non-Windows
     #endif
     // handle your error here
@@ -105,7 +105,7 @@ void paraView(std::string const &filename,
     std::stringstream s; s <<"Results/"<< filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtk";
 
     // open file
-    std::cout << "writing results to " << s.str() << std::endl;
+    //std::cout << "writing results to " << s.str() << std::endl;
     std::ofstream f(s.str().c_str());
     f << std::scientific;
     // header
