@@ -7,11 +7,11 @@
 //  - s: particle spacing
 //  - pertubation: percentage of perturbation in position of particles (equal 0 by default)
 
-void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack)
-{
+void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart,
+     double perturbation, bool stack){
     // if we stack the cube:
     if(stack == true){
-        L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
+        L[0] -= s; L[1] -= s; L[2] -= s;
     }
 
     // calculate nb of particles along each direction from target size "s"
@@ -21,12 +21,14 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
     double dy = L[1]/nj; ++nj;
     int nk = int(ceil(L[2]/s));
     double dz = L[2]/nk; ++nk;
-
+    // Volume & number of particles computation
+    (*nPart)=ni*nj*nk;
+    (*volPart)=dx*dy*dz;
     // output
     std::cout << "meshing cube at center o=(" << o[0] << ","  << o[1] << ","  << o[2] << ") ";
     std::cout << "of size L=(" <<L[0]<< ","  <<L[1]<< ","  <<L[2]<< ")\n";
     std::cout << "\tparticle spacing s=(" <<dx<< ","  <<dy<< ","  <<dz<< ") [target was s=" << s << "]\n";
-    std::cout << "\t=> "<<ni<< "*"  <<nj<< "*"  <<nk<< " = " << ni*nj*nk << " particles to be generated\n";
+    std::cout << "\t=> "<<ni<< "*"  <<nj<< "*"  <<nk<< " = " << (*nPart) << " particles to be generated\n";
 
     // memory allocation
     pos.reserve(pos.size() + ni*nj*nk*3);
@@ -62,11 +64,11 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, doub
 //  - (optional) pertubation: percentage of perturbation in position of particles (equal 0 by default)
 //  - (optional) stack: reduce L[3] by s/2 in order to stack cube (equal 0 by default)
 
-void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack)
-{
+void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart,
+     double perturbation, bool stack){
     // if we stack the cylinder:
     if(stack == true){
-        L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
+        L[0] -= s; L[1] -= s; L[2] -= s;
     }
 
     // ellipse parameter
@@ -79,15 +81,17 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
     double dr2 = L[1]/nd2; ++nd2;
     int nl = int(ceil(L[2]/s));
     double dl = L[2]/nl; ++nl;
-
+    // Volume & number of particles computation
+    (*nPart)=nl*nd1/2*nd2/2;
+    //(*volPart)=;
     // output
     std::cout << "meshing cylinder at o=(" <<o[0]<< ","  <<o[1]<< ","  <<o[2]<< ") ";
     std::cout << "of diameter D1=" << L[0] << ", diameter D2=" << L[1] << " and L=" << L[2] << "\n";
     std::cout << "\tparticle spacing s=(" <<dr1<< " and "<<dr2<< "," <<dl<< ") [target was s=" << s << "]\n";
-    std::cout << "\t less than  => "<<nl<< "*"  <<nd1<< "*"  <<nd2<< " = " << nl*nd1/2*nd2/2 << " particles to be generated\n";
+    std::cout << "\t less than  => "<<nl<< "*"  <<nd1<< "*"  <<nd2<< " = " << (*nPart) << " particles to be generated\n";
 
     // memory allocation
-    pos.reserve(pos.size() + nl*nd1/2*nd2/2*3);
+    pos.reserve(pos.size() + (*nPart)*3);
 
     // generates number in the range -s*perturbation % and s*perturbation %
     std::default_random_engine generator;
@@ -123,11 +127,11 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
 //  - (optional) pertubation: percentage of perturbation in position of particles (equal 0 by default)
 //  - (optional) stack: reduce L[3] by s/2 in order to stack cube (equal 0 by default)
 
-void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation, bool stack)
-{
-    // if we stack the cylinder:
+void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart,
+     double perturbation, bool stack){
+           // if we stack the cylinder:
     if(stack == true){
-        L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
+        L[0] -= s; L[1] -= s; L[2] -= s;
     }
 
     // ellipse parameter
@@ -140,15 +144,17 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, do
     double dr2 = L[1]/nd2; ++nd2;
     int nd3 = int(ceil(L[2]/s));
     double dr3 = L[2]/nd3; ++nd3;
-
+    // Volume & number of particles computation
+    (*nPart)=nd1/2*nd2/2*nd3/2;
+    //(*volPart)=;
     // output
     std::cout << "meshing sphere at o=(" <<o[0]<< ","  <<o[1]<< ","  <<o[2]<< ") ";
     std::cout << "of diameter D1=" << L[0] << ", diameter D2=" << L[1] << ", diameter D3=" << L[2] << "\n";
     std::cout << "\tparticle spacing s=(" <<dr1<< " and "<<dr2<< "," <<dr3<< ") [target was s=" << s << "]\n";
-    std::cout << "\t less than => "<<nd1<< "*"  <<nd2<< "*"  <<nd3<< " = " <<nd1/2*nd2/2*nd3/2<< " particles to be generated\n";
+    std::cout << "\t less than => "<<nd1<< "*"  <<nd2<< "*"  <<nd3<< " = " <<(*nPart)<< " particles to be generated\n";
 
     // memory allocation
-    pos.reserve(pos.size() + nd1/2*nd2/2*nd3/2*3);
+    pos.reserve(pos.size() + (*nPart)*3);
 
     // generates number in the range -s*perturbation % and s*perturbation %
     std::default_random_engine generator;
