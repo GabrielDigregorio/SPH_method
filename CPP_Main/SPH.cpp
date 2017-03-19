@@ -39,9 +39,11 @@ int main(int argc, char *argv[]){
     //Read parameters
     Parameter* parameter =  new Parameter();
     readParameter(parameterFilename, parameter);
+    // Initialisation volume vector
+    std::vector<double> volVector;
     //Read geometry
     Field* currentField =  new Field();
-    readGeometry(geometryFilename, currentField);
+    readGeometry(geometryFilename, currentField, &volVector);
     sizeField(currentField, currentField->nTotal);
 
     // INITIALISATION (all the vectors should have the right size here!)
@@ -67,7 +69,7 @@ int main(int argc, char *argv[]){
     nextField->nMoving = currentField->nMoving;
     nextField->nTotal = currentField->nTotal;
     for(int i=0 ; i<currentField->nTotal ; i++)
-    nextField->mass[i] = currentField->mass[i];
+        nextField->mass[i] = currentField->mass[i];
     unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k);
     std::cout << "\t Number of time steps = " << nMax << "\n" << std::endl;
 
