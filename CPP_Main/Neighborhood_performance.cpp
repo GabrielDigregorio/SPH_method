@@ -29,7 +29,9 @@ int main(int argc, char *argv[])
 
     //Generate cube
     std::vector<double> pos;
-    meshcube(o, L, s, pos, eps);
+    int nPart;
+    double volPart;
+    meshcube(o, L, s, pos, &nPart, &volPart, eps);
 
     double ll[3] = {-L[0]/2, -L[1]/2, -L[2]/2};
     double uu[3] = {L[0]/2, L[1]/2, L[2]/2};

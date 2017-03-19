@@ -14,10 +14,7 @@
 
 // inputReader.cpp
 void readParameter(std::string filename, Parameter* parameter);
-void readGeometry(std::string filename, Field* currentField);
-void readBrick(int type, std::ifstream* inFile, Field* currentField);
-
-
+void readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector);
 
 // writeField.cpp
 std::string creatDirectory(std::string dirname);
