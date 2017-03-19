@@ -34,6 +34,7 @@ int main(int argc, char *argv[]){
     {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = "result";} // default name
     else // Use default name for the experiment (result)
     {parameterFilename = argv[1]; geometryFilename = argv[2]; experimentFilename = argv[3];}
+
     std::cout << "----END argument checking----\n" << std::endl;
 
     //Read parameters
@@ -137,4 +138,5 @@ int main(int argc, char *argv[]){
     cleanParameter(parameter);
 
     return 0;
+
 }

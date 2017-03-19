@@ -1,6 +1,6 @@
 #GEOM1
 %********************************************
-% PLAYGROUND : Geometry example
+% PLAYGROUND : SwimmingPool
 %
 % #GEOM
 % #domain
@@ -25,42 +25,70 @@
 %********************************************
 
 #domsz
-ux = 50
-uy = 60
-uz = 70
-lx = 20
-ly = 30
-lz = 40
+ux = 6
+uy = 6
+uz = 1
+lx = -6
+ly = -6
+lz = -11
 
     #brick
         %param
-        c=0
+        c=2
         s=0.5
-        r=5
+        r=0
         %coord
-        x=10
+        x=-4.5
         y=0
-        z=0
+        z=-5
         %dimen
-        L=10
+        L=1
         W=10
         H=10
 
     #brick
         %param
-        c=1
+        c=2
         s=0.5
-        r=5
+        r=0
         %coord
-        x=-10
+        x=4.5
         y=0
-        z=0
+        z=-5
         %dimen
-        L=10
+        L=1
         W=10
         H=10
+    
+    #brick
+        %param
+        c=2
+        s=0.5
+        r=0
+        %coord
+        x=0
+        y=-4.5
+        z=-5
+        %dimen
+        L=8
+        W=1
+        H=10
 
-    #cylin
+    #brick
+        %param
+        c=2
+        s=0.5
+        r=0
+        %coord
+        x=0
+        y=4.5
+        z=-5
+        %dimen
+        L=8
+        W=1
+        H=10
+
+    #brick
         %param
         c=2
         s=0.5
@@ -68,51 +96,24 @@ lz = 40
         %coord
         x=0
         y=0
-        z=10
+        z=-9.5
         %dimen
-        D=7
-        d=4
-        H=20
+        L=8
+        W=8
+        H=1
 
     #brick
         %param
         c=0
-        s=1
-        r=20
-        %coord
-        x=10
-        y=0
-        z=15
-        %dimen
-        L=10
-        W=10
-        H=2
-
-    #brick
-        %param
-        c=1
-        s=1
-        r=20
-        %coord
-        x=-10
-        y=0
-        z=15
-        %dimen
-        L=10
-        W=10
-        H=2
-
-    #spher
-        %param
-        c=2
         s=0.5
         r=0
         %coord
         x=0
-        y=-10
-        z=15
+        y=0
+        z=-4.5
         %dimen
-        D=5
-        d=5
-        H=5
+        L=7.5
+        W=7.5
+        H=9
+
 #END_G

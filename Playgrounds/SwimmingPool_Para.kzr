@@ -1,6 +1,6 @@
 #PARA1
 %********************************************
-% PLAYGROUND : Parameter example
+% PLAYGROUND : SwimmingPool
 % #param
 %
 % kh = smothing length
@@ -18,28 +18,28 @@
 % speedLaw = To be determined, will dictate the behaviour of moving boundaries
 %********************************************
 #param
-    kh=0.06
-    k=0.001
-    T=3
+    kh=0.6
+    k=0.0005
+    T=2
     densityRef=1000.0
-    B=128000.0
+    B=128.0
     gamma=7.0
     g=9.81
     writeInterval=0.01
     charactTime=1.0
-    c=35
-    alpha=0.5
-    beta=0
-    epsilon=0.001
+    c=300.0
+    alpha=1.0
+    beta=1.0
+    epsilon=0.01
     movingDirectionX=2.1
     movingDirectionY=2.2
     movingDirectionZ=2.3
-    kernel=1
+    kernel=2
     viscosityModel=0
     integrationMethod=0
     densityInitMethod=1
     stateEquationMethod=0
     massInitMethod=0
     speedLaw=0
-    format=1
+    format=3
 #END_F
