@@ -1,0 +1,120 @@
+#GEOM1
+%********************************************
+% PLAYGROUND : Geometry example
+%
+% #GEOM
+% #domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+%
+% geometry : #brick, #cylin or #spher
+% #param
+%   c ==> 0=free, 1=moving, 2=fixed
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% #coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% #dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+%********************************************
+
+#domsz
+ux = 0.3
+uy = 0.3
+uz = 0.6
+lx = -0.3
+ly = -0.3
+lz = -0.1
+
+#brick
+    %param
+    c=0
+    s=0.05
+    r=0
+    %coord
+    x=0
+    y=0
+    z=0.26
+    %dimen
+    L=0.4
+    W=0.4
+    H=0.4
+
+#brick
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=0
+    y=0
+    z=0
+    %dimen
+    L=0.6
+    W=0.6
+    H=0.1
+
+#brick
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=0.25
+    y=0
+    z=0.3
+    %dimen
+    L=0.1
+    W=0.5
+    H=0.5
+
+#brick
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=-0.25
+    y=0
+    z=0.3
+    %dimen
+    L=0.1
+    W=0.5
+    H=0.5
+
+#brick
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=0
+    y=0.25
+    z=0.3
+    %dimen
+    L=0.6
+    W=0.1
+    H=0.5
+
+#brick
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=0
+    y=-0.25
+    z=0.3
+    %dimen
+    L=0.6
+    W=0.1
+    H=0.5
+
+
+#END_G
