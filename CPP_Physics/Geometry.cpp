@@ -11,7 +11,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int*
      double perturbation, bool stack){
     // if we stack the cube:
     if(stack == true){
-        L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
+        L[0] -= s; L[1] -= s; L[2] -= s;
     }
 
     // calculate nb of particles along each direction from target size "s"
@@ -68,7 +68,7 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
      double perturbation, bool stack){
     // if we stack the cylinder:
     if(stack == true){
-        L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
+        L[0] -= s; L[1] -= s; L[2] -= s;
     }
 
     // ellipse parameter
@@ -131,7 +131,7 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, in
      double perturbation, bool stack){
            // if we stack the cylinder:
     if(stack == true){
-        L[0] -= s/2; L[1] -= s/2; L[2] -= s/2;
+        L[0] -= s; L[1] -= s; L[2] -= s;
     }
 
     // ellipse parameter
