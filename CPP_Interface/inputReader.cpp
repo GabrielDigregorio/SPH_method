@@ -12,8 +12,9 @@
 enum geomType{cube,cylinder,sphere};
 enum boundCondition{freePart, movingPart, fixedPart};
 
-void readBrick(int type, std::ifstream* inFile, Field* currentField,
-                std::vector<double>* posFree, std::vector<double>* posMoving, std::vector<double>* posFixed){
+void readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector<double>* posFree,
+        std::vector<double>* posMoving, std::vector<double>* posFixed,
+        std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<double>* volVectorMoving){
         std::string buf;
         int cnt=0;
         char valueArray[1024];
@@ -32,55 +33,63 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField,
         float r=brickData[2];
         double o[3] = {brickData[3],brickData[4],brickData[5]};
         double L[3] = {brickData[6],brickData[7],brickData[8]};
-        switch(type){
-                case cube :
-                        switch(c){
-                                case freePart :
-                                        meshcube(o, L, s, *posFree, r, true);
+        int nPart;
+        double volPart;
+        switch(c){
+                case freePart :
+                        switch(type){
+                                case cube :
+                                        meshcube(o, L, s, *posFree, &nPart, &volPart, r, true);
                                 break;
-                                case movingPart :
-                                        meshcube(o, L, s, *posMoving, r, true);
+                                case cylinder :
+                                        meshcylinder(o, L, s, *posFree, &nPart, &volPart, r, true);
                                 break;
-                                case fixedPart :
-                                        meshcube(o, L, s, *posFixed, r, true);
-                                break;
-                        }
-                break;
-                case cylinder :
-                        switch(c){
-                                case freePart :
-                                        meshcylinder(o, L, s, *posFree, r, true);
-                                break;
-                                case movingPart :
-                                        meshcylinder(o, L, s, *posMoving, r, true);
-                                break;
-                                case fixedPart :
-                                        meshcylinder(o, L, s, *posFixed, r, true);
+                                case sphere :
+                                        meshsphere(o, L, s, *posFree, &nPart, &volPart, r, true);
                                 break;
                         }
+                        for(cnt=0; cnt<nPart; ++cnt){
+                                (*volVectorFree).push_back(volPart);
+                        }
                 break;
-                case sphere :
-                        switch(c){
-                                case freePart :
-                                        meshsphere(o, L, s, *posFree, r, true);
+                case fixedPart :
+                        switch(type){
+                                case cube :
+                                        meshcube(o, L, s, *posFixed, &nPart, &volPart, r, true);
                                 break;
-                                case movingPart :
-                                        meshsphere(o, L, s, *posMoving, r, true);
+                                case cylinder :
+                                        meshcylinder(o, L, s, *posFixed, &nPart, &volPart, r, true);
                                 break;
-                                case fixedPart :
-                                        meshsphere(o, L, s, *posFixed, r, true);
+                                case sphere :
+                                        meshsphere(o, L, s, *posFixed, &nPart, &volPart, r, true);
                                 break;
+                        }
+                        for(cnt=0; cnt<nPart; ++cnt){
+                                (*volVectorFixed).push_back(volPart);
+                        }
+                break;
+                case movingPart :
+                        switch(type){
+                                case cube :
+                                        meshcube(o, L, s, *posMoving, &nPart, &volPart, r, true);
+                                break;
+                                case cylinder :
+                                        meshcylinder(o, L, s, *posMoving, &nPart, &volPart, r, true);
+                                break;
+                                case sphere :
+                                        meshsphere(o, L, s, *posMoving, &nPart, &volPart, r, true);
+                                break;
+                        }
+                        for(cnt=0; cnt<nPart; ++cnt){
+                                (*volVectorMoving).push_back(volPart);
                         }
                 break;
         }
-        // Only one of the 3 vectors is filled. Here there is a problem because s is not defined by the user but rather by the function meshcube !!!!!!!
-        (currentField->s).insert((currentField->s).end(),(*posFree).size() + (*posFixed).size() + (*posMoving).size(), s);
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
-void readGeometry(std::string filename, Field* currentField){
+void readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector){
         std::cout << "----BEGIN geometry reading----\n" << std::endl;
-        std::vector<double> posFree, posFixed, posMoving; // TO BE USED IF S VALUES ARE NEEDED
+        std::vector<double> posFree, posFixed, posMoving, volVectorFree, volVectorFixed, volVectorMoving;
         std::ifstream inFile(filename);
         std::string buf;
         char valueArray[1024];
@@ -119,21 +128,30 @@ void readGeometry(std::string filename, Field* currentField){
                                 }
                                 else if(buf=="brick")
                                         readBrick(cube,&inFile, currentField,
-                                                &posFree, &posMoving, &posFixed);
+                                                &posFree, &posMoving, &posFixed,
+                                                &volVectorFree, &volVectorFixed, &volVectorMoving);
                                 else if(buf=="cylin")
                                         readBrick(cylinder,&inFile, currentField,
-                                                &posFree, &posMoving, &posFixed);
+                                                &posFree, &posMoving, &posFixed,
+                                                &volVectorFree, &volVectorFixed, &volVectorMoving);
+
                                 else if(buf=="spher")
                                         readBrick(sphere,&inFile, currentField,
-                                                &posFree, &posMoving, &posFixed);
+                                                &posFree, &posMoving, &posFixed,
+                                                &volVectorFree, &volVectorFixed, &volVectorMoving);
                                 else if(buf=="END_G"){
+                                        // Number of particles
                                         currentField->nFree=posFree.size()/3;
                                         currentField->nFixed=posFixed.size()/3;
                                         currentField->nMoving=posMoving.size()/3;
+                                        currentField->nTotal= currentField->nFree + currentField->nFixed + currentField->nMoving;
+                                        // Position and volume vector sorting
                                         posFree.insert(posFree.end(), posFixed.begin(), posFixed.end());
                                         posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
+                                        volVectorFree.insert(volVectorFree.end(), volVectorFixed.begin(), volVectorFixed.end());
+                                        volVectorFree.insert(volVectorFree.end(), volVectorMoving.begin(), volVectorMoving.end());
+                                        (*volVector)=volVectorFree;
                                         currentField->pos=posFree;
-                                        currentField->nTotal= currentField->nFree + currentField->nFixed + currentField->nMoving;
                                         //std::cout << "\t Position vector:\n" << std::endl;
                                         for (int i = 0; i < 3*currentField->nTotal; i+=3)
                                         {
@@ -224,7 +242,7 @@ void readParameter(std::string filename, Parameter* parameter){
                                                         if(cnt==22)
                                                                 parameter->speedLaw=(SpeedLaw) atoi(valueArray);
                                                         if(cnt==23)
-                                                          parameter->format = (Format) atoi(valueArray);
+                                                                parameter->format = (Format) atoi(valueArray);
                                                         ++cnt;
                                                 }
                                                 else{continue;}

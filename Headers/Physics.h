@@ -8,9 +8,9 @@
 
 // Geometry.cpp
 #include <random>
-void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation = 0.0, bool stack = false);
-void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation = 0.0, bool stack = false);
-void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, double perturbation = 0.0, bool stack = false);
+void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
+void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
+void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
 
 
 // Neighborhood.cpp
@@ -41,7 +41,7 @@ void findNeighbors(int particleID, std::vector<double> &pos, double kh,
                     std::vector<double> &kernelGradients,
                     Kernel myKernel,
                     std::vector<double> &kernelGradientsSamples,
-                    int resolution);
+                    int resolution); // USELESS
 void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
                    std::vector<std::vector<int> > &boxes);
 void boxMesh(double l[3], double u[3], double kh,
@@ -50,8 +50,9 @@ void boxMesh(double l[3], double u[3], double kh,
 
 
 // TimeIntegration.cpp
-bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, std::vector<std::vector<int> >& boxes,
-std::vector<std::vector<int> >& surrBoxesAll, unsigned int n);
+bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter,
+    std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
+    unsigned int n, std::vector<double> &timeInfo);
 
 
 // Kernel.cpp

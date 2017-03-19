@@ -37,7 +37,7 @@ end
     disp(['What would you like to plot: ']); % Display Possibilities
     disp(['1) All particules (Free, Moving and Fixed)']);
     disp(['2) Free particules']);
-    disp(['3) Free particules and Moving particules']);disp([' ']);
+    disp(['3) Fixed particules and Moving particules']);disp([' ']);
     n = input('Choice: ');
         
 switch n
@@ -47,7 +47,11 @@ switch n
     case 2
         scatter3(InitExperiment.data(1:limit(1),1),InitExperiment.data(1:limit(1),2),InitExperiment.data(1:limit(1),3),10,InitExperiment.data(1:limit(1),3))
     case 3
-        scatter3(InitExperiment.data(1:limit(1)+limit(2),1),InitExperiment.data(1:limit(1)+limit(2),2),InitExperiment.data(1:limit(1)+limit(2),3),10,InitExperiment.data(1:limit(1)+limit(2),3))
+        InitExperiment.data(limit(1):limit(2)+limit(3),1)
+        scatter3(InitExperiment.data(limit(1):limit(1)+limit(2)+limit(3),1),...
+                 InitExperiment.data(limit(1):limit(1)+limit(2)+limit(3),2),...
+                 InitExperiment.data(limit(1):limit(1)+limit(2)+limit(3),3),10,...
+                 InitExperiment.data(limit(1):limit(1)+limit(2)+limit(3),3))
 end
 
 axis([l(1) u(1) l(2) u(2) l(3) u(3)])

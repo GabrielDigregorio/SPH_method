@@ -68,7 +68,7 @@ switch(choice)
     case 4 % Analyse:
         disp(['Experiments Types: ']); % Display Possibilities
         disp(['1) Free Falling Cube']);
-        disp(['2) Free Falling Cube with random particules']);
+        disp(['2) Swimming Pool']);
         disp(['3) Stationary Tank']);disp([' ']);
         n = input('Enter the TYPE of the experiment: ');disp([' ']);
         disp(['Clic on directory: ']);

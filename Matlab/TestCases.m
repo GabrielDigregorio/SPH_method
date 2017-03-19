@@ -17,11 +17,11 @@ end
 %addpath(genpath('../build/Results/'))
 
     % Number of files to read
-    dirName = dir([nameExperiment, '\*.txt']) %list all directory with.txt
+    dirName = dir([nameExperiment, '\*.txt']); %list all directory with.txt
     nstep = length(dir([nameExperiment, '\*.txt']))-1 %[-]
 
     % Import data at t=0
-    filename=strcat(nameExperiment,'/',dirName(1).name)
+    filename=strcat(nameExperiment,'/',dirName(1).name);
     InitExperiment = importdata(filename);
     
     % time step
@@ -39,11 +39,23 @@ end
     Index = strfind(Str, Key);
     timeSimu = sscanf(Str(Index(1) + length(Key):end), '%g', 1); %[s]
 
+    % Domain and nbr particules
+    Str1 = char(InitExperiment.textdata(12));
+    Key1 = 'Domain (lower l) : ';
+    Str2 = char(InitExperiment.textdata(13));
+    Key2 = 'Domain (upper u) : ';
+    Str3 = char(InitExperiment.textdata(14));
+    Key3 = 'Number of Particules (nFree/nMoving/nFixed) : ';             
+    Index1 = strfind(Str1, Key1); Index2 = strfind(Str2, Key2); Index3 = strfind(Str3, Key3);
+    l     = sscanf(Str1(Index1(1) + length(Key1):end), '%g %g %g', 3);
+    u     = sscanf(Str2(Index2(1) + length(Key2):end), '%g %g %g', 3);
+    limit = sscanf(Str3(Index3(1) + length(Key3):end), '%g %g %g', 3);
+
     
     for i=1 : nstep 
         
         % Open File nbr i
-        disp(dirName(i+1).name)
+        %disp(dirName(i+1).name);
         filename=strcat(nameExperiment,'/',dirName(i+1).name);
         Experiment = importdata(filename); % Import Data
         
@@ -89,7 +101,7 @@ case 1
     for i=1 : nstep 
         
         % Open File nbr i
-        disp(dirName(i+1).name)
+        %disp(dirName(i+1).name);
         filename=strcat(nameExperiment,'/',dirName(i+1).name);
         Experiment = importdata(filename); % Import Data
         
@@ -186,22 +198,63 @@ DATA.error = error;
 save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
 
-%% Free Falling cube Random
+%% Swimming Pool (Hydrostatic)
 %  ************************************************************************
 case 2
 
     % Parameters
     g = 9.81;
     z0_center = 100; %[m]
-
+    nbrWindows = 10;
     % Cube:
 
 
-  
+    for i=1 : nstep 
+        
+        % Open File nbr i
+        %disp(dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i+1).name);
+        Experiment = importdata(filename); % Import Data
+        
+        % Zmin and Zmax
+        Zmax = max(Experiment.data(1:limit(1),3));
+        Zmin = min(Experiment.data(1:limit(1),3));
+        
+        % Height of the swimming pool
+        Height = Zmin - Zmax;
+        
+        % Sort by height
+        [Experiment.data(1:limit(1),3), SortIndex] = sort(Experiment.data(1:limit(1),3));
+        for j=[1 2 4 5 6 7 8 9]
+            Experiment.data(1:limit(1),j) = Experiment.data(SortIndex,j);
+        end
+        
+        % Compute the hydrostatic pressure
+        for j=1:nbrWindows
+            height_min = (nbrWindows-(j-1))*(Height/nbrWindows)
+            height_max = (nbrWindows-(j))*(Height/nbrWindows)
+            WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min))
+            WindowsUp = max(find(Experiment.data(1:limit(1),3) <= height_max))
+            
+            H(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,3));
+            Hydrostatic(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,8));
+        end
+        Height
+    end
 
-
-
-    
+figure(1)
+hold on
+    for i=[1 floor(length(H(:,1))/2) length(H(:,1))-1]
+        plot(H(i,:), Hydrostatic(i,:))
+    end   
+    %axis([0 1 2 3])
+    title('Hydrostatic Pressure')
+    xlabel('Height [m]')
+    ylabel('Pressure [Pa]')
+    legend('t = 0 [s]', 't = end/2 [s]', 't = end [s]')
+    grid
+    %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
+hold off   
     
 % Save data
 DATA.name = dirName(1).name;
@@ -214,12 +267,14 @@ DATA.CPUtime = CPU_Time;
 DATA.memory = Memory;
 DATA.memoryPeak = Memory_Peak;
 DATA.time = time;
+DATA.height = H;
+DATA.hydrostatic = Hydrostatic;
 
 save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
 
 
-%% Stationary tank
+%% Crash Cube
 %  ************************************************************************
 case 3
 

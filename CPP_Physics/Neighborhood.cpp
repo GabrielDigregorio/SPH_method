@@ -227,7 +227,7 @@ void findNeighbors(int particleID, std::vector<double> &pos, double kh,
     }
 }
 
-/* Overload with tabulated values */
+/* Overload with tabulated values : USELESS !!*/
 void findNeighbors(int particleID, std::vector<double> &pos, double kh,
                     std::vector<std::vector<int> > &boxes,
                     std::vector<int> &surrBoxes,
@@ -260,7 +260,6 @@ void findNeighbors(int particleID, std::vector<double> &pos, double kh,
         }
     }
 }
-
 
 
 // Gives the list of the surrounding boxes
