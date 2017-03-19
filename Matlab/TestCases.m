@@ -205,7 +205,7 @@ case 2
     % Parameters
     g = 9.81;
     z0_center = 100; %[m]
-    nbrWindows = 10;
+    nbrWindows = 5;
     % Cube:
 
 
@@ -231,31 +231,45 @@ case 2
         
         % Compute the hydrostatic pressure
         for j=1:nbrWindows
-            height_min = (nbrWindows-(j-1))*(Height/nbrWindows)
-            height_max = (nbrWindows-(j))*(Height/nbrWindows)
-            WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min))
-            WindowsUp = max(find(Experiment.data(1:limit(1),3) <= height_max))
+            height_min = (nbrWindows-(j-1))*(Height/nbrWindows);
+            height_max = (nbrWindows-(j))*(Height/nbrWindows);
+            WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min));
+            WindowsUp = max(find(Experiment.data(1:limit(1),3) <= height_max));
             
             H(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,3));
+            Density(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,7));
             Hydrostatic(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,8));
         end
-        Height
     end
 
 figure(1)
 hold on
-    for i=[1 floor(length(H(:,1))/2) length(H(:,1))-1]
+    for i=[1 floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
+        plot(H(i,:), Density(i,:))
+    end   
+    %axis([0 1 2 3])
+    title('Density')
+    xlabel('Height [m]')
+    ylabel('Density [kg/m^3]')
+    legend('t = 0 [s]', 't = end/4 [s]', 't = end/2 [s]', 't = 3*end/4 [s]', 't = end [s]')
+    grid
+    %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
+hold off   
+
+figure(2)
+hold on
+    for i=[1 floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
         plot(H(i,:), Hydrostatic(i,:))
     end   
     %axis([0 1 2 3])
     title('Hydrostatic Pressure')
     xlabel('Height [m]')
-    ylabel('Pressure [Pa]')
-    legend('t = 0 [s]', 't = end/2 [s]', 't = end [s]')
+    ylabel(' Hydrostatic Pressure [kg/m^3]')
+    legend('t = 0 [s]', 't = end/4 [s]', 't = end/2 [s]', 't = 3*end/4 [s]', 't = end [s]')
     grid
     %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
 hold off   
-    
+
 % Save data
 DATA.name = dirName(1).name;
 DATA.path = nameExperiment;
