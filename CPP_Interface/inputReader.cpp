@@ -85,6 +85,9 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector
                         }
                 break;
         }
+        // TO REMOVE AFTER !!
+        (currentField->s).insert((currentField->s).end(),(*posFree).size() + (*posFixed).size() + (*posMoving).size(), s);
+
 }
 
 void readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector){
