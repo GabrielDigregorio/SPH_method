@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
   massInit(currentField,parameter);
   // UPDATE & WRITTING
   Field *nextField = new Field();
-  Field *tmpField;
+  Field *tmpField = new Field();
   // Reserv Memory for each field of nextField and copy const parameters of currentField
   sizeField(nextField, currentField->nTotal);
   for (int i = 0; i < 3; i++){
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     if(writeCount*parameter->writeInterval <= n*parameter->k){
       writeField(nextField, n, parameter, parameterFilename, geometryFilename, experimentFilename);
       writeCount++;
-    }
+}
     tmpField = currentField;
     currentField = nextField;
     nextField = tmpField;

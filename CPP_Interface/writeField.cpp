@@ -184,7 +184,7 @@ void matlab(std::string const &filename,
     std::stringstream s; s << "Results/"<< filename << "_" << std::setw(8) << std::setfill('0') << step << ".txt";
 
     // open file
-    std::cout << "Writing results to " << s.str() << std::endl;
+    //std::cout << "Writing results to " << s.str() << std::endl;
     std::ofstream f(s.str().c_str());
     f << std::scientific;
 
@@ -218,7 +218,7 @@ void matlab(std::string const &filename,
     f << "Domain (upper u) : "<< field->u[0] << "   " << field->u[1] << "   " << field->u[2] << "    [m]" << std::endl;
     f << "Number of Particules (nFree/nMoving/nFixed) : "<< field->nFree << "   "<< field->nMoving<< "   "<< field->nFixed <<  std::endl;
     f << "\n";
-    f << " posX\t     posY\t     posZ\t     velocityX\t     velocityY\t     velocityZ\t     density\t     pressure\t     mass"<<std::endl;
+    f << " posX\t        posY\t        posZ\t     velocityX\t     velocityY\t     velocityZ\t     density\t     pressure\t     mass"<<std::endl;
 
     // Fill f:
     for(int i=0; i<nbp; ++i)
