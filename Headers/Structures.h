@@ -65,8 +65,6 @@ struct Parameter {
 struct Field {
     int nFree, nFixed, nMoving, nTotal;
 
-    std::vector<double> s;
-
     double l[3];
     double u[3];
 

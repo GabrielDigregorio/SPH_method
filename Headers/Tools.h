@@ -42,8 +42,7 @@ size_t GetMemoryProcessPeak(bool screen, bool print);
 void cleanField(Field* field);
 void cleanParameter(Parameter* parameter);
 void boxClear(std::vector<std::vector<int> > &boxes);
-
-//sizeField
-void sizeField(Field *field, int nTotal);
+void copyField(Field *sourceField,Field *copiedField);
+void swapField(Field** hopField, Field** cornField);
 
 #endif
