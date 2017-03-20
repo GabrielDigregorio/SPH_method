@@ -100,10 +100,9 @@ case 1
     
     % Parameters
     g = 9.81;
-    z0_center = 100; %[m]
+    z0_center = 10; %[m]
     
     for i=1 : nstep 
-        
         % Open File nbr i
         %disp(dirName(i+1).name);
         filename=strcat(nameExperiment,'/',dirName(i+1).name);
@@ -111,13 +110,13 @@ case 1
         
         % Compute the error to analytical solution 
         Analytic(i) = mean(InitExperiment.data(:,3)) - g*(time(i)^2)/2; % MRUA
-        error(i) = mean(abs(((Experiment.data(:,3)-Analytic(i))./Analytic(i))))*100; % error [%]
+        MeanZ_experiment(i) = mean(abs(Experiment.data(:,3)));
+        error(i) = (MeanZ_experiment(i)-Analytic(i))./Analytic(i) *100; % error [%]
         %XY_move(i) = sqrt(mean(  (InitExperiment.data(:,1) - Experiment.data(:,1)).^2  ...
                              % +  (InitExperiment.data(:,2) - Experiment.data(:,2)).^2   ));
-        MeanZ_experiment(i) = mean(abs(Experiment.data(:,3)));
      
     end
-
+ 
     
     % Plot
     figure(1)
@@ -207,8 +206,6 @@ save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 case 2
 
     % Parameters
-    g = 9.81;
-    z0_center = 100; %[m]
     nbrWindows = 6;
     % Cube:
 
@@ -225,7 +222,7 @@ case 2
         Zmin = min(Experiment.data(1:limit(1),3));
         
         % Height of the swimming pool
-        Height = Zmax - Zmin;
+        Height(i) = Zmax - Zmin;
         
         % Sort by height
         [Experiment.data(1:limit(1),3), SortIndex] = sort(Experiment.data(1:limit(1),3));
@@ -235,12 +232,12 @@ case 2
         
         % Compute the hydrostatic pressure
         for j=1:nbrWindows
-            height_min = (j-1)*(Height/nbrWindows);%(nbrWindows-(j-1))*(Height/nbrWindows);
-            height_max = (j)*(Height/nbrWindows);%(nbrWindows-(j))*(Height/nbrWindows);
+            height_min = (j-1)*(Height(i)/nbrWindows);%(nbrWindows-(j-1))*(Height/nbrWindows);
+            height_max = (j)*(Height(i)/nbrWindows);%(nbrWindows-(j))*(Height/nbrWindows);
             WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min));
             WindowsUp = max(find(Experiment.data(1:limit(1),3) <= height_max));
             
-            H(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,3));
+            H(i,j) = mean(Experiment.data(WindowsDown:WindowsUp,3));
             mean_Density(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,7));
             std_Density(i,j)= std(Experiment.data(WindowsDown:WindowsUp,7));
             mean_Hydrostatic(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,8));
@@ -251,7 +248,7 @@ case 2
 figure(1)
 hold on
     for i=[1 floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
-        errorbar(H(i,:), mean_Density(i,:),std_Density(i,:))
+        errorbar(H(i,:), mean_Density(i,:),std_Density(i,:),'LineWidth', 2)
     end   
     %axis([0 1 2 3])
     title('Density')
@@ -264,15 +261,16 @@ hold off
 
 figure(2)
 hold on
-    plot(H(i,:), 1000*9.81*(Height-H(i,:)), '*', 'color', 'k')
     for i=[1 floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
-        errorbar(H(i,:), mean_Hydrostatic(i,:), std_Hydrostatic(i,:))
-    end   
+        errorbar(H(i,:), mean_Hydrostatic(i,:), std_Hydrostatic(i,:),'LineWidth', 2)
+    end
+    plot(H(i,:), 1000*9.81*(Height(i)-H(i,:)), '*', 'color', 'k')
+    
     %axis([0 1 2 3])
     title('Hydrostatic Pressure')
     xlabel('Height [m]')
     ylabel(' Hydrostatic Pressure [Pa]')
-    legend('Analytic = rho*g*h','t = 0 [s]', 't = end/4 [s]', 't = end/2 [s]', 't = 3*end/4 [s]', 't = end [s]')
+    legend('t = 0 [s]', 't = end/4 [s]', 't = end/2 [s]', 't = 3*end/4 [s]', 't = end [s]', 'Analytic = rho*g*h')
     grid
     %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
 hold off   
@@ -298,7 +296,7 @@ save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
 
 
-%% Crash Cube
+%% Not defined
 %  ************************************************************************
 case 3
 
