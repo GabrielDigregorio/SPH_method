@@ -1,6 +1,6 @@
 #PARA1
 %********************************************
-% PLAYGROUND : Parameter example
+% PLAYGROUND : Parameter Pool
 % #param
 %
 % kh = smothing length
@@ -18,11 +18,11 @@
 % speedLaw = To be determined, will dictate the behaviour of moving boundaries
 %********************************************
 #param
-    kh=0.06
+    kh=0.024
     k=0.00001
-    T=0.5
+    T=2
     densityRef=1000.0
-    B=1280000
+    B=128
     gamma=7.0
     g=9.81
     writeInterval=0.002
@@ -41,5 +41,5 @@
     stateEquationMethod=0
     massInitMethod=0
     speedLaw=0
-    format=1
+    format=3
 #END_F
