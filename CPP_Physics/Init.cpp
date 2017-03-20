@@ -1,35 +1,31 @@
+///**************************************************************************
+/// SOURCE: Functions to initialise a field and compute pressure from density.
+///**************************************************************************
 #include "Main.h"
 #include "Physics.h"
-
+/*
+*Input:
+*- field: field whose speeds will be initialised
+*- parameter: pointer the the structure containing parameters
+*Decscription:
+*Initialise speed from field.
+*/
 void speedInit(Field* field,Parameter* parameter)
 {
-	std::cout << "----BEGIN speed initialitation---- \n \n";
-	// On démarre du repos, d'autres choix pourraient être fait.
-	field->speed.assign(field->nTotal,0.0);
-
-  // Initialisation des moving boundaries
+	field->speed.assign(3*field->nTotal,0.0); // Initial state is zero speed; other choice could be implemented
   if(field->nMoving != 0){updateMovingSpeed(field,parameter,0.0);}
-
-	//std::cout << "\t Speed vector:\n" << std::endl;
-	for (int i = 0; i < 3*field->nTotal; i+=3)
-	{
-			//std::cout <<"\t" << field->speed[i] << "\n"<< std::endl;
-			//std::cout <<"\t" << field->speed[i+1] << "\n"<< std::endl;
-			//std::cout <<"\t" << field->speed[i+2] << "\n\n"<< std::endl;
-	}
-
-	std::cout << "----END speed initialitation---- \n \n";
 }
-//-----------------------------------------------------------------------------------------
+
 /*
-* In: field = structure containing the position of particules (among others)
-*     parameter = structure containing the parameter usefull to compute the densities
-* Out: Initialisation of the density for the field
+*Input:
+*- field: field whose densities will be initialised
+*- parameter: pointer the the structure containing parameters
+*Decscription:
+*Initialise densities from field.
 */
 void densityInit(Field* field,Parameter* parameter)
 {
-	std::cout << "----BEGIN density initialitation---- \n \n";
-	//Récupération des paramètres
+	//Parameter withdrawal
 	double rho_0 = parameter->densityRef;
 	double B = parameter->B;
 	double gamma = parameter->gamma;
@@ -39,24 +35,18 @@ void densityInit(Field* field,Parameter* parameter)
 		case hydrostatic:
 
 		double H;
-		// Find height of free surface.
 		double zMax;
-		zMax = *(std::max_element(&field->pos[0],&field->pos[field->nFree+1]));
-		//std::cout << "\t Density vector\n" <<std::endl;
+		zMax = *(std::max_element(&field->pos[0],&field->pos[field->nFree+1])); // Find height of free surface.
 		for (int i = 0; i < field->nTotal; i++)
 		{
 			H = zMax - field->pos[3*i+2];
 			double rho = (1 + (1 / B)*rho_0*g*H);
-			field->density[i] = rho_0*pow(rho, 1.0 / gamma);
-			//std::cout << "\t" << field->density[i] << "\n" << std::endl;
+			field->density.push_back(rho_0*pow(rho, 1.0 / gamma));
 		}
 		break;
-		case homogeneous:
-		for (int i = 0; i < field->nTotal; i++)
-		{
-			field->density[i] = rho_0;
-		}
 
+		case homogeneous:
+			field->density.assign(field->nTotal,rho_0);
 		break;
 		// A voir si on considère le cas d'un gas pft, nécéssite des parametres supplémentaires(T°,M)
 		/*
@@ -71,70 +61,68 @@ void densityInit(Field* field,Parameter* parameter)
 
 }
 */
-}
-std::cout << "----END density initialitation---- \n \n";
+	}
 }
 
-//-----------------------------------------------------------------------------------------
 /*
-* In: field = structure containing the density of particules (among others)
-*     parameter = structure containing the parameter usefull to compute the pressures
-* Out: Computation of the pressure for the field
+*Input:
+*- field: field whose pressure will be initialised
+*- parameter: pointer the the structure containing parameters
+*Decscription:
+*Initialise pressure from field.
+*/
+void pressureInit(Field* field,Parameter* parameter)
+{
+		field->pressure.resize(field->nTotal);
+		pressureComputation(field,parameter);
+}
+
+/*
+*Input:
+*- field: field whose pressure will be updated
+*- parameter: pointer the the structure containing parameters
+*Decscription:
+*Compute pressure from field.
 */
 void pressureComputation(Field* field,Parameter* parameter)
 {
-
-	//std::cout << "----BEGIN pressure computation---- \n \n";
-	//Récupération des paramètres
+	//Parameter withdrawal
 	double rho_0 = parameter->densityRef;
 	double B = parameter->B;
 	double gamma = parameter->gamma;
 	double g = parameter->g;
 
-	switch (parameter->stateEquationMethod){
+	switch (parameter->stateEquationMethod)
+	{
 		case quasiIncompressible:
 
-		//std::cout << "\t Pressure vector \n" << std::endl;
 		for (int i=0; i<field->nTotal; i++)
 		{
 			double rho = field->density[i];
 			double p = B*(pow(rho/rho_0,gamma)-1);
 			field->pressure[i] = p;
-			//std::cout << "\t" << field->pressure[i] << "\n" << std::endl;
 		}
 		break;
 
 		case perfectGas:
-		std::cout << "Perfect gas not yet implemented\n"; // ATTENTION !!!
+		std::cout << "Perfect gas not yet implemented\n" << std::endl;
 		break;
 
 	}
-
-	//std::cout << "----END pressure computation---- \n \n";
-	// + cas gaz parfait ?
 }
 
-
-//-----------------------------------------------------------------------------------------
 /*
-* In: field = structure containing the density of particules (among others)
-*     parameter = structure containing the parameter s with is needed to compute the masses
-* Out: Computation of the masses for the field
+*Input:
+*- field: field whose masses are initialised
+*- parameter: pointer the the structure containing parameters
+*Decscription:
+*Initialise mass from field.
 */
-void massInit(Field* field,Parameter* parameter)
+void massInit(Field* field,Parameter* parameter, std::vector<double> &vol)
 {
-
-	std::cout << "----BEGIN mass initialitation---- \n \n";
-	//std::cout << "\t Mass vector \n" << std::endl;
 	for (int i=0; i<field->nTotal; i++)
 	{
-		double V = field->s[i]*field->s[i]*field->s[i];
-		double m = field->density[i]*V;
-
-		field->mass[i] = m;
-		//std::cout << "\t" << field->mass[i] << "\n" << std::endl;
+		double m = field->density[i]*vol[i];
+		field->mass.push_back(m);
 	}
-
-	std::cout << "----END mass initialitation---- \n \n";
-
 }

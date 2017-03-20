@@ -13,8 +13,8 @@
 #include <iomanip>
 
 // inputReader.cpp
-void readParameter(std::string filename, Parameter* parameter);
-void readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector);
+int readParameter(std::string filename, Parameter* parameter);
+int readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector);
 
 // writeField.cpp
 std::string creatDirectory(std::string dirname);

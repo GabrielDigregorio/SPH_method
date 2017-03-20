@@ -24,11 +24,14 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int*
     // Volume & number of particles computation
     (*nPart)=ni*nj*nk;
     (*volPart)=dx*dy*dz;
+
     // output
+    /*
     std::cout << "meshing cube at center o=(" << o[0] << ","  << o[1] << ","  << o[2] << ") ";
     std::cout << "of size L=(" <<L[0]<< ","  <<L[1]<< ","  <<L[2]<< ")\n";
     std::cout << "\tparticle spacing s=(" <<dx<< ","  <<dy<< ","  <<dz<< ") [target was s=" << s << "]\n";
     std::cout << "\t=> "<<ni<< "*"  <<nj<< "*"  <<nk<< " = " << (*nPart) << " particles to be generated\n";
+    */
 
     // memory allocation
     pos.reserve(pos.size() + ni*nj*nk*3);
@@ -84,11 +87,13 @@ void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, 
     // Volume & number of particles computation
     (*nPart)=nl*nd1/2*nd2/2;
     //(*volPart)=;
-    // output
+
+    /* output
     std::cout << "meshing cylinder at o=(" <<o[0]<< ","  <<o[1]<< ","  <<o[2]<< ") ";
     std::cout << "of diameter D1=" << L[0] << ", diameter D2=" << L[1] << " and L=" << L[2] << "\n";
     std::cout << "\tparticle spacing s=(" <<dr1<< " and "<<dr2<< "," <<dl<< ") [target was s=" << s << "]\n";
     std::cout << "\t less than  => "<<nl<< "*"  <<nd1<< "*"  <<nd2<< " = " << (*nPart) << " particles to be generated\n";
+    */
 
     // memory allocation
     pos.reserve(pos.size() + (*nPart)*3);
@@ -147,11 +152,13 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, in
     // Volume & number of particles computation
     (*nPart)=nd1/2*nd2/2*nd3/2;
     //(*volPart)=;
-    // output
+
+    /* output
     std::cout << "meshing sphere at o=(" <<o[0]<< ","  <<o[1]<< ","  <<o[2]<< ") ";
     std::cout << "of diameter D1=" << L[0] << ", diameter D2=" << L[1] << ", diameter D3=" << L[2] << "\n";
     std::cout << "\tparticle spacing s=(" <<dr1<< " and "<<dr2<< "," <<dr3<< ") [target was s=" << s << "]\n";
     std::cout << "\t less than => "<<nd1<< "*"  <<nd2<< "*"  <<nd3<< " = " <<(*nPart)<< " particles to be generated\n";
+    */
 
     // memory allocation
     pos.reserve(pos.size() + (*nPart)*3);

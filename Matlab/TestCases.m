@@ -231,7 +231,7 @@ case 2
         end
         
         % Compute the hydrostatic pressure
-        for j=1:nbrWindows
+        for j=1:nbrWindows+1
             height_min = (j-1)*(Height(i)/nbrWindows);%(nbrWindows-(j-1))*(Height/nbrWindows);
             height_max = (j)*(Height(i)/nbrWindows);%(nbrWindows-(j))*(Height/nbrWindows);
             WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min));
@@ -286,7 +286,8 @@ DATA.CPUtime = CPU_Time;
 DATA.memory = Memory;
 DATA.memoryPeak = Memory_Peak;
 DATA.time = time;
-DATA.height = H;
+DATA.Height = Height;
+DATA.H = H;
 DATA.meanDensity = mean_Density;
 DATA.stdDensity = std_Density;
 DATA.meanHydrostatic = mean_Hydrostatic;
@@ -307,32 +308,32 @@ case 3
     % Import data
 
 
-    % Plot
-    figure(20)
-    hold on
-    plot();
-        %axis([0 0 0 0])
-        title('')
-        xlabel('')
-        ylabel('')
-        legend('')
-        grid
-        %print(strcat(path,'StationaryTank'), '-depsc')
-    hold off  
-
-% Save data
-DATA.name = dirName(1).name;
-DATA.path = nameExperiment;
-DATA.nbrFiles = nstep;
-DATA.timeStep = timeStep;
-DATA.timeWrite = timeWrite;
-DATA.timeSimu = timeSimu;
-DATA.CPUtime = CPU_Time;
-DATA.memory = Memory;
-DATA.memoryPeak = Memory_Peak;
-DATA.time = time;
-
-save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
+%     % Plot
+%     figure(20)
+%     hold on
+%     plot();
+%         %axis([0 0 0 0])
+%         title('')
+%         xlabel('')
+%         ylabel('')
+%         legend('')
+%         grid
+%         %print(strcat(path,'StationaryTank'), '-depsc')
+%     hold off  
+% 
+% % Save data
+% DATA.name = dirName(1).name;
+% DATA.path = nameExperiment;
+% DATA.nbrFiles = nstep;
+% DATA.timeStep = timeStep;
+% DATA.timeWrite = timeWrite;
+% DATA.timeSimu = timeSimu;
+% DATA.CPUtime = CPU_Time;
+% DATA.memory = Memory;
+% DATA.memoryPeak = Memory_Peak;
+% DATA.time = time;
+% 
+% save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
     
 %% Not Valid Experiment

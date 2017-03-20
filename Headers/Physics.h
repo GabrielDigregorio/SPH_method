@@ -66,8 +66,9 @@ double gethFromkh(Kernel kernelType, double kh);
 // Init.cpp
 void speedInit(Field* field,Parameter* parameter);
 void densityInit(Field* field,Parameter* parameter);
+void pressureInit(Field* field,Parameter* parameter);
 void pressureComputation(Field* field,Parameter* parameter);
-void massInit(Field* field,Parameter* parameter);
+void massInit(Field* field,Parameter* parameter,std::vector<double> &vol);
 
 // updateMovingSpeed.cpp
 void updateMovingSpeed(Field* field, Parameter* parameter, double t);
