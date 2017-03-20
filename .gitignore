@@ -16,5 +16,6 @@ sph
 *h.gch
 Makefile
 test.*
+Test.*
 .DS_Store
 !CMakeLists.txt
