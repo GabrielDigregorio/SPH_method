@@ -22,7 +22,7 @@
     k=0.001
     T=2
     densityRef=1000.0
-    B=128
+    B=128000
     gamma=7.0
     g=9.81
     writeInterval=0.002
