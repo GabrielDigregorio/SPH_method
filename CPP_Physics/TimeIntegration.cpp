@@ -78,8 +78,6 @@ bool timeIntegration(Field* currentField, Field* nextField,
                     for (int i = 0; i <= 2; i++)
                     {
                         nextField->speed[3*particleID + i] = currentField->speed[3*particleID + i] + parameter->k*speedDerivative[i];
-                        //std::cout << speedDerivative[i] << std::endl;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        //std::cout << currentField->speed[3*particleID + i] << std::endl;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
                 }
                 break;
@@ -98,7 +96,6 @@ bool timeIntegration(Field* currentField, Field* nextField,
                 for (int i = 0; i <= 2; i++)
                 {
                     nextField->pos[3*particleID + i] = currentField->pos[3*particleID + i] + parameter->k*currentField->speed[3*particleID + i];
-                    //std::cout << currentField->speed[3*particleID + i] << std::endl;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 }
             }
             timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
