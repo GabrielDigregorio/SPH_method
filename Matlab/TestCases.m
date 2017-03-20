@@ -47,9 +47,13 @@ end
     Str3 = char(InitExperiment.textdata(14));
     Key3 = 'Number of Particules (nFree/nMoving/nFixed) : ';             
     Index1 = strfind(Str1, Key1); Index2 = strfind(Str2, Key2); Index3 = strfind(Str3, Key3);
+    
+    % Domain (l and u)
     l     = sscanf(Str1(Index1(1) + length(Key1):end), '%g %g %g', 3);
     u     = sscanf(Str2(Index2(1) + length(Key2):end), '%g %g %g', 3);
-    limit = sscanf(Str3(Index3(1) + length(Key3):end), '%g %g %g', 3);
+    
+    % Number of particules (nFree, nMoving and nFixed)
+    limit = sscanf(Str3(Index3(1) + length(Key3):end), '%g %g %g', 3); 
 
     
     for i=1 : nstep 
@@ -205,7 +209,7 @@ case 2
     % Parameters
     g = 9.81;
     z0_center = 100; %[m]
-    nbrWindows = 5;
+    nbrWindows = 6;
     % Cube:
 
 
@@ -221,7 +225,7 @@ case 2
         Zmin = min(Experiment.data(1:limit(1),3));
         
         % Height of the swimming pool
-        Height = Zmin - Zmax;
+        Height = Zmax - Zmin;
         
         % Sort by height
         [Experiment.data(1:limit(1),3), SortIndex] = sort(Experiment.data(1:limit(1),3));
@@ -231,21 +235,23 @@ case 2
         
         % Compute the hydrostatic pressure
         for j=1:nbrWindows
-            height_min = (nbrWindows-(j-1))*(Height/nbrWindows);
-            height_max = (nbrWindows-(j))*(Height/nbrWindows);
+            height_min = (j-1)*(Height/nbrWindows);%(nbrWindows-(j-1))*(Height/nbrWindows);
+            height_max = (j)*(Height/nbrWindows);%(nbrWindows-(j))*(Height/nbrWindows);
             WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min));
             WindowsUp = max(find(Experiment.data(1:limit(1),3) <= height_max));
             
             H(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,3));
-            Density(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,7));
-            Hydrostatic(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,8));
+            mean_Density(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,7));
+            std_Density(i,j)= std(Experiment.data(WindowsDown:WindowsUp,7));
+            mean_Hydrostatic(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,8));
+            std_Hydrostatic(i,j)= std(Experiment.data(WindowsDown:WindowsUp,8));
         end
     end
 
 figure(1)
 hold on
     for i=[1 floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
-        plot(H(i,:), Density(i,:))
+        errorbar(H(i,:), mean_Density(i,:),std_Density(i,:))
     end   
     %axis([0 1 2 3])
     title('Density')
@@ -258,14 +264,15 @@ hold off
 
 figure(2)
 hold on
+    plot(H(i,:), 1000*9.81*(Height-H(i,:)), '*', 'color', 'k')
     for i=[1 floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
-        plot(H(i,:), Hydrostatic(i,:))
+        errorbar(H(i,:), mean_Hydrostatic(i,:), std_Hydrostatic(i,:))
     end   
     %axis([0 1 2 3])
     title('Hydrostatic Pressure')
     xlabel('Height [m]')
-    ylabel(' Hydrostatic Pressure [kg/m^3]')
-    legend('t = 0 [s]', 't = end/4 [s]', 't = end/2 [s]', 't = 3*end/4 [s]', 't = end [s]')
+    ylabel(' Hydrostatic Pressure [Pa]')
+    legend('Analytic = rho*g*h','t = 0 [s]', 't = end/4 [s]', 't = end/2 [s]', 't = 3*end/4 [s]', 't = end [s]')
     grid
     %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
 hold off   
@@ -282,7 +289,10 @@ DATA.memory = Memory;
 DATA.memoryPeak = Memory_Peak;
 DATA.time = time;
 DATA.height = H;
-DATA.hydrostatic = Hydrostatic;
+DATA.meanDensity = mean_Density;
+DATA.stdDensity = std_Density;
+DATA.meanHydrostatic = mean_Hydrostatic;
+DATA.stdHydrostatic = std_Hydrostatic;
 
 save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
