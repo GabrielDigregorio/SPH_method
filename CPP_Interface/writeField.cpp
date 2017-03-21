@@ -64,23 +64,24 @@ void writeField(Field* field, double t, Parameter* parameter,
     // Save results to disk (ParaView or Matlab)
     switch (parameter->format){
 
-    case 1 : // .vtk in ParaView
+    case ParaView : // .vtk in ParaView
         paraView(filename, t, field->pos, scalars, vectors);
         //return ;
     break;
 
-    case 2 : // .txt in Matlab
+    case Matlab : // .txt in Matlab
         matlab(filename, parameterFilename, geometryFilename,  t, parameter, field);
         //return ;
     break;
 
-    case 3 : // .vtk in ParaView and .txt in Matlab
+    case Both : // .vtk in ParaView and .txt in Matlab
         paraView(filename, t, field->pos, scalars, vectors);
         matlab(filename, parameterFilename, geometryFilename, t, parameter, field);
         //return ;
     break;
 
-    default: ;
+    default:
+        std::cout<<"Non existing writing type."<<std::endl;
     }
 }
 

@@ -36,12 +36,12 @@ double Wab(double r, double kh, Kernel myKernel)
     double h;
 
     switch (myKernel){
-    case 1 : // Gausian Kernel
+    case Gaussian : // Gausian Kernel
         h = kh;
         alphaD = 1.0/(pow(M_PI,1.5)*h*h*h);
         return alphaD*exp(-(r/h)*(r/h));
     break;
-    case 2 : // Bell-shaped Kernel
+    case Bell_shaped : // Bell-shaped Kernel
         h = kh;
         alphaD = 6.5625/(M_PI*h*h*h);
         if(r < h)
@@ -49,7 +49,7 @@ double Wab(double r, double kh, Kernel myKernel)
         else
             return 0.0;
     break;
-    case 3 : // Cubic spline Kernel
+    case Cubic_spline : // Cubic spline Kernel
         h = kh/2.0;
         alphaD = 1.5/(M_PI*h*h*h);
         if(r < h) // never negative...
@@ -59,7 +59,7 @@ double Wab(double r, double kh, Kernel myKernel)
         else
             return 0.0;
     break;
-    case 4 : // Quadratic Kernel
+    case Quadratic : // Quadratic Kernel
         h = kh/2.0;
         alphaD = 1.25/(M_PI*h*h*h);
         if(r < 2*h)
@@ -67,7 +67,7 @@ double Wab(double r, double kh, Kernel myKernel)
         else
             return 0.0;
     break;
-    case 5 : // Quintic Kernel
+    case Quintic : // Quintic Kernel
         h = kh/2.0;
         alphaD = 1.3125/(M_PI*h*h*h);
         if(r < 2*h)
@@ -75,7 +75,7 @@ double Wab(double r, double kh, Kernel myKernel)
         else
             return 0.0;
     break;
-    case 6 : // Quintic spline Kernel
+    case Quintic_spline : // Quintic spline Kernel
         h = kh/3.0;
         alphaD = 3.0/(359.0*M_PI*h*h*h);
         if(r < h)
@@ -103,12 +103,12 @@ double gradWab(double r, double kh, Kernel myKernel)
     double h;
 
     switch (myKernel){
-    case 1 : // Gausian Kernel
+    case Gaussian : // Gausian Kernel
         h = kh;
         alphaD = 1.0/(pow(M_PI,3.0/2.0)*h*h*h);
         return (alphaD/h)*(-2.0*(r/h))*exp(-(r/h)*(r/h));
     break;
-    case 2 : // Bell-shaped Kernel
+    case Bell_shaped : // Bell-shaped Kernel
         h = kh;
         alphaD = 6.5625/(M_PI*h*h*h);
         if(r < h)
@@ -116,7 +116,7 @@ double gradWab(double r, double kh, Kernel myKernel)
         else
             return 0.0;
     break;
-    case 3 : // Cubic spline Kernel
+    case Cubic_spline : // Cubic spline Kernel
         h = kh/2.0;
         alphaD = 1.5/(M_PI*h*h*h);
         if(r < h)
@@ -126,7 +126,7 @@ double gradWab(double r, double kh, Kernel myKernel)
         else
             return 0.0;
     break;
-    case 4 : // Quadratic Kernel
+    case Quadratic : // Quadratic Kernel
         h = kh/2.0;
         alphaD = 1.25/(M_PI*h*h*h);
         if(r < 2*h)
@@ -134,7 +134,7 @@ double gradWab(double r, double kh, Kernel myKernel)
         else
             return 0.0;
     break;
-    case 5 : // Quintic Kernel
+    case Quintic : // Quintic Kernel
         h = kh/2.0;
         alphaD = 1.3125/(M_PI*h*h*h);
         if(r < 2*h)
@@ -142,7 +142,7 @@ double gradWab(double r, double kh, Kernel myKernel)
         else
             return 0.0;
     break;
-    case 6 : // Quintic spline Kernel
+    case Quintic_spline : // Quintic spline Kernel
         h = kh/3.0;
         alphaD = 3.0/(359.0*M_PI*h*h*h);
         if(r < h)
@@ -164,17 +164,17 @@ double gradWab(double r, double kh, Kernel myKernel)
 
 double gethFromkh(Kernel kernelType, double kh){
     switch (kernelType){
-    case 1 : // Gausian Kernel
+    case Gaussian : // Gausian Kernel
         return kh; // Attention, different signification for Gaussian!
-    case 2 : // Bell-shaped Kernel
+    case Bell_shaped : // Bell-shaped Kernel
         return kh;
-    case 3 : // Cubic spline Kernel
+    case Cubic_spline : // Cubic spline Kernel
         return kh/2.0;
-    case 4 : // Quadratic Kernel
+    case Quadratic : // Quadratic Kernel
         return kh/2.0;
-    case 5 : // Quintic Kernel
+    case Quintic : // Quintic Kernel
         return kh/2.0;
-    case 6 : // Quintic spline Kernel
+    case Quintic_spline : // Quintic spline Kernel
         return kh/3.0;
     default :
         std::cout<< "Non existing kernel.\n";
