@@ -242,7 +242,7 @@ int readParameter(std::string filename, Parameter* parameter)
         std::cout << "Wrong parameter file type.\n" << std::endl;
         return 1;
     }
-    while(true)
+    while(inFile.peek() != std::ifstream::traits_type::eof())
     {
         std::getline(inFile, buf);
         buf.erase(std::remove(buf.begin(), buf.end(), ' '),buf.end());
