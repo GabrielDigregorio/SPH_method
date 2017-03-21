@@ -54,13 +54,15 @@ end
     
     % Number of particules (nFree, nMoving and nFixed)
     limit = sscanf(Str3(Index3(1) + length(Key3):end), '%g %g %g', 3); 
-
     
+figure(100)
+    plot(InitExperiment.data(:,3), InitExperiment.data(:,8))
+
     for i=1 : nstep 
         
         % Open File nbr i
         %disp(dirName(i+1).name);
-        filename=strcat(nameExperiment,'/',dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i).name);
         Experiment = importdata(filename); % Import Data
         
         % Compute time of the experiment
@@ -105,7 +107,7 @@ case 1
     for i=1 : nstep 
         % Open File nbr i
         %disp(dirName(i+1).name);
-        filename=strcat(nameExperiment,'/',dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i).name);
         Experiment = importdata(filename); % Import Data
         
         % Compute the error to analytical solution 
@@ -230,20 +232,29 @@ case 2
             Experiment.data(1:limit(1),j) = Experiment.data(SortIndex,j);
         end
         
+
+    
         % Compute the hydrostatic pressure
         for j=1:nbrWindows+1
             height_min = (j-1)*(Height(i)/nbrWindows);%(nbrWindows-(j-1))*(Height/nbrWindows);
             height_max = (j)*(Height(i)/nbrWindows);%(nbrWindows-(j))*(Height/nbrWindows);
-            WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min));
-            WindowsUp = max(find(Experiment.data(1:limit(1),3) <= height_max));
+            WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min))
+            WindowsUp = max(find(Experiment.data(1:limit(1),3) <= height_max))
             
-            H(i,j) = mean(Experiment.data(WindowsDown:WindowsUp,3));
+            H(i,j) = height_min + (height_max - height_min)/2;%mean(Experiment.data(WindowsDown:WindowsUp,3));
             mean_Density(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,7));
             std_Density(i,j)= std(Experiment.data(WindowsDown:WindowsUp,7));
             mean_Hydrostatic(i,j)= mean(Experiment.data(WindowsDown:WindowsUp,8));
             std_Hydrostatic(i,j)= std(Experiment.data(WindowsDown:WindowsUp,8));
         end
+        
+        if(i==1)
+            figure(101)
+            plot(H(i,:), mean_Hydrostatic(i,:))
+        end
+        
     end
+
 
 figure(1)
 hold on
@@ -264,7 +275,7 @@ hold on
     for i=[1 floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
         errorbar(H(i,:), mean_Hydrostatic(i,:), std_Hydrostatic(i,:),'LineWidth', 2)
     end
-    plot(H(i,:), 1000*9.81*(Height(i)-H(i,:)), '*', 'color', 'k')
+    plot(H(i,:), 1000*9.81*(Height(length(H(:,1))-1)-H(i,:)), '*', 'color', 'k')
     
     %axis([0 1 2 3])
     title('Hydrostatic Pressure')

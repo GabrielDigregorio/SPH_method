@@ -18,11 +18,11 @@
 % speedLaw = To be determined, will dictate the behaviour of moving boundaries
 %********************************************
 #param
-    kh=0.024
+    kh=0.06
     k=0.00001
     T=2
     densityRef=1000.0
-    B=128000
+    B=1280000
     gamma=7.0
     g=9.81
     writeInterval=0.002
@@ -37,7 +37,7 @@
     kernel=2
     viscosityModel=0
     integrationMethod=0
-    densityInitMethod=1
+    densityInitMethod=0
     stateEquationMethod=0
     massInitMethod=0
     speedLaw=0

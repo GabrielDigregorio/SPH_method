@@ -18,14 +18,14 @@
 % speedLaw = To be determined, will dictate the behaviour of moving boundaries
 %********************************************
 #param
-    kh=0.06
-    k=0.01
+    kh=1
+    k=0.1
     T=1
     densityRef=1000.0
     B=12800000.0
     gamma=7.0
     g=9.81
-    writeInterval=0.01
+    writeInterval=0.1
     charactTime=1.0
     c=300.0
     alpha=1.0
