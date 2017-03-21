@@ -84,11 +84,11 @@ end
     
     
     % Put file in a new directory
-%     if(input('MoveFile to an other folder (1 for yes, 0 for no): ' ))
-%     mkdir ../build/Results/FreeFallingCube
-%     movefile ../build/Results/FreeFallingCube_*.txt ../build/Results/FreeFallingCube
-%     movefile ../build/Results/FreeFallingCube_*.vtk ../build/Results/FreeFallingCube
-%     end
+    %     if(input('MoveFile to an other folder (1 for yes, 0 for no): ' ))
+    %     mkdir ../build/Results/FreeFallingCube
+    %     movefile ../build/Results/FreeFallingCube_*.txt ../build/Results/FreeFallingCube
+    %     movefile ../build/Results/FreeFallingCube_*.vtk ../build/Results/FreeFallingCube
+    %     end
 
 
 
@@ -123,8 +123,6 @@ case 1
     figure(1)
     hold on
     plot(time, Analytic, time, MeanZ_experiment);
-    % polyfit...
-        %axis([0 0 0 0])
         title('')
         xlabel('Time [s]')
         ylabel('Z')
@@ -139,8 +137,6 @@ case 1
     figure(2)
     hold on
     plot(time, error, '*');
-    % polyfit...
-        %axis([0 0 0 0])
         title('')
         xlabel('Time [s]')
         ylabel('Error in %')
@@ -149,22 +145,21 @@ case 1
         %print('FreeFallingCube_error', '-depsc')
     hold off  
     
-%     figure(3)
-%     hold on
-%     plot(time, XY_move, '*');
-%         %axis([0 0 0 0])
-%         title('')
-%         xlabel('Time [s]')
-%         ylabel('Error in %')
-%         legend('')
-%         grid
-%         %print(strcat(path,'FreeFallingCube_XY_move'), '-depsc')
-%     hold off  
+    %     figure(3)
+    %     hold on
+    %     plot(time, XY_move, '*');
+    %         %axis([0 0 0 0])
+    %         title('')
+    %         xlabel('Time [s]')
+    %         ylabel('Error in %')
+    %         legend('')
+    %         grid
+    %         %print(strcat(path,'FreeFallingCube_XY_move'), '-depsc')
+    %     hold off  
     
     figure(4)
     hold on
     plot(time, Memory*1.25e-7, time, Memory_Peak*1.25e-7);
-        %axis([0 1 2 3])
         title('Memory Consumption')
         xlabel('Time [s]')
         ylabel('Memory Consumption [MB]')
@@ -176,7 +171,6 @@ case 1
     figure(5)
     hold on
     plot(time, CPU_Time);
-        %axis([0 1 2 3])
         title('Time Consumption')
         xlabel('Time Experiment[s]')
         ylabel('CPU Time [s]')
@@ -264,7 +258,7 @@ hold on
     legend('t = 0 [s]', 't = end/4 [s]', 't = end/2 [s]', 't = 3*end/4 [s]', 't = end [s]')
     grid
     %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
-hold off   
+    hold off   
 
 figure(2)
 hold on
@@ -288,7 +282,7 @@ hold on
     grid
     box on
     %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
-hold off   
+    hold off   
 
 % Save data
 DATA.name = dirName(1).name;

@@ -74,7 +74,8 @@ switch(choice)
         disp(['Clic on directory: ']);
         nameExperiment = uigetdir('../build/Results/');
         exit = TestCases(nameExperiment, n, path);
-    
+        loop=0;
+        
     case 5 % Edit File
         cd ..; cd Playgrounds/;
         p = input('NEW Parameter file name: ','s'); p = strcat(p, '.kzr ');
