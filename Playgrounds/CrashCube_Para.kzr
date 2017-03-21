@@ -19,8 +19,8 @@
 %********************************************
 #param
    kh=0.12
-   k=0.01
-   T=3
+   k=0.0001
+   T=1
    densityRef=1000.0
    B=1280000
    gamma=7.0
@@ -41,5 +41,5 @@
    stateEquationMethod=0
    massInitMethod=0
    speedLaw=0
-   format=3
+   format=1
 #END_F
