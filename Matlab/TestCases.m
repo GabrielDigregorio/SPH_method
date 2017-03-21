@@ -17,8 +17,8 @@ end
 %addpath(genpath('../build/Results/'))
 
     % Number of files to read
-    dirName = dir([nameExperiment, '\*.txt']); %list all directory with.txt
-    nstep = length(dir([nameExperiment, '\*.txt']))-1 %[-]
+    dirName = dir([nameExperiment, '/*.txt']); %list all directory with.txt
+    nstep = length(dir([nameExperiment, '/*.txt']))-1 %[-]
 
     % Import data at t=0
     filename=strcat(nameExperiment,'/',dirName(1).name);
