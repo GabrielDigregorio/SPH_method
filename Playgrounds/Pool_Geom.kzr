@@ -45,75 +45,75 @@ lz = -0.1
    L=0.4
    W=0.4
    H=0.4
-#brick
-   %param
-   c=2
-   s=0.05
-   r=0
-   %coord
-   x=0
-   y=0
-   z=0
-   %dimen
-   L=0.6
-   W=0.6
-   H=0.1
 
 #brick
-   %param
-   c=2
-   s=0.05
-   r=0
-   %coord
-   x=0.25
-   y=0
-   z=0.3
-   %dimen
-   L=0.1
-   W=0.5
-   H=0.5
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=0
+    y=0
+    z=0
+    %dimen
+    L=0.6
+    W=0.6
+    H=0.1
 
 #brick
-   %param
-   c=2
-   s=0.05
-   r=0
-   %coord
-   x=-0.25
-   y=0
-   z=0.3
-   %dimen
-   L=0.1
-   W=0.5
-   H=0.5
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=0.25
+    y=0
+    z=0.3
+    %dimen
+    L=0.1
+    W=0.5
+    H=0.5
 
 #brick
-   %param
-   c=2
-   s=0.05
-   r=0
-   %coord
-   x=0
-   y=0.25
-   z=0.3
-   %dimen
-   L=0.6
-   W=0.1
-   H=0.5
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=-0.25
+    y=0
+    z=0.3
+    %dimen
+    L=0.1
+    W=0.5
+    H=0.5
 
 #brick
-   %param
-   c=2
-   s=0.05
-   r=0
-   %coord
-   x=0
-   y=-0.25
-   z=0.3
-   %dimen
-   L=0.6
-   W=0.1
-   H=0.5
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=0
+    y=0.25
+    z=0.3
+    %dimen
+    L=0.6
+    W=0.1
+    H=0.5
 
+#brick
+    %param
+    c=2
+    s=0.05
+    r=0
+    %coord
+    x=0
+    y=-0.25
+    z=0.3
+    %dimen
+    L=0.6
+    W=0.1
+    H=0.5
 
 #END_G
