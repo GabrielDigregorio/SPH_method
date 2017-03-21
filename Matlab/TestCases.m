@@ -111,7 +111,7 @@ case 1
         % Compute the error to analytical solution 
         Analytic(i) = mean(InitExperiment.data(:,3)) - g*(time(i)^2)/2; % MRUA
         MeanZ_experiment(i) = mean(abs(Experiment.data(:,3)));
-        error(i) = (MeanZ_experiment(i)-Analytic(i))./Analytic(i) *100; % error [%]
+        error(i) = abs((MeanZ_experiment(i)-Analytic(i))./Analytic(i) *100); % error [%]
         %XY_move(i) = sqrt(mean(  (InitExperiment.data(:,1) - Experiment.data(:,1)).^2  ...
                              % +  (InitExperiment.data(:,2) - Experiment.data(:,2)).^2   ));
      
