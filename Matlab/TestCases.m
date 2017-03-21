@@ -58,7 +58,7 @@ end
     % figure(100)
     %     plot(InitExperiment.data(:,3), InitExperiment.data(:,8))
 
-    for i=1 : nstep 
+    for i=1 : nstep
         
         % Open File nbr i
         %disp(dirName(i+1).name);
@@ -116,7 +116,6 @@ case 1
         error(i) = abs((MeanZ_experiment(i)-Analytic(i))./Analytic(i) *100); % error [%]
         %XY_move(i) = sqrt(mean(  (InitExperiment.data(:,1) - Experiment.data(:,1)).^2  ...
                              % +  (InitExperiment.data(:,2) - Experiment.data(:,2)).^2   ));
-     
     end
  
     
@@ -235,7 +234,7 @@ case 2
 
     
         % Compute the hydrostatic pressure
-        for j=1:nbrWindows
+        for j=1:nbrWindows+1
             height_min = (j-1)*(Height(i)/nbrWindows);%(nbrWindows-(j-1))*(Height/nbrWindows);
             height_max = (j)*(Height(i)/nbrWindows);%(nbrWindows-(j))*(Height/nbrWindows);
             WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min));
@@ -249,6 +248,8 @@ case 2
         end
         
     end
+
+
 
 
 figure(1)
@@ -267,17 +268,25 @@ hold off
 
 figure(2)
 hold on
-    for i=[1 floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
-        errorbar(H(i,:), mean_Hydrostatic(i,:), std_Hydrostatic(i,:),'LineWidth', 2)
+    plot(H(1,:), mean_Hydrostatic(1,:), '*','LineWidth', 2)
+    %i=[floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
+    for i=[floor(length(H(:,1))/2)  length(H(:,1))]
+        errorbar(H(i,:), mean_Hydrostatic(i,:), std_Hydrostatic(i,:), '*','LineWidth', 2)
     end
-    plot(H(i,:), 1000*9.81*(Height(length(H(:,1))-1)-H(i,:)), '*', 'color', 'k')
-    
+    plot(H(i,:), 1000*9.81*(height_max -H(i,:)), 'color', 'k')
     %axis([0 1 2 3])
-    title('Hydrostatic Pressure')
-    xlabel('Height [m]')
-    ylabel(' Hydrostatic Pressure [Pa]')
-    legend('t = 0 [s]', 't = end/4 [s]', 't = end/2 [s]', 't = 3*end/4 [s]', 't = end [s]', 'Analytic = rho*g*h')
+    set(gca,'FontSize',22);
+    xlabel('Height [m]','FontSize',22,'Interpreter','latex');
+    ylabel('Hydrostatic Pressure [Pa]','FontSize',22,'Interpreter','latex');
+    NumTicks=5;
+    L = get(gca,'XLim');
+    set(gca,'XTick',linspace(L(1),L(2),NumTicks))
+    L = get(gca,'YLim');
+    set(gca,'YTick',linspace(L(1),L(2),NumTicks))
+    legendInfo={'t = 0 [s]'; 't = 1 [s]';'t = 2 [s]';'Analytical solution'};
+    legend(legendInfo,'Interpreter','latex','Location','Best');
     grid
+    box on
     %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
 hold off   
 
