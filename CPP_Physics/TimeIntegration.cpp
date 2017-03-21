@@ -25,7 +25,7 @@ bool timeIntegration(Field* currentField, Field* nextField,
     Parameter* parameter, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
     unsigned int n, std::vector<double> &timeInfo)
 {
-  // CPU time information
+    // CPU time information
     std::clock_t start;
 
     // Sort the particles at the current time step
@@ -65,7 +65,7 @@ bool timeIntegration(Field* currentField, Field* nextField,
                     // Momentum equation only for free particles
                     start = std::clock();
                     if(particleID < currentField->nFree)
-                        momentum(particleID, neighbors, kernelGradients, currentField, parameter, speedDerivative);
+                    momentum(particleID, neighbors, kernelGradients, currentField, parameter, speedDerivative);
                     timeInfo[3] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
                     // Integration
@@ -90,9 +90,9 @@ bool timeIntegration(Field* currentField, Field* nextField,
 
                 break;
 
-            default:
+                default:
                 std::cout << "Integration method not coded.\n";
-            return EXIT_FAILURE;
+                return EXIT_FAILURE;
             }
             // Position ( update only for non fixed particles )
             start = std::clock();
