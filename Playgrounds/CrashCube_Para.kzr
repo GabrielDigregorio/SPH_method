@@ -19,13 +19,13 @@
 %********************************************
 #param
    kh=0.12
-   k=0.0001
+   k=0.00001
    T=1
    densityRef=1000.0
    B=1280000
    gamma=7.0
    g=9.81
-   writeInterval=0.02
+   writeInterval=0.01
    charactTime=1.0
    c=100
    alpha=0.1
