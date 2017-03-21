@@ -189,8 +189,7 @@ void matlab(std::string const &filename,
     f << std::scientific;
 
     //Record Time
-    double duration = ( std::clock() - startExperimentTimeClock ) / (double) CLOCKS_PER_SEC;;
-
+    double duration = ( std::clock() - startExperimentTimeClock ) / (double) CLOCKS_PER_SEC;
     // header
     f << "#EXPERIMENT: " << filename << std::endl;
     f << std::endl;

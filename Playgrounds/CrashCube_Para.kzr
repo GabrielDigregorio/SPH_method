@@ -25,7 +25,7 @@
    B=1280000
    gamma=7.0
    g=9.81
-   writeInterval=0.01
+   writeInterval=0.005
    charactTime=1.0
    c=100
    alpha=0.1
