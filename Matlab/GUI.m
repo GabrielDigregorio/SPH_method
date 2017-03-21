@@ -29,34 +29,34 @@ choice = input('Enter your choice number: ' ); disp(' ');
 
 switch(choice)
     case 1 % Compile:
-        cd ..; cd build\;
+        cd ..; cd build/;
         if(ispc) system('mingw32-make')
         elseif(isunix) system('make')
         else disp(['You are not allowed to compile... ']);
         end
-        cd ..; cd Matlab\;
+        cd ..; cd Matlab/;
         
     case 2 % Run:
         %if(strcmp(name,'DESKTOP-31TT348'))
            disp(['Choose among the list of Playgrounds: ']);
-           cd ..\Playgrounds\
+           cd ../Playgrounds/
            
            disp(['Clic on Parameter file: ']);
-           [p, pathname] = uigetfile({'*.kzr'},'\Playgrounds\');
+           [p, pathname] = uigetfile({'*.kzr'},'/Playgrounds/');
            
            disp(['Clic on Geometry file: ']);
-           [g, pathname] = uigetfile({'*.kzr'},'\Playgrounds\');
+           [g, pathname] = uigetfile({'*.kzr'},'/Playgrounds/');
            
-           p = strcat('..\Playgrounds\',p)
-           g = strcat('..\Playgrounds\',g)
+           p = strcat('../Playgrounds/',p)
+           g = strcat('../Playgrounds/',g)
            
            cd ../build/Results
            nameExperiment = input('Enter the name of the experiment: ','s');
            mkdir(nameExperiment);
            nameExperiment = strcat(nameExperiment,'/', nameExperiment);
            cd ..
-           system(char(strcat({'"sph.exe"'},{' '},p,{' '},g,{' '}, {nameExperiment})))
-           cd ..\Matlab\;
+           system(char(strcat({'"./sph"'},{' '},p,{' '},g,{' '}, {nameExperiment})))
+           cd ../Matlab/;
         %else disp(['You are not allowed to launch an experiment... ']);
         %end
         
@@ -76,7 +76,7 @@ switch(choice)
         exit = TestCases(nameExperiment, n, path);
     
     case 5 % Edit File
-        cd ..; cd Playgrounds\;
+        cd ..; cd Playgrounds/;
         p = input('NEW Parameter file name: ','s'); p = strcat(p, '.kzr ');
         if (exist(p, 'file')==0) 
             fid = fopen( p, 'wt' );
@@ -88,7 +88,7 @@ switch(choice)
             edit(g);
         end
         input('Enter: '); fclose(p); fclose(g);
-        cd ..; cd Matlab\;
+        cd ..; cd Matlab/;
         
     case 6 % Exit
         loop=0;
