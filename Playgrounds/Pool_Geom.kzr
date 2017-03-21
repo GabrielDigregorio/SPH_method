@@ -33,6 +33,7 @@ ly = -0.3
 lz = -0.1
 
 #brick
+<<<<<<< HEAD
    %param
    c=0
    s=0.05
@@ -45,6 +46,20 @@ lz = -0.1
    L=0.4
    W=0.4
    H=0.4
+=======
+    %param
+    c=0
+    s=0.02
+    r=0
+    %coord
+    x=0
+    y=0
+    z=0.26
+    %dimen
+    L=0.4
+    W=0.4
+    H=0.4
+>>>>>>> 3f755a6310fffad5281c2dc78c4be13cb9f65e58
 
 #brick
    %param
