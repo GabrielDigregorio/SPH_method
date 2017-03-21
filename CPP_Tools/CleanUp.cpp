@@ -1,23 +1,6 @@
 #include "Main.h"
 #include "Interface.h"
 
-// Clear Field structure
-void cleanField(Field* field)
-{
-    field->pos.clear();
-    field->speed.clear();
-    field->density.clear();
-    field->pressure.clear();
-    field->mass.clear();
-    delete field;
-}
-
-// Clear Parameter structure
-void cleanParameter(Parameter* parameter)
-{
-    delete parameter;
-}
-
 // Clear the boxes content
 void boxClear(std::vector<std::vector<int> > &boxes)
 {

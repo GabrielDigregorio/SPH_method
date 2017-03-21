@@ -5,9 +5,9 @@
 
 // Creat directory to store data
 // In: name of the directory
-std::string creatDirectory(std::string dirname){
+/* std::string creatDirectory(std::string dirname){
 
-   /* std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
+    std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
     DIR* dir = opendir(newdir.str().c_str());
     int i=1;
 
@@ -34,8 +34,8 @@ std::string creatDirectory(std::string dirname){
     //mkdir(newdir.str().c_str());
     outdir<< "/"<<dirname;
     std::cout <<"\n"<<  outdir.str()<<"\n";
-    return outdir.str();*/
-}
+    return outdir.str();
+} */
 
 /*
  * In: field = stucture containing value to write
@@ -64,23 +64,24 @@ void writeField(Field* field, double t, Parameter* parameter,
     // Save results to disk (ParaView or Matlab)
     switch (parameter->format){
 
-    case 1 : // .vtk in ParaView
+    case ParaView : // .vtk in ParaView
         paraView(filename, t, field->pos, scalars, vectors);
         //return ;
     break;
 
-    case 2 : // .txt in Matlab
+    case Matlab : // .txt in Matlab
         matlab(filename, parameterFilename, geometryFilename,  t, parameter, field);
         //return ;
     break;
 
-    case 3 : // .vtk in ParaView and .txt in Matlab
+    case Both : // .vtk in ParaView and .txt in Matlab
         paraView(filename, t, field->pos, scalars, vectors);
         matlab(filename, parameterFilename, geometryFilename, t, parameter, field);
         //return ;
     break;
 
-    default: ;
+    default:
+        std::cout<<"Non existing writing type."<<std::endl;
     }
 }
 

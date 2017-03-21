@@ -30,18 +30,34 @@ void densityInit(Field* field,Parameter* parameter)
 	double B = parameter->B;
 	double gamma = parameter->gamma;
 	double g = parameter->g;
+	//std::vector<double> z;
+	double zMax = 0.0;
+
 	switch (parameter->densityInitMethod)
 	{
 		case hydrostatic:
 
 		double H;
-		double zMax;
-		zMax = *(std::max_element(&field->pos[0],&field->pos[field->nFree+1])); // Find height of free surface.
-		for (int i = 0; i < field->nTotal; i++)
+		
+		for (int j = 0; j < field->nFree; j += 3)
 		{
-			H = zMax - field->pos[3*i+2];
+			if (field->pos[j] > zMax)
+			{
+				zMax = field->pos[j];
+			}
+			
+
+		}
+
+		for (int i = 0; i < field->nFree; i++)
+		{
+			H = zMax - field->pos[3 * i + 2];
 			double rho = (1 + (1 / B)*rho_0*g*H);
 			field->density.push_back(rho_0*pow(rho, 1.0 / gamma));
+		}
+		for (int k = field->nFree; k < field->nTotal; k++)
+		{
+			field->density.push_back(parameter->densityRef);
 		}
 		break;
 
