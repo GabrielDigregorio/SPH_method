@@ -47,8 +47,6 @@ double continuity(int particleID, std::vector<int>& neighbors, std::vector<doubl
 void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter, std::vector<double>& speedDerivative)
 {
 
-  speedDerivative.assign(3,0.0);
-
   std::vector<double> viscosity;
   viscosity.resize(neighbors.size());
   viscosityComputation(particleID, neighbors, currentField, parameter, viscosity);

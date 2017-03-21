@@ -19,7 +19,11 @@
 %********************************************
 #param
    kh=0.12
-   k=0.00001
+<<<<<<< HEAD
+   k=0.0001
+=======
+   k=0.0001
+>>>>>>> 16db639925e5ccfc1fd695207ec1c9963ce8fb7b
    T=1
    densityRef=1000.0
    B=1280000
@@ -41,5 +45,5 @@
    stateEquationMethod=0
    massInitMethod=0
    speedLaw=0
-   format=3
+   format=1
 #END_F

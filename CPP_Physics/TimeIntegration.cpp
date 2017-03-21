@@ -10,8 +10,10 @@
 *- currentField: field that contains all the information about step n-1
 *- nextField: field in which results of step n are stored
 *- parameter: pointer to the field containing the user defined parameters
-*- boxes: vector of vector????????????????????????????????????????????????????????????????????????????
-*- surrBoxesAll: vector of vector????????????????????????????????????????????????????????????????????
+*- boxes: vector of vectors of int, each vector is related to a given box and contains a list
+with the particles ID of the particles that are inside this box
+*- surrBoxesAll: vector of vector of int, each vector is related to a given box and contains
+a list with the box ID of the boxes that are adjacent to this box
 *- n: number of the current time step
 *- timeInfo: pointer to the array containing the duration of each part of the code
 *Output:
@@ -45,7 +47,7 @@ bool timeIntegration(Field* currentField, Field* nextField,
             int particleID = boxes[box][part];
             std::vector<int> neighbors;
             std::vector<double> kernelGradients;
-            std::vector<double> speedDerivative;//Size is invariant and equal to 3, we could replace it by vector and make momentum return a double* ?
+            std::vector<double> speedDerivative(3, 0.0);
 
             // Neighbor search
             findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, parameter->kernel);
