@@ -8,7 +8,7 @@
 
 
 // Kernel Types
-enum Kernel { Gaussian=1, Bell_shaped=2, Cubic_spline=3, Quadratic=4, Quintic=5, Quintic_spline=6 };
+enum Kernel {Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline};
 
 // model of viscosity formulation
 enum ViscosityModel {violeauArtificial};
@@ -29,7 +29,7 @@ enum MassInitMethod {violeau2012};
 enum SpeedLaw {constant, sine, exponential};
 
 // Write Format output
-enum Format { ParaView=1, Matlab=2, Both=3 };
+enum Format {ParaView, Matlab, Both};
 
 // charactTime = characteristic time of movement or period of oscillations
 

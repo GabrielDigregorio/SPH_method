@@ -10,8 +10,10 @@
 *- currentField: field that contains all the information about step n-1
 *- nextField: field in which results of step n are stored
 *- parameter: pointer to the field containing the user defined parameters
-*- boxes: vector of vector????????????????????????????????????????????????????????????????????????????
-*- surrBoxesAll: vector of vector????????????????????????????????????????????????????????????????????
+*- boxes: vector of vectors of int, each vector is related to a given box and contains a list
+with the particles ID of the particles that are inside this box
+*- surrBoxesAll: vector of vector of int, each vector is related to a given box and contains
+a list with the box ID of the boxes that are adjacent to this box
 *- n: number of the current time step
 *- timeInfo: pointer to the array containing the duration of each part of the code
 *Output:
@@ -45,16 +47,16 @@ bool timeIntegration(Field* currentField, Field* nextField,
             int particleID = boxes[box][part];
             std::vector<int> neighbors;
             std::vector<double> kernelGradients;
-            std::vector<double> speedDerivative;//Size is invariant and equal to 3, we could replace it by vector and make momentum return a double* ?
+            std::vector<double> speedDerivative(3, 0.0);
 
             // Neighbor search
             findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, parameter->kernel);
 
             timeInfo[1] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-            
+
             switch(parameter->integrationMethod){
                 case euler:
-                { 
+                {
                     // Continuity equation
                     start = std::clock();
                     double densityDerivative = continuity(particleID, neighbors, kernelGradients,currentField);
@@ -75,87 +77,15 @@ bool timeIntegration(Field* currentField, Field* nextField,
                         for (int i = 0; i <= 2; i++){
                             nextField->speed[3*particleID + i] = currentField->speed[3*particleID + i] + parameter->k*speedDerivative[i];
                         }
-                    } 
+                    }
                 }
                 break;
 
                 case RK2:
-                {
-                    // alpha=1: heuns
-                    // alpha=1/2: midpoint
-                    // alpha=2/3: Ralston
-                    double alpha=1.0; // to choose via struc param 
-                    // see wikipedia 
-                    // 1: 0  0
-                    // 2:alpha 0
-                    // next= 1-1/(2*alpha)   1/(2*alpha)
-                    // romain Runge kutta, 2 step 
 
-                    // // continuity
-                    double k=parameter->k;
-                    std::vector<double> u_vector_1={0.0,0.0,0.0};
-                    std::vector<double> u_vector_2={0.0,0.0,0.0};
-                    std::vector<double> speedDerivative={0.0,0.0,0.0};
-                    double temp_rho_2=0.0;
-                    double temp_rho_1=0.0;
-                    double rho_1=0.0;
-                    double rho_2=0.0;
-                    // evaluating speed field for the current particle 
-                
-                    for(int i=0; i<3; ++i){
-                       u_vector_1[i]=currentField->speed[3*particleID+i];
-                    }
-                    momentum(particleID, neighbors, kernelGradients,currentField,parameter, speedDerivative);
-                    for(int i=0; i<3; ++i){
-                        u_vector_2[i]=currentField->speed[3*particleID+i]+alpha*k*speedDerivative[i];
-                    }
-                    
-                    // calucling intermediate value for the RK2 formula
-                    temp_rho_1=continuity(particleID, neighbors, kernelGradients,currentField);
-                    for(int i=0; i<3; ++i){
-                        currentField->speed[3*particleID+i]  =u_vector_2[i];
-                    }
-                    temp_rho_2=continuity(particleID, neighbors, kernelGradients,currentField);
 
-                    // getting back normal veocity field (it should not be affected by the calculation of rho for instance)
-                    for(int i=0; i<3; ++i){
-                        currentField->speed[3*particleID+i]  =u_vector_1[i];
-                    }
-                    // calculating new density 
-                    nextField->density[particleID]= currentField->density[particleID]+ (1.0-1.0/(2.0*alpha))*temp_rho_1+1.0/(2.0*alpha)*temp_rho_2;
-                     
-                     
-                    // // momentum
-                    if(particleID < currentField->nFree)
-                    {
-                            rho_1=currentField->density[particleID];
-                            rho_2=currentField->density[particleID]+alpha*k*continuity(particleID, neighbors, kernelGradients,currentField);
-        
-                            // calucling intermediate value for the RK2 formul
-                            std::vector<double> temp_u_vector_1={0.0,0.0,0.0};
-                            std::vector<double> temp_u_vector_2={0.0,0.0,0.0};
-                            momentum(particleID, neighbors, kernelGradients,currentField,parameter, speedDerivative);
-                            
-                            for(int i=0; i<3; ++i){
-                                temp_u_vector_1[i]=speedDerivative[i];
-                            }
 
-                            currentField->density[particleID]=rho_2;
-                            momentum(particleID, neighbors, kernelGradients,currentField,parameter, speedDerivative);
-                            for(int i=0; i<3; ++i){
-                                temp_u_vector_2[i]=speedDerivative[i];
-                            }
-                            // getting back normal density (it should not be affected by the calculation of speed for instance)
-                            currentField->density[particleID]=rho_1;
-
-                            // calculating new speed
-                            for(int i=0; i<3; ++i){
-                                nextField->speed[3*particleID+i]  =currentField->speed[3*particleID+i]+(1.0-1.0/(2.0*alpha))*temp_u_vector_1[i]+1.0/(2.0*alpha)*temp_u_vector_2[i];
-                            }
-                    }       
-                } 
-            
-            break;
+                break;
 
             default:
                 std::cout << "Integration method not coded.\n";

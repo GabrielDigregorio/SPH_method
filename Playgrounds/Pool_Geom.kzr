@@ -33,18 +33,18 @@ ly = -0.3
 lz = -0.1
 
 #brick
-    %param
-    c=0
-    s=0.05
-    r=0
-    %coord
-    x=0
-    y=0
-    z=0.26
-    %dimen
-    L=0.4
-    W=0.4
-    H=0.4
+   %param
+   c=0
+   s=0.05
+   r=0
+   %coord
+   x=0
+   y=0
+   z=0.26
+   %dimen
+   L=0.4
+   W=0.4
+   H=0.4
 
 #brick
     %param
@@ -115,6 +115,5 @@ lz = -0.1
     L=0.6
     W=0.1
     H=0.5
-
 
 #END_G

@@ -57,7 +57,8 @@ int main(int argc, char *argv[])
     }
 
     // Read parameters
-    Parameter* parameter =  new Parameter();
+    Parameter parameterInstance;
+    Parameter* parameter = &parameterInstance;
     errorFlag = readParameter(parameterFilename, parameter);
     if(errorFlag == 1)
     {
@@ -68,7 +69,8 @@ int main(int argc, char *argv[])
     std::vector<double> volVector;
 
     // Read geometry
-    Field* currentField =  new Field();
+    Field currentFieldInstance;
+    Field* currentField=&currentFieldInstance;
     errorFlag = readGeometry(geometryFilename, currentField, &volVector); //Why sending adress of volVector ? Wouldn't it be more understable to pass it by reference ?
     if(errorFlag == 1)
     {
@@ -81,11 +83,10 @@ int main(int argc, char *argv[])
     densityInit(currentField, parameter);
     pressureInit(currentField,parameter);
     massInit(currentField,parameter,volVector);
-    //Here we could free volVector ??????????????????????????????????????
-
+    volVector.clear();
     // Creates field to store result of update
-    Field *nextField = new Field();
-    Field *tmpField;
+    Field nextFieldInstance;
+    Field* nextField=&nextFieldInstance;
     copyField(currentField, nextField);
 
     unsigned int nMax = (unsigned int) ceil(parameter->T/parameter->k);
@@ -159,11 +160,5 @@ int main(int argc, char *argv[])
     std::cout << "\t- TOTAL  \t" << ( std::clock() - startExperimentTimeClock ) / (double) CLOCKS_PER_SEC<<"\n";
     std::cout << "NB : Total - sum of times = time capture duration (!!)\n";
 
-    // Free all vectors and structurs
-    cleanField(currentField);
-    cleanField(nextField);
-    cleanParameter(parameter);
-
     return 0;
-
 }

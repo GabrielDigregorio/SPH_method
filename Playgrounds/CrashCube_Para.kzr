@@ -1,6 +1,6 @@
 #PARA1
 %********************************************
-% PLAYGROUND : Parameter Crash Cube
+% PLAYGROUND : Parameter example
 % #param
 %
 % kh = smothing length
@@ -19,27 +19,40 @@
 %********************************************
 #param
    kh=0.12
-   k=0.01
-   T=3
+<<<<<<< HEAD
+   k=0.00002
+   T=0.5
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+   k=0.0001
+=======
+   k=0.0001
+>>>>>>> 16db639925e5ccfc1fd695207ec1c9963ce8fb7b
+=======
+   k=0.0001
+>>>>>>> fdab54ad9d8de2daebee0b0f51ba1746ac200c3b
+   T=1
+>>>>>>> 3f755a6310fffad5281c2dc78c4be13cb9f65e58
    densityRef=1000.0
    B=1280000
    gamma=7.0
    g=9.81
-   writeInterval=0.02
+   writeInterval=0.01
    charactTime=1.0
    c=100
    alpha=0.1
    beta=0
    epsilon=0.1
-   movingDirectionX=2.1
-   movingDirectionY=2.2
-   movingDirectionZ=2.3
-   kernel=2
+   movingDirectionX=0
+   movingDirectionY=0
+   movingDirectionZ=0.5
+   kernel=0
    viscosityModel=0
    integrationMethod=0
-   densityInitMethod=1
+   densityInitMethod=0
    stateEquationMethod=0
    massInitMethod=0
    speedLaw=0
-   format=3
+   format=0
 #END_F
