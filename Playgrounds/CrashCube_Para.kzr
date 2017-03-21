@@ -20,7 +20,7 @@
 #param
    kh=0.12
    k=0.00001
-   T=0.5
+   T=0.25
    Ref=1000.0
    B=1280000
    gamma=7.0
@@ -41,5 +41,5 @@
    stateEquationMethod=0
    massInitMethod=0
    speedLaw=0
-   format=2
+   format=0
 #END_F

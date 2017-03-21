@@ -71,6 +71,7 @@ bool timeIntegration(Field* currentField, Field* nextField,
                     // Integration
                     //switch(parameter->integrationMethod){
                     //  case euler: // u_n = u_(n-1) + k * du/dt
+                    start = std::clock();
                     nextField->density[particleID] = currentField->density[particleID] + parameter->k*densityDerivative;
                     // Update speed only for Free particles
                     if(particleID < currentField->nFree){
@@ -78,6 +79,8 @@ bool timeIntegration(Field* currentField, Field* nextField,
                             nextField->speed[3*particleID + i] = currentField->speed[3*particleID + i] + parameter->k*speedDerivative[i];
                         }
                     }
+                    timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+
                 }
                 break;
 
@@ -92,6 +95,7 @@ bool timeIntegration(Field* currentField, Field* nextField,
             return EXIT_FAILURE;
             }
             // Position ( update only for non fixed particles )
+            start = std::clock();
             if( (particleID < currentField->nFree) || (particleID >= currentField->nFree + currentField->nFixed) )
             {
                 for (int i = 0; i <= 2; i++)
