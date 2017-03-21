@@ -199,8 +199,8 @@ void matlab(std::string const &filename,
     f << "Computer Name : "<< getenv("COMPUTERNAME") <<std::endl;
     f << "Username : "<< getenv("USERNAME") <<std::endl;
     #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
-    f << "Computer Name : "<< getenv("HOSTNAME") <<std::endl;
-    f << "Username : "<< getenv("USER") <<std::endl;
+    f << "Computer Name : None"<<std::endl;// To be implemented
+    f << "Username : None"<<std::endl;// To be implemented
     #else
     #error "Cannot define GetMemory( ) or GetMemoryProcessPeak( ) or GetMemoryProcess() for an unknown OS."
     #endif

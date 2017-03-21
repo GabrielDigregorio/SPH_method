@@ -41,5 +41,5 @@
    stateEquationMethod=0
    massInitMethod=0
    speedLaw=0
-   format=0
+   format=2
 #END_F
