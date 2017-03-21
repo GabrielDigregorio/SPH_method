@@ -35,7 +35,7 @@ lz = -0.1
 #brick
     %param
     c=0
-    s=0.08
+    s=0.02
     r=0
     %coord
     x=0
