@@ -20,7 +20,7 @@
 #param
    kh=0.06
    k=0.00001
-   T=2
+   T=1
    densityRef=1000.0
    B=1280000
    gamma=7.0

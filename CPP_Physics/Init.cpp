@@ -10,10 +10,10 @@
 *Decscription:
 *Initialise speed from field.
 */
-void speedInit(Field* field,Parameter* parameter)
+void speedInit(Field* field, Parameter* parameter)
 {
-	field->speed.assign(3*field->nTotal,0.0); // Initial state is zero speed; other choice could be implemented
-  if(field->nMoving != 0){updateMovingSpeed(field,parameter,0.0);}
+	field->speed.assign(3 * field->nTotal, 0.0); // Initial state is zero speed; other choice could be implemented
+	if (field->nMoving != 0) { updateMovingSpeed(field, parameter, 0.0); }
 }
 
 /*
@@ -23,7 +23,7 @@ void speedInit(Field* field,Parameter* parameter)
 *Decscription:
 *Initialise densities from field.
 */
-void densityInit(Field* field,Parameter* parameter)
+void densityInit(Field* field, Parameter* parameter)
 {
 	//Parameter withdrawal
 	double rho_0 = parameter->densityRef;
@@ -35,17 +35,16 @@ void densityInit(Field* field,Parameter* parameter)
 
 	switch (parameter->densityInitMethod)
 	{
-		case hydrostatic:
+	case hydrostatic:
 
 		double H;
-		
-		for (int j = 0; j < field->nFree; j += 3)
+
+		for (int j = 0; j < field->nFree; j++)
 		{
-			if (field->pos[j] > zMax)
+			if (field->pos[3*j+2] > zMax)
 			{
-				zMax = field->pos[j];
+				zMax = field->pos[3*j+2];
 			}
-			
 
 		}
 
@@ -54,6 +53,7 @@ void densityInit(Field* field,Parameter* parameter)
 			H = zMax - field->pos[3 * i + 2];
 			double rho = (1 + (1 / B)*rho_0*g*H);
 			field->density.push_back(rho_0*pow(rho, 1.0 / gamma));
+
 		}
 		for (int k = field->nFree; k < field->nTotal; k++)
 		{
@@ -61,8 +61,8 @@ void densityInit(Field* field,Parameter* parameter)
 		}
 		break;
 
-		case homogeneous:
-			field->density.assign(field->nTotal,rho_0);
+	case homogeneous:
+		field->density.assign(field->nTotal, rho_0);
 		break;
 		// A voir si on considère le cas d'un gas pft, nécéssite des parametres supplémentaires(T°,M)
 		/*
@@ -73,10 +73,9 @@ void densityInit(Field* field,Parameter* parameter)
 		H = z_max - field->pos[i];
 		double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H);
 		field->density.push_back(rho)
-	}
-
-}
-*/
+		}
+		}
+		*/
 	}
 }
 
@@ -87,10 +86,10 @@ void densityInit(Field* field,Parameter* parameter)
 *Decscription:
 *Initialise pressure from field.
 */
-void pressureInit(Field* field,Parameter* parameter)
+void pressureInit(Field* field, Parameter* parameter)
 {
-		field->pressure.resize(field->nTotal);
-		pressureComputation(field,parameter);
+	field->pressure.resize(field->nTotal);
+	pressureComputation(field, parameter);
 }
 
 /*
@@ -100,7 +99,7 @@ void pressureInit(Field* field,Parameter* parameter)
 *Decscription:
 *Compute pressure from field.
 */
-void pressureComputation(Field* field,Parameter* parameter)
+void pressureComputation(Field* field, Parameter* parameter)
 {
 	//Parameter withdrawal
 	double rho_0 = parameter->densityRef;
@@ -110,17 +109,22 @@ void pressureComputation(Field* field,Parameter* parameter)
 
 	switch (parameter->stateEquationMethod)
 	{
-		case quasiIncompressible:
+	case quasiIncompressible:
 
-		for (int i=0; i<field->nTotal; i++)
+		for (int i = 0; i<field->nFree; i++)
 		{
 			double rho = field->density[i];
-			double p = B*(pow(rho/rho_0,gamma)-1);
+			double p = B*(pow(rho / rho_0, gamma) - 1);
 			field->pressure[i] = p;
+		}
+
+		for (int j = field->nFree; j < field->nTotal; j++)
+		{
+			field->pressure[j] = 0.0;
 		}
 		break;
 
-		case perfectGas:
+	case perfectGas:
 		std::cout << "Perfect gas not yet implemented\n" << std::endl;
 		break;
 
@@ -134,11 +138,11 @@ void pressureComputation(Field* field,Parameter* parameter)
 *Decscription:
 *Initialise mass from field.
 */
-void massInit(Field* field,Parameter* parameter, std::vector<double> &vol)
+void massInit(Field* field, Parameter* parameter, std::vector<double> &vol)
 {
-	for (int i=0; i<field->nTotal; i++)
+	for (int i = 0; i<field->nTotal; i++)
 	{
-		double m = field->density[i]*vol[i];
+		double m = field->density[i] * vol[i];
 		field->mass.push_back(m);
 	}
 }
