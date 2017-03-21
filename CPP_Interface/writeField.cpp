@@ -54,7 +54,7 @@ void writeField(Field* field, double t, Parameter* parameter,
     std::map<std::string, std::vector<double> *> vectors;
 
     // Map particules
-    if(parameter->format==1 || parameter->format==3)
+    if(parameter->format==0 || parameter->format==2)
     {
         scalars["pressure"] = &field->pressure;
         scalars["density"]  = &field->density;
