@@ -103,7 +103,8 @@ int main(int argc, char *argv[])
 	if (parameter->adaptativeTimeStep == no)
 		std::cout << "Number of time steps = " << nMax << "\n" << std::endl;
 	else
-		std::cout << "Number of time steps = " << "not defined (adaptative time step)" << "\n" << std::endl; 
+        std::cout << "Number of time steps = " << "not defined (adaptative time step)" << "\n" << std::endl;
+
 	std::cout << "Number of free particles = " << currentField->nFree << "\n" << std::endl;
 	std::cout << "Number of fixed particles = " << currentField->nFixed << "\n" << std::endl;
 	std::cout << "Number of particles with imposed speed = " << currentField->nMoving << "\n" << std::endl;
@@ -139,13 +140,12 @@ int main(int argc, char *argv[])
 			surrBoxesAll.resize(0);// VERY BAD, TO CHANGE !!! How to do this properly ?
 			boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
 			timeInfo[1] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
-		}
-			//std::cout << "timestep 0" << std::endl;
-		reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, (n-1)*parameter->k,parameter->k, timeInfo);
+        }
+        reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
 
 		// Write field when needed
 		start = std::clock();
-		if (writeCount*parameter->writeInterval <= n*parameter->k)
+    if (writeCount*parameter->writeInterval <= currentTime)
 		{
 			writeField(nextField, n, parameter, parameterFilename, geometryFilename, experimentFilename);
 			writeCount++;

@@ -17,8 +17,8 @@ enum ViscosityModel {violeauArtificial, NB_VISCOSITY_VALUE};
 // integrationMethod = euler ou RK2
 enum IntegrationMethod {euler, RK2, NB_INTEGRATION_VALUE};
 
-// integrationMethod = euler ou RK2
-enum AdaptativeTimeStep {no, yes};
+// AdaptativeTimeStep
+enum AdaptativeTimeStep {no, yes, NB_ADAPTATIVE_VALUE};
 
 // densityInitMethod = hydrosatic, etc.
 enum DensityInitMethod {hydrostatic, homogeneous, NB_DENSITYINIT_VALUE};
