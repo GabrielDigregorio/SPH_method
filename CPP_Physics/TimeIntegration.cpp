@@ -65,7 +65,7 @@ bool timeIntegration(Field* currentField, Field* nextField,
                     // Momentum equation only for free particles
                     start = std::clock();
                     if(particleID < currentField->nFree)
-                    momentum(particleID, neighbors, kernelGradients, currentField, parameter, speedDerivative);
+                        momentum(particleID, neighbors, kernelGradients, currentField, parameter, speedDerivative);
                     timeInfo[3] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
                     // Integration

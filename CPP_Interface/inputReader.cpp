@@ -10,7 +10,7 @@
 
 #define N_UL 3
 #define N_DATA 9
-#define N_PARAM 24
+#define N_PARAM 25
 
 enum geomType{cube,cylinder,sphere};
 enum boundCondition{freePart, movingPart, fixedPart};
@@ -263,53 +263,55 @@ int readParameter(std::string filename, Parameter* parameter)
                     if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
                     {
                         if(cnt==0)
-                        parameter->kh=atof(valueArray);
+                            parameter->kh=atof(valueArray);
                         if(cnt==1)
-                        parameter->k=atof(valueArray);
+                            parameter->k=atof(valueArray);
                         if(cnt==2)
-                        parameter->T=atof(valueArray);
+                            parameter->T=atof(valueArray);
                         if(cnt==3)
-                        parameter->densityRef=atof(valueArray);
+                            parameter->densityRef=atof(valueArray);
                         if(cnt==4)
-                        parameter->B=atof(valueArray);
+                            parameter->B=atof(valueArray);
                         if(cnt==5)
-                        parameter->gamma=atof(valueArray);
+                            parameter->gamma=atof(valueArray);
                         if(cnt==6)
-                        parameter->g=atof(valueArray);
+                            parameter->g=atof(valueArray);
                         if(cnt==7)
-                        parameter->writeInterval=atof(valueArray);
+                            parameter->writeInterval=atof(valueArray);
                         if(cnt==8)
-                        parameter->charactTime=atof(valueArray);
+                            parameter->charactTime=atof(valueArray);
                         if(cnt==9)
-                        parameter->c=atof(valueArray);
+                            parameter->c=atof(valueArray);
                         if(cnt==10)
-                        parameter->alpha=atof(valueArray);
+                            parameter->alpha=atof(valueArray);
                         if(cnt==11)
-                        parameter->beta=atof(valueArray);
+                            parameter->beta=atof(valueArray);
                         if(cnt==12)
-                        parameter->epsilon=atof(valueArray);
+                            parameter->epsilon=atof(valueArray);
                         if(cnt==13)
-                        parameter->movingDirection[0]=atof(valueArray);
+                            parameter->movingDirection[0]=atof(valueArray);
                         if(cnt==14)
-                        parameter->movingDirection[1]=atof(valueArray);
+                            parameter->movingDirection[1]=atof(valueArray);
                         if(cnt==15)
-                        parameter->movingDirection[2]=atof(valueArray);
+                            parameter->movingDirection[2]=atof(valueArray);
                         if(cnt==16)
-                        parameter->kernel=(Kernel) atoi(valueArray);
+                            parameter->kernel=(Kernel) atoi(valueArray);
                         if(cnt==17)
-                        parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
+                            parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
                         if(cnt==18)
-                        parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
+                            parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
                         if(cnt==19)
-                        parameter->densityInitMethod=(DensityInitMethod) atoi(valueArray);
+                            parameter->adaptativeTimeStep=(AdaptativeTimeStep) atoi(valueArray);
                         if(cnt==20)
-                        parameter->stateEquationMethod=(StateEquationMethod) atoi(valueArray);
+                            parameter->densityInitMethod=(DensityInitMethod) atoi(valueArray);
                         if(cnt==21)
-                        parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
+                            parameter->stateEquationMethod=(StateEquationMethod) atoi(valueArray);
                         if(cnt==22)
-                        parameter->speedLaw=(SpeedLaw) atoi(valueArray);
+                            parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
                         if(cnt==23)
-                        parameter->format = (Format) atoi(valueArray);
+                            parameter->speedLaw=(SpeedLaw) atoi(valueArray);
+                        if(cnt==24)
+                            parameter->format = (Format) atoi(valueArray);
                         ++cnt;
                     }
                     else{continue;}

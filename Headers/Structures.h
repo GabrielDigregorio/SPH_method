@@ -16,6 +16,9 @@ enum ViscosityModel {violeauArtificial};
 // integrationMethod = euler ou RK2
 enum IntegrationMethod {euler, RK2};
 
+// integrationMethod = euler ou RK2
+enum AdaptativeTimeStep {no, yes};
+
 // densityInitMethod = hydrosatic, etc.
 enum DensityInitMethod {hydrostatic, homogeneous};
 
@@ -54,6 +57,7 @@ struct Parameter {
     Kernel kernel;
     ViscosityModel viscosityModel;
     IntegrationMethod integrationMethod;
+    AdaptativeTimeStep adaptativeTimeStep;
     DensityInitMethod densityInitMethod;
     StateEquationMethod stateEquationMethod;
     MassInitMethod massInitMethod;
@@ -67,6 +71,8 @@ struct Field {
 
     double l[3];
     double u[3];
+
+    double nextK=0.0;
 
     std::vector<double> pos;
 
