@@ -10,7 +10,7 @@
 
 #define N_UL 3
 #define N_DATA 9
-#define N_PARAM 24
+#define N_PARAM 26
 
 enum geomType{cube,cylinder,sphere};
 enum boundCondition{freePart, movingPart, fixedPart};
@@ -125,7 +125,7 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector
 *Decscription:
 *Read a entire geometry file and generate the position and the volume of the particles and store these informations in a structure.
 */
-int readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector)
+Error readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector)
 {
     std::vector<double> posFree, posFixed, posMoving, volVectorFree, volVectorFixed, volVectorMoving;
     std::ifstream inFile(filename);
@@ -136,7 +136,7 @@ int readGeometry(std::string filename, Field* currentField, std::vector<double>*
     if(buf!="#GEOM1")
     {
         std::cout << "Wrong Geometry file type.\n" << std::endl;
-        return 1;
+        return geometryError;
     }
     while(true) // UNTIL #END_G
     {
@@ -207,12 +207,12 @@ int readGeometry(std::string filename, Field* currentField, std::vector<double>*
                 volVectorFree.insert(volVectorFree.end(), volVectorMoving.begin(), volVectorMoving.end());
                 (*volVector)=volVectorFree;
                 currentField->pos=posFree;
-                return 0;
+                return noError;
             }
             else
             {
                 std::cout <<"Unknown '"<<buf<<"' identifier.\n" << std::endl;
-                return 1;
+                return geometryError;
             }
             break;
             default :
@@ -231,7 +231,7 @@ int readGeometry(std::string filename, Field* currentField, std::vector<double>*
 *Decscription:
 *Read a parameter file and the information in a structure.
 */
-int readParameter(std::string filename, Parameter* parameter)
+Error readParameter(std::string filename, Parameter* parameter)
 {
     // open a file geometry.kzr
     std::ifstream inFile(filename);
@@ -240,7 +240,7 @@ int readParameter(std::string filename, Parameter* parameter)
     if(buf!="#PARA1")
     {
         std::cout << "Wrong parameter file type.\n" << std::endl;
-        return 1;
+        return parameterError;
     }
     while(inFile.peek() != std::ifstream::traits_type::eof())
     {
@@ -295,21 +295,105 @@ int readParameter(std::string filename, Parameter* parameter)
                         if(cnt==15)
                         parameter->movingDirection[2]=atof(valueArray);
                         if(cnt==16)
-                        parameter->kernel=(Kernel) atoi(valueArray);
-                        if(cnt==17)
-                        parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
+                        parameter->molarMass = atof(valueArray);
+                        if (cnt==17)
+                        parameter->temperature = atof(valueArray);
                         if(cnt==18)
-                        parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_KERNEL_VALUE) )
+                          {
+                            parameter->kernel=(Kernel) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid Kernel.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
                         if(cnt==19)
-                        parameter->densityInitMethod=(DensityInitMethod) atoi(valueArray);
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_VISCOSITY_VALUE) )
+                          {
+                            parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid viscosityModel.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
                         if(cnt==20)
-                        parameter->stateEquationMethod=(StateEquationMethod) atoi(valueArray);
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_INTEGRATION_VALUE) )
+                          {
+                            parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid integrationMethod.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
                         if(cnt==21)
-                        parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_DENSITYINIT_VALUE) )
+                          {
+                            parameter->densityInitMethod=(DensityInitMethod) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid densityInitMethod.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
                         if(cnt==22)
-                        parameter->speedLaw=(SpeedLaw) atoi(valueArray);
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_STATEEQUATION_VALUE) )
+                          {
+                            parameter->stateEquationMethod=(StateEquationMethod) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid stateEquationMethod.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
                         if(cnt==23)
-                        parameter->format = (Format) atoi(valueArray);
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MASSINIT_VALUE) )
+                          {
+                            parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid massInitMethod.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
+                        if(cnt==24)
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_SPEEDLAW_VALUE) )
+                          {
+                            parameter->speedLaw=(SpeedLaw) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid speedLaw.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
+                        if(cnt==25)
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_FORMAT_VALUE) )
+                          {
+                            parameter->format=(Format) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid outputFormat.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
                         ++cnt;
                     }
                     else{continue;}
@@ -317,12 +401,12 @@ int readParameter(std::string filename, Parameter* parameter)
             }
             else if(buf=="END_F")
             {
-                return 0;
+                return noError;
             }
             else
             {
                 std::cout <<"Unknown '"<<buf<<"' identifier. \n" << std::endl;
-                return 1;
+                return parameterError;
             }
             break;
             default :

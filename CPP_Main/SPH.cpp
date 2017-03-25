@@ -20,12 +20,12 @@ std::clock_t startExperimentTimeClock;
 */
 int main(int argc, char *argv[])
 {
-	// Creates an error flag
-	int errorFlag = 0;
-
 	// Record algorithm performance
 	startExperimentTimeClock = std::clock();
 	double duration;
+
+	// Creates an error flag
+	Error errorFlag = noError;
 
 	// CPU time repartition
 	std::clock_t start;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 	if (argc<3) // Not enough argument
 	{
 		std::cout << "Invalid input files.\n" << std::endl;
-		errorFlag = 1;
+		errorFlag = argumentError;
 		return errorFlag;
 	}
 	else if (argc<4) // Use default name for the experiment (result)
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 	Parameter parameterInstance;
 	Parameter* parameter = &parameterInstance;
 	errorFlag = readParameter(parameterFilename, parameter);
-	if (errorFlag == 1)
+	if (errorFlag != noError)
 	{
 		return errorFlag;
 	}
@@ -72,10 +72,18 @@ int main(int argc, char *argv[])
 	Field currentFieldInstance;
 	Field* currentField = &currentFieldInstance;
 	errorFlag = readGeometry(geometryFilename, currentField, &volVector); //Why sending adress of volVector ? Wouldn't it be more understable to pass it by reference ?
-	if (errorFlag == 1)
+	if (errorFlag != noError)
 	{
 		return errorFlag;
 	}
+
+	// Checking consistency of user datas
+	errorFlag = consistency(parameter, currentField);
+	if (errorFlag != noError)
+	{
+		return errorFlag;
+	}
+
 	std::cout << "Done.\n" << std::endl;
 
 	// Initialisation
@@ -84,6 +92,7 @@ int main(int argc, char *argv[])
 	pressureInit(currentField, parameter);
 	massInit(currentField, parameter, volVector);
 	volVector.clear();
+	
 	// Creates field to store result of update
 	Field nextFieldInstance;
 	Field* nextField = &nextFieldInstance;

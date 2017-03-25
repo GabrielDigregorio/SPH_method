@@ -1,80 +1,111 @@
+///**************************************************************************
+/// SOURCE: Check the coherence of input values.
+///**************************************************************************
 #include "Main.h"
 #include "Interface.h"
 
-/*struct Parameter {
-    double kh, k, T, densityRef, B, gamma, g, writeInterval, charactTime, c, alpha, beta, epsilon;
-    double movingDirection[3];
-    Kernel kernel;
-    ViscosityModel viscosityModel;
-    IntegrationMethod integrationMethod;
-    DensityInitMethod densityInitMethod;
-    StateEquationMethod stateEquationMethod;
-    MassInitMethod massInitMethod;
-    SpeedLaw speedLaw;
-    Format format;
-    }
-*/
-
-void Consistency(Parameter* param,Field* field)
+Error consistency(Parameter* parameter, Field* field)
 {
-double ux=field->u[0];
-double uy=field->u[1];
-double uz=field->u[2];
-double lx=field->l[0];
-double ly=field->l[1];
-double lz=field->l[2];
-int nFree=field->nFree;
-int nFixed=field->nFixed;
-int nMoving= field->nMoving;
-int nTotal=field->nTotal;
-// // check of structure "Field"
-// check domain (l vs u)
-assert(ux>lx && uy>ly && uz>lz && "ui not > li");
-// check number of particules
-assert(nFree>=0 && nFixed>=0 && nMoving>=0 && nTotal>=0 && "number of particule not an positive integer ");
-// check position of the cube, boundary... if include in the domain ??
+  int cntError = 0;
+  if( (field->u[0]<field->l[0]) || (field->u[1]<field->l[1]) || (field->u[2]<field->l[2]) )
+  {
+    std::cout << "Lower and higher domain dimension are not consistent.\n" << std::endl;
+    cntError++;
+  }
 
-// check s for free, moving fixed.
+  int cntOutOfDomain = 0;
+  for(int i = 0; i < field->nTotal; i += 3)
+  for (int j=0;j<3;j++)
+  {
+    {
+      if(field->pos[i+j] > field->u[j])
+      {
+        cntOutOfDomain++;
+        break;
+      }
+      else if (field->pos[i+j] < field->l[j])
+      {
+        cntOutOfDomain++;
+        break;
+      }
+    }
+  }
+  if(cntOutOfDomain != 0)
+  {
+    std::cout << cntOutOfDomain << " particles out of the domain.\n" << std::endl;
+    cntError++;
+  }
 
+  if(parameter->kh <= 0.0)
+  {
+    std::cout << "Invalid kh.\n" << std::endl;
+    cntError++;
+  }
 
+  if( (parameter->k <= 0.0) || (parameter->k > parameter->T) )
+  {
+    std::cout << "Invalid timestep.\n" << std::endl;
+    cntError++;
+  }
 
-double kh=param->kh;
-double k=param->k;
-double T=param->T;
-double densityRef=param->densityRef;
-double B=param->B;
-double gamma=param->gamma;
-double writeInterval=param->writeInterval;
-double alpha=param->alpha; 
-double beta=param->beta;
-double epsilon=param->epsilon;
-
-// // check of struture "Parameter"
-// check kh >0 (and kh>1.2*s ??)
-assert(kh>0.0 );
-// check k>0 && k< T
-assert(k>0.0 && k<T && "time step not good " );
-// check density initial
-assert(densityRef>0.0 && "density not positive");
-// check B >0 , and what else ?
-assert(B>0.0 && "B is not positive");
-// check gamma >0 , and what else ?
-assert(gamma>0 && "gamma is not positive");
-// check write interval >k and <T
-assert(writeInterval>k && writeInterval<T && "writeInterval not good");
-// check  charactTime is positive 
-assert(charactTime>=0 && "charactTime is not positive");
-// check c ( speed of sound ) is positive
-assert(c>0 && "c is not positive");
-// check alpha is a positve number
-assert(alpha>=0 && "alpha is not positive");
-// check beta is a positve number
-assert(beta>=0 && "beta is not positive");
-// check epsilon is a positive number;
-assert(epsilon>0 && "beta is not positive");
+  if(parameter->densityRef <= 0.0)
+  {
+    std::cout << "Invalid referecne density.\n" << std::endl;
+    cntError++;
+  }
 
 
-
-// // check Consistency
-
+  if(parameter->B < 0.0)
+  {
+    std::cout << "Invalid B.\n" << std::endl;
+    cntError++;
+  }
+  if(parameter->gamma < 0.0)
+  {
+    std::cout << "Invalid gamma.\n" << std::endl;
+    cntError++;
+  }
+  if(parameter->writeInterval < parameter->k)
+  {
+    std::cout << "Invalid writeInterval.\n" << std::endl;
+    cntError++;
+  }
+  if(parameter->c < 0.0)
+  {
+    std::cout << "Invalid speed of sound.\n" << std::endl;
+    cntError++;
+  }
+  if(parameter->alpha < 0.0)
+  {
+    std::cout << "Invalid alpha.\n" << std::endl;
+    cntError++;
+  }
+  if(parameter->beta < 0.0)
+  {
+    std::cout << "Invalid beta.\n" << std::endl;
+    cntError++;
+  }
+  if(parameter->epsilon < 0.0)
+  {
+    std::cout << "Invalid epsilon.\n" << std::endl;
+    cntError++;
+  }
+  if(parameter->temperature < 0.0)
+  {
+    std::cout << "Invalid temperature.\n" << std::endl;
+    cntError++;
+  }
+  if(parameter->molarMass < 0.0)
+  {
+    std::cout << "Invalid molarMass.\n" << std::endl;
+    cntError++;
+  }
+  if (cntError != 0)
+  {
+    return consistencyError;
+  }
+  else
+  {
+    return noError;
+  }
 }

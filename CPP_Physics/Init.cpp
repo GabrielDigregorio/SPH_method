@@ -3,6 +3,7 @@
 ///**************************************************************************
 #include "Main.h"
 #include "Physics.h"
+#define R 8.314
 /*
 *Input:
 *- field: field whose speeds will be initialised
@@ -30,52 +31,56 @@ void densityInit(Field* field, Parameter* parameter)
 	double B = parameter->B;
 	double gamma = parameter->gamma;
 	double g = parameter->g;
-	//std::vector<double> z;
-	double zMax = 0.0;
 
 	switch (parameter->densityInitMethod)
 	{
-	case hydrostatic:
-
-		double H;
-
-		for (int j = 0; j < field->nFree; j++)
+		case hydrostatic:
 		{
-			if (field->pos[3*j+2] > zMax)
+			double zMax = 0.0;
+			double H;
+
+			for (int j = 0; j < field->nFree; j++)
 			{
-				zMax = field->pos[3*j+2];
+				if (field->pos[3*j+2] > zMax)
+				{
+					zMax = field->pos[3*j+2];
+				}
+
+			}
+			switch (parameter->stateEquationMethod)
+			{
+				case quasiIncompressible:
+
+				for (int i = 0; i < field->nFree; i++)
+				{
+					H = zMax - field->pos[3 * i + 2];
+					double rho = (1 + (1 / B)*rho_0*g*H);
+					field->density.push_back(rho_0*pow(rho, 1.0 / gamma));
+
+				}
+				break;
+
+				case perfectGas:
+				for (int i = 0; i < field->nFree; i++)
+				{
+					H = zMax - field->pos[3 * i + 2];
+					double rho = rho_0*(1 + (parameter->molarMass/R/parameter->temperature)*rho_0*g*H);
+					field->density.push_back(rho);
+
+				}
+				break;
 			}
 
-		}
-
-		for (int i = 0; i < field->nFree; i++)
-		{
-			H = zMax - field->pos[3 * i + 2];
-			double rho = (1 + (1 / B)*rho_0*g*H);
-			field->density.push_back(rho_0*pow(rho, 1.0 / gamma));
-
-		}
-		for (int k = field->nFree; k < field->nTotal; k++)
-		{
-			field->density.push_back(parameter->densityRef);
+			for (int k = field->nFree; k < field->nTotal; k++)
+			{
+				field->density.push_back(parameter->densityRef);
+			}
 		}
 		break;
 
-	case homogeneous:
+		case homogeneous:
 		field->density.assign(field->nTotal, rho_0);
 		break;
-		// A voir si on considère le cas d'un gas pft, nécéssite des parametres supplémentaires(T°,M)
-		/*
-		if (parameter->stateEquationMethod == perfectGas)
-		{
-		for (int i=2; i<field->pos.size(); i=i+3)
-		{
-		H = z_max - field->pos[i];
-		double rho = rho_0*(1 + (Mach/R*Temperature)*rho_0*g*H);
-		field->density.push_back(rho)
-		}
-		}
-		*/
 	}
 }
 
@@ -109,7 +114,7 @@ void pressureComputation(Field* field, Parameter* parameter)
 
 	switch (parameter->stateEquationMethod)
 	{
-	case quasiIncompressible:
+		case quasiIncompressible:
 
 		for (int i = 0; i<field->nFree; i++)
 		{
@@ -118,17 +123,21 @@ void pressureComputation(Field* field, Parameter* parameter)
 			field->pressure[i] = p;
 		}
 
-		for (int j = field->nFree; j < field->nTotal; j++)
+		case perfectGas:
+		for (int i = 0; i<field->nFree; i++)
 		{
-			field->pressure[j] = 0.0;
+			double rho = field->density[i];
+			double p = rho*R*parameter->temperature/parameter->molarMass;
+			field->pressure[i] = p;
 		}
 		break;
-
-	case perfectGas:
-		std::cout << "Perfect gas not yet implemented\n" << std::endl;
-		break;
-
 	}
+	for (int j = field->nFree; j < field->nTotal; j++)
+	{
+		field->pressure[j] = 0.0;
+	}
+
+
 }
 
 /*
