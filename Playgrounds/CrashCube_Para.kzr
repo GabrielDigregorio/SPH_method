@@ -12,6 +12,7 @@
 % g = gravity
 % writeInteval = time interval between two outputs file are generated
 % integrationMethod = euler ou RK2
+% adaptativeTimeStep= yes or no
 % densityInitMethod = hydrosatic, etc.
 % stateEquationMethod = quasiIncompressible, perfectGas, etc.
 % massInitMethod = violeau2012 (all particles have same volumes), etc.
@@ -21,7 +22,6 @@
    kh=0.12
    k=0.00001
    T=0.25
-   T=1
    Ref=1000.0
    B=1280000
    gamma=7.0
@@ -38,6 +38,7 @@
    kernel=0
    viscosityModel=0
    integrationMethod=0
+   adaptativeTimeStep=0
    densityInitMethod=0
    stateEquationMethod=0
    massInitMethod=0

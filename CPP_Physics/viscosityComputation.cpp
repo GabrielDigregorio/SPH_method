@@ -17,6 +17,8 @@
 void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity)
 {
     double h = gethFromkh(parameter->kernel ,parameter->kh);
+    double maxMu = 0.0;
+
     switch(parameter->viscosityModel)
     {
         case violeauArtificial :
@@ -29,17 +31,19 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
             double ry =  currentField->pos[3*particleID+1]-currentField->pos[3*neighbors[i]+1];
             double rz =  currentField->pos[3*particleID+2]-currentField->pos[3*neighbors[i]+2];
             double Rij_Uij = ux*rx+ry*uy+rz*uz;// moyen plus élégant de faire tout ça ?
-            if(Rij_Uij < 0)
+            if(Rij_Uij < 0.0)
             {
                 double Rij2 = rx*rx+ry*ry+rz*rz;
                 double nu2 = parameter->epsilon*h*h;
                 double mu = (h*Rij_Uij)/(Rij2+nu2);
                 double rho  = 0.5 * (currentField->density[particleID] + currentField->density[neighbors[i]]);
+
                 viscosity[i] = ( -parameter->alpha*parameter->c*mu + parameter->beta*mu*mu ) / (rho);
+                if (maxMu < mu){maxMu = mu;}
             }
             else
             {
-                viscosity[i]=0;
+                viscosity[i]=0.0;
             }
         }
         break;
@@ -47,6 +51,24 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
         default :
         viscosity.assign(neighbors.size(),0.0);
         break;
+
     }
 
+    // Adaptative Time Step
+    switch(parameter->adaptativeTimeStep)
+    {
+        case yes :
+        {
+            double t_f  = 0.25 * sqrt(h/parameter->g);
+            double t_cv = 0.4  * (h/(parameter->c+0.6*parameter->alpha*parameter->c+0.6*parameter->beta*maxMu));
+
+            if (t_f < t_cv)
+                currentField->nextK = t_f ;
+                //std::cout<<"parameter->k = "<< currentField->nextK << std::endl;}
+            else if(t_cv < t_f)
+                currentField->nextK = t_cv ;
+                //std::cout<<"parameter->k = "<< currentField->nextK << std::endl;}
+        }
+        break;
+    }
 }

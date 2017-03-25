@@ -99,7 +99,11 @@ int main(int argc, char *argv[])
 	copyField(currentField, nextField);
 
 	unsigned int nMax = (unsigned int)ceil(parameter->T / parameter->k);
-	std::cout << "Number of time steps = " << nMax << "\n" << std::endl;
+	double currentTime = 0.0;
+	if (parameter->adaptativeTimeStep == no)
+		std::cout << "Number of time steps = " << nMax << "\n" << std::endl;
+	else
+		std::cout << "Number of time steps = " << "not defined (adaptative time step)" << "\n" << std::endl; 
 	std::cout << "Number of free particles = " << currentField->nFree << "\n" << std::endl;
 	std::cout << "Number of fixed particles = " << currentField->nFixed << "\n" << std::endl;
 	std::cout << "Number of particles with imposed speed = " << currentField->nMoving << "\n" << std::endl;
@@ -121,9 +125,12 @@ int main(int argc, char *argv[])
 	// Loop on time
 	std::cout << "Time integration progress:\n" << std::endl;
 	std::cout << "0%----------------------------------------------100%\n[";
+	unsigned int loadingBar = 0;
 
-	for (unsigned int n = 1; n <= nMax; n++)
+	for (unsigned int n = 1; currentTime < parameter->T; n++)
 	{
+		currentField->nextK = parameter->k;
+
 		// Rebox the domain if h has sufficiently changed
 		if (reBoxing == true)
 		{
@@ -147,14 +154,20 @@ int main(int argc, char *argv[])
 
 		start = std::clock();
 
+		// Adaptative time step
+		currentTime += parameter->k;
+		parameter->k = currentField->nextK;
+
 		// Swap two fields
 		swapField(&currentField, &nextField);
 
 		timeInfo[4] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
 		// Fancy progress bar
-		if (!((50 * n) % nMax))
+		if ( currentTime >= loadingBar * parameter->T/50.0){
 			std::cout << ">" << std::flush;
+			loadingBar++;
+		}
 	}
 	std::cout << "]\n" << std::endl;
 

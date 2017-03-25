@@ -263,43 +263,43 @@ Error readParameter(std::string filename, Parameter* parameter)
                     if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
                     {
                         if(cnt==0)
-                        parameter->kh=atof(valueArray);
+                            parameter->kh=atof(valueArray);
                         if(cnt==1)
-                        parameter->k=atof(valueArray);
+                            parameter->k=atof(valueArray);
                         if(cnt==2)
-                        parameter->T=atof(valueArray);
+                            parameter->T=atof(valueArray);
                         if(cnt==3)
-                        parameter->densityRef=atof(valueArray);
+                            parameter->densityRef=atof(valueArray);
                         if(cnt==4)
-                        parameter->B=atof(valueArray);
+                            parameter->B=atof(valueArray);
                         if(cnt==5)
-                        parameter->gamma=atof(valueArray);
+                            parameter->gamma=atof(valueArray);
                         if(cnt==6)
-                        parameter->g=atof(valueArray);
+                            parameter->g=atof(valueArray);
                         if(cnt==7)
-                        parameter->writeInterval=atof(valueArray);
+                            parameter->writeInterval=atof(valueArray);
                         if(cnt==8)
-                        parameter->charactTime=atof(valueArray);
+                            parameter->charactTime=atof(valueArray);
                         if(cnt==9)
-                        parameter->c=atof(valueArray);
+                            parameter->c=atof(valueArray);
                         if(cnt==10)
-                        parameter->alpha=atof(valueArray);
+                            parameter->alpha=atof(valueArray);
                         if(cnt==11)
-                        parameter->beta=atof(valueArray);
+                            parameter->beta=atof(valueArray);
                         if(cnt==12)
-                        parameter->epsilon=atof(valueArray);
+                            parameter->epsilon=atof(valueArray);
                         if(cnt==13)
-                        parameter->movingDirection[0]=atof(valueArray);
+                            parameter->movingDirection[0]=atof(valueArray);
                         if(cnt==14)
-                        parameter->movingDirection[1]=atof(valueArray);
+                            parameter->movingDirection[1]=atof(valueArray);
                         if(cnt==15)
-                        parameter->movingDirection[2]=atof(valueArray);
+                            parameter->movingDirection[2]=atof(valueArray);
                         if(cnt==16)
-                        parameter->molarMass = atof(valueArray);
+                            parameter->molarMass = atof(valueArray);
                         if (cnt==17)
-                        parameter->temperature = atof(valueArray);
+                            parameter->temperature = atof(valueArray);
                         if (cnt==18)
-                        parameter->theta = atof(valueArray);
+                            parameter->theta = atof(valueArray);
                         if(cnt==19)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_KERNEL_VALUE) )
