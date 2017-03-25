@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 	pressureInit(currentField, parameter);
 	massInit(currentField, parameter, volVector);
 	volVector.clear();
-	
+
 	// Creates field to store result of update
 	Field nextFieldInstance;
 	Field* nextField = &nextFieldInstance;
@@ -133,9 +133,8 @@ int main(int argc, char *argv[])
 			boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
 			timeInfo[1] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
 		}
-
-		// Time integration
-		reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, n, timeInfo);
+			//std::cout << "timestep 0" << std::endl;
+		reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, (n-1)*parameter->k,parameter->k, timeInfo);
 
 		// Write field when needed
 		start = std::clock();

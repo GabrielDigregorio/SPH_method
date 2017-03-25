@@ -52,7 +52,7 @@ void boxMesh(double l[3], double u[3], double kh,
 // TimeIntegration.cpp
 bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter,
     std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
-    unsigned int n, std::vector<double> &timeInfo);
+    double t, double k, std::vector<double> &timeInfo);
 
 
 // Kernel.cpp

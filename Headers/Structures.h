@@ -50,7 +50,7 @@ enum Format {ParaView, Matlab, Both, NB_FORMAT_VALUE};
 
 
 struct Parameter {
-    double kh, k, T, densityRef, B, gamma, g, writeInterval, charactTime, c, alpha, beta, epsilon, molarMass, temperature;
+    double kh, k, T, densityRef, B, gamma, g, writeInterval, charactTime, c, alpha, beta, epsilon, molarMass, temperature, theta;
     double movingDirection[3];
     Kernel kernel;
     ViscosityModel viscosityModel;

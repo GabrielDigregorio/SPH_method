@@ -56,7 +56,6 @@ void densityInit(Field* field, Parameter* parameter)
 					H = zMax - field->pos[3 * i + 2];
 					double rho = (1 + (1 / B)*rho_0*g*H);
 					field->density.push_back(rho_0*pow(rho, 1.0 / gamma));
-
 				}
 				break;
 
@@ -70,7 +69,7 @@ void densityInit(Field* field, Parameter* parameter)
 				}
 				break;
 			}
-
+			// Boundaries have constant densities, no reason for this, might thus be changed !!!!!
 			for (int k = field->nFree; k < field->nTotal; k++)
 			{
 				field->density.push_back(parameter->densityRef);
@@ -116,15 +115,16 @@ void pressureComputation(Field* field, Parameter* parameter)
 	{
 		case quasiIncompressible:
 
-		for (int i = 0; i<field->nFree; i++)
+		for (int i = 0; i<field->nTotal; i++)
 		{
 			double rho = field->density[i];
 			double p = B*(pow(rho / rho_0, gamma) - 1);
 			field->pressure[i] = p;
 		}
+		break;
 
 		case perfectGas:
-		for (int i = 0; i<field->nFree; i++)
+		for (int i = 0; i<field->nTotal; i++)
 		{
 			double rho = field->density[i];
 			double p = rho*R*parameter->temperature/parameter->molarMass;
@@ -132,12 +132,6 @@ void pressureComputation(Field* field, Parameter* parameter)
 		}
 		break;
 	}
-	for (int j = field->nFree; j < field->nTotal; j++)
-	{
-		field->pressure[j] = 0.0;
-	}
-
-
 }
 
 /*

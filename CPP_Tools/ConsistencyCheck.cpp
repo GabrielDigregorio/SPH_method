@@ -100,6 +100,11 @@ Error consistency(Parameter* parameter, Field* field)
     std::cout << "Invalid molarMass.\n" << std::endl;
     cntError++;
   }
+  if( (parameter->theta <= 0.0) || (parameter->theta > 1.0) )
+  {
+    std::cout << "Invalid theta.\n" << std::endl;
+    cntError++;
+  }
   if (cntError != 0)
   {
     return consistencyError;

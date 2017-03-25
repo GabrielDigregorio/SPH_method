@@ -10,7 +10,7 @@
 
 #define N_UL 3
 #define N_DATA 9
-#define N_PARAM 26
+#define N_PARAM 27
 
 enum geomType{cube,cylinder,sphere};
 enum boundCondition{freePart, movingPart, fixedPart};
@@ -298,7 +298,9 @@ Error readParameter(std::string filename, Parameter* parameter)
                         parameter->molarMass = atof(valueArray);
                         if (cnt==17)
                         parameter->temperature = atof(valueArray);
-                        if(cnt==18)
+                        if (cnt==18)
+                        parameter->theta = atof(valueArray);
+                        if(cnt==19)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_KERNEL_VALUE) )
                           {
@@ -310,7 +312,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==19)
+                        if(cnt==20)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_VISCOSITY_VALUE) )
                           {
@@ -322,7 +324,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==20)
+                        if(cnt==21)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_INTEGRATION_VALUE) )
                           {
@@ -334,7 +336,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==21)
+                        if(cnt==22)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_DENSITYINIT_VALUE) )
                           {
@@ -346,7 +348,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==22)
+                        if(cnt==23)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_STATEEQUATION_VALUE) )
                           {
@@ -358,7 +360,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==23)
+                        if(cnt==24)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MASSINIT_VALUE) )
                           {
@@ -370,7 +372,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==24)
+                        if(cnt==25)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_SPEEDLAW_VALUE) )
                           {
@@ -382,7 +384,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==25)
+                        if(cnt==26)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_FORMAT_VALUE) )
                           {
