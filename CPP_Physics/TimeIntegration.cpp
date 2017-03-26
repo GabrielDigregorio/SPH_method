@@ -73,8 +73,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, std::vecto
 
   // Sort the particles at the current time step
   start = std::clock();
-  boxClear(boxes); // Clear the sorting to restart it
-  sortParticles(currentField->pos, currentField->l, currentField->u, parameter->kh, boxes); // At each time step (to optimize?)
+  sortParticles(currentField->pos, currentField->l, currentField->u, parameter->kh, boxes); // At each time step, restart it (to optimize with lists?)
   timeInfo[1] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
   // Spans the boxes
