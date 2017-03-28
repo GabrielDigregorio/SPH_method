@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 
 	// Loop on time
 	std::cout << "Time integration progress:\n" << std::endl;
-	std::cout << "0%----------------------------------------------100%\n[";
+	std::cout << "0%-----------------------------------------------100%\n[";
 	unsigned int loadingBar = 0;
 
 	for (unsigned int n = 1; currentTime < parameter->T; n++)
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 
 		// Write field when needed
 		start = std::clock();
-    if (writeCount*parameter->writeInterval <= currentTime)
+    	if (writeCount*parameter->writeInterval <= currentTime)
 		{
 			writeField(nextField, n, parameter, parameterFilename, geometryFilename, experimentFilename);
 			writeCount++;
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 		timeInfo[4] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
 		// Fancy progress bar
-		if ( currentTime >= loadingBar * parameter->T/50.0){
+		if ( currentTime > loadingBar * parameter->T/50.0){
 			std::cout << ">" << std::flush;
 			loadingBar++;
 		}

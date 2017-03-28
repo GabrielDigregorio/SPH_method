@@ -44,6 +44,8 @@ void findNeighbors(int particleID, std::vector<double> &pos, double kh,
                     int resolution); // USELESS
 void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
                    std::vector<std::vector<int> > &boxes);
+void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
+                  std::vector<std::vector<int> > &boxes, bool toOptimize);
 void boxMesh(double l[3], double u[3], double kh,
              std::vector<std::vector<int> > &boxes,
              std::vector<std::vector<int> > &surrBoxesAll);

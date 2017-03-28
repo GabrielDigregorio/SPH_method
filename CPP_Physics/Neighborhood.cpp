@@ -167,6 +167,8 @@ void boxMesh(double l[3], double u[3], double kh,
 // Sorts the particles into cubic boxes
 void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
                    std::vector<std::vector<int> > &boxes){
+    // Start from scratch
+    boxClear(boxes);
     // Determination of the number of boxes in each direction
     int nBoxesX = ceil((u[0] - l[0])/kh); // Extra box if non integer quotient
     int nBoxesY = ceil((u[1] - l[1])/kh);
@@ -191,6 +193,55 @@ void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh
         boxes[boxX + boxY*nBoxesX + boxZ*nBoxesX*nBoxesY].push_back(i);
     }
 }
+
+// Overload with "optimization" -> useless with vectors, maybe useful with lists...
+void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
+                   std::vector<std::vector<int> > &boxes, bool toOptimize){
+
+    if(toOptimize){
+        // Determination of the number of boxes in each direction
+        int nBoxesX = ceil((u[0] - l[0])/kh); // Extra box if non integer quotient
+        int nBoxesY = ceil((u[1] - l[1])/kh);
+        int nBoxesZ = ceil((u[2] - l[2])/kh);
+
+        int boxNumber = 0;
+        for(int currBoxX=0 ; currBoxX<nBoxesX ; currBoxX++){
+            for(int currBoxY=0 ; currBoxY<nBoxesY ; currBoxY++){
+                for(int currBoxZ=0 ; currBoxZ<nBoxesZ ; currBoxZ++){
+                    int size = boxes[boxNumber].size();
+                    for(int i=0 ; i<size ;){
+                        int particleID = boxes[boxNumber][i];
+                        int boxX, boxY, boxZ;
+                        // Box pre-coordinates along X
+                        boxX = (pos[3*particleID] - l[0])/kh; // Integer division
+                        boxY = (pos[3*particleID+1] - l[1])/kh;
+                        boxZ = (pos[3*particleID+2] - l[2])/kh;
+                        if(boxX==currBoxX && boxY==currBoxY && boxZ==currBoxZ){i++;}
+                        else{
+                            // Box coordinate along X
+                            if(boxX < 0){boxX = 0;}
+                            else{boxX = (boxX < nBoxesX-1) ? boxX : nBoxesX-1;}
+                            // Box coordinate along Y
+                            if(boxY < 0){boxY = 0;}
+                            else{boxY = (boxY < nBoxesY-1) ? boxY : nBoxesY-1;}
+                            // Box coordinate along Z
+                            if(boxZ < 0){boxZ = 0;}
+                            else{boxZ = (boxZ < nBoxesZ-1) ? boxZ : nBoxesZ-1;}
+                            // Put the particle identifier in the corresponding box array
+                            boxes[boxNumber].erase(boxes[boxNumber].begin()+i);
+                            size--;
+                            boxes[boxX + boxY*nBoxesX + boxZ*nBoxesX*nBoxesY].push_back(particleID);
+                        }
+                    }
+                    boxNumber++;
+                }
+            }
+        }
+    }
+    else{sortParticles(pos, l, u, kh, boxes);}
+}
+
+
 
 /* Searches the neighbors of a given particle in the surrounding boxes
 Fills the neighbors/kernelGradients vectors with the neighbors and the associated
