@@ -1,7 +1,9 @@
-Smoothed-particle hydrodynamics
+# Smoothed-particle hydrodynamics
 MATH0471 – Spring 2017
 v.1 (7/02/2017)
-----------------------------------------------------------------------------------------
+
+## Assignment
+
 This project consists in studying, implementing and validating a numerical scheme for the
 solution of Navier-Stokes equations using the “smoothed-particle hydrodynamics” (SPH)
 computational method. SPH originated in the late 1970’s for astrophysical problems, and
@@ -49,3 +51,48 @@ non-trivial configurations) is due on May 19th. An oral presentation of the main
 results will be organized during the June exam session; individual theoretical and practical
 questions will be asked to each member of the two student groups.
 
+
+## Compilation
+
+* Windows
+
+```
+mkdir build
+cd ./build/
+set PATH=%PATH:D:/Programy/Git/bin=%
+cmake -G "MinGW Makefiles" ..
+mingw32-make
+```
+
+* Linux & mac OS
+
+```
+mkdir build
+cmake ..
+cd build
+make
+```
+
+
+## Launch an experiment
+
+* Creat a new directory to store data
+
+```
+mkdir ./Results/myExperiment
+```
+
+* Launch a new experiment
+
+```
+mkdir ./Results/myExperiment
+./sph ../Playgrounds/<name>_Para.kzr ../Playgrounds/<name>_Geom.kzr myExperiment/<name>
+```
+
+## Experiment Analysis
+
+* Open matlab and go into the directory Matlab of the SPH project
+
+* Launch the GUI script in the command windows
+
+* Enjoy... ;)
