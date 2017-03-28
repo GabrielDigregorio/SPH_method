@@ -93,6 +93,6 @@ mkdir ./Results/myExperiment
 
 * Open matlab and go into the directory Matlab of the SPH project
 
-* Lounch GUI script in the command windows
+* Launch the GUI script in the command windows
 
 * Enjoy... ;)
