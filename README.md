@@ -89,3 +89,10 @@ mkdir ./Results/myExperiment
 ./sph ../Playgrounds/<name>_Para.kzr ../Playgrounds/<name>_Geom.kzr myExperiment/<name>
 ```
 
+## Experiment Analysis
+
+* Open matlab and go into the directory Matlab of the SPH project
+
+* Lounch GUI script in the command windows
+
+* Enjoy... ;)
