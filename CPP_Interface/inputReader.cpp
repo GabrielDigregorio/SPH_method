@@ -30,7 +30,7 @@ enum boundCondition{freePart, movingPart, fixedPart};
 // Why passing vector with a pointer ? Isn't it possible with a reference ?
 // Field* currentField useless here ?
 
-void readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector<double>* posFree,
+Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector<double>* posFree,
         std::vector<double>* posMoving, std::vector<double>* posFixed,
         std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<double>* volVectorMoving)
 {
@@ -39,15 +39,23 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector
     char valueArray[1024];
     float brickData[N_DATA];
 
-    while(cnt!=N_DATA)
+    while(cnt!=N_DATA && inFile->peek() != std::ifstream::traits_type::eof())
     {
         std::getline(*inFile, buf);
+        if(1==sscanf(buf.c_str(),"%*[^#]#%s", valueArray)){
+            std::cout << "Missing an element parameter.\n" << std::endl;
+            return geometryError;
+        }
         if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
         {
             brickData[cnt]=atof(valueArray);
             ++cnt;
         }
         else{continue;}
+    }
+    if(cnt!=N_DATA){
+        std::cout << "Reached end of file before geometry reading.\n" << std::endl;
+        return geometryError;
     }
     int c=(int)brickData[0];
     float s=brickData[1];
@@ -113,6 +121,7 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector
         }
         break;
     }
+    return noError;
 }
 
 /*
@@ -138,87 +147,115 @@ Error readGeometry(std::string filename, Field* currentField, std::vector<double
         std::cout << "Wrong Geometry file type.\n" << std::endl;
         return geometryError;
     }
-    while(true) // UNTIL #END_G
+    while(inFile.peek() != std::ifstream::traits_type::eof())
     {
         std::getline(inFile, buf);
         buf.erase(std::remove(buf.begin(), buf.end(), ' '),buf.end());
-        switch(buf[0])
-        {
-            case '%' :
-            continue;
-            break;
-            case '#' :
-            buf.erase (0,1);
-            if(buf=="domsz")
+        if(buf.size()!=0){
+            switch(buf[0])
             {
-                while(cnt!=N_UL)
+                case '%' :
+                continue;
+                break;
+                case '#' :
+                buf.erase (0,1);
+                if(buf=="domsz")
                 {
-                    std::getline(inFile, buf);
-                    if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
+                    while(cnt!=N_UL && inFile.peek() != std::ifstream::traits_type::eof())
                     {
-                        currentField->u[cnt]=atof(valueArray);
-                        ++cnt;
-                    }
-                    else
-                    continue;
+                        std::getline(inFile, buf);
+                        if(1==sscanf(buf.c_str(),"%*[^#]#%s", valueArray)){
+                            std::cout << "Missing a domain parameter.\n" << std::endl;
+                            return geometryError;
+                        }
+                        if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
+                        {
+                            currentField->u[cnt]=atof(valueArray);
+                            ++cnt;
+                        }
+                        else
+                            continue;
+                }
+                if(cnt!=N_UL){
+                    std::cout << "Reached end of file before geometry reading.\n" << std::endl;
+                    return geometryError;
                 }
                 cnt = 0;
-                while(cnt!=N_UL)
-                {
-                    std::getline(inFile, buf);
-                    if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
+                    while(cnt!=N_UL && inFile.peek() != std::ifstream::traits_type::eof())
                     {
-                        currentField->l[cnt]=atof(valueArray);
-                        ++cnt;
+                        std::getline(inFile, buf);
+                        if(1==sscanf(buf.c_str(),"%*[^#]#%s", valueArray)){
+                            std::cout << "Missing a domain parameter.\n" << std::endl;
+                            return geometryError;
+                        }
+                        if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
+                        {
+                            currentField->l[cnt]=atof(valueArray);
+                            ++cnt;
+                        }
+                        else
+                            continue;
                     }
-                    else
-                    continue;
+                    if(cnt!=N_UL){
+                        std::cout << "Reached end of file before geometry reading.\n" << std::endl;
+                        return geometryError;
+                    }
                 }
+                else if(buf=="brick")
+                {
+                    if(readBrick(cube,&inFile, currentField,
+                        &posFree, &posMoving, &posFixed,
+                        &volVectorFree, &volVectorFixed, &volVectorMoving)==geometryError){
+                            return geometryError;
+                    }
+                }
+                else if(buf=="cylin")
+                {
+                    if(readBrick(cylinder,&inFile, currentField,
+                        &posFree, &posMoving, &posFixed,
+                        &volVectorFree, &volVectorFixed, &volVectorMoving)==geometryError){
+                            return geometryError;
+                    }
+                }
+                else if(buf=="spher")
+                {
+                    if(readBrick(sphere,&inFile, currentField,
+                        &posFree, &posMoving, &posFixed,
+                        &volVectorFree, &volVectorFixed, &volVectorMoving)==geometryError){
+                            return geometryError;
+                    }
+                }
+                else if(buf=="END_G")
+                {
+                    // Number of particles
+                    currentField->nFree=posFree.size()/3;
+                    currentField->nFixed=posFixed.size()/3;
+                    currentField->nMoving=posMoving.size()/3;
+                    currentField->nTotal= currentField->nFree + currentField->nFixed + currentField->nMoving;
+                    // Position and volume vector sorting
+                    posFree.insert(posFree.end(), posFixed.begin(), posFixed.end());
+                    posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
+                    volVectorFree.insert(volVectorFree.end(), volVectorFixed.begin(), volVectorFixed.end());
+                    volVectorFree.insert(volVectorFree.end(), volVectorMoving.begin(), volVectorMoving.end());
+                    (*volVector)=volVectorFree;
+                    currentField->pos=posFree;
+                    return noError;
+                }
+                else
+                {
+                    std::cout <<"Unknown '"<<buf<<"' identifier.\n" << std::endl;
+                    return geometryError;
+                }
+                break;
+                default :
+                    std::cout <<"Wrong tag in the geometry file.\n" << std::endl;
+                    return geometryError;
+                continue;
             }
-            else if(buf=="brick")
-            {
-                readBrick(cube,&inFile, currentField,
-                    &posFree, &posMoving, &posFixed,
-                    &volVectorFree, &volVectorFixed, &volVectorMoving);
-            }
-            else if(buf=="cylin")
-            {
-                readBrick(cylinder,&inFile, currentField,
-                    &posFree, &posMoving, &posFixed,
-                    &volVectorFree, &volVectorFixed, &volVectorMoving);
-            }
-            else if(buf=="spher")
-            {
-                readBrick(sphere,&inFile, currentField,
-                    &posFree, &posMoving, &posFixed,
-                    &volVectorFree, &volVectorFixed, &volVectorMoving);
-            }
-            else if(buf=="END_G")
-            {
-                // Number of particles
-                currentField->nFree=posFree.size()/3;
-                currentField->nFixed=posFixed.size()/3;
-                currentField->nMoving=posMoving.size()/3;
-                currentField->nTotal= currentField->nFree + currentField->nFixed + currentField->nMoving;
-                // Position and volume vector sorting
-                posFree.insert(posFree.end(), posFixed.begin(), posFixed.end());
-                posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
-                volVectorFree.insert(volVectorFree.end(), volVectorFixed.begin(), volVectorFixed.end());
-                volVectorFree.insert(volVectorFree.end(), volVectorMoving.begin(), volVectorMoving.end());
-                (*volVector)=volVectorFree;
-                currentField->pos=posFree;
-                return noError;
-            }
-            else
-            {
-                std::cout <<"Unknown '"<<buf<<"' identifier.\n" << std::endl;
-                return geometryError;
-            }
-            break;
-            default :
-            continue;
         }
     }
+    std::cout << "Reached end of file before geometry reading.\n" << std::endl;
+    return geometryError;
 }
 
 /*
@@ -257,7 +294,7 @@ Error readParameter(std::string filename, Parameter* parameter)
             {
                 int cnt=0;
                 char valueArray[1024];
-                while(cnt!=N_PARAM)
+                while(cnt!=N_PARAM && inFile.peek() != std::ifstream::traits_type::eof())
                 {
                     std::getline(inFile, buf);
                     if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
@@ -411,6 +448,10 @@ Error readParameter(std::string filename, Parameter* parameter)
                         ++cnt;
                     }
                     else{continue;}
+                }
+                if(cnt!=N_PARAM){
+                    std::cout << "Reached end of file before parameters reading.\n" << std::endl;
+                    return parameterError;
                 }
             }
             else if(buf=="END_F")
