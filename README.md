@@ -49,11 +49,3 @@ non-trivial configurations) is due on May 19th. An oral presentation of the main
 results will be organized during the June exam session; individual theoretical and practical
 questions will be asked to each member of the two student groups.
 
-
-
-Xavier Adriaens     : ok
-Andrea Attipoe      : ok
-Sébastien Brialmont : ok
-Gabriel Digregorio  : ok
-Julien Dular        : ok
-Romain Hanus        : ok
