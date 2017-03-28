@@ -63,13 +63,9 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
             double t_cv = 0.4  * (h/(parameter->c+0.6*parameter->alpha*parameter->c+0.6*parameter->beta*maxMu));
 
             if (t_f < t_cv)
-            {
                 currentField->nextK = t_f ;
-            }
             else if(t_cv < t_f)
-            {
                 currentField->nextK = t_cv ;
-            }
         }
         break;
     }

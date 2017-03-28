@@ -39,7 +39,8 @@
    theta=0.5
    kernel=2
    viscosityModel=0
-   integrationMethod=1
+   integrationMethod=0
+   adaptativeTimeStep=1
    densityInitMethod=1
    stateEquationMethod=0
    massInitMethod=0
