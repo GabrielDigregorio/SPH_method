@@ -79,6 +79,7 @@ make
 * Creat a new directory to store data
 
 ```
+cd build
 mkdir ./Results/myExperiment
 ```
 
@@ -89,7 +90,7 @@ mkdir ./Results/myExperiment
 ./sph ../Playgrounds/<name>_Para.kzr ../Playgrounds/<name>_Geom.kzr myExperiment/<name>
 ```
 
-## Experiment Analysis
+## Experiment Analysis (Matlab)
 
 * Open matlab and go into the directory Matlab of the SPH project
 
