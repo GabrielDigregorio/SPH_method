@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #define N_UL 3
-#define N_DATA 9
+#define N_DATA 12
 #define N_PARAM 28
 
 enum geomType{cube,cylinder,sphere};
@@ -62,6 +62,8 @@ Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vecto
     float r=brickData[2];
     double o[3] = {brickData[3],brickData[4],brickData[5]};
     double L[3] = {brickData[6],brickData[7],brickData[8]};
+    double teta[3]= {brickData[9],brickData[10],brickData[11]};
+    std::cout<<"teta " << teta[0]<< teta[1]<< teta[2] <<"\n";
     int nPart;
     double volPart;
     switch(c)
@@ -70,7 +72,7 @@ Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vecto
         switch(type)
         {
             case cube :
-            meshcube(o, L, s, *posFree, &nPart, &volPart, r, true);
+            meshcube(o, L,teta, s, *posFree, &nPart, &volPart, r, true);
             break;
             case cylinder :
             meshcylinder(o, L, s, *posFree, &nPart, &volPart, r, true);
@@ -88,7 +90,7 @@ Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vecto
         switch(type)
         {
             case cube :
-            meshcube(o, L, s, *posFixed, &nPart, &volPart, r, true);
+            meshcube(o, L,teta, s, *posFree, &nPart, &volPart, r, true);
             break;
             case cylinder :
             meshcylinder(o, L, s, *posFixed, &nPart, &volPart, r, true);
@@ -106,7 +108,7 @@ Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vecto
         switch(type)
         {
             case cube :
-            meshcube(o, L, s, *posMoving, &nPart, &volPart, r, true);
+            meshcube(o, L,teta, s, *posFree, &nPart, &volPart, r, true);
             break;
             case cylinder :
             meshcylinder(o, L, s, *posMoving, &nPart, &volPart, r, true);
@@ -445,6 +447,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
+                        
                         ++cnt;
                     }
                     else{continue;}
