@@ -27,7 +27,7 @@
 #domsz
 ux = 0.5
 uy = 0.5
-uz = 0.6
+uz = 1
 lx = -0.5
 ly = -0.5
 lz = -0.5
@@ -41,8 +41,8 @@ lz = -0.5
        y=0
        z=0.45
        %dimen
-       L=0.7
-       W=0.7
+       L=0.5
+       W=0.5
        H=0.7
    #brick
        %param

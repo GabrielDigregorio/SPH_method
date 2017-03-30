@@ -165,28 +165,28 @@ void boxMesh(double l[3], double u[3], double kh,
 }
 
 // Sorts the particles into cubic boxes
-void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
+void sortParticles(std::vector<double> &pos, double l[3], double u[3], double boxSize,
                    std::vector<std::vector<int> > &boxes){
     // Start from scratch
     boxClear(boxes);
     // Determination of the number of boxes in each direction
-    int nBoxesX = ceil((u[0] - l[0])/kh); // Extra box if non integer quotient
-    int nBoxesY = ceil((u[1] - l[1])/kh);
-    int nBoxesZ = ceil((u[2] - l[2])/kh);
+    int nBoxesX = ceil((u[0] - l[0])/boxSize); // Extra box if non integer quotient
+    int nBoxesY = ceil((u[1] - l[1])/boxSize);
+    int nBoxesZ = ceil((u[2] - l[2])/boxSize);
     // Box identifier variables
     int boxX; int boxY; int boxZ;
     double temp;
     for(int i=0 ; i<pos.size()/3 ; i++){
         // Box coordinate along X
-        temp = (pos[3*i] - l[0])/kh; // Integer division
+        temp = (pos[3*i] - l[0])/boxSize; // Integer division
         if(temp < 0){boxX = 0;}
         else{boxX = (temp < nBoxesX-1) ? temp : nBoxesX-1;}
         // Box coordinate along Y
-        temp = (pos[3*i+1] - l[1])/kh;
+        temp = (pos[3*i+1] - l[1])/boxSize;
         if(temp < 0){boxY = 0;}
         else{boxY = (temp < nBoxesY-1) ? temp : nBoxesY-1;}
         // Box coordinate along Z
-        temp = (pos[3*i+2] - l[2])/kh;
+        temp = (pos[3*i+2] - l[2])/boxSize;
         if(temp < 0){boxZ = 0;}
         else{boxZ = (temp < nBoxesZ-1) ? temp : nBoxesZ-1;}
         // Put the particle identifier in the corresponding box array
@@ -195,14 +195,14 @@ void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh
 }
 
 // Overload with "optimization" -> useless with vectors, maybe useful with lists...
-void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
+void sortParticles(std::vector<double> &pos, double l[3], double u[3], double boxSize,
                    std::vector<std::vector<int> > &boxes, bool toOptimize){
 
     if(toOptimize){
         // Determination of the number of boxes in each direction
-        int nBoxesX = ceil((u[0] - l[0])/kh); // Extra box if non integer quotient
-        int nBoxesY = ceil((u[1] - l[1])/kh);
-        int nBoxesZ = ceil((u[2] - l[2])/kh);
+        int nBoxesX = ceil((u[0] - l[0])/boxSize); // Extra box if non integer quotient
+        int nBoxesY = ceil((u[1] - l[1])/boxSize);
+        int nBoxesZ = ceil((u[2] - l[2])/boxSize);
 
         int boxNumber = 0;
         for(int currBoxX=0 ; currBoxX<nBoxesX ; currBoxX++){
@@ -213,9 +213,9 @@ void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh
                         int particleID = boxes[boxNumber][i];
                         int boxX, boxY, boxZ;
                         // Box pre-coordinates along X
-                        boxX = (pos[3*particleID] - l[0])/kh; // Integer division
-                        boxY = (pos[3*particleID+1] - l[1])/kh;
-                        boxZ = (pos[3*particleID+2] - l[2])/kh;
+                        boxX = (pos[3*particleID] - l[0])/boxSize; // Integer division
+                        boxY = (pos[3*particleID+1] - l[1])/boxSize;
+                        boxZ = (pos[3*particleID+2] - l[2])/boxSize;
                         if(boxX==currBoxX && boxY==currBoxY && boxZ==currBoxZ){i++;}
                         else{
                             // Box coordinate along X
@@ -238,7 +238,7 @@ void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh
             }
         }
     }
-    else{sortParticles(pos, l, u, kh, boxes);}
+    else{sortParticles(pos, l, u, boxSize, boxes);}
 }
 
 
