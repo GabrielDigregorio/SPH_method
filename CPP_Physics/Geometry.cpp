@@ -187,7 +187,7 @@ void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<dou
      // the function is the same as meshcube, but as an option to make the palne rotate in any direction over it's center à masse
       // if we stack the cube:
   
-      std::cout<<"teta " << teta[0]<< teta[1]<< teta[2] <<"\n";
+      //std::cout<<"teta " << teta[0]<< teta[1]<< teta[2] <<"\n";
     if(stack == true){
         L[0] -= s; L[1] -= s; L[2] -= s;
     }

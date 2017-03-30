@@ -63,7 +63,7 @@ Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vecto
     double o[3] = {brickData[3],brickData[4],brickData[5]};
     double L[3] = {brickData[6],brickData[7],brickData[8]};
     double teta[3]= {brickData[9],brickData[10],brickData[11]};
-    std::cout<<"teta " << teta[0]<< teta[1]<< teta[2] <<"\n";
+    //std::cout<<"teta " << teta[0]<< teta[1]<< teta[2] <<"\n";
     int nPart;
     double volPart;
     switch(c)
