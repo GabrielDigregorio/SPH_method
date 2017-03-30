@@ -1,13 +1,13 @@
 #include "Main.h"
 #include "Physics.h"
-
+#define M_PI           3.14159265358979323846  /* pi */
 // Build a brick of regulary aligned particles with the center of mass at o(x,y,z).
 //  - o[3]: corner of the cube with the lowest (x,y,z) values ??? Center ???
 //  - L[3]: edge lengths along x,y and z
 //  - s: particle spacing
 //  - pertubation: percentage of perturbation in position of particles (equal 0 by default)
 
-void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart,
+/*void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart,
      double perturbation, bool stack){
     // if we stack the cube:
     if(stack == true){
@@ -25,13 +25,6 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int*
     (*nPart)=ni*nj*nk;
     (*volPart)=dx*dy*dz;
 
-    // output
-    /*
-    std::cout << "meshing cube at center o=(" << o[0] << ","  << o[1] << ","  << o[2] << ") ";
-    std::cout << "of size L=(" <<L[0]<< ","  <<L[1]<< ","  <<L[2]<< ")\n";
-    std::cout << "\tparticle spacing s=(" <<dx<< ","  <<dy<< ","  <<dz<< ") [target was s=" << s << "]\n";
-    std::cout << "\t=> "<<ni<< "*"  <<nj<< "*"  <<nk<< " = " << (*nPart) << " particles to be generated\n";
-    */
 
     // memory allocation
     pos.reserve(pos.size() + ni*nj*nk*3);
@@ -56,7 +49,7 @@ void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int*
             }
         }
     }
-}
+}*/
 
 
 
@@ -189,4 +182,126 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, in
                 }
             }
     }
+}
+void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation, bool stack){
+     // the function is the same as meshcube, but as an option to make the palne rotate in any direction over it's center à masse
+      // if we stack the cube:
+  
+      std::cout<<"teta " << teta[0]<< teta[1]<< teta[2] <<"\n";
+    if(stack == true){
+        L[0] -= s; L[1] -= s; L[2] -= s;
+    }
+
+    // calculate nb of particles along each direction from target size "s"
+    int ni = int(ceil(L[0]/s));
+    double dx = L[0]/ni; ++ni;
+    int nj = int(ceil(L[1]/s));
+    double dy = L[1]/nj; ++nj;
+    int nk = int(ceil(L[2]/s));
+    double dz = L[2]/nk; ++nk;
+    // Volume & number of particles computation
+    (*nPart)=ni*nj*nk;
+    (*volPart)=dx*dy*dz;
+
+    // output
+    /*
+    std::cout << "meshing cube at center o=(" << o[0] << ","  << o[1] << ","  << o[2] << ") ";
+    std::cout << "of size L=(" <<L[0]<< ","  <<L[1]<< ","  <<L[2]<< ")\n";
+    std::cout << "\tparticle spacing s=(" <<dx<< ","  <<dy<< ","  <<dz<< ") [target was s=" << s << "]\n";
+    std::cout << "\t=> "<<ni<< "*"  <<nj<< "*"  <<nk<< " = " << (*nPart) << " particles to be generated\n";
+    */
+
+    // memory allocation
+    pos.reserve(pos.size() + ni*nj*nk*3);
+
+    // generates number in the range -s*perturbation % and s*perturbation %
+    std::default_random_engine generator; // A SEED MUST BE USE TO CHANGE VALUE AT EACH CALL
+    std::uniform_real_distribution<double> distribution(-s*perturbation/100,s*perturbation/100);
+
+    // particle generation
+    for(int k=0; k<nk; ++k)
+    {
+        double z = o[2] - L[2]/2 + k*dz;
+        for(int j=0; j<nj; ++j)
+        {
+            double y = o[1] - L[1]/2 +j*dy;
+            for(int i=0; i<ni; ++i)
+            {
+                double x = o[0] - L[0]/2 +i*dx;
+                pos.push_back(x + distribution(generator));
+                pos.push_back(y + distribution(generator));
+                pos.push_back(z + distribution(generator));
+            }
+        }
+    }
+    int n_block=3*nk*nj*ni;
+    int n_total=pos.size();
+    int start=(n_total-n_block)/3;
+    // creation matrice rotation
+    std::vector<double> Rx(9,0);
+    std::vector<double> Ry(9,0);
+    std::vector<double> Rz(9,0);
+    double teta_x=teta[0];// en dregré
+    double teta_y=teta[1];// en dregré
+    double teta_z=teta[2];// en dregré
+    Rx[0]=1;
+    Rx[1]=0;
+    Rx[2]=0;
+    Rx[3]=0;
+    Rx[4]=cos(teta_x/180.0*M_PI);
+    Rx[5]=-sin(teta_x/180.0*M_PI);
+    Rx[6]=0;
+    Rx[7]=sin(teta_x/180.0*M_PI);
+    Rx[8]=cos(teta_x/180.0*M_PI);
+
+    Ry[0]=cos(teta_y/180.0*M_PI);
+    Ry[1]=0;
+    Ry[2]=sin(teta_y/180.0*M_PI);
+    Ry[3]=0;
+    Ry[4]=1;
+    Ry[5]=0;
+    Ry[6]=-sin(teta_y/180.0*M_PI);
+    Ry[7]=0;
+    Ry[8]=cos(teta_y/180.0*M_PI);
+
+    Rz[0]=cos(teta_z/180.0*M_PI);
+    Rz[1]=-sin(teta_z/180.0*M_PI);
+    Rz[2]=0;
+    Rz[3]=sin(teta_z/180.0*M_PI);
+    Rz[4]=cos(teta_z/180.0*M_PI);
+    Rz[5]=0;
+    Rz[6]=0;
+    Rz[7]=0;
+    Rz[8]=1;
+        for(int i=start; i<(n_total)/3; ++i)
+            {
+                pos[3*i]= pos[3*i]-o[0];
+                pos[3*i+1]= pos[3*i+1]-o[1];
+                pos[3*i+2]= pos[3*i+2]-o[2];
+            }
+        // rotation
+        for(int i=start; i<(n_total)/3; ++i)
+        {
+           // first Rx 
+            pos[3*i]= Rx[0]*pos[3*i]+Rx[1]*pos[3*i+1]+Rx[2]*pos[3*i+2];
+            pos[3*i+1]= Rx[3]*pos[3*i]+Rx[4]*pos[3*i+1]+Rx[5]*pos[3*i+2];
+            pos[3*i+2]= Rx[6]*pos[3*i]+Rx[7]*pos[3*i+1]+Rx[8]*pos[3*i+2];
+            // second Ry
+            pos[3*i]= Ry[0]*pos[3*i]+Ry[1]*pos[3*i+1]+Ry[2]*pos[3*i+2];
+            pos[3*i+1]= Ry[3]*pos[3*i]+Ry[4]*pos[3*i+1]+Ry[5]*pos[3*i+2];
+            pos[3*i+2]= Ry[6]*pos[3*i]+Ry[7]*pos[3*i+1]+Ry[8]*pos[3*i+2];
+            // thrid Rz
+            pos[3*i]= Rz[0]*pos[3*i]+Rz[1]*pos[3*i+1]+Rz[2]*pos[3*i+2];
+            pos[3*i+1]= Rz[3]*pos[3*i]+Rz[4]*pos[3*i+1]+Rz[5]*pos[3*i+2];
+            pos[3*i+2]= Rz[6]*pos[3*i]+Rz[7]*pos[3*i+1]+Rz[8]*pos[3*i+2];
+        }
+        // translation back at the first place
+        for(int i=start; i<(n_total)/3; ++i)
+            {
+                pos[3*i]= pos[3*i]+o[0];
+                pos[3*i+1]= pos[3*i+1]+o[1];
+                pos[3*i+2]= pos[3*i+2]+o[2];
+            }
+
+
 }
