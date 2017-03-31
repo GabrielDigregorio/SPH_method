@@ -53,36 +53,45 @@ void writeField(Field* field, double t, Parameter* parameter,
     std::map<std::string, std::vector<double> *> scalars;
     std::map<std::string, std::vector<double> *> vectors;
 
-    // Map particules
-    if(parameter->format==0 || parameter->format==2)
+    // Save results to disk (ParaView or Matlab)
+    if (parameter->paraview != noParaview)// .vtk in ParaView
     {
         scalars["pressure"] = &field->pressure;
         scalars["density"]  = &field->density;
         vectors["velocity"] = &field->speed;
+
+        // nbr of particles should be multiple of 3
+        int nbp = field->pos.size()/3, nbpStart, nbpEnd;
+        assert(field->pos.size()==nbp*3); // should be multiple of 3
+
+        // Selection of the output format
+        // Full
+        if(parameter->paraview == fullParaview)
+        {
+            nbpStart = 0;
+            nbpEnd   = nbp; 
+            paraView(filename+"_Full", t, field->pos, scalars, vectors, nbpStart, nbpEnd);
+        }
+
+        // Only nFree
+        if(parameter->paraview == nFreeParaview || parameter->paraview == nFree_nMovingFixedParaview )
+        {
+            nbpStart = 0;
+            nbpEnd   = field->nFree - 1; 
+            paraView(filename + "_Free", t, field->pos, scalars, vectors, nbpStart, nbpEnd);  
+        }
+
+        // Only nFree and nMoving
+        if(parameter->paraview == nMovingFixedParaview || parameter->paraview == nFree_nMovingFixedParaview )
+        {
+            nbpStart = field->nFree;
+            nbpEnd   = nbp; 
+            paraView(filename + "_MovingFixed", t, field->pos, scalars, vectors, nbpStart, nbpEnd);                         
+        }
     }
 
-    // Save results to disk (ParaView or Matlab)
-    switch (parameter->format){
-
-    case ParaView : // .vtk in ParaView
-        paraView(filename, t, field->pos, scalars, vectors);
-        //return ;
-    break;
-
-    case Matlab : // .txt in Matlab
+    if (parameter->matlab != noMatlab) // .txt in Matlab
         matlab(filename, parameterFilename, geometryFilename,  t, parameter, field);
-        //return ;
-    break;
-
-    case Both : // .vtk in ParaView and .txt in Matlab
-        paraView(filename, t, field->pos, scalars, vectors);
-        matlab(filename, parameterFilename, geometryFilename, t, parameter, field);
-        //return ;
-    break;
-
-    default:
-        std::cout<<"Non existing writing type."<<std::endl;
-    }
 }
 
 
@@ -97,10 +106,11 @@ void paraView(std::string const &filename,
               int step,
               std::vector<double> const &pos,
               std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors)
+              std::map<std::string, std::vector<double> *> const &vectors,
+              int nbpStart, int nbpEnd)
 {
-    int nbp = pos.size()/3;
-    assert(pos.size()==nbp*3); // should be multiple of 3
+    // number of particles to write
+    int nbp = (nbpEnd-nbpStart);
 
     // build file name + stepno + vtk extension
     std::stringstream s; s <<"Results/"<< filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtk";
@@ -117,12 +127,12 @@ void paraView(std::string const &filename,
 
     // points
     f << "POINTS " << nbp << " float"<<std::endl;
-    for(int i=0; i<nbp; ++i)
+    for(int i=nbpStart; i<nbpEnd; ++i)
         f << pos[3*i+0] << " " << pos[3*i+1] << " " << pos[3*i+2] << std::endl;
 
     // vertices
     f << "VERTICES " << nbp << " " << 2*nbp << std::endl;
-    for(int i=0; i<nbp; ++i)
+    for(int i=nbpStart; i<nbpEnd; ++i)
         f << "1 " << i << std::endl;
     f << '\n'; // empty line (required)
 
@@ -136,7 +146,7 @@ void paraView(std::string const &filename,
     {
         assert(it->second->size()==nbp);
         f << it->first << " 1 " << nbp << " float"<<std::endl;
-        for(int i=0; i<nbp; ++i)
+        for(int i=nbpStart; i<nbpEnd; ++i)
             f << (*it->second)[i] << '\n';
     }
 
@@ -146,7 +156,7 @@ void paraView(std::string const &filename,
     {
         assert(it->second->size()==3*nbp);
         f << it->first << " 3 " << nbp << " float"<<std::endl;
-        for(int i=0; i<nbp; ++i)
+        for(int i=nbpStart; i<nbpEnd; ++i)
             f << (*it->second)[3*i+0] << " " << (*it->second)[3*i+1] << " " << (*it->second)[3*i+2] << std::endl;
     }
 
@@ -220,6 +230,8 @@ void matlab(std::string const &filename,
     f << "\n";
     f << " posX\t        posY\t        posZ\t     velocityX\t     velocityY\t     velocityZ\t     density\t     pressure\t     mass"<<std::endl;
 
+
+    
     // Fill f:
     for(int i=0; i<nbp; ++i)
     {

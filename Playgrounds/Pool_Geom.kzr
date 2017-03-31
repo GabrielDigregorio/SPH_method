@@ -8,112 +8,142 @@
 %   ux, uy, uz ==> Upper coordinate of the domain
 %
 % geometry : #brick, #cylin or #spher
-% #param
+% %param
 %   c ==> 0=free, 1=moving, 2=fixed
 %   s ==> spacing between particles
 %   r ==> % randomness in particle's position
-% #coord
+% %coord
 %   x ==> x coordinate of the center of mass
 %   y ==> y coordinate of the center of mass
 %   z ==> z coordinate of the center of mass
-% #dimen
+% %dimen
 %   L ==> Length of the geometry
 %   W ==> Width  of the geometry
 %   H ==> Height of the geometry
 %   d ==> Small diameter of the geometry
 %   D ==> Large diameter of the geometry
+% %inclin
+%   tetax ==> Angle of rotation around the x axis (in degre)
+%   tetay ==> Angle of rotation around the y axis (in degre)
+%   tetaz ==> Angle of rotation around the z axis (in degre)
 %********************************************
 
+
 #domsz
-ux = 0.3
-uy = 0.3
-uz = 0.6
-lx = -0.3
-ly = -0.3
-lz = -0.1
+    ux = 0.3
+    uy = 0.3
+    uz = 0.6
+    lx = -0.3
+    ly = -0.3
+    lz = -0.1
 
-#brick
-   %param
-   c=0
-   s=0.05
-   r=0
-   %coord
-   x=0
-   y=0
-   z=0.26
-   %dimen
-   L=0.4
-   W=0.4
-   H=0.4
+% Fluid
+    #brick
+        %param
+            c=0
+            s=0.05
+            r=0
+        %coord
+            x=0
+            y=0
+            z=0.26
+        %dimen
+            L=0.4
+            W=0.4
+            H=0.4
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+% Walls
+    #brick
+        %param
+            c=2
+            s=0.05
+            r=0
+        %coord
+            x=0
+            y=0
+            z=0
+        %dimen
+            L=0.6
+            W=0.6
+            H=0.1
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
 
-#brick
-    %param
-    c=2
-    s=0.05
-    r=0
-    %coord
-    x=0
-    y=0
-    z=0
-    %dimen
-    L=0.6
-    W=0.6
-    H=0.1
+    #brick
+        %param
+            c=2
+            s=0.05
+            r=0
+        %coord
+            x=0.25
+            y=0
+            z=0.3
+        %dimen
+            L=0.1
+            W=0.5
+            H=0.5
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
 
-#brick
-    %param
-    c=2
-    s=0.05
-    r=0
-    %coord
-    x=0.25
-    y=0
-    z=0.3
-    %dimen
-    L=0.1
-    W=0.5
-    H=0.5
+    #brick
+        %param
+            c=2
+            s=0.05
+            r=0
+        %coord
+            x=-0.25
+            y=0
+            z=0.3
+        %dimen
+            L=0.1
+            W=0.5
+            H=0.5
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
 
-#brick
-    %param
-    c=2
-    s=0.05
-    r=0
-    %coord
-    x=-0.25
-    y=0
-    z=0.3
-    %dimen
-    L=0.1
-    W=0.5
-    H=0.5
+    #brick
+        %param
+            c=2
+            s=0.05
+            r=0
+        %coord
+            x=0
+            y=0.25
+            z=0.3
+        %dimen
+            L=0.6
+            W=0.1
+            H=0.5
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
 
-#brick
-    %param
-    c=2
-    s=0.05
-    r=0
-    %coord
-    x=0
-    y=0.25
-    z=0.3
-    %dimen
-    L=0.6
-    W=0.1
-    H=0.5
-
-#brick
-    %param
-    c=2
-    s=0.05
-    r=0
-    %coord
-    x=0
-    y=-0.25
-    z=0.3
-    %dimen
-    L=0.6
-    W=0.1
-    H=0.5
-
+    #brick
+        %param
+            c=2
+            s=0.05
+            r=0
+        %coord
+            x=0
+            y=-0.25
+            z=0.3
+        %dimen
+            L=0.6
+            W=0.1
+            H=0.5
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+            
 #END_G

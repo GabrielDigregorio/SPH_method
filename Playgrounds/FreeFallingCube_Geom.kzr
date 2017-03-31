@@ -8,42 +8,51 @@
 %   ux, uy, uz ==> Upper coordinate of the domain
 %
 % geometry : #brick, #cylin or #spher
-% #param
+% %param
 %   c ==> 0=free, 1=moving, 2=fixed
 %   s ==> spacing between particles
 %   r ==> % randomness in particle's position
-% #coord
+% %coord
 %   x ==> x coordinate of the center of mass
 %   y ==> y coordinate of the center of mass
 %   z ==> z coordinate of the center of mass
-% #dimen
+% %dimen
 %   L ==> Length of the geometry
 %   W ==> Width  of the geometry
 %   H ==> Height of the geometry
 %   d ==> Small diameter of the geometry
 %   D ==> Large diameter of the geometry
+% %inclin
+%   tetax ==> Angle of rotation around the x axis (in degre)
+%   tetay ==> Angle of rotation around the y axis (in degre)
+%   tetaz ==> Angle of rotation around the z axis (in degre)
 %********************************************
 
-#domsz
-ux = 5
-uy = 5
-uz = 11
-lx = -5
-ly = -5
-lz = -1
 
+#domsz
+    ux = 5
+    uy = 5
+    uz = 11
+    lx = -5
+    ly = -5
+    lz = -1
+
+% Fluid cube
     #brick
         %param
-        c=0
-        s=0.05
-        r=0
+            c=0
+            s=0.05
+            r=0
         %coord
-        x=0
-        y=0
-        z=10
+            x=0
+            y=0
+            z=10
         %dimen
-        L=1
-        W=1
-        H=1
-
+            L=1
+            W=1
+            H=1
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
 #END_G

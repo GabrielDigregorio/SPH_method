@@ -8,6 +8,7 @@
 
 // Error types
 enum Error {noError, argumentError, parameterError, geometryError, consistencyError, NB_ERROR_VALUE};
+
 // Kernel Types
 enum Kernel {Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline, NB_KERNEL_VALUE};
 
@@ -33,7 +34,8 @@ enum MassInitMethod {violeau2012, NB_MASSINIT_VALUE};
 enum SpeedLaw {constant, sine, exponential, NB_SPEEDLAW_VALUE};
 
 // Write Format output
-enum Format {ParaView, Matlab, Both, NB_FORMAT_VALUE};
+enum Matlab {noMatlab, fullMatlab, NB_MATLAB_VALUE};
+enum Paraview {noParaview, fullParaview, nFreeParaview, nMovingFixedParaview, nFree_nMovingFixedParaview, NB_PARAVIEW_VALUE};
 
 // charactTime = characteristic time of movement or period of oscillations
 
@@ -63,7 +65,8 @@ struct Parameter {
     StateEquationMethod stateEquationMethod;
     MassInitMethod massInitMethod;
     SpeedLaw speedLaw;
-    Format format;
+    Matlab matlab;
+    Paraview paraview;
 };
 
 

@@ -10,7 +10,7 @@
 
 #define N_UL 3
 #define N_DATA 12
-#define N_PARAM 28
+#define N_PARAM 29
 
 enum geomType{cube,cylinder,sphere};
 enum boundCondition{freePart, movingPart, fixedPart};
@@ -437,9 +437,9 @@ Error readParameter(std::string filename, Parameter* parameter)
                         }
                         if(cnt==27)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_FORMAT_VALUE) )
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MATLAB_VALUE) )
                           {
-                            parameter->format=(Format) atoi(valueArray);
+                            parameter->matlab=(Matlab) atoi(valueArray);
                           }
                           else
                           {
@@ -447,7 +447,18 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        
+                        if(cnt==28)
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_PARAVIEW_VALUE) )
+                          {
+                            parameter->paraview=(Paraview) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid outputFormat.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
                         ++cnt;
                     }
                     else{continue;}

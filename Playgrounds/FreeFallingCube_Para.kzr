@@ -18,33 +18,44 @@
 % massInitMethod = violeau2012 (all particles have same volumes), etc.
 % speedLaw = To be determined, will dictate the behaviour of moving boundaries
 %********************************************
+
 #param
-    kh=0.06
-    k=0.001
-    T=1
-    densityRef=1000.0
-    B=1280000.0
-    gamma=7.0
-    g=9.81
-    writeInterval=0.1
-    charactTime=1.0
-    c=300.0
-    alpha=1.0
-    beta=1.0
-    epsilon=0.01
-    movingDirectionX=0
-    movingDirectionY=0
-    movingDirectionZ=0.5
-    molarMass=1
-    temperature=293.15
-    theta=0.5
-    kernel=2
-    viscosityModel=0
-    integrationMethod=1
-    adaptativeTimeStep=1
-    densityInitMethod=1
-    stateEquationMethod=0
-    massInitMethod=0
-    speedLaw=0
-    format=2
+
+    % Time parameters
+        kh=0.06
+        k=0.001
+        T=1
+        densityRef=1000.0
+        B=1280000.0
+        gamma=7.0
+        g=9.81
+        writeInterval=0.1
+        charactTime=1.0
+        c=300.0
+        alpha=1.0
+        beta=1.0
+        epsilon=0.01
+
+    % Moving Block Parameters
+        movingDirectionX=0
+        movingDirectionY=0
+        movingDirectionZ=0.5
+        molarMass=1
+        temperature=293.15
+        theta=0.5
+        kernel=2
+
+    % Numerical parameters
+        viscosityModel=0
+        integrationMethod=1
+        adaptativeTimeStep=1
+        densityInitMethod=1
+        stateEquationMethod=0
+        massInitMethod=0
+        speedLaw=0
+    
+    % Output Parameters
+        matlab=1
+        paraview=4
+
 #END_F
