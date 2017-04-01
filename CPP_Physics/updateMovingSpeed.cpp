@@ -16,6 +16,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
 
     int number_block_diff=field->info_block.size()/6;
     int block_number=0;
+    int block_number_moving=0;
     int counter_1=0;
     int counter_2=0;
     while(block_number<number_block_diff)
@@ -47,8 +48,8 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
         int p=start;
         int lm=0;
         int cnt_p=1;
-
-        while(lm<block_number)
+        
+        while(lm<block_number_moving)
         {
           int nx_p=field->info_block[cnt_p];
           int ny_p=field->info_block[cnt_p+1];
@@ -57,8 +58,9 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
           p=p+nx_p*nz_p*ny_p;
           lm=lm+1;
         }
-        block_number=block_number+1;
-      //  std::cout << "p" << p<< std::endl;
+       block_number_moving=block_number_moving+1;
+       block_number=block_number+1;
+     
     switch(speedLaw)
     {
       case sine:
@@ -96,7 +98,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
       case level_arm:
       {
        
-
+       
             for(int k=0; k<nz; ++k)
               {
 
