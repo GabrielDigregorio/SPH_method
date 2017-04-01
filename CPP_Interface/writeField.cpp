@@ -51,7 +51,7 @@ void writeField(Field* field, double t, Parameter* parameter,
                 std::string const &filename)
 {
     std::map<std::string, std::vector<double> *> scalars;
-    std::map<std::string, std::vector<double> *> vectors;
+    std::map<std::string, std::vector<double> (*)[3]> vectors;
 
     // Map particules
     if(parameter->format==0 || parameter->format==2)
@@ -89,18 +89,17 @@ void writeField(Field* field, double t, Parameter* parameter,
 
 // export results to paraview (VTK polydata - legacy file fomat)
 //   filename: file name without vtk extension
-//   pos:     positions (vector of size 3*number of particles)
+//   pos:     positions (vector of size number of particles)
 //   step:    time step number
 //   scalars: scalar fields defined on particles (map linking [field name] <=> [vector of results v1, v2, v3, v4, ...]
 //   vectors: vector fields defined on particles (map linking [field name] <=> [vector of results v1x, v1y, v1z, v2x, v2y, ...]
 void paraView(std::string const &filename,
               int step,
-              std::vector<double> const &pos,
+              std::vector<double> (&pos)[3],
               std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors)
+              std::map<std::string, std::vector<double> (*)[3] > const &vectors)
 {
-    int nbp = pos.size()/3;
-    assert(pos.size()==nbp*3); // should be multiple of 3
+    int nbp = pos[0].size();
 
     // build file name + stepno + vtk extension
     std::stringstream s; s <<"Results/"<< filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtk";
@@ -118,7 +117,7 @@ void paraView(std::string const &filename,
     // points
     f << "POINTS " << nbp << " float"<<std::endl;
     for(int i=0; i<nbp; ++i)
-        f << pos[3*i+0] << " " << pos[3*i+1] << " " << pos[3*i+2] << std::endl;
+        f << pos[0][i] << " " << pos[1][i] << " " << pos[2][i] << std::endl;
 
     // vertices
     f << "VERTICES " << nbp << " " << 2*nbp << std::endl;
@@ -141,13 +140,13 @@ void paraView(std::string const &filename,
     }
 
     // vector fields
-    it = vectors.begin();
-    for(; it!=vectors.end(); ++it)
+    std::map<std::string, std::vector<double> (*)[3]>::const_iterator itV=vectors.begin();
+    for(; itV!=vectors.end(); ++itV)
     {
-        assert(it->second->size()==3*nbp);
-        f << it->first << " 3 " << nbp << " float"<<std::endl;
+        //assert((*itV->second)[0].size()==nbp);
+        f << itV->first << " 3 " << nbp << " float"<<std::endl;
         for(int i=0; i<nbp; ++i)
-            f << (*it->second)[3*i+0] << " " << (*it->second)[3*i+1] << " " << (*it->second)[3*i+2] << std::endl;
+            f << (*itV->second)[0][i] << " " << (*itV->second)[1][i] << " " << (*itV->second)[2][i] << std::endl;
     }
 
     f.close();
@@ -168,8 +167,7 @@ void matlab(std::string const &filename,
               std::string const &geometryFilename,
               int step, Parameter* parameter,Field* field)
 {
-    int nbp = field->pos.size()/3;
-    assert(field->pos.size()==nbp*3); // should be multiple of 3
+    int nbp = field->pos[0].size();
 
     // Set Chronos and time variable
     std::chrono::time_point<std::chrono::system_clock> start, end;
@@ -223,8 +221,8 @@ void matlab(std::string const &filename,
     // Fill f:
     for(int i=0; i<nbp; ++i)
     {
-        f <<field->pos[3*i+0]<<"\t"<<field->pos[3*i+1]<<"\t"<<field->pos[3*i+2]<<"\t"
-        <<field->speed[3*i+0]<<"\t"<<field->speed[3*i+1]<<"\t"<<field->speed[3*i+2]<<"\t"
+        f <<field->pos[0][i]<<"\t"<<field->pos[1][i]<<"\t"<<field->pos[2][i]<<"\t"
+        <<field->speed[0][i]<<"\t"<<field->speed[1][i]<<"\t"<<field->speed[2][i]<<"\t"
         <<field->density[i]<<"\t"
         <<field->pressure[i]<<"\t"
         <<field->mass[i]<<"\t"<<std::endl;

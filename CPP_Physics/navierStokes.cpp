@@ -23,7 +23,7 @@ double continuity(int particleID, std::vector<int>& neighbors, std::vector<doubl
     //Compute scalar product present in the formula
     for (int j = 0; j <= 2; j++)
     {
-      scalarProduct += (currentField->speed[3*particleID + j] - currentField->speed[3*neighbors[i] + j])
+      scalarProduct += (currentField->speed[j][particleID] - currentField->speed[j][neighbors[i]])
             * kernelGradients[3*i + j];
     }
     densityDerivative += currentField->mass[neighbors[i]]  * scalarProduct;

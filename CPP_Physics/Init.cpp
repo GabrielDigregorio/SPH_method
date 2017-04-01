@@ -13,7 +13,8 @@
 */
 void speedInit(Field* field, Parameter* parameter)
 {
-	field->speed.assign(3 * field->nTotal, 0.0); // Initial state is zero speed; other choice could be implemented
+	for(int j=0 ; j<3 ; j++)
+		field->speed[j].assign(field->nTotal, 0.0); // Initial state is zero speed; other choice could be implemented
 	if (field->nMoving != 0) { updateMovingSpeed(field, parameter, 0.0); }
 }
 
@@ -40,8 +41,8 @@ void densityInit(Field* field, Parameter* parameter)
 			double H;
 
 			for (int j = 0; j < field->nTotal; j++){
-				if (field->type[j] == freePart && field->pos[3*j+2] > zMax){
-					zMax = field->pos[3*j+2];
+				if (field->type[j] == freePart && field->pos[2][j] > zMax){
+					zMax = field->pos[2][j];
 				}
 			}
 			switch (parameter->stateEquationMethod)
@@ -50,7 +51,7 @@ void densityInit(Field* field, Parameter* parameter)
 
 				for (int i = 0; i < field->nTotal; i++){
 					if(field->type[i] == freePart){
-						H = zMax - field->pos[3 * i + 2];
+						H = zMax - field->pos[2][i];
 						double rho = (1 + (1 / B)*rho_0*g*H);
 						field->density.push_back(rho_0*pow(rho, 1.0 / gamma));
 					}
@@ -60,7 +61,7 @@ void densityInit(Field* field, Parameter* parameter)
 				case perfectGas:
 				for (int i = 0; i < field->nTotal; i++){
 					if(field->type[i] == freePart){
-						H = zMax - field->pos[3 * i + 2];
+						H = zMax - field->pos[2][i];
 						double rho = rho_0*(1 + (parameter->molarMass/R/parameter->temperature)*rho_0*g*H);
 						field->density.push_back(rho);
 					}

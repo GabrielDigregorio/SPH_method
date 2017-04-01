@@ -30,9 +30,10 @@ void copyField(Field *sourceField,Field *copiedField)
 
   copiedField->mass = sourceField->mass;
   copiedField->type = sourceField->type;
-
-  copiedField->pos.resize(3*nTotal);
-  copiedField->speed.resize(3*nTotal);
+  for(int j=0 ; j<3 ; j++){
+      copiedField->pos[j].resize(nTotal);
+      copiedField->speed[j].resize(nTotal);
+  }
   copiedField->pressure.resize(nTotal);
   copiedField->density.resize(nTotal);
 
@@ -40,7 +41,7 @@ void copyField(Field *sourceField,Field *copiedField)
     for(int i = 0 ; i<nTotal ; i++){
         if(sourceField->type[i] == fixedPart){
             for(int j=0 ; j<3 ; j++)
-                copiedField->pos[3*i+j] = sourceField->pos[3*i+j];
+                copiedField->pos[j][i] = sourceField->pos[j][i];
         }
     }
 }

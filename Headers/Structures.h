@@ -75,8 +75,8 @@ struct Field {
     double l[3];
     double u[3];
     double nextK=0.0;
-    std::vector<double> pos;
-    std::vector<double> speed;
+    std::vector<double> pos[3];
+    std::vector<double> speed[3];
     std::vector<double> density;
     std::vector<double> pressure;
     std::vector<double> mass;

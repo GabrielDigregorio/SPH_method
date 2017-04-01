@@ -215,15 +215,15 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
     int ni = int(ceil(L[0]/s));
     double dx = L[0]/ni; ++ni;
     if(flag_1==1){
-        ni=ni-1;}
+    ni=ni-1;}
     int nj = int(ceil(L[1]/s));
     double dy = L[1]/nj; ++nj;
     if(flag_2==1){
-        nj=nj-1;}
+    nj=nj-1;}
     int nk = int(ceil(L[2]/s));
     double dz = L[2]/nk; ++nk;
     if(flag_3==1){
-        nk=nk-1;}
+    nk=nk-1;}
     // Volume & number of particles computation
     (*nPart)=ni*nj*nk;
     (*volPart)=dx*dy*dz;

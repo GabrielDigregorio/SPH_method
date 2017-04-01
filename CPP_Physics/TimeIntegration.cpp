@@ -27,8 +27,8 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, std
             case freePart:
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             for (int j = 0; j <= 2; j++){
-                nextField->speed[3*i + j] = currentField->speed[3*i + j] + k*currentSpeedDerivative[3*i + j];
-                nextField->pos[3*i + j] = currentField->pos[3*i + j] + k*currentField->speed[3*i + j];
+                nextField->speed[j][i] = currentField->speed[j][i] + k*currentSpeedDerivative[3*i + j];
+                nextField->pos[j][i] = currentField->pos[j][i] + k*currentField->speed[j][i];
             }
             // Fixed particles update
             case fixedPart:
@@ -37,7 +37,7 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, std
             case movingPart:
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             for (int j = 0; j <= 2; j++){
-                nextField->pos[3*i + j] = currentField->pos[3*i + j] + k*currentField->speed[3*i + j];
+                nextField->pos[j][i] = currentField->pos[j][i] + k*currentField->speed[j][i];
             }
         }
     }

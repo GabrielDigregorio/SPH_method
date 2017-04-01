@@ -13,7 +13,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
     //int end;
     start = field->nFixed + field->nFree;
     //end = field->nTotal;
-    
+
     int number_block_diff=field->info_block.size()/6;
     int block_number=0;
     int counter_1=0;
@@ -47,7 +47,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
         int p=start;
         int lm=1;
         int cnt_p=1;
-        
+
         while(lm<=block_number)
         {
           int nx_p=field->info_block[cnt_p];
@@ -68,11 +68,11 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
       for(int i=p ; i<end ; i++)
       {
         // x
-        field->speed[3*i]=movx*sin(parameter->charactTime*t);
+        field->speed[0][i]=movx*sin(parameter->charactTime*t);
         // y
-        field->speed[3*i+1]=movy*sin(parameter->charactTime*t);
+        field->speed[1][i]=movy*sin(parameter->charactTime*t);
         // z
-        field->speed[3*i+2]=movz*sin(parameter->charactTime*t);
+        field->speed[2][i]=movz*sin(parameter->charactTime*t);
       }
       }
       break;
@@ -82,11 +82,11 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
       for(int i=p ; i<end ; i++)
       {
         // x
-        field->speed[3*i]=movx;
+        field->speed[0][i]=movx;
         // y
-        field->speed[3*i+1]=movy;
+        field->speed[1][i]=movy;
         // z
-        field->speed[3*i+2]=movz;
+        field->speed[2][i]=movz;
       }
       }
       break;
@@ -95,18 +95,18 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
       break;
       case level_arm:
       {
-       
+
         double frequency=2;
-          
+
             for(int k=0; k<nz; ++k)
               {
-              
+
                 for(int j=0; j<ny; ++j)
                 {
-                    
+
                     for(int i=0; i<nx; ++i)
                     {
-                      
+
                       double teta=angle/180.0*M_PI*cos(parameter->charactTime*t);
                       double teta_dot=-angle/180.0*M_PI*frequency*sin(parameter->charactTime*t);
                       // ne fonctionne que dans l'approximation des petits angles, sinon il faut utiliser la forme de jacobi
@@ -114,47 +114,47 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
                       if(direction==2)
                       {
                       // x
-                      field->speed[3*p]=k/10.0*cos(teta)*teta_dot;
+                      field->speed[0][i]=k/10.0*cos(teta)*teta_dot;
                       // y
-                      field->speed[3*p+1]=0.0;
+                      field->speed[1][i]=0.0;
                       // z
-                      field->speed[3*p+2]=-k/10.0*sin(teta)*teta_dot;
+                      field->speed[2][i]=-k/10.0*sin(teta)*teta_dot;
                       }
                       else if(direction==1)
                       {
                       // x
-                      field->speed[3*p]=0.0;
+                      field->speed[0][i]=0.0;
                       // y
-                      field->speed[3*p+1]=k/10.0*cos(teta)*teta_dot;
+                      field->speed[1][i]=k/10.0*cos(teta)*teta_dot;
                       // z
-                      field->speed[3*p+2]=-k/10.0*sin(teta)*teta_dot;
+                      field->speed[2][i]=-k/10.0*sin(teta)*teta_dot;
                       }
                       else if(direction==3)
                       {
                       // x
-                      field->speed[3*p]=-j/10.0*cos(teta)*teta_dot;
+                      field->speed[0][i]=-j/10.0*cos(teta)*teta_dot;
                       // y
-                      field->speed[3*p+1]=j/10.0*sin(teta)*teta_dot;
+                      field->speed[1][i]=j/10.0*sin(teta)*teta_dot;
                       // z
-                      field->speed[3*p+2]=0.0;
+                      field->speed[2][i]=0.0;
                       }
                       else //if (direction==0)
                       {
                         // x
-                      field->speed[3*p]=0.0;
+                      field->speed[0][i]=0.0;
                       // y
-                      field->speed[3*p+1]=0.0;
+                      field->speed[1][i]=0.0;
                       // z
-                      field->speed[3*p+2]=0.0;
+                      field->speed[2][i]=0.0;
                       }
-   
+
                       p=p+1;
                     }
                 }
               }
-           
-          
-      }// end case 
+
+
+      }// end case
       break;
       }
      }

@@ -70,64 +70,67 @@ Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vecto
     currentField->info_moving.push_back(movingDirection[1]);
     currentField->info_moving.push_back(movingDirection[2]);
     bool stack=true;
-      if(stack == true){
+    if(stack == true){
         tempo[0] -= s; tempo[1] -= s; tempo[2] -= s;
     }
     int flag_1 =0;
     int flag_2 =0;
     int flag_3 =0;
-   if(tempo[0]==0)
-   {
-   tempo[0]=s;
-   flag_1=1;
-   }
-   if(tempo[1]==0){
-   tempo[1]=s;
-   flag_2=1;
-   }
-   if(tempo[2]==0)
-   {
-   tempo[2]=s;
-   flag_3=1;
-   }
+    if(tempo[0]==0)
+    {
+        tempo[0]=s;
+        flag_1=1;
+    }
+    if(tempo[1]==0){
+        tempo[1]=s;
+        flag_2=1;
+    }
+    if(tempo[2]==0)
+    {
+        tempo[2]=s;
+        flag_3=1;
+    }
     // calculate nb of particles along each direction from target size "s"
     int ni = int(ceil(tempo[0]/s));
     double dx = tempo[0]/ni; ++ni;
     if(flag_1==1){
-    ni=ni-1;}
+        ni=ni-1;
+    }
     int nj = int(ceil(tempo[1]/s));
     double dy = tempo[1]/nj; ++nj;
     if(flag_2==1){
-    nj=nj-1;}
+        nj=nj-1;
+    }
     int nk = int(ceil(tempo[2]/s));
     double dz = tempo[2]/nk; ++nk;
     if(flag_3==1){
-    nk=nk-1;}
+        nk=nk-1;
+    }
 
- currentField->info_block.push_back((double)c);// tell us if the block is moving, free or fixed
- currentField->info_block.push_back((double)ni);
- currentField->info_block.push_back((double)nj);
- currentField->info_block.push_back((double)nk);
-if(c==1 && teta[0]!=0 && teta[1]==0 && teta[2]==0)
-{
-    currentField->info_block.push_back(teta[0]);
-    currentField->info_block.push_back(1);// axe de roation selon x 
-}
-else if(c==1 && teta[0]==0 && teta[1]!=0 && teta[2]==0)
-{
-    currentField->info_block.push_back(teta[1]);
-    currentField->info_block.push_back(2);// axe de roation selon y 
-}
-else if(c==1 && teta[0]==0 && teta[1]==0 && teta[2]!=0)
-{
-    currentField->info_block.push_back(teta[2]);
-    currentField->info_block.push_back(3);// axe de roation selon z 
-}
-else
-{
-    currentField->info_block.push_back(0);// no roation for the moving 
-    currentField->info_block.push_back(0);
-}
+    currentField->info_block.push_back((double)c);// tell us if the block is moving, free or fixed
+    currentField->info_block.push_back((double)ni);
+    currentField->info_block.push_back((double)nj);
+    currentField->info_block.push_back((double)nk);
+    if(c==1 && teta[0]!=0 && teta[1]==0 && teta[2]==0)
+    {
+        currentField->info_block.push_back(teta[0]);
+        currentField->info_block.push_back(1);// axe de roation selon x
+    }
+    else if(c==1 && teta[0]==0 && teta[1]!=0 && teta[2]==0)
+    {
+        currentField->info_block.push_back(teta[1]);
+        currentField->info_block.push_back(2);// axe de roation selon y
+    }
+    else if(c==1 && teta[0]==0 && teta[1]==0 && teta[2]!=0)
+    {
+        currentField->info_block.push_back(teta[2]);
+        currentField->info_block.push_back(3);// axe de roation selon z
+    }
+    else
+    {
+        currentField->info_block.push_back(0);// no roation for the moving
+        currentField->info_block.push_back(0);
+    }
 
 
     int nPart;
@@ -306,7 +309,13 @@ Error readGeometry(std::string filename, Field* currentField, std::vector<double
                     volVectorFree.insert(volVectorFree.end(), volVectorFixed.begin(), volVectorFixed.end());
                     volVectorFree.insert(volVectorFree.end(), volVectorMoving.begin(), volVectorMoving.end());
                     (*volVector)=volVectorFree;
-                    currentField->pos=posFree;
+
+                    // Filling position vector
+                    for(int i=0 ; i < currentField->nTotal ; i++){
+                        for(int j=0 ; j<3 ; j++)
+                            currentField->pos[j].push_back(posFree[3*i+j]);
+                    }
+
                     // Particle type saving
                     for(int partNb=0 ; partNb<currentField->nFree ; partNb++)
                         currentField->type.push_back(freePart);
