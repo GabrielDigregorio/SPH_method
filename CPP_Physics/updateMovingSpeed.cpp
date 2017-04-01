@@ -48,7 +48,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
         int lm=1;
         int cnt_p=1;
 
-        while(lm<=block_number)
+        while(lm<block_number)
         {
           int nx_p=field->info_block[cnt_p];
           int ny_p=field->info_block[cnt_p+1];

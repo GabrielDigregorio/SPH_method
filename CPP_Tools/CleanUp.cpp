@@ -36,7 +36,8 @@ void copyField(Field *sourceField,Field *copiedField)
   }
   copiedField->pressure.resize(nTotal);
   copiedField->density.resize(nTotal);
-
+  copiedField->info_block=sourceField->info_block;
+  copiedField->info_moving=sourceField->info_moving;
   // Copying fixed positions and particle type
     for(int i = 0 ; i<nTotal ; i++){
         if(sourceField->type[i] == fixedPart){
