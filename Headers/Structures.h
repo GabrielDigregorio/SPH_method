@@ -30,7 +30,7 @@ enum StateEquationMethod {quasiIncompressible, perfectGas, NB_STATEEQUATION_VALU
 enum MassInitMethod {violeau2012, NB_MASSINIT_VALUE};
 
 // speedLaw = Will dictate the behaviour of moving boundaries: constant, sine, exponential
-enum SpeedLaw {constant, sine, exponential, NB_SPEEDLAW_VALUE};
+enum SpeedLaw {constant, sine, exponential,level_arm, NB_SPEEDLAW_VALUE};
 
 // Write Format output
 enum Format {ParaView, Matlab, Both, NB_FORMAT_VALUE};
@@ -81,6 +81,8 @@ struct Field {
     std::vector<double> pressure;
     std::vector<double> mass;
     std::vector<ParticleType> type;
+    std::vector<double> info_block;
+    std::vector<double> info_moving;
 };
 
 

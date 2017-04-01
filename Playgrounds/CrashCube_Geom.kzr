@@ -48,6 +48,11 @@ lz = -0.5
        theta1=0.0
        theta2=0.0
        theta3=0.0
+       %movpara
+       speedLaw=1
+       movingDirectionX=0
+       movingDirectionY=0
+       movingDirectionZ=0.5
    #brick
        %param
        c=2
@@ -60,9 +65,14 @@ lz = -0.5
        %dimen
        L=0.5
        W=0.5
-       H=0.15
+       H=0.08
        %rotation
        theta1=0.0
        theta2=0.0
        theta3=0.0
+       %movpara
+       speedLaw=0
+       movingDirectionX=0
+       movingDirectionY=0
+       movingDirectionZ=0.5
 #END_G
