@@ -39,40 +39,38 @@ void densityInit(Field* field, Parameter* parameter)
 			double zMax = 0.0;
 			double H;
 
-			for (int j = 0; j < field->nFree; j++)
-			{
-				if (field->pos[3*j+2] > zMax)
-				{
+			for (int j = 0; j < field->nTotal; j++){
+				if (field->type[j] == freePart && field->pos[3*j+2] > zMax){
 					zMax = field->pos[3*j+2];
 				}
-
 			}
 			switch (parameter->stateEquationMethod)
 			{
 				case quasiIncompressible:
 
-				for (int i = 0; i < field->nFree; i++)
-				{
-					H = zMax - field->pos[3 * i + 2];
-					double rho = (1 + (1 / B)*rho_0*g*H);
-					field->density.push_back(rho_0*pow(rho, 1.0 / gamma));
+				for (int i = 0; i < field->nTotal; i++){
+					if(field->type[i] == freePart){
+						H = zMax - field->pos[3 * i + 2];
+						double rho = (1 + (1 / B)*rho_0*g*H);
+						field->density.push_back(rho_0*pow(rho, 1.0 / gamma));
+					}
 				}
 				break;
 
 				case perfectGas:
-				for (int i = 0; i < field->nFree; i++)
-				{
-					H = zMax - field->pos[3 * i + 2];
-					double rho = rho_0*(1 + (parameter->molarMass/R/parameter->temperature)*rho_0*g*H);
-					field->density.push_back(rho);
-
+				for (int i = 0; i < field->nTotal; i++){
+					if(field->type[i] == freePart){
+						H = zMax - field->pos[3 * i + 2];
+						double rho = rho_0*(1 + (parameter->molarMass/R/parameter->temperature)*rho_0*g*H);
+						field->density.push_back(rho);
+					}
 				}
 				break;
 			}
 			// Boundaries have constant densities, no reason for this, might thus be changed !!!!!
-			for (int k = field->nFree; k < field->nTotal; k++)
-			{
-				field->density.push_back(parameter->densityRef);
+			for (int k = 0; k < field->nTotal; k++){
+				if(field->type[k] != freePart)
+					field->density.push_back(parameter->densityRef);
 			}
 		}
 		break;

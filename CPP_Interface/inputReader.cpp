@@ -13,7 +13,6 @@
 #define N_PARAM 28
 
 enum geomType{cube,cylinder,sphere};
-enum boundCondition{freePart, movingPart, fixedPart};
 
 /*
 *Input:
@@ -240,6 +239,13 @@ Error readGeometry(std::string filename, Field* currentField, std::vector<double
                     volVectorFree.insert(volVectorFree.end(), volVectorMoving.begin(), volVectorMoving.end());
                     (*volVector)=volVectorFree;
                     currentField->pos=posFree;
+                    // Particle type saving
+                    for(int partNb=0 ; partNb<currentField->nFree ; partNb++)
+                        currentField->type.push_back(freePart);
+                    for(int partNb=0 ; partNb<currentField->nFixed ; partNb++)
+                        currentField->type.push_back(fixedPart);
+                    for(int partNb=0 ; partNb<currentField->nMoving ; partNb++)
+                        currentField->type.push_back(movingPart);
                     return noError;
                 }
                 else
@@ -446,7 +452,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        
+
                         ++cnt;
                     }
                     else{continue;}

@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 		return errorFlag;
 	}
 
-	// Creation of temporary volume vector
+	// Creation of temporary volume vector (used to initialize the mass)
 	std::vector<double> volVector;
 
 	// Read geometry
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 		return errorFlag;
 	}
 
-	std::cout << "Done.\n" << std::endl;
+	std::cout << "Done.\n"  << std::endl;
 
 	// Initialisation
 	speedInit(currentField, parameter);
@@ -142,7 +142,6 @@ int main(int argc, char *argv[])
 			timeInfo[1] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
         }
         reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
-
 		// Write field when needed
 		start = std::clock();
     	if (writeCount*parameter->writeInterval <= currentTime)

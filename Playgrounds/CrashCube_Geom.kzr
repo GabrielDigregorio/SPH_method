@@ -39,22 +39,30 @@ lz = -0.5
        %coord
        x=0
        y=0
-       z=0.45
+       z=0.15
        %dimen
-       L=0.5
-       W=0.5
-       H=0.7
+       L=0.3
+       W=0.3
+       H=0.3
+       %rotation
+       theta1=0.0
+       theta2=0.0
+       theta3=0.0
    #brick
        %param
        c=2
-       s=0.1
+       s=0.08
        r=0
        %coord
        x=0
        y=0
        z=0
        %dimen
-       L=1.0
-       W=1.0
+       L=0.5
+       W=0.5
        H=0.15
+       %rotation
+       theta1=0.0
+       theta2=0.0
+       theta3=0.0
 #END_G

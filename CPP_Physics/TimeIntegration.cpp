@@ -20,36 +20,32 @@
 */
 void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, double t, double k)
 {
-  // Free particles
-  for(int i = 0; i < currentField->nFree; i++)
-  {
-    nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
-    for (int j = 0; j <= 2; j++)
-    {
-      nextField->speed[3*i + j] = currentField->speed[3*i + j] + k*currentSpeedDerivative[3*i + j];
-      nextField->pos[3*i + j] = currentField->pos[3*i + j] + k*currentField->speed[3*i + j];
+    // Loop on all the particles
+    for(int i=0 ; i<currentField->nTotal ; i++){
+        switch (currentField->type[i]){
+            // Free particles update
+            case freePart:
+            nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
+            for (int j = 0; j <= 2; j++){
+                nextField->speed[3*i + j] = currentField->speed[3*i + j] + k*currentSpeedDerivative[3*i + j];
+                nextField->pos[3*i + j] = currentField->pos[3*i + j] + k*currentField->speed[3*i + j];
+            }
+            // Fixed particles update
+            case fixedPart:
+            nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
+            // Moving boundary particles update
+            case movingPart:
+            nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
+            for (int j = 0; j <= 2; j++){
+                nextField->pos[3*i + j] = currentField->pos[3*i + j] + k*currentField->speed[3*i + j];
+            }
+        }
     }
-  }
 
-  // Fixed particles
-  for(int i = currentField->nFree; i < (currentField->nFree + currentField->nFixed); i++)
-  {
-    nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
-  }
-
-  // Moving particles
-  for(int i = (currentField->nFree + currentField->nFixed); i < currentField->nTotal; i++)
-  {
-    nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
-    for (int j = 0; j <= 2; j++)
-    {
-      nextField->pos[3*i + j] = currentField->pos[3*i + j] + k*currentField->speed[3*i + j];
-    }
-  }
-  if(currentField->nMoving != 0){updateMovingSpeed(nextField,parameter,t+k);}
-
-  // Pressure (all particles at the same time)
-  pressureComputation(nextField,parameter);
+    // Update speed of moving boundaries
+    if(currentField->nMoving != 0){updateMovingSpeed(nextField,parameter,t+k);}
+    // Pressure (all particles at the same time)
+    pressureComputation(nextField,parameter);
 }
 
 /*
@@ -99,8 +95,8 @@ void derivativeComputation(Field* currentField, Parameter* parameter, std::vecto
 
       // Momentum equation only for free particles
       start = std::clock();
-      if(particleID < currentField->nFree)
-      momentum(particleID, neighbors, kernelGradients, currentField, parameter, currentSpeedDerivative);
+      if(currentField->type[particleID] == freePart)
+        momentum(particleID, neighbors, kernelGradients, currentField, parameter, currentSpeedDerivative);
       timeInfo[3] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     }
   }
@@ -166,22 +162,18 @@ bool timeIntegration(Field* currentField, Field* nextField,
           // Compute weighted mean derivative then update
           start = std::clock();
 
-          for(int i = 0; i < currentField->nFree; i++)
-          {
-            for(int j = 0; j < 3;j++)
-            {
-              currentSpeedDerivative[3*i + j] =  (1-parameter->theta)*currentSpeedDerivative[3*i + j] + parameter->theta*midSpeedDerivative[3*i + j];
+          for(int i = 0; i < currentField->nTotal ;i++){
+            if(currentField->type[i] == freePart){
+              for(int j = 0; j < 3;j++){
+                currentSpeedDerivative[3*i + j] =  (1-parameter->theta)*currentSpeedDerivative[3*i + j] + parameter->theta*midSpeedDerivative[3*i + j];
+              }
             }
-          }
-          for(int i = 0; i < currentField->nTotal ;i++)
-          {
             currentDensityDerivative[i] =  (1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i];
           }
 
           eulerUpdate(currentField, nextField, parameter, currentDensityDerivative, currentSpeedDerivative, t, k);
 
           timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
 
       }
       break;

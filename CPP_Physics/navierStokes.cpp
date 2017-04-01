@@ -60,5 +60,5 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
             * kernelGradients[3*i + j];
     }
   }
-  speedDerivative[3*particleID + 2] -= parameter->g;
+  speedDerivative[3*particleID + 2] -= parameter->g; // Gravitational acceleration
 }

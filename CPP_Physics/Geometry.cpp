@@ -186,7 +186,7 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, in
 void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation, bool stack){
      // the function is the same as meshcube, but as an option to make the palne rotate in any direction over it's center à masse
       // if we stack the cube:
-  
+
       //std::cout<<"teta " << teta[0]<< teta[1]<< teta[2] <<"\n";
     if(stack == true){
         L[0] -= s; L[1] -= s; L[2] -= s;
@@ -194,11 +194,11 @@ void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<dou
 
     // calculate nb of particles along each direction from target size "s"
     int ni = int(ceil(L[0]/s));
-    double dx = L[0]/ni; ++ni;
+    double dx = L[0]/ni; if(ni != 1){++ni;}
     int nj = int(ceil(L[1]/s));
-    double dy = L[1]/nj; ++nj;
+    double dy = L[1]/nj; if(nj != 1){++nj;}
     int nk = int(ceil(L[2]/s));
-    double dz = L[2]/nk; ++nk;
+    double dz = L[2]/nk; if(nk != 1){++nk;}
     // Volume & number of particles computation
     (*nPart)=ni*nj*nk;
     (*volPart)=dx*dy*dz;
@@ -282,7 +282,7 @@ void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<dou
         // rotation
         for(int i=start; i<(n_total)/3; ++i)
         {
-           // first Rx 
+           // first Rx
             pos[3*i]= Rx[0]*pos[3*i]+Rx[1]*pos[3*i+1]+Rx[2]*pos[3*i+2];
             pos[3*i+1]= Rx[3]*pos[3*i]+Rx[4]*pos[3*i+1]+Rx[5]*pos[3*i+2];
             pos[3*i+2]= Rx[6]*pos[3*i]+Rx[7]*pos[3*i+1]+Rx[8]*pos[3*i+2];

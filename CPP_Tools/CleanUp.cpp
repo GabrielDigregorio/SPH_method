@@ -29,17 +29,20 @@ void copyField(Field *sourceField,Field *copiedField)
   copiedField->nTotal = nTotal;
 
   copiedField->mass = sourceField->mass;
+  copiedField->type = sourceField->type;
 
   copiedField->pos.resize(3*nTotal);
   copiedField->speed.resize(3*nTotal);
   copiedField->pressure.resize(nTotal);
   copiedField->density.resize(nTotal);
 
-  // Copying fixed positions
-  for(int i = 3*sourceField->nFree; i < 3*(sourceField->nFree + sourceField->nFixed);i++)
-  {
-    copiedField->pos[i] = sourceField->pos[i];
-  }
+  // Copying fixed positions and particle type
+    for(int i = 0 ; i<nTotal ; i++){
+        if(sourceField->type[i] == fixedPart){
+            for(int j=0 ; j<3 ; j++)
+                copiedField->pos[3*i+j] = sourceField->pos[3*i+j];
+        }
+    }
 }
 
 /*

@@ -35,6 +35,9 @@ enum SpeedLaw {constant, sine, exponential, NB_SPEEDLAW_VALUE};
 // Write Format output
 enum Format {ParaView, Matlab, Both, NB_FORMAT_VALUE};
 
+// Particle type
+enum ParticleType {freePart, movingPart, fixedPart};
+
 // charactTime = characteristic time of movement or period of oscillations
 
 // movingDirection = direction de la paroi mouvante
@@ -69,22 +72,15 @@ struct Parameter {
 
 struct Field {
     int nFree, nFixed, nMoving, nTotal;
-
     double l[3];
     double u[3];
-
     double nextK=0.0;
-
     std::vector<double> pos;
-
     std::vector<double> speed;
-
     std::vector<double> density;
-
     std::vector<double> pressure;
-
     std::vector<double> mass;
-
+    std::vector<ParticleType> type;
 };
 
 
