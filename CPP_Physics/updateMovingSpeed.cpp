@@ -45,7 +45,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
         counter_1=counter_1+1;
 
         int p=start;
-        int lm=1;
+        int lm=0;
         int cnt_p=1;
 
         while(lm<block_number)
@@ -58,7 +58,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
           lm=lm+1;
         }
         block_number=block_number+1;
-
+      //  std::cout << "p" << p<< std::endl;
     switch(speedLaw)
     {
       case sine:
@@ -95,8 +95,7 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
       break;
       case level_arm:
       {
-
-        double frequency=2;
+       
 
             for(int k=0; k<nz; ++k)
               {
@@ -108,46 +107,46 @@ void updateMovingSpeed(Field* field, Parameter* parameter, double t)
                     {
 
                       double teta=angle/180.0*M_PI*cos(parameter->charactTime*t);
-                      double teta_dot=-angle/180.0*M_PI*frequency*sin(parameter->charactTime*t);
+                      double teta_dot=-angle/180.0*M_PI*parameter->charactTime*sin(parameter->charactTime*t);
                       // ne fonctionne que dans l'approximation des petits angles, sinon il faut utiliser la forme de jacobi
                       // pour le cas du pendule
                       if(direction==2)
                       {
                       // x
-                      field->speed[0][i]=k/10.0*cos(teta)*teta_dot;
+                      field->speed[0][p]=k/10.0*cos(teta)*teta_dot;
                       // y
-                      field->speed[1][i]=0.0;
+                      field->speed[1][p]=0.0;
                       // z
-                      field->speed[2][i]=-k/10.0*sin(teta)*teta_dot;
+                      field->speed[2][p]=-k/10.0*sin(teta)*teta_dot;
                       }
                       else if(direction==1)
                       {
                       // x
-                      field->speed[0][i]=0.0;
+                      field->speed[0][p]=0.0;
                       // y
-                      field->speed[1][i]=k/10.0*cos(teta)*teta_dot;
+                      field->speed[1][p]=k/10.0*cos(teta)*teta_dot;
                       // z
-                      field->speed[2][i]=-k/10.0*sin(teta)*teta_dot;
+                      field->speed[2][p]=-k/10.0*sin(teta)*teta_dot;
                       }
                       else if(direction==3)
                       {
                       // x
-                      field->speed[0][i]=-j/10.0*cos(teta)*teta_dot;
+                      field->speed[0][p]=-j/10.0*cos(teta)*teta_dot;
                       // y
-                      field->speed[1][i]=j/10.0*sin(teta)*teta_dot;
+                      field->speed[1][p]=j/10.0*sin(teta)*teta_dot;
                       // z
-                      field->speed[2][i]=0.0;
+                      field->speed[2][p]=0.0;
                       }
                       else //if (direction==0)
                       {
                         // x
-                      field->speed[0][i]=0.0;
+                      field->speed[0][p]=0.0;
                       // y
-                      field->speed[1][i]=0.0;
+                      field->speed[1][p]=0.0;
                       // z
-                      field->speed[2][i]=0.0;
+                      field->speed[2][p]=0.0;
                       }
-
+                     // std::cout << p<<"\n";
                       p=p+1;
                     }
                 }
