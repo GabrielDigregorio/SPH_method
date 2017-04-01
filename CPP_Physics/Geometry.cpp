@@ -183,10 +183,6 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, in
             }
     }
 }
-
-
-
-
 void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation, bool stack){
      // the function is the same as meshcube, but as an option to make the palne rotate in any direction over it's center à masse
       // if we stack the cube:

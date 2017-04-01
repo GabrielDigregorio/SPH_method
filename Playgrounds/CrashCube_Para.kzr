@@ -23,13 +23,13 @@
 
     % Time parameters
         kh=0.12
-        k=0.00001
-        T=0.05
-        Ref=1000.0
+        k=0.00002
+        T=0.6
+        densityRef=1000.0
         B=1280000
         gamma=7.0
         g=9.81
-        writeInterval=0.005
+        writeInterval=0.01
         charactTime=1.0
         c=100
         alpha=0.1
@@ -39,23 +39,23 @@
     % Moving Block Parameters 
         movingDirectionX=0
         movingDirectionY=0
-        movingDirectionZ=0.5
-        molarMass=10.0
-        temperature=300
-        theta=1
-        kernel=1
+        movingDirectionZ=0
+        molarMass=1
+        temperature=293.15
+        theta=0.5
 
     % Numerical parameters
+        kernel=2
         viscosityModel=0
-        integrationMethod=0
-        adaptativeTimeStep=0
-        densityInitMethod=0
+        integrationMethod=1
+        adaptativeTimeStep=1
+        densityInitMethod=1
         stateEquationMethod=0
         massInitMethod=0
         speedLaw=0
-    
+
     % Output Parameters
-        matlab=1
-        paraview=4
+        matlab=0
+        paraview=1
         
 #END_F
