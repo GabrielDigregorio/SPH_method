@@ -10,6 +10,7 @@
 
 #define N_UL 3
 #define N_DATA 9
+#define N_DATA_BATHYMETRY 5
 #define N_PARAM 28
 
 enum geomType{cube,cylinder,sphere};
@@ -117,6 +118,65 @@ void readBrick(int type, std::ifstream* inFile, Field* currentField, std::vector
 
 /*
 *Input:
+*- inFile: Pointer to the input stream associated to the geometry file
+*- currentField: Pointer to the structure to fill
+*- posFree/posFree/posMoving: vector to store the position of the particles generated during brick reading
+*- volVectorFree/Fixed/Moving: vector to store the volume of the particles generated during brick reading
+*Decscription:
+*/
+
+void readBathymetry(std::ifstream* inFile, std::vector<double>* posFree, std::vector<double>* posFixed,
+        std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed)
+{
+    std::string buf;
+    char batFile[64];
+    int cnt=0;
+    char valueArray[1024];
+    float brickData[N_DATA_BATHYMETRY];
+
+    std::getline(*inFile, buf);
+    sscanf(buf.c_str(),"%*[^=]=%s", batFile);
+
+    std::cout << "batFile name read: " << batFile << '\n';
+
+    while(cnt!=N_DATA_BATHYMETRY)
+    {
+        std::getline(*inFile, buf);
+        if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
+        {
+            brickData[cnt]=atof(valueArray);
+            ++cnt;
+        }
+        else{continue;}
+    }
+
+    float s=brickData[0];
+    float r=brickData[1];
+    double numberGroundParticles = (int) brickData[2];
+    double height0 = brickData[3];
+    double hFreeSurface = brickData[4];
+    int nPartFree, nPartFixed;
+    double volPart;
+
+    std::cout << "BathyBrick read." << '\n';
+
+    meshBathymetry(batFile, numberGroundParticles, height0, hFreeSurface, s, *posFree, *posFixed,  &nPartFree, &nPartFixed, &volPart,
+         r, true);
+
+         std::cout << "Bathy meshed." << '\n';
+
+         for(int i=0; cnt<nPartFree; ++cnt)
+         {
+             (*volVectorFree).push_back(volPart);
+         }
+         for(int i=0; cnt<nPartFixed; ++cnt)
+         {
+             (*volVectorFree).push_back(volPart);
+         }
+}
+
+/*
+*Input:
 *- filename: name of the geometry file to read
 *- volVector: vector to store the volume of the particles generated during reading the whole geometry
 *Output:
@@ -192,6 +252,12 @@ Error readGeometry(std::string filename, Field* currentField, std::vector<double
                 readBrick(sphere,&inFile, currentField,
                     &posFree, &posMoving, &posFixed,
                     &volVectorFree, &volVectorFixed, &volVectorMoving);
+            }
+            else if(buf=="bathy")
+            {
+                std::cout << "Bathy recognized." << '\n';
+                readBathymetry(&inFile, &posFree, &posFixed,
+                        &volVectorFree,  &volVectorFixed);
             }
             else if(buf=="END_G")
             {

@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
 	{
 		return errorFlag;
 	}
+  std::cout << "Parameter read." << '\n';
 
 	// Creation of temporary volume vector
 	std::vector<double> volVector;
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
 	{
 		return errorFlag;
 	}
-
+	std::cout << "Geometry read." << '\n';
 	// Checking consistency of user datas
 	errorFlag = consistency(parameter, currentField);
 	if (errorFlag != noError)
