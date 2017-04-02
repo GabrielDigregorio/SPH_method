@@ -68,12 +68,6 @@
         
         massInitMethod=0
 
-    % Moving Block Parameters
-        movingDirectionX=0
-        movingDirectionY=0
-        movingDirectionZ=0
-        speedLaw=0
-
     % Output Parameters
         writeInterval=0.1
         matlab=1

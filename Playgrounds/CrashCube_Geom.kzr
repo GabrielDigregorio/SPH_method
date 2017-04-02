@@ -59,7 +59,7 @@
             speedLaw=1
             movingDirectionX=0
             movingDirectionY=0
-            movingDirectionZ=0.5
+            movingDirectionZ=0
 
 % Wall          
    #brick
@@ -83,6 +83,6 @@
             speedLaw=0
             movingDirectionX=0
             movingDirectionY=0
-            movingDirectionZ=0.5
+            movingDirectionZ=0
                        
 #END_G

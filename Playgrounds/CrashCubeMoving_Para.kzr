@@ -68,12 +68,6 @@
         temperature=293.15
 
         massInitMethod=0
-
-    % Moving Block Parameters
-        movingDirectionX=0
-        movingDirectionY=0
-        movingDirectionZ=0.5
-        speedLaw=0
  
     % Output Parameters
         writeInterval=0.01
