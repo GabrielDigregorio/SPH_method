@@ -76,7 +76,7 @@ make
 
 ## Launch an experiment
 
-* Creat a new directory to store data
+* Create a new directory to store data
 
 ```
 cd build
@@ -87,7 +87,7 @@ mkdir ./Results/myExperiment
 
 ```
 mkdir ./Results/myExperiment
-./sph ../Playgrounds/<name>_Para.kzr ../Playgrounds/<name>_Geom.kzr myExperiment/<name>
+mpirun -np nbProc ./sph ../Playgrounds/<name>_Para.kzr ../Playgrounds/<name>_Geom.kzr myExperiment/<name>
 ```
 
 ## Experiment Analysis (Matlab)
