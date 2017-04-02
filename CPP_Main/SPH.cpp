@@ -22,26 +22,30 @@ int main(int argc, char *argv[])
 {
 	// Record algorithm performance
 	startExperimentTimeClock = std::clock();
-	double duration;
+
+	// MPI Initialization
+	MPI_Init(&argc, &argv);
+	int nTasks, procID;
+	MPI_Comm_size(MPI_COMM_WORLD, &nTasks);
+	MPI_Comm_rank(MPI_COMM_WORLD, &procID);
 
 	// Creates an error flag
 	Error errorFlag = noError;
 
-	// CPU time repartition
+	// CPU time repartition information variables
 	std::clock_t start;
 	std::vector<double> timeInfo(6, 0.0);
 
-	start = std::clock();
-	std::cout << "Argument checking..." << std::endl;
+	// Checks and gets the arguments
+	if(procID==0){std::cout << "Initialization..." << std::endl;}
 	std::string parameterFilename;
 	std::string geometryFilename;
 	std::string experimentFilename;
-
-	// Check the arguments
-	if (argc<3) // Not enough argument
+	if (argc<3) // Not enough arguments
 	{
 		std::cout << "Invalid input files.\n" << std::endl;
 		errorFlag = argumentError;
+		MPI_Finalize();
 		return errorFlag;
 	}
 	else if (argc<4) // Use default name for the experiment (result)
@@ -56,78 +60,71 @@ int main(int argc, char *argv[])
 		experimentFilename = argv[3];
 	}
 
-	// Read parameters
+	// Main variables declaration
 	Parameter parameterInstance;
 	Parameter* parameter = &parameterInstance;
-	errorFlag = readParameter(parameterFilename, parameter);
-	if (errorFlag != noError)
-	{
-		return errorFlag;
-	}
-
-	// Creation of temporary volume vector (used to initialize the mass)
-	std::vector<double> volVector;
-
-	// Read geometry
 	Field currentFieldInstance;
 	Field* currentField = &currentFieldInstance;
-	errorFlag = readGeometry(geometryFilename, currentField, &volVector); //Why sending adress of volVector ? Wouldn't it be more understable to pass it by reference ?
-	if (errorFlag != noError)
-	{
-		return errorFlag;
-	}
-
-	// Checking consistency of user datas
-	errorFlag = consistency(parameter, currentField);
-	if (errorFlag != noError)
-	{
-		return errorFlag;
-	}
-
-	std::cout << "Done.\n"  << std::endl;
-
-	// Initialisation
-	speedInit(currentField, parameter);
-	densityInit(currentField, parameter);
-	pressureInit(currentField, parameter);
-	massInit(currentField, parameter, volVector);
-	volVector.clear();
-
-	// Creates field to store result of update
 	Field nextFieldInstance;
 	Field* nextField = &nextFieldInstance;
+	Field globalFieldInstance; // Used by node 0 only
+	Field* globalField = &globalFieldInstance; // Used by node 0 only
+
+
+	start = std::clock();
+	// Reads parameters and checks their consistency (each process)
+	errorFlag = readParameter(parameterFilename, parameter);
+	if(errorFlag != noError){MPI_Finalize(); return errorFlag;}
+	// Reads geometry and check its consistency (process 0 only)
+	//if(procID==0){
+		errorFlag = readGeometry(geometryFilename, globalField, parameter);
+	//}
+	MPI_Bcast(&errorFlag, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	if(errorFlag != noError){MPI_Finalize(); return errorFlag;}
+
+
+	// Scatters the globalField from node 0 into the currentField of all nodes
+	// !!!!!!!!!!
+	// TEMPORARY
+	currentField = globalField;
+
+	// Copies the invariant information about the field
 	copyField(currentField, nextField);
 
-	unsigned int nMax = (unsigned int)ceil(parameter->T / parameter->k);
-	double currentTime = 0.0;
-	if (parameter->adaptativeTimeStep == no)
-		std::cout << "Number of time steps = " << nMax << "\n" << std::endl;
-	else
-        std::cout << "Number of time steps = " << "not defined (adaptative time step)" << "\n" << std::endl;
+	// Initialization done
+	if(procID==0){std::cout << "Done.\n"  << std::endl;}
 
-	std::cout << "Number of free particles = " << currentField->nFree << "\n" << std::endl;
-	std::cout << "Number of fixed particles = " << currentField->nFixed << "\n" << std::endl;
-	std::cout << "Number of particles with imposed speed = " << currentField->nMoving << "\n" << std::endl;
-
+	// Information on the simulation
+	if(procID==0){
+		if (parameter->adaptativeTimeStep == no){
+			unsigned int nMax = (unsigned int)ceil(parameter->T / parameter->k);
+			std::cout << "Number of time steps = " << nMax << "\n" << std::endl;
+		}
+		else
+	        std::cout << "Number of time steps = " << "not defined (adaptative time step)" << "\n" << std::endl;
+		std::cout << "Number of free particles = " << currentField->nFree << "\n" << std::endl;
+		std::cout << "Number of fixed particles = " << currentField->nFixed << "\n" << std::endl;
+		std::cout << "Number of particles with imposed speed = " << currentField->nMoving << "\n" << std::endl;
+	}
 
 	// Writes the initial configuration
-	writeField(currentField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);
+	if(procID==0){writeField(currentField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);}
 	unsigned int writeCount = 1;
 
-	// To mesh at least at the first time step
-	bool reBoxing = true;
-
-	// Creates the box mesh and describes their adjacent relations
+	// Declares the box mesh and their adjacent relations variables
+	bool reBoxing = true; // To mesh at least at the first time step
 	std::vector<std::vector<int> > boxes;
 	std::vector<std::vector<int> > surrBoxesAll;
 
 	timeInfo[0] = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
-	// Loop on time
-	std::cout << "Time integration progress:\n" << std::endl;
-	std::cout << "0%-----------------------------------------------100%\n[";
+	// ------------ LOOP ON TIME ------------
+	if(procID==0){
+		std::cout << "Time integration progress:\n" << std::endl;
+		std::cout << "0%-----------------------------------------------100%\n[";
+	}
 	unsigned int loadingBar = 0;
-
+	double currentTime = 0.0; // Current time of the simulation
 	for (unsigned int n = 1; currentTime < parameter->T; n++)
 	{
 		currentField->nextK = parameter->k;
@@ -141,17 +138,8 @@ int main(int argc, char *argv[])
 			boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
 			timeInfo[1] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
         }
+		// Solve the time step
         reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
-		// Write field when needed
-		start = std::clock();
-    	if (writeCount*parameter->writeInterval <= currentTime)
-		{
-			writeField(nextField, n, parameter, parameterFilename, geometryFilename, experimentFilename);
-			writeCount++;
-		}
-		timeInfo[5] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
-
-		start = std::clock();
 
 		// Adaptative time step
 		currentTime += parameter->k;
@@ -160,25 +148,38 @@ int main(int argc, char *argv[])
 		// Swap two fields
 		swapField(&currentField, &nextField);
 
-		timeInfo[4] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
+		// Write field when needed
+		start = std::clock();
+    	if (writeCount*parameter->writeInterval <= currentTime)
+		{
+			if(procID==0){writeField(currentField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
+			writeCount++;
+		}
+		timeInfo[5] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
-		// Fancy progress bar
-		if ( currentTime > loadingBar * parameter->T/50.0){
+
+		// Fancy progress bar (ok if at least 50 time step)
+		if ( procID==0 && currentTime > loadingBar * parameter->T/50.0){
 			std::cout << ">" << std::flush;
 			loadingBar++;
 		}
 	}
-	std::cout << "]\n" << std::endl;
 
-	std::cout << "TIME INFORMATION:\n";
-	std::cout << "\t- Initial\t" << timeInfo[0] << "\n";
-	std::cout << "\t- Neighbors\t" << timeInfo[1] << "\n";
-	std::cout << "\t- Continuity\t" << timeInfo[2] << "\n";
-	std::cout << "\t- Momentum\t" << timeInfo[3] << "\n";
-	std::cout << "\t- Update\t" << timeInfo[4] << "\n";
-	std::cout << "\t- Writing\t" << timeInfo[5] << "\n";
-	std::cout << "\t- TOTAL  \t" << (std::clock() - startExperimentTimeClock) / (double)CLOCKS_PER_SEC << "\n";
-	std::cout << "NB : Total - sum of times = time capture duration (!!)\n";
+	// MPI Finalize
+	MPI_Finalize();
+
+	if(procID==0){
+		std::cout << "]\n" << std::endl;
+		std::cout << "TIME INFORMATION:\n";
+		std::cout << "\t- Initial\t" << timeInfo[0] << "\n";
+		std::cout << "\t- Neighbors\t" << timeInfo[1] << "\n";
+		std::cout << "\t- Continuity\t" << timeInfo[2] << "\n";
+		std::cout << "\t- Momentum\t" << timeInfo[3] << "\n";
+		std::cout << "\t- Update\t" << timeInfo[4] << "\n";
+		std::cout << "\t- Writing\t" << timeInfo[5] << "\n";
+		std::cout << "\t- TOTAL  \t" << (std::clock() - startExperimentTimeClock) / (double)CLOCKS_PER_SEC << "\n";
+		std::cout << "NB : Total - sum of times = time capture duration (!!)\n";
+	}
 
 	return 0;
 }

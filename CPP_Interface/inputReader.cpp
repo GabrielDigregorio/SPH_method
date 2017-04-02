@@ -343,6 +343,31 @@ Error readGeometry(std::string filename, Field* currentField, std::vector<double
 }
 
 /*
+Overload to make all particle initializations
+*/
+Error readGeometry(std::string filename, Field* currentField, Parameter* parameter){
+
+    Error errorFlag = noError;
+
+    std::vector<double> volVector; // Temporary volume vector used to initialize the mass vector
+    errorFlag = readGeometry(filename, currentField, &volVector); //Why sending adress of volVector ?
+    if (errorFlag != noError){return errorFlag;}
+
+    // Checking consistency of user datas
+    errorFlag = consistencyField(currentField);
+    if (errorFlag != noError){return errorFlag;}
+
+    // Initialisation of the particles
+    speedInit(currentField, parameter);
+    densityInit(currentField, parameter);
+    pressureInit(currentField, parameter);
+    massInit(currentField, parameter, volVector);
+
+    return noError;
+}
+
+
+/*
 *Input:
 *- filename: name of the parameter file to read
 *- parameter: pointer the the structure to fill
@@ -523,7 +548,13 @@ Error readParameter(std::string filename, Parameter* parameter)
             }
             else if(buf=="END_F")
             {
-                return noError;
+                // Checks finally if the input parameters are consistent (node 0 only)
+                Error errorFlag;
+                int procID;
+                MPI_Comm_rank(MPI_COMM_WORLD, &procID);
+                if(procID==0){errorFlag = consistencyParameters(parameter);}
+                MPI_Bcast(&errorFlag, 1, MPI_INT, 0, MPI_COMM_WORLD);
+                return errorFlag;
             }
             else
             {
