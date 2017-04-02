@@ -31,9 +31,9 @@ enum geomType{cube,cylinder,sphere};
 // Field* currentField useless here ?
 
 Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vector<double>* posFree,
-        std::vector<double>* posMoving, std::vector<double>* posFixed,
-        std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<double>* volVectorMoving,std::vector<int>* typeFree,  std::vector<int>* typeFixed, std::vector<int>* typeMoving, int* numberMovingBoundaries)
-{
+  std::vector<double>* posMoving, std::vector<double>* posFixed,
+  std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<double>* volVectorMoving,std::vector<int>* typeFree,  std::vector<int>* typeFixed, std::vector<int>* typeMoving, int* numberMovingBoundaries)
+  {
     std::string buf;
     int cnt=0;
     char valueArray[1024];
@@ -41,22 +41,22 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
 
     while(cnt!=N_DATA && inFile->peek() != std::ifstream::traits_type::eof())
     {
-        std::getline(*inFile, buf);
-        if(1==sscanf(buf.c_str(),"%*[^#]#%s", valueArray)){
-            std::cout << "Missing an element parameter.\n" << std::endl;
-            return geometryError;
-        }
-        if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
-        {
-            brickData[cnt]=atof(valueArray);
-            ++cnt;
-        }
-        else{continue;}
+      std::getline(*inFile, buf);
+      if(1==sscanf(buf.c_str(),"%*[^#]#%s", valueArray)){
+        std::cout << "Missing an element parameter.\n" << std::endl;
+        return geometryError;
+      }
+      if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
+      {
+        brickData[cnt]=atof(valueArray);
+        ++cnt;
+      }
+      else{continue;}
     }
     if(cnt!=N_DATA)
     {
-        std::cout << "Reached end of file before geometry reading.\n" << std::endl;
-        return geometryError;
+      std::cout << "Reached end of file before geometry reading.\n" << std::endl;
+      return geometryError;
     }
     int c=(int)brickData[0];
     float s=brickData[1];
@@ -71,7 +71,7 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
     {
       if(L[j] < s)
       {
-        std::cout << "Box smaller than s" << '\n';
+        std::cout << "Box smaller than s." << '\n';
         return geometryError;
       }
     }
@@ -80,140 +80,138 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
 
     switch(c)
     {
-        case freePart :
-        switch(type)
-        {
-            case cube :
-            meshcube(o, L,teta,s, *posFree, &nPart, &volPart, r, true);
-            break;
-            case cylinder :
-            meshcylinder(o, L, s, *posFree, &nPart, &volPart, r, true);
-            break;
-            case sphere :
-            meshsphere(o, L, s, *posFree, &nPart, &volPart, r, true);
-            break;
-        }
-        for(cnt=0; cnt<nPart; ++cnt)
-        {
-            (*volVectorFree).push_back(volPart);
-            (*typeFree).push_back(c);
-        }
+      case freePart :
+      switch(type)
+      {
+        case cube :
+        meshcube(o, L,teta,s, *posFree, &nPart, &volPart, r, true);
         break;
-        case fixedPart :
-        switch(type)
-        {
-            case cube :
-            meshcube(o, L,teta, s, *posFixed, &nPart, &volPart, r, true);
-            break;
-            case cylinder :
-            meshcylinder(o, L, s, *posFixed, &nPart, &volPart, r, true);
-            break;
-            case sphere :
-            meshsphere(o, L, s, *posFixed, &nPart, &volPart, r, true);
-            break;
-        }
-        for(cnt=0; cnt<nPart; ++cnt)
-        {
-            (*volVectorFixed).push_back(volPart);
-            (*typeFixed).push_back(c);
-        }
+        case cylinder :
+        meshcylinder(o, L, s, *posFree, &nPart, &volPart, r, true);
         break;
-        case movingPart :
-        {
+        case sphere :
+        meshsphere(o, L, s, *posFree, &nPart, &volPart, r, true);
+        break;
+      }
+      for(cnt=0; cnt<nPart; ++cnt)
+      {
+        (*volVectorFree).push_back(volPart);
+        (*typeFree).push_back(c);
+      }
+      break;
+      case fixedPart :
+      switch(type)
+      {
+        case cube :
+        meshcube(o, L,teta, s, *posFixed, &nPart, &volPart, r, true);
+        break;
+        case cylinder :
+        meshcylinder(o, L, s, *posFixed, &nPart, &volPart, r, true);
+        break;
+        case sphere :
+        meshsphere(o, L, s, *posFixed, &nPart, &volPart, r, true);
+        break;
+      }
+      for(cnt=0; cnt<nPart; ++cnt)
+      {
+        (*volVectorFixed).push_back(volPart);
+        (*typeFixed).push_back(c);
+      }
+      break;
+      case movingPart :
+      {
         int IDMovingBoundary;
         *numberMovingBoundaries++;
         IDMovingBoundary = *numberMovingBoundaries - 1;
-        
+
         for(int j=0 ; j<3 ; j++)
         {
-            parameter->teta[j].push_back(teta[j]);
-            parameter->movingDirection[j].push_back(movingDirection[j]);
+          parameter->teta[j].push_back(teta[j]);
+          parameter->movingDirection[j].push_back(movingDirection[j]);
         }
         parameter->charactTime.push_back(charactTime);
         parameter->speedLaw.push_back( (SpeedLaw) speedLaw);
         switch(type)
         {
-            case cube :
-            meshcube(o, L,teta,s, *posMoving, &nPart, &volPart, r, true);
-            break;
-            case cylinder :
-            meshcylinder(o, L, s, *posMoving, &nPart, &volPart, r, true);
-            break;
-            case sphere :
-            meshsphere(o, L, s, *posMoving, &nPart, &volPart, r, true);
-            break;
+          case cube :
+          meshcube(o, L,teta,s, *posMoving, &nPart, &volPart, r, true);
+          break;
+          case cylinder :
+          meshcylinder(o, L, s, *posMoving, &nPart, &volPart, r, true);
+          break;
+          case sphere :
+          meshsphere(o, L, s, *posMoving, &nPart, &volPart, r, true);
+          break;
         }
         for(cnt=0; cnt<nPart; ++cnt)
         {
-            (*volVectorMoving).push_back(volPart);
-            (*typeMoving).push_back(IDMovingBoundary + 2);  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
+          (*volVectorMoving).push_back(volPart);
+          (*typeMoving).push_back(IDMovingBoundary + 2);  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
         }
       }
-        break;
+      break;
     }
     return noError;
-}
+  }
 
-/*
-*Input:
-*- inFile: Pointer to the input stream associated to the geometry file
-*- currentField: Pointer to the structure to fill
-*- posFree/posFree/posMoving: vector to store the position of the particles generated during brick reading
-*- volVectorFree/Fixed/Moving: vector to store the volume of the particles generated during brick reading
-*Decscription:
-*/
-
-void readBathymetry(std::ifstream* inFile, std::vector<double>* posFree, std::vector<double>* posFixed,
-        std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<int>* typeFree,  std::vector<int>* typeFixed)
-{
-    std::string buf;
-    char batFile[64];
-    int cnt=0;
-    char valueArray[1024];
-    float brickData[N_DATA_BATHYMETRY];
-
-    std::getline(*inFile, buf);
-    sscanf(buf.c_str(),"%*[^=]=%s", batFile);
-
-    std::cout << "batFile name read: " << batFile << '\n';
-
-    while(cnt!=N_DATA_BATHYMETRY)
+  /*
+  *Input:
+  *- inFile: Pointer to the input stream associated to the geometry file
+  *- currentField: Pointer to the structure to fill
+  *- posFree/posFree/posMoving: vector to store the position of the particles generated during brick reading
+  *- volVectorFree/Fixed/Moving: vector to store the volume of the particles generated during brick reading
+  *Decscription:
+  */
+  //Add defensive programmation here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  Error readBathymetry(std::ifstream* inFile, std::vector<double>* posFree, std::vector<double>* posFixed,
+    std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<int>* typeFree,  std::vector<int>* typeFixed)
     {
+      std::string buf;
+      char batFile[64];
+      int cnt=0;
+      char valueArray[1024];
+      float brickData[N_DATA_BATHYMETRY];
+
+      std::getline(*inFile, buf);
+      sscanf(buf.c_str(),"%*[^=]=%s", batFile);
+
+      while(cnt!=N_DATA_BATHYMETRY)
+      {
         std::getline(*inFile, buf);
         if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
         {
-            brickData[cnt]=atof(valueArray);
-            ++cnt;
+          brickData[cnt]=atof(valueArray);
+          ++cnt;
         }
         else{continue;}
-    }
+      }
 
-    float s=brickData[0];
-    float r=brickData[1];
-    double numberGroundParticles = (int) brickData[2];
-    double height0 = brickData[3];
-    double hFreeSurface = brickData[4];
-    int nPartFree, nPartFixed;
-    double volPart;
+      float s=brickData[0];
+      float r=brickData[1];
+      double numberGroundParticles = (int) brickData[2];
+      double height0 = brickData[3];
+      double hFreeSurface = brickData[4];
+      int nPartFree, nPartFixed;
+      double volPart;
 
-    std::cout << "BathyBrick read." << '\n';
+      if(meshBathymetry(batFile, numberGroundParticles, height0, hFreeSurface, s, *posFree, *posFixed, &nPartFree, &nPartFixed, &volPart,
+        r, true)!=noError)
+        {
+          return geometryError;
+        }
 
-    meshBathymetry(batFile, numberGroundParticles, height0, hFreeSurface, s, *posFree, *posFixed, &nPartFree, &nPartFixed, &volPart,
-         r, true);
-
-         std::cout << "Bathy meshed." << '\n';
-
-         for(int i=0; i<nPartFree; i++)
-         {
-             (*volVectorFree).push_back(volPart);
-             (*typeFree).push_back(freePart);
-         }
-         for(int i=0; i<nPartFixed; i++)
-         {
-             (*volVectorFixed).push_back(volPart);
-             (*typeFixed).push_back(fixedPart);
-         }
-}
+        for(int i=0; i<nPartFree; i++)
+        {
+          (*volVectorFree).push_back(volPart);
+          (*typeFree).push_back(freePart);
+        }
+        for(int i=0; i<nPartFixed; i++)
+        {
+          (*volVectorFixed).push_back(volPart);
+          (*typeFixed).push_back(fixedPart);
+        }
+        return noError;
+      }
 
 /*
 *Input:
@@ -322,8 +320,10 @@ Error readGeometry(std::string filename, Field* currentField, Parameter* paramet
                 else if(buf=="bathy")
                 {
                     std::cout << "Bathy recognized." << '\n';
-                    readBathymetry(&inFile, &posFree, &posFixed,
-                            &volVectorFree,  &volVectorFixed, &typeFree, &typeFixed);
+                    if(readBathymetry(&inFile, &posFree, &posFixed,
+                            &volVectorFree,  &volVectorFixed, &typeFree, &typeFixed)!=noError){
+                              return geometryError;
+                            }
                 }
                 else if(buf=="END_G")
                 {
@@ -368,6 +368,31 @@ Error readGeometry(std::string filename, Field* currentField, Parameter* paramet
     std::cout << "Reached end of file before geometry reading.\n" << std::endl;
     return geometryError;
 }
+
+/*
+Read the geometry and make all particle initializations
+*/
+Error initializeField(std::string filename, Field* currentField, Parameter* parameter){
+
+    Error errorFlag = noError;
+
+    std::vector<double> volVector; // Temporary volume vector used to initialize the mass vector
+    errorFlag = readGeometry(filename, currentField, parameter, &volVector); //Why sending adress of volVector ?
+    if (errorFlag != noError){return errorFlag;}
+
+    // Checking consistency of user datas
+    errorFlag = consistencyField(currentField);
+    if (errorFlag != noError){return errorFlag;}
+
+    // Initialisation of the particles
+    speedInit(currentField, parameter);
+    densityInit(currentField, parameter);
+    pressureInit(currentField, parameter);
+    massInit(currentField, parameter, volVector);
+
+    return noError;
+}
+
 
 /*
 *Input:
@@ -549,7 +574,13 @@ Error readParameter(std::string filename, Parameter* parameter)
             }
             else if(buf=="END_F")
             {
-                return noError;
+                // Checks finally if the input parameters are consistent (node 0 only)
+                Error errorFlag;
+                int procID;
+                MPI_Comm_rank(MPI_COMM_WORLD, &procID);
+                if(procID==0){errorFlag = consistencyParameters(parameter);}
+                MPI_Bcast(&errorFlag, 1, MPI_INT, 0, MPI_COMM_WORLD);
+                return errorFlag;
             }
             else
             {

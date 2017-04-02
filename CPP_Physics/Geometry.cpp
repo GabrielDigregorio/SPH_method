@@ -2,6 +2,7 @@
 #include "Physics.h"
 #define M_PI     3.14159265358979323846
 
+//Documentation left to do
 int interpBathymetry(double* sTrue, int* n, double xa, double xb, double ya, double yb, double height0, double hFreeSurface,
   int Nx, int Ny, double* bath, std::vector<double>& posFree, std::vector<double>& posFixed, double perturbation)
   {
@@ -19,8 +20,8 @@ int interpBathymetry(double* sTrue, int* n, double xa, double xb, double ya, dou
       }
       else if(k == Nx)
       {
+        //should not appear
         k_low = k-1; k_up = k;
-        std::cout << "Problem!" << '\n';
       }
       else
       {
@@ -36,14 +37,13 @@ int interpBathymetry(double* sTrue, int* n, double xa, double xb, double ya, dou
         }
         else if(l == Ny)
         {
+          //should not appear
           l_low = l-1; l_up = l;
-          std::cout << "Problem!" << '\n';
         }
         else{printf("Error reading bathemetry\n");
       }
 
       y = ya + ((double)j+0.5)*sTrue[1];
-      //std::cout << "xa: " << x << " ya: " << y << "sTrue1: " << sTrue[0] << " sTrue2: " << sTrue[1] << std::endl;
 
       //Bathemetric nodes around mesh nodes (x,y)
       x_up = xa + ((double)k_up)*dx;
@@ -74,63 +74,11 @@ int interpBathymetry(double* sTrue, int* n, double xa, double xb, double ya, dou
         posFree.push_back(y + distribution(generator));
         posFree.push_back(z + ((double)p)*sTrue[2] + distribution(generator));
       }
-      //std::cout << z + ((double)nzFree)*sTrue[2] << '\n';
       nFreeTotal += nzFree;
     }
   }
   return nFreeTotal;
 }
-// Build a brick of regulary aligned particles with the center of mass at o(x,y,z).
-//  - o[3]: corner of the cube with the lowest (x,y,z) values ??? Center ???
-//  - L[3]: edge lengths along x,y and z
-//  - s: particle spacing
-//  - pertubation: percentage of perturbation in position of particles (equal 0 by default)
-
-/*void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart,
-     double perturbation, bool stack){
-    // if we stack the cube:
-    if(stack == true){
-        L[0] -= s; L[1] -= s; L[2] -= s;
-    }
-
-    // calculate nb of particles along each direction from target size "s"
-    int ni = int(ceil(L[0]/s));
-    double dx = L[0]/ni; ++ni;
-    int nj = int(ceil(L[1]/s));
-    double dy = L[1]/nj; ++nj;
-    int nk = int(ceil(L[2]/s));
-    double dz = L[2]/nk; ++nk;
-    // Volume & number of particles computation
-    (*nPart)=ni*nj*nk;
-    (*volPart)=dx*dy*dz;
-
-
-    // memory allocation
-    pos.reserve(pos.size() + ni*nj*nk*3);
-
-    // generates number in the range -s*perturbation % and s*perturbation %
-    std::default_random_engine generator; // A SEED MUST BE USE TO CHANGE VALUE AT EACH CALL
-    std::uniform_real_distribution<double> distribution(-s*perturbation/100,s*perturbation/100);
-
-    // particle generation
-    for(int k=0; k<nk; ++k)
-    {
-        double z = o[2] - L[2]/2 + k*dz;
-        for(int j=0; j<nj; ++j)
-        {
-            double y = o[1] - L[1]/2 +j*dy;
-            for(int i=0; i<ni; ++i)
-            {
-                double x = o[0] - L[0]/2 +i*dx;
-                pos.push_back(x + distribution(generator));
-                pos.push_back(y + distribution(generator));
-                pos.push_back(z + distribution(generator));
-            }
-        }
-    }
-}*/
-
-
 
 // Build a cylinder of regulary aligned particles with the center of mass at o(x,y,z).
 //  - o[3]: center of the cylinder
@@ -262,6 +210,8 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, in
             }
     }
 }
+/*Documentation left to do*/
+/*Add error handling*/
 Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, double hFreeSurface, double s, std::vector<double> &posFree,std::vector<double> &posFixed,  int* nPartFree, int* nPartFixed, double* volPart,
      double perturbation, bool stack)
      {
@@ -418,7 +368,6 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
     Rx[6]=0;
     Rx[7]=sin(teta_x/180.0*M_PI);
     Rx[8]=cos(teta_x/180.0*M_PI);
-
     Ry[0]=cos(teta_y/180.0*M_PI);
     Ry[1]=0;
     Ry[2]=sin(teta_y/180.0*M_PI);

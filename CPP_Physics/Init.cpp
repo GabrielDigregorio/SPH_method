@@ -11,8 +11,7 @@
 *Decscription:
 *Initialise speed from field.
 */
-
-// To be totally changed
+// To be totally changed because of updateMoving speed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void speedInit(Field* field, Parameter* parameter)
 {
 	for(int j=0 ; j<3 ; j++)

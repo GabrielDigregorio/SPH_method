@@ -4,37 +4,9 @@
 #include "Main.h"
 #include "Interface.h"
 
-Error consistency(Parameter* parameter, Field* field)
+Error consistencyParameters(Parameter* parameter)
 {
   int cntError = 0;
-  if( (field->u[0]<field->l[0]) || (field->u[1]<field->l[1]) || (field->u[2]<field->l[2]) )
-  {
-    std::cout << "Lower and higher domain dimension are not consistent.\n" << std::endl;
-    cntError++;
-  }
-
-  int cntOutOfDomain = 0;
-  for(int i = 0; i < field->nTotal; i++)
-  for (int j=0;j<3;j++)
-  {
-    {
-      if(field->pos[j][i] > field->u[j])
-      {
-        cntOutOfDomain++;
-        break;
-      }
-      else if (field->pos[j][i] < field->l[j])
-      {
-        cntOutOfDomain++;
-        break;
-      }
-    }
-  }
-  if(cntOutOfDomain != 0)
-  {
-    std::cout << cntOutOfDomain << " particles out of the domain.\n" << std::endl;
-    cntError++;
-  }
 
   if(parameter->kh <= 0.0)
   {
@@ -50,10 +22,9 @@ Error consistency(Parameter* parameter, Field* field)
 
   if(parameter->densityRef <= 0.0)
   {
-    std::cout << "Invalid referecne density.\n" << std::endl;
+    std::cout << "Invalid reference density.\n" << std::endl;
     cntError++;
   }
-
 
   if(parameter->B < 0.0)
   {
@@ -113,4 +84,41 @@ Error consistency(Parameter* parameter, Field* field)
   {
     return noError;
   }
+}
+
+
+Error consistencyField(Field* field)
+{
+    int cntError = 0;
+    if( (field->u[0]<field->l[0]) || (field->u[1]<field->l[1]) || (field->u[2]<field->l[2]) )
+    {
+        std::cout << "Lower and higher domain dimension are not consistent.\n" << std::endl;
+        cntError++;
+    }
+
+    int cntOutOfDomain = 0;
+    for(int i = 0; i < field->nTotal; i++)
+    for (int j=0;j<3;j++)
+    {
+        {
+            if(field->pos[j][i] > field->u[j])
+            {
+                cntOutOfDomain++;
+                break;
+            }
+            else if (field->pos[j][i] < field->l[j])
+            {
+                cntOutOfDomain++;
+                break;
+            }
+        }
+    }
+    if(cntOutOfDomain != 0)
+    {
+        std::cout << cntOutOfDomain << " particles out of the domain.\n" << std::endl;
+        cntError++;
+    }
+
+    if (cntError != 0){return consistencyError;}
+    else{return noError;}
 }
