@@ -86,4 +86,10 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 // viscosityComputation.cpp
 void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity);
 
+// MPI.cpp
+void scatterField(Field* globalField, Field* currentField);
+void gatherField(Field* globalField, Field* currentField);
+void processUpdate(Field* currentField);
+void timeStepFinding(Field* currentField);
+
 #endif

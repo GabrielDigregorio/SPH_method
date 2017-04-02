@@ -70,23 +70,22 @@ int main(int argc, char *argv[])
 	Field globalFieldInstance; // Used by node 0 only
 	Field* globalField = &globalFieldInstance; // Used by node 0 only
 
-
 	start = std::clock();
-	// Reads parameters and checks their consistency (each process)
+	// Reads parameters (each process) and geometry (process 0) and checks their consistency
 	errorFlag = readParameter(parameterFilename, parameter);
 	if(errorFlag != noError){MPI_Finalize(); return errorFlag;}
-	// Reads geometry and check its consistency (process 0 only)
-	//if(procID==0){
-		errorFlag = readGeometry(geometryFilename, globalField, parameter);
-	//}
+	if(procID==0){
+		errorFlag = initializeField(geometryFilename, globalField, parameter);
+	}
 	MPI_Bcast(&errorFlag, 1, MPI_INT, 0, MPI_COMM_WORLD);
 	if(errorFlag != noError){MPI_Finalize(); return errorFlag;}
 
+	// Writes the initial configuration
+	if(procID==0){writeField(globalField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);}
+	unsigned int writeCount = 1;
 
 	// Scatters the globalField from node 0 into the currentField of all nodes
-	// !!!!!!!!!!
-	// TEMPORARY
-	currentField = globalField;
+	scatterField(globalField, currentField);
 
 	// Copies the invariant information about the field
 	copyField(currentField, nextField);
@@ -107,10 +106,6 @@ int main(int argc, char *argv[])
 		std::cout << "Number of particles with imposed speed = " << currentField->nMoving << "\n" << std::endl;
 	}
 
-	// Writes the initial configuration
-	if(procID==0){writeField(currentField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);}
-	unsigned int writeCount = 1;
-
 	// Declares the box mesh and their adjacent relations variables
 	bool reBoxing = true; // To mesh at least at the first time step
 	std::vector<std::vector<int> > boxes;
@@ -127,11 +122,13 @@ int main(int argc, char *argv[])
 	double currentTime = 0.0; // Current time of the simulation
 	for (unsigned int n = 1; currentTime < parameter->T; n++)
 	{
+		// Major MPI communication: the time integration is preparated
+		processUpdate(currentField);
+
 		currentField->nextK = parameter->k;
 
-		// Rebox the domain if h has sufficiently changed
-		if (reBoxing == true)
-		{
+		// Rebox the domain if h has sufficiently changed (PROBABLY NOT TO BE LEFT HERE)
+		if (reBoxing == true){
 			start = std::clock();
 			boxes.resize(0);// VERY BAD, TO CHANGE !!! How to do this properly ?
 			surrBoxesAll.resize(0);// VERY BAD, TO CHANGE !!! How to do this properly ?
@@ -142,8 +139,9 @@ int main(int argc, char *argv[])
         reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
 
 		// Adaptative time step
-		currentTime += parameter->k;
-		parameter->k = currentField->nextK;
+		timeStepFinding(currentField);
+		currentTime += parameter->k; // Temporary
+		parameter->k = currentField->nextK; // Temporary
 
 		// Swap two fields
 		swapField(&currentField, &nextField);
@@ -152,11 +150,11 @@ int main(int argc, char *argv[])
 		start = std::clock();
     	if (writeCount*parameter->writeInterval <= currentTime)
 		{
+			gatherField(Field* globalField, Field* currentField);
 			if(procID==0){writeField(currentField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}
 		timeInfo[5] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
-
 
 		// Fancy progress bar (ok if at least 50 time step)
 		if ( procID==0 && currentTime > loadingBar * parameter->T/50.0){

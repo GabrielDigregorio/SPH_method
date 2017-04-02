@@ -343,9 +343,9 @@ Error readGeometry(std::string filename, Field* currentField, std::vector<double
 }
 
 /*
-Overload to make all particle initializations
+Read the geometry and make all particle initializations
 */
-Error readGeometry(std::string filename, Field* currentField, Parameter* parameter){
+Error initializeField(std::string filename, Field* currentField, Parameter* parameter){
 
     Error errorFlag = noError;
 

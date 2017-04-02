@@ -15,7 +15,7 @@
 // inputReader.cpp
 Error readParameter(std::string filename, Parameter* parameter);
 Error readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector);
-Error readGeometry(std::string filename, Field* currentField, Parameter* parameter);
+Error initializeField(std::string filename, Field* currentField, Parameter* parameter);
 
 // writeField.cpp
 std::string creatDirectory(std::string dirname);
