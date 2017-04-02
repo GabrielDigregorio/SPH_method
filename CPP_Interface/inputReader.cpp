@@ -319,7 +319,6 @@ Error readGeometry(std::string filename, Field* currentField, Parameter* paramet
                 }
                 else if(buf=="bathy")
                 {
-                    std::cout << "Bathy recognized." << '\n';
                     if(readBathymetry(&inFile, &posFree, &posFixed,
                             &volVectorFree,  &volVectorFixed, &typeFree, &typeFixed)!=noError){
                               return geometryError;
@@ -435,6 +434,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                     std::getline(inFile, buf);
                     if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
                     {
+                        // Numerical parameters
                         if(cnt==0)
                             parameter->kh=atof(valueArray);
                         if(cnt==1)
@@ -561,7 +561,6 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-
                         ++cnt;
                     }
                     else{continue;}

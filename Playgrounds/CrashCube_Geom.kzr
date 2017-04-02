@@ -8,71 +8,81 @@
 %   ux, uy, uz ==> Upper coordinate of the domain
 %
 % geometry : #brick, #cylin or #spher
-% #param
+% %param
 %   c ==> 0=free, 1=moving, 2=fixed
 %   s ==> spacing between particles
 %   r ==> % randomness in particle's position
-% #coord
+% %coord
 %   x ==> x coordinate of the center of mass
 %   y ==> y coordinate of the center of mass
 %   z ==> z coordinate of the center of mass
-% #dimen
+% %dimen
 %   L ==> Length of the geometry
 %   W ==> Width  of the geometry
 %   H ==> Height of the geometry
 %   d ==> Small diameter of the geometry
 %   D ==> Large diameter of the geometry
+% %inclin
+%   tetax ==> Angle of rotation around the x axis (in degre)
+%   tetay ==> Angle of rotation around the y axis (in degre)
+%   tetaz ==> Angle of rotation around the z axis (in degre)
 %********************************************
 
+
 #domsz
-ux = 0.5
-uy = 0.5
-uz = 1
-lx = -0.5
-ly = -0.5
-lz = -0.5
+    ux = 0.5
+    uy = 0.5
+    uz = 1
+    lx = -0.5
+    ly = -0.5
+    lz = -0.5
+
+% Fluid
    #brick
-       %param
-       c=0
-       s=0.1
-       r=0
-       %coord
-       x=0
-       y=0
-       z=0.15
-       %dimen
-       L=0.3
-       W=0.3
-       H=0.3
-       %rotation
-       theta1=0.0
-       theta2=0.0
-       theta3=0.0
-       %movpara
-       speedLaw=1
-       movingDirectionX=0
-       movingDirectionY=0
-       movingDirectionZ=0.5
+        %param
+            c=0
+            s=0.1
+            r=0
+        %coord
+            x=0
+            y=0
+            z=0.15
+        %dimen
+            L=0.3
+            W=0.3
+            H=0.3
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=1
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+
+% Wall          
    #brick
-       %param
-       c=2
-       s=0.08
-       r=0
-       %coord
-       x=0
-       y=0
-       z=0
-       %dimen
-       L=0.5
-       W=0.5
-       H=0.08
-       %rotation
-       theta1=0.0
-       theta2=0.0
-       theta3=0.0
-       %movpara
-       speedLaw=0
-       movingDirectionX=0
-       movingDirectionY=0
-       movingDirectionZ=0.5
+        %param
+            c=2
+            s=0.08
+            r=0
+        %coord
+            x=0
+            y=0
+            z=0
+        %dimen
+            L=0.5
+            W=0.5
+            H=0.08
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+                       
 #END_G

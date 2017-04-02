@@ -1,50 +1,83 @@
 #PARA1
-%********************************************
+%**********************************************************************************************
 % PLAYGROUND : Parameter Pool
 % #param
 %
+% kernel = type of kernel : Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline 
 % kh = smothing length
+% integrationMethod = euler or RK2
+% theta = RK2 parameter : 1 for mid point method, 0.5 for Heun's method, 1.5 for Ralston's method
+% adaptativeTimeStep= no or yes
 % k = time step
 % T = simulation time
+% charactTime = 
+%
 % densityRef = density of the fluid at atmospheric pressure
-% l & u = lower and upper limit of the domain
+% densityInitMethod = hydrosatic, etc.
 % B & gamma = fluid constants
 % g = gravity
-% writeInteval = time interval between two outputs file are generated
-% integrationMethod = euler or RK2
-% adaptativeTimeStep= yes or no
-% densityInitMethod = hydrosatic, etc.
+% c = speed of sound
+% viscosityModel = violeauArtificial
+% alpha, beta & epsilon = viscosity parameters
 % stateEquationMethod = quasiIncompressible, perfectGas, etc.
+% molarMass = 
+% temperature = 
 % massInitMethod = violeau2012 (all particles have same volumes), etc.
-% speedLaw = To be determined, will dictate the behaviour of moving boundaries
-%********************************************
+%
+% movingDirection X, Y & Z = 
+% speedLaw = dictate the behaviour of moving boundaries
+%
+% writeInteval = time interval between two outputs file are generated
+% matlab = write .txt for matlab analysis:  noMatlab or fullMatlab
+% paraview = write .vtx for paraview analysis: noParaview, fullParaview, nFreeParaview,
+%                                              nMovingFixedParaview, nFree_nMovingFixedParaview
+%**********************************************************************************************
+
 #param
-   kh=0.06
-   k=0.00001
-   T=1
-   densityRef=1000.0
-   B=1280000
-   gamma=7.0
-   g=9.81
-   writeInterval=0.002
-   charactTime=1.0
-   c=100
-   alpha=0.1
-   beta=0
-   epsilon=0.1
-   smovingDirectionX=0
-   movingDirectionY=0
-   movingDirectionZ=0
-   molarMass=1
-   temperature=293.15
-   theta=0.5
-   kernel=2
-   viscosityModel=0
-   integrationMethod=0
-   adaptativeTimeStep=0
-   densityInitMethod=1
-   stateEquationMethod=0
-   massInitMethod=0
-   speedLaw=0
-   format=2
+
+    % Numerical parameters
+        kernel=2  
+        kh=0.06
+
+        integrationMethod=1
+        theta=0.5
+
+        adaptativeTimeStep=1
+        k=0.00001
+
+        T=1
+
+        charactTime=1.0
+
+    % Physical Parameters 
+        densityRef=1000.0
+        densityInitMethod=1 
+
+        B=1280000
+        gamma=7.0
+        g=9.81
+        c=100
+
+        viscosityModel=0
+        alpha=0.1
+        beta=0
+        epsilon=0.1
+
+        stateEquationMethod=0
+        molarMass=1
+        temperature=293.15
+        
+        massInitMethod=0
+
+    % Moving Block Parameters
+        movingDirectionX=0
+        movingDirectionY=0
+        movingDirectionZ=-1.5
+        speedLaw=0
+
+    % Output Parameters
+        writeInterval=0.002
+        matlab=1
+        paraview=4
+
 #END_F

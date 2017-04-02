@@ -216,9 +216,6 @@ Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, d
      double perturbation, bool stack)
      {
 
-
-       std::cout << "mesh Bathymetry entered." << '\n';
-
              double* bath;
              char buf[1000];
              // Opening files
@@ -237,22 +234,22 @@ Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, d
              unsigned int bytesRead;
              bytesRead = fread(&buf, 8, 1, fp_bat);
              double xa = (*(double*)buf);
-             std::cout << xa << std::endl;
+             //std::cout << xa << std::endl;
              bytesRead = fread(&buf, 8, 1, fp_bat);
              double xb = (*(double*)buf);
-             std::cout << xb << std::endl;
+             //std::cout << xb << std::endl;
              bytesRead = fread(&buf, 8, 1, fp_bat);
              double ya = (*(double*)buf);
-             std::cout << ya << std::endl;
+             //std::cout << ya << std::endl;
              bytesRead = fread(&buf, 8, 1, fp_bat);
              double yb = (*(double*)buf);
-             std::cout << yb << std::endl;
+             //std::cout << yb << std::endl;
              bytesRead = fread(&buf, 4, 1, fp_bat);
              int Nx = (*(int*)buf);
-             std::cout << Nx << std::endl;
+             //std::cout << Nx << std::endl;
              bytesRead = fread(&buf, 4, 1, fp_bat);
              int Ny = (*(int*)buf);
-             std::cout << Ny << std::endl;
+             //std::cout << Ny << std::endl;
 
 
              // Reading the bathymetry
@@ -261,15 +258,8 @@ Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, d
              {
                bytesRead = fread(&buf, 8, 1, fp_bat);
                bath[i] = (*(double*)buf);
-               if(bath[i] > 10)
-               {
-                std::cout << bath[i] << '\n';
-               }
              }
              fclose(fp_bat);
-
-
-             std::cout << "Bathymetry read." << '\n';
              // Interpolating the bathymetry
              // Number of grid points -1 along x and y
              // Number of fixed particles along z

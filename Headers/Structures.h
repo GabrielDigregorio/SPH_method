@@ -8,6 +8,7 @@
 
 // Error types
 enum Error {noError, argumentError, parameterError, geometryError, consistencyError, NB_ERROR_VALUE};
+
 // Kernel Types
 enum Kernel {Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline, NB_KERNEL_VALUE};
 
@@ -64,11 +65,11 @@ struct Parameter {
     DensityInitMethod densityInitMethod;
     StateEquationMethod stateEquationMethod;
     MassInitMethod massInitMethod;
-    Format format;
     std::vector<SpeedLaw> speedLaw;
     std::vector<double> teta[3];
     std::vector<double> charactTime;
     std::vector<double> movingDirection[3];
+    Format format;
 };
 
 

@@ -6,11 +6,9 @@
 // Creat directory to store data
 // In: name of the directory
 /* std::string creatDirectory(std::string dirname){
-
     std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
     DIR* dir = opendir(newdir.str().c_str());
     int i=1;
-
     while(dir)
     {
          Directory exists.
@@ -20,7 +18,6 @@
         dir = opendir(newdir.str().c_str());
         i++;
     }
-
     mode_t nMode = 0733; // UNIX style permissions
     int nError = 0;
     #if defined(_WIN32)
@@ -30,7 +27,6 @@
     #endif
     // handle your error here
     }
-
     //mkdir(newdir.str().c_str());
     outdir<< "/"<<dirname;
     std::cout <<"\n"<<  outdir.str()<<"\n";
@@ -239,4 +235,4 @@ void matlab(std::string const &filename,
 
     f.close();
 
-    }
+}
