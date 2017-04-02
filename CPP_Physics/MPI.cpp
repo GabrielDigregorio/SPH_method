@@ -38,7 +38,23 @@ void scatterField(Field* globalField, Field* currentField){
 
 void gatherField(Field* globalField, Field* currentField){
     // Gather all the current fields into the global Field (for output file writing for example)
-    globalField = currentField;
+
+    globalField->nFree = currentField->nFree;
+    globalField->nFixed = currentField->nFixed;
+    globalField->nMoving = currentField->nMoving;
+    globalField->nTotal = currentField->nTotal;
+    for (int i = 0; i < 3; i++){
+      globalField->l[i] = currentField->l[i];
+      globalField->u[i] = currentField->u[i];
+      globalField->pos[i] = currentField->pos[i];
+      globalField->speed[i] = currentField->speed[i];
+    }
+    globalField->mass = currentField->mass;
+    globalField->type = currentField->type;
+    globalField->density = currentField->density;
+    globalField->pressure = currentField->pressure;
+
+
 }
 
 void processUpdate(Field* currentField){

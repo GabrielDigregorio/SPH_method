@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     	if (writeCount*parameter->writeInterval <= currentTime)
 		{
 			gatherField(globalField, currentField);
-			if(procID==0){writeField(currentField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
+			if(procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}
 		timeInfo[5] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
