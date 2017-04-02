@@ -41,7 +41,7 @@
     #brick
         %param
             c=0
-            s=0.05
+            s=0.5
             r=0
         %coord
             x=0

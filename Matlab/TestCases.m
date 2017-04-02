@@ -306,43 +306,104 @@ save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
 
 
-%% Not defined
+%% Piston (Gas)
 %  ************************************************************************
 case 3
 
     % Parameters
-
-    % Cube
-
-    % Import data
+    nbrWindows = 1;
+    % Cube:
 
 
-%     % Plot
-%     figure(20)
-%     hold on
-%     plot();
-%         %axis([0 0 0 0])
-%         title('')
-%         xlabel('')
-%         ylabel('')
-%         legend('')
-%         grid
-%         %print(strcat(path,'StationaryTank'), '-depsc')
-%     hold off  
-% 
-% % Save data
-% DATA.name = dirName(1).name;
-% DATA.path = nameExperiment;
-% DATA.nbrFiles = nstep;
-% DATA.timeStep = timeStep;
-% DATA.timeWrite = timeWrite;
-% DATA.timeSimu = timeSimu;
-% DATA.CPUtime = CPU_Time;
-% DATA.memory = Memory;
-% DATA.memoryPeak = Memory_Peak;
-% DATA.time = time;
-% 
-% save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
+    for i=1 : nstep 
+        
+        % Open File nbr i
+        %disp(dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i).name);
+        Experiment = importdata(filename); % Import Data
+        
+        % Pressure mean of the gas inside the piston
+        mean_Pressure(i) = mean(Experiment.data(1:limit(1),8));
+        std_Pressure(i)  =  std(Experiment.data(1:limit(1),8));
+        volumePiston(i) = 0.4*0.4*(mean(Experiment.data(limit(1)+limit(3):end,3))-0.1);
+    end
+
+
+figure(1)
+hold on
+    errorbar(time, mean_Pressure, std_Pressure, '*','LineWidth', 2)
+
+    axis([0 0.2 -0.1e5 4e5])
+    set(gca,'FontSize',22);
+    xlabel('Time [s]','FontSize',22,'Interpreter','latex');
+    ylabel('Mean Pressure [Pa]','FontSize',22,'Interpreter','latex');
+    NumTicks=5;
+    L = get(gca,'XLim');
+    set(gca,'XTick',linspace(L(1),L(2),NumTicks))
+    L = get(gca,'YLim');
+    set(gca,'YTick',linspace(L(1),L(2),NumTicks))
+    %legendInfo={'t = 0 [s]'; 't = 1 [s]';'t = 2 [s]';'Analytical solution'};
+    %legend(legendInfo,'Interpreter','latex','Location','Best');
+    grid
+    box on
+    %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
+    hold off   
+
+    
+    figure(2)
+    hold on
+    errorbar(volumePiston, mean_Pressure, std_Pressure, '*','LineWidth', 2)
+    %axis([0 0.2 -0.1e5 4e5])
+    set(gca,'FontSize',22);
+    xlabel('Volume $[m^3]$','FontSize',22,'Interpreter','latex');
+    ylabel('Mean Pressure [Pa]','FontSize',22,'Interpreter','latex');
+    NumTicks=5;
+    L = get(gca,'XLim');
+    set(gca,'XTick',linspace(L(1),L(2),NumTicks))
+    L = get(gca,'YLim');
+    set(gca,'YTick',linspace(L(1),L(2),NumTicks))
+    %legendInfo={'t = 0 [s]'; 't = 1 [s]';'t = 2 [s]';'Analytical solution'};
+    %legend(legendInfo,'Interpreter','latex','Location','Best');
+    grid
+    box on
+    %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
+    hold off 
+    
+figure(3)
+hold on
+    plot(time, mean_Pressure.*volumePiston, '*','LineWidth', 2)
+
+    %saxis([0 0.2 -0.1e5 4e5])
+    set(gca,'FontSize',22);
+    xlabel('Time [s]','FontSize',22,'Interpreter','latex');
+    ylabel('P*V $[kg * m^2 / s^2]$','FontSize',22,'Interpreter','latex');
+    NumTicks=5;
+    L = get(gca,'XLim');
+    set(gca,'XTick',linspace(L(1),L(2),NumTicks))
+    L = get(gca,'YLim');
+    set(gca,'YTick',linspace(L(1),L(2),NumTicks))
+    %legendInfo={'t = 0 [s]'; 't = 1 [s]';'t = 2 [s]';'Analytical solution'};
+    %legend(legendInfo,'Interpreter','latex','Location','Best');
+    grid
+    box on
+    %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
+    hold off      
+% Save data
+DATA.name = dirName(1).name;
+DATA.path = nameExperiment;
+DATA.nbrFiles = nstep;
+DATA.timeStep = timeStep;
+DATA.timeWrite = timeWrite;
+DATA.timeSimu = timeSimu;
+DATA.CPUtime = CPU_Time;
+DATA.memory = Memory;
+DATA.memoryPeak = Memory_Peak;
+DATA.time = time;
+DATA.meanHydrostatic = mean_Pressure;
+DATA.stdHydrostatic = std_Pressure;
+
+save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
+
 
     
 %% Not Valid Experiment

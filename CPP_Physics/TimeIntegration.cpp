@@ -154,7 +154,7 @@ bool timeIntegration(Field* currentField, Field* nextField,
           std::vector<double> midDensityDerivative;
           midSpeedDerivative.assign(3*currentField->nFree, 0.0);
           midDensityDerivative.assign(currentField->nTotal, 0.0);
-
+std::cout<<"ok RK2"<<std::endl;
           start = std::clock();
           // Storing midpoint in nextField
           eulerUpdate(currentField, nextField, parameter, currentDensityDerivative, currentSpeedDerivative, t, kMid);

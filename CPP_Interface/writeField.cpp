@@ -133,7 +133,7 @@ void paraView(std::string const &filename,
     // vertices
     f << "VERTICES " << nbp << " " << 2*nbp << std::endl;
     for(int i=nbpStart; i<nbpEnd; ++i)
-        f << "1 " << i << std::endl;
+        f << "1 " << i-nbpStart << std::endl;
     f << '\n'; // empty line (required)
 
     // fields

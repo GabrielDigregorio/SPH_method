@@ -69,7 +69,7 @@ switch(choice)
         disp(['Experiments Types: ']); % Display Possibilities
         disp(['1) Free Falling Cube']);
         disp(['2) Swimming Pool']);
-        disp(['3) not defined']);disp([' ']);
+        disp(['3) Piston']);disp([' ']);
         n = input('Enter the TYPE of the experiment: ');disp([' ']);
         disp(['Clic on directory: ']);
         nameExperiment = uigetdir('../build/Results/');

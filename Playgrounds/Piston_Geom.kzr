@@ -41,7 +41,7 @@
 #brick
     %param
         c=0
-        s=0.05
+        s=0.04
         r=0
     %coord
         x=0
@@ -60,7 +60,7 @@
 #brick
     %param
         c=1
-        s=0.05
+        s=0.04
         r=0
     %coord
         x=0
@@ -79,7 +79,7 @@
 #brick
     %param
         c=2
-        s=0.05
+        s=0.04
         r=0
     %coord
         x=0
@@ -97,7 +97,7 @@
 #brick
     %param
         c=2
-        s=0.05
+        s=0.04
         r=0
     %coord
         x=0.25
@@ -115,7 +115,7 @@
 #brick
     %param
         c=2
-        s=0.05
+        s=0.04
         r=0
     %coord
         x=-0.25
@@ -133,7 +133,7 @@
 #brick
     %param
         c=2
-        s=0.05
+        s=0.04
         r=0
     %coord
         x=0
@@ -151,7 +151,7 @@
 #brick
     %param
         c=2
-        s=0.05
+        s=0.04
         r=0
     %coord
         x=0

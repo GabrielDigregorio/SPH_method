@@ -300,45 +300,8 @@ Error readParameter(std::string filename, Parameter* parameter)
                     std::getline(inFile, buf);
                     if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
                     {
+                        // Numerical parameters
                         if(cnt==0)
-                            parameter->kh=atof(valueArray);
-                        if(cnt==1)
-                            parameter->k=atof(valueArray);
-                        if(cnt==2)
-                            parameter->T=atof(valueArray);
-                        if(cnt==3)
-                            parameter->densityRef=atof(valueArray);
-                        if(cnt==4)
-                            parameter->B=atof(valueArray);
-                        if(cnt==5)
-                            parameter->gamma=atof(valueArray);
-                        if(cnt==6)
-                            parameter->g=atof(valueArray);
-                        if(cnt==7)
-                            parameter->writeInterval=atof(valueArray);
-                        if(cnt==8)
-                            parameter->charactTime=atof(valueArray);
-                        if(cnt==9)
-                            parameter->c=atof(valueArray);
-                        if(cnt==10)
-                            parameter->alpha=atof(valueArray);
-                        if(cnt==11)
-                            parameter->beta=atof(valueArray);
-                        if(cnt==12)
-                            parameter->epsilon=atof(valueArray);
-                        if(cnt==13)
-                            parameter->movingDirection[0]=atof(valueArray);
-                        if(cnt==14)
-                            parameter->movingDirection[1]=atof(valueArray);
-                        if(cnt==15)
-                            parameter->movingDirection[2]=atof(valueArray);
-                        if(cnt==16)
-                            parameter->molarMass = atof(valueArray);
-                        if (cnt==17)
-                            parameter->temperature = atof(valueArray);
-                        if (cnt==18)
-                            parameter->theta = atof(valueArray);
-                        if(cnt==19)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_KERNEL_VALUE) )
                           {
@@ -350,19 +313,9 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==20)
-                        {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_VISCOSITY_VALUE) )
-                          {
-                            parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid viscosityModel.\n" << std::endl;
-                            return parameterError;
-                          }
-                        }
-                        if(cnt==21)
+                        if(cnt==1)
+                            parameter->kh=atof(valueArray);
+                        if(cnt==2)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_INTEGRATION_VALUE) )
                           {
@@ -374,7 +327,9 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==22)
+                        if (cnt==3)
+                            parameter->theta = atof(valueArray);
+                        if(cnt==4)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_ADAPTATIVE_VALUE) )
                           {
@@ -386,7 +341,17 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==23)
+                        if(cnt==5)
+                            parameter->k=atof(valueArray);
+                        if(cnt==6)
+                            parameter->T=atof(valueArray);
+                        if(cnt==7)
+                            parameter->charactTime=atof(valueArray);
+                        
+                        // Physical Parameters 
+                        if(cnt==8)
+                            parameter->densityRef=atof(valueArray);
+                        if(cnt==9)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_DENSITYINIT_VALUE) )
                           {
@@ -398,7 +363,33 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==24)
+                        if(cnt==10)
+                            parameter->B=atof(valueArray);
+                        if(cnt==11)
+                            parameter->gamma=atof(valueArray);
+                        if(cnt==12)
+                            parameter->g=atof(valueArray);
+                        if(cnt==13)
+                            parameter->c=atof(valueArray);
+                        if(cnt==14)
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_VISCOSITY_VALUE) )
+                          {
+                            parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid viscosityModel.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
+                        if(cnt==15)
+                            parameter->alpha=atof(valueArray);
+                        if(cnt==16)
+                            parameter->beta=atof(valueArray);
+                        if(cnt==17)
+                            parameter->epsilon=atof(valueArray);
+                        if(cnt==18)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_STATEEQUATION_VALUE) )
                           {
@@ -410,7 +401,11 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==25)
+                        if(cnt==19)
+                            parameter->molarMass = atof(valueArray);
+                        if(cnt==20)
+                            parameter->temperature = atof(valueArray);
+                        if(cnt==21)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MASSINIT_VALUE) )
                           {
@@ -422,7 +417,16 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==26)
+
+
+                        // Moving Block Parameters
+                        if(cnt==22)
+                            parameter->movingDirection[0]=atof(valueArray);
+                        if(cnt==23)
+                            parameter->movingDirection[1]=atof(valueArray);
+                        if(cnt==24)
+                            parameter->movingDirection[2]=atof(valueArray);
+                        if(cnt==25)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_SPEEDLAW_VALUE) )
                           {
@@ -434,6 +438,10 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
+
+                        // Output Parameters
+                        if(cnt==26)
+                            parameter->writeInterval=atof(valueArray);
                         if(cnt==27)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MATLAB_VALUE) )
