@@ -61,8 +61,7 @@ void writeField(Field* field, double t, Parameter* parameter,
         vectors["velocity"] = &field->speed;
 
         // nbr of particles should be multiple of 3
-        int nbp = field->pos[0].size()/3, nbpStart, nbpEnd;
-        assert(field->pos[0].size()==nbp*3); // should be multiple of 3
+        int nbp = field->pos[0].size(), nbpStart, nbpEnd;
 
         // Selection of the output format
         // Full
