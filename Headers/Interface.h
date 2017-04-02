@@ -15,6 +15,7 @@
 // inputReader.cpp
 Error readParameter(std::string filename, Parameter* parameter);
 Error readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector);
+Error initializeField(std::string filename, Field* currentField, Parameter* parameter);
 
 // writeField.cpp
 std::string creatDirectory(std::string dirname);
@@ -26,9 +27,9 @@ void writeField(Field* field, double t, Parameter* parameter,
 
 void paraView(std::string const &filename,
               int step,
-              std::vector<double> const &pos,
+              std::vector<double> (&pos)[3],
               std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors,
+              std::map<std::string, std::vector<double> (*)[3] > const &vectors,
               int nbpStart, int nbpEnd);
 
 void matlab(std::string const &filename,
@@ -37,7 +38,8 @@ void matlab(std::string const &filename,
               int step, Parameter* parameter, Field* field);
 
 // ConsistencyCheck.cpp
-Error consistency(Parameter* param, Field* field);
+Error consistencyParameters(Parameter* param);
+Error consistencyField(Field* field);
 
 
 #endif

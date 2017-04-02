@@ -9,11 +9,10 @@
 #include <algorithm>
 
 #define N_UL 3
-#define N_DATA 12
-#define N_PARAM 29
+#define N_DATA 16
+#define N_PARAM 25
 
 enum geomType{cube,cylinder,sphere};
-enum boundCondition{freePart, movingPart, fixedPart};
 
 /*
 *Input:
@@ -62,7 +61,78 @@ Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vecto
     float r=brickData[2];
     double o[3] = {brickData[3],brickData[4],brickData[5]};
     double L[3] = {brickData[6],brickData[7],brickData[8]};
+    double tempo[3]= {brickData[6],brickData[7],brickData[8]};
     double teta[3]= {brickData[9],brickData[10],brickData[11]};
+    int speedLaw= brickData[12];
+    double movingDirection[3]={brickData[13],brickData[14],brickData[15]};
+    currentField->info_moving.push_back(speedLaw);
+    currentField->info_moving.push_back(movingDirection[0]);
+    currentField->info_moving.push_back(movingDirection[1]);
+    currentField->info_moving.push_back(movingDirection[2]);
+    bool stack=true;
+    if(stack == true){
+        tempo[0] -= s; tempo[1] -= s; tempo[2] -= s;
+    }
+    int flag_1 =0;
+    int flag_2 =0;
+    int flag_3 =0;
+    if(tempo[0]==0)
+    {
+        tempo[0]=s;
+        flag_1=1;
+    }
+    if(tempo[1]==0){
+        tempo[1]=s;
+        flag_2=1;
+    }
+    if(tempo[2]==0)
+    {
+        tempo[2]=s;
+        flag_3=1;
+    }
+    // calculate nb of particles along each direction from target size "s"
+    int ni = int(ceil(tempo[0]/s));
+    double dx = tempo[0]/ni; ++ni;
+    if(flag_1==1){
+        ni=ni-1;
+    }
+    int nj = int(ceil(tempo[1]/s));
+    double dy = tempo[1]/nj; ++nj;
+    if(flag_2==1){
+        nj=nj-1;
+    }
+    int nk = int(ceil(tempo[2]/s));
+    double dz = tempo[2]/nk; ++nk;
+    if(flag_3==1){
+        nk=nk-1;
+    }
+
+    currentField->info_block.push_back((double)c);// tell us if the block is moving, free or fixed
+    currentField->info_block.push_back((double)ni);
+    currentField->info_block.push_back((double)nj);
+    currentField->info_block.push_back((double)nk);
+    if(c==1 && teta[0]!=0 && teta[1]==0 && teta[2]==0)
+    {
+        currentField->info_block.push_back(teta[0]);
+        currentField->info_block.push_back(1);// axe de roation selon x
+    }
+    else if(c==1 && teta[0]==0 && teta[1]!=0 && teta[2]==0)
+    {
+        currentField->info_block.push_back(teta[1]);
+        currentField->info_block.push_back(2);// axe de roation selon y
+    }
+    else if(c==1 && teta[0]==0 && teta[1]==0 && teta[2]!=0)
+    {
+        currentField->info_block.push_back(teta[2]);
+        currentField->info_block.push_back(3);// axe de roation selon z
+    }
+    else
+    {
+        currentField->info_block.push_back(0);// no roation for the moving
+        currentField->info_block.push_back(0);
+    }
+
+
     int nPart;
     double volPart;
     switch(c)
@@ -71,7 +141,7 @@ Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vecto
         switch(type)
         {
             case cube :
-            meshcube(o, L,teta, s, *posFree, &nPart, &volPart, r, true);
+            meshcube(o, L,teta,s, *posFree, &nPart, &volPart, r, true);
             break;
             case cylinder :
             meshcylinder(o, L, s, *posFree, &nPart, &volPart, r, true);
@@ -107,7 +177,7 @@ Error readBrick(int type, std::ifstream* inFile, Field* currentField, std::vecto
         switch(type)
         {
             case cube :
-            meshcube(o, L,teta, s, *posMoving, &nPart, &volPart, r, true);
+            meshcube(o, L,teta,s, *posMoving, &nPart, &volPart, r, true);
             break;
             case cylinder :
             meshcylinder(o, L, s, *posMoving, &nPart, &volPart, r, true);
@@ -239,7 +309,20 @@ Error readGeometry(std::string filename, Field* currentField, std::vector<double
                     volVectorFree.insert(volVectorFree.end(), volVectorFixed.begin(), volVectorFixed.end());
                     volVectorFree.insert(volVectorFree.end(), volVectorMoving.begin(), volVectorMoving.end());
                     (*volVector)=volVectorFree;
-                    currentField->pos=posFree;
+
+                    // Filling position vector
+                    for(int i=0 ; i < currentField->nTotal ; i++){
+                        for(int j=0 ; j<3 ; j++)
+                            currentField->pos[j].push_back(posFree[3*i+j]);
+                    }
+
+                    // Particle type saving
+                    for(int partNb=0 ; partNb<currentField->nFree ; partNb++)
+                        currentField->type.push_back(freePart);
+                    for(int partNb=0 ; partNb<currentField->nFixed ; partNb++)
+                        currentField->type.push_back(fixedPart);
+                    for(int partNb=0 ; partNb<currentField->nMoving ; partNb++)
+                        currentField->type.push_back(movingPart);
                     return noError;
                 }
                 else
@@ -258,6 +341,31 @@ Error readGeometry(std::string filename, Field* currentField, std::vector<double
     std::cout << "Reached end of file before geometry reading.\n" << std::endl;
     return geometryError;
 }
+
+/*
+Read the geometry and make all particle initializations
+*/
+Error initializeField(std::string filename, Field* currentField, Parameter* parameter){
+
+    Error errorFlag = noError;
+
+    std::vector<double> volVector; // Temporary volume vector used to initialize the mass vector
+    errorFlag = readGeometry(filename, currentField, &volVector); //Why sending adress of volVector ?
+    if (errorFlag != noError){return errorFlag;}
+
+    // Checking consistency of user datas
+    errorFlag = consistencyField(currentField);
+    if (errorFlag != noError){return errorFlag;}
+
+    // Initialisation of the particles
+    speedInit(currentField, parameter);
+    densityInit(currentField, parameter);
+    pressureInit(currentField, parameter);
+    massInit(currentField, parameter, volVector);
+
+    return noError;
+}
+
 
 /*
 *Input:
@@ -327,7 +435,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if (cnt==3)
+                        if(cnt==3)
                             parameter->theta = atof(valueArray);
                         if(cnt==4)
                         {
@@ -418,27 +526,6 @@ Error readParameter(std::string filename, Parameter* parameter)
                           }
                         }
 
-
-                        // Moving Block Parameters
-                        if(cnt==22)
-                            parameter->movingDirection[0]=atof(valueArray);
-                        if(cnt==23)
-                            parameter->movingDirection[1]=atof(valueArray);
-                        if(cnt==24)
-                            parameter->movingDirection[2]=atof(valueArray);
-                        if(cnt==25)
-                        {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_SPEEDLAW_VALUE) )
-                          {
-                            parameter->speedLaw=(SpeedLaw) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid speedLaw.\n" << std::endl;
-                            return parameterError;
-                          }
-                        }
-
                         // Output Parameters
                         if(cnt==26)
                             parameter->writeInterval=atof(valueArray);
@@ -466,6 +553,7 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
+                        
                         ++cnt;
                     }
                     else{continue;}
@@ -477,7 +565,13 @@ Error readParameter(std::string filename, Parameter* parameter)
             }
             else if(buf=="END_F")
             {
-                return noError;
+                // Checks finally if the input parameters are consistent (node 0 only)
+                Error errorFlag;
+                int procID;
+                MPI_Comm_rank(MPI_COMM_WORLD, &procID);
+                if(procID==0){errorFlag = consistencyParameters(parameter);}
+                MPI_Bcast(&errorFlag, 1, MPI_INT, 0, MPI_COMM_WORLD);
+                return errorFlag;
             }
             else
             {

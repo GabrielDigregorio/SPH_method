@@ -46,33 +46,43 @@
         %coord
             x=0
             y=0
-            z=0.45
+            z=0.15
         %dimen
-            L=0.5
-            W=0.5
-            H=0.7
+            L=0.3
+            W=0.3
+            H=0.3
         %inclin
             tetax=0.0
             tetay=0.0
             tetaz=0.0
+        %movpara
+            speedLaw=1
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0.5
 
 % Wall          
    #brick
         %param
             c=2
-            s=0.1
+            s=0.08
             r=0
         %coord
             x=0
             y=0
             z=0
-       %dimen
-            L=1.0
-            W=1.0
-            H=0.15
+        %dimen
+            L=0.5
+            W=0.5
+            H=0.08
         %inclin
             tetax=0.0
             tetay=0.0
             tetaz=0.0
+        %movpara
+            speedLaw=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0.5
                        
 #END_G

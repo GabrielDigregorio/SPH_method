@@ -31,11 +31,14 @@ enum StateEquationMethod {quasiIncompressible, perfectGas, NB_STATEEQUATION_VALU
 enum MassInitMethod {violeau2012, NB_MASSINIT_VALUE};
 
 // speedLaw = Will dictate the behaviour of moving boundaries: constant, sine, exponential
-enum SpeedLaw {constant, sine, exponential, NB_SPEEDLAW_VALUE};
+enum SpeedLaw {constant, sine, exponential,level_arm, NB_SPEEDLAW_VALUE};
 
 // Write Format output
 enum Matlab {noMatlab, fullMatlab, NB_MATLAB_VALUE};
 enum Paraview {noParaview, fullParaview, nFreeParaview, nMovingFixedParaview, nFree_nMovingFixedParaview, NB_PARAVIEW_VALUE};
+
+// Particle type
+enum ParticleType {freePart, movingPart, fixedPart};
 
 // charactTime = characteristic time of movement or period of oscillations
 
@@ -72,22 +75,17 @@ struct Parameter {
 
 struct Field {
     int nFree, nFixed, nMoving, nTotal;
-
     double l[3];
     double u[3];
-
     double nextK=0.0;
-
-    std::vector<double> pos;
-
-    std::vector<double> speed;
-
+    std::vector<double> pos[3];
+    std::vector<double> speed[3];
     std::vector<double> density;
-
     std::vector<double> pressure;
-
     std::vector<double> mass;
-
+    std::vector<ParticleType> type;
+    std::vector<double> info_block;
+    std::vector<double> info_moving;
 };
 
 

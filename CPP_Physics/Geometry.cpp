@@ -183,22 +183,47 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, in
             }
     }
 }
-void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation, bool stack){
+void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation, bool stack){
      // the function is the same as meshcube, but as an option to make the palne rotate in any direction over it's center à masse
       // if we stack the cube:
-  
+
       //std::cout<<"teta " << teta[0]<< teta[1]<< teta[2] <<"\n";
     if(stack == true){
         L[0] -= s; L[1] -= s; L[2] -= s;
     }
+    int flag_1 =0;
+    int flag_2 =0;
+    int flag_3 =0;
+   if(L[0]==0)
+   {
+   L[0]=s;
+   flag_1=1;
+   }
+   if(L[1]==0){
+   L[1]=s;
+   flag_2=1;
+   }
+   if(L[2]==0)
+   {
+   L[2]=s;
+   flag_3=1;
+   }
+
 
     // calculate nb of particles along each direction from target size "s"
+
     int ni = int(ceil(L[0]/s));
     double dx = L[0]/ni; ++ni;
+    if(flag_1==1){
+    ni=ni-1;}
     int nj = int(ceil(L[1]/s));
     double dy = L[1]/nj; ++nj;
+    if(flag_2==1){
+    nj=nj-1;}
     int nk = int(ceil(L[2]/s));
     double dz = L[2]/nk; ++nk;
+    if(flag_3==1){
+    nk=nk-1;}
     // Volume & number of particles computation
     (*nPart)=ni*nj*nk;
     (*volPart)=dx*dy*dz;
@@ -253,7 +278,6 @@ void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<dou
     Rx[6]=0;
     Rx[7]=sin(teta_x/180.0*M_PI);
     Rx[8]=cos(teta_x/180.0*M_PI);
-
     Ry[0]=cos(teta_y/180.0*M_PI);
     Ry[1]=0;
     Ry[2]=sin(teta_y/180.0*M_PI);
@@ -282,18 +306,28 @@ void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<dou
         // rotation
         for(int i=start; i<(n_total)/3; ++i)
         {
-           // first Rx 
-            pos[3*i]= Rx[0]*pos[3*i]+Rx[1]*pos[3*i+1]+Rx[2]*pos[3*i+2];
-            pos[3*i+1]= Rx[3]*pos[3*i]+Rx[4]*pos[3*i+1]+Rx[5]*pos[3*i+2];
-            pos[3*i+2]= Rx[6]*pos[3*i]+Rx[7]*pos[3*i+1]+Rx[8]*pos[3*i+2];
+           // first Rx
+            double var_x=pos[3*i];
+            double var_y=pos[3*i+1];
+            double var_z=pos[3*i+2];
+            pos[3*i]= Rx[0]*var_x+Rx[1]*var_y+Rx[2]*var_z;
+            pos[3*i+1]= Rx[3]*var_x+Rx[4]*var_y+Rx[5]*var_z;
+            pos[3*i+2]= Rx[6]*var_x+Rx[7]*var_y+Rx[8]*pos[3*i+2];
+            
             // second Ry
-            pos[3*i]= Ry[0]*pos[3*i]+Ry[1]*pos[3*i+1]+Ry[2]*pos[3*i+2];
-            pos[3*i+1]= Ry[3]*pos[3*i]+Ry[4]*pos[3*i+1]+Ry[5]*pos[3*i+2];
-            pos[3*i+2]= Ry[6]*pos[3*i]+Ry[7]*pos[3*i+1]+Ry[8]*pos[3*i+2];
+            var_x=pos[3*i];
+            var_y=pos[3*i+1];
+            var_z=pos[3*i+2];
+            pos[3*i]= Ry[0]*var_x+Ry[1]*var_y+Ry[2]*var_z;
+            pos[3*i+1]= Ry[3]*var_x+Ry[4]*var_y+Ry[5]*var_z;
+            pos[3*i+2]= Ry[6]*var_x+Ry[7]*var_y+Ry[8]*var_z;
             // thrid Rz
-            pos[3*i]= Rz[0]*pos[3*i]+Rz[1]*pos[3*i+1]+Rz[2]*pos[3*i+2];
-            pos[3*i+1]= Rz[3]*pos[3*i]+Rz[4]*pos[3*i+1]+Rz[5]*pos[3*i+2];
-            pos[3*i+2]= Rz[6]*pos[3*i]+Rz[7]*pos[3*i+1]+Rz[8]*pos[3*i+2];
+            var_x=pos[3*i];
+            var_y=pos[3*i+1];
+            var_z=pos[3*i+2];
+            pos[3*i]= Rz[0]*var_x+Rz[1]*var_y+Rz[2]*var_z;
+            pos[3*i+1]= Rz[3]*var_x+Rz[4]*var_y+Rz[5]*var_z;
+            pos[3*i+2]= Rz[6]*var_x+Rz[7]*var_y+Rz[8]*var_z;
         }
         // translation back at the first place
         for(int i=start; i<(n_total)/3; ++i)
