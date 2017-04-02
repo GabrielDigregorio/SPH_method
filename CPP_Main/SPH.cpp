@@ -66,13 +66,13 @@ int main(int argc, char *argv[])
 	}
   std::cout << "Parameter read." << '\n';
 
-	// Creation of temporary volume vector
+	// Creation of temporary volume vector (used to initialize the mass)
 	std::vector<double> volVector;
 
 	// Read geometry
 	Field currentFieldInstance;
 	Field* currentField = &currentFieldInstance;
-	errorFlag = readGeometry(geometryFilename, currentField, &volVector); //Why sending adress of volVector ? Wouldn't it be more understable to pass it by reference ?
+	errorFlag = readGeometry(geometryFilename, currentField, parameter, &volVector); //Why sending adress of volVector ? Wouldn't it be more understable to pass it by reference ?
 	if (errorFlag != noError)
 	{
 		return errorFlag;
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 		return errorFlag;
 	}
 
-	std::cout << "Done.\n" << std::endl;
+	std::cout << "Done.\n"  << std::endl;
 
 	// Initialisation
 	speedInit(currentField, parameter);
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 
 	// Loop on time
 	std::cout << "Time integration progress:\n" << std::endl;
-	std::cout << "0%----------------------------------------------100%\n[";
+	std::cout << "0%-----------------------------------------------100%\n[";
 	unsigned int loadingBar = 0;
 
 	for (unsigned int n = 1; currentTime < parameter->T; n++)
@@ -143,10 +143,9 @@ int main(int argc, char *argv[])
 			timeInfo[1] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
         }
         reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
-
 		// Write field when needed
 		start = std::clock();
-    if (writeCount*parameter->writeInterval <= currentTime)
+    	if (writeCount*parameter->writeInterval <= currentTime)
 		{
 			writeField(nextField, n, parameter, parameterFilename, geometryFilename, experimentFilename);
 			writeCount++;
@@ -165,7 +164,7 @@ int main(int argc, char *argv[])
 		timeInfo[4] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
 		// Fancy progress bar
-		if ( currentTime >= loadingBar * parameter->T/50.0){
+		if ( currentTime > loadingBar * parameter->T/50.0){
 			std::cout << ">" << std::flush;
 			loadingBar++;
 		}

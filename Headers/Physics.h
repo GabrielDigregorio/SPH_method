@@ -8,7 +8,7 @@
 
 // Geometry.cpp
 #include <random>
-void meshcube(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
+void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
 void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
 void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
 Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, double hFreeSurface, double s, std::vector<double> &posFree,std::vector<double> &posFixed,  int* nPartFree, int* nPartFixed, double* volPart,
@@ -17,12 +17,12 @@ Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, d
 
 
 // Neighborhood.cpp
-void neighborAllPair (std::vector<double> &pos,
+void neighborAllPair (std::vector<double> (&pos)[3],
                         double kh,
                         std::vector<std::vector<int> > &neighborsAll,
                         std::vector<std::vector<double> > &kernelGradientsAll,
                         Kernel myKernel);
-void neighborLinkedList(std::vector<double> &pos,
+void neighborLinkedList(std::vector<double> (&pos)[3],
                         double l[3],
                         double u[3],
                         double kh,
@@ -30,14 +30,14 @@ void neighborLinkedList(std::vector<double> &pos,
                         std::vector<std::vector<double> > &kernelGradientsAll,
                         Kernel myKernel);
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes);
-double distance(std::vector<double> &pos, int partA, int partB);
-void findNeighbors(int particleID, std::vector<double> &pos, double kh,
+double distance(std::vector<double> (&pos)[3], int partA, int partB);
+void findNeighbors(int particleID, std::vector<double> (&pos)[3], double kh,
                     std::vector<std::vector<int> > &boxes,
                     std::vector<int> &surrBoxes,
                     std::vector<int> &neighbors,
                     std::vector<double> &kernelGradients,
                     Kernel myKernel);
-void findNeighbors(int particleID, std::vector<double> &pos, double kh,
+void findNeighbors(int particleID, std::vector<double> (&pos)[3], double kh,
                     std::vector<std::vector<int> > &boxes,
                     std::vector<int> &surrBoxes,
                     std::vector<int> &neighbors,
@@ -45,8 +45,10 @@ void findNeighbors(int particleID, std::vector<double> &pos, double kh,
                     Kernel myKernel,
                     std::vector<double> &kernelGradientsSamples,
                     int resolution); // USELESS
-void sortParticles(std::vector<double> &pos, double l[3], double u[3], double kh,
+void sortParticles(std::vector<double> (&pos)[3], double l[3], double u[3], double kh,
                    std::vector<std::vector<int> > &boxes);
+void sortParticles(std::vector<double> (&pos)[3], double l[3], double u[3], double kh,
+                  std::vector<std::vector<int> > &boxes, bool toOptimize);
 void boxMesh(double l[3], double u[3], double kh,
              std::vector<std::vector<int> > &boxes,
              std::vector<std::vector<int> > &surrBoxesAll);

@@ -25,12 +25,12 @@
 %********************************************
 
 #domsz
-ux = 1.5
-uy = 1.5
-uz = 2
-lx = -1.5
-ly = -1.5
-lz = -1
+ux = 0.5
+uy = 0.5
+uz = 1
+lx = -0.5
+ly = -0.5
+lz = -0.5
    #brick
        %param
        c=0
@@ -39,22 +39,40 @@ lz = -1
        %coord
        x=0
        y=0
-       z=0.6
+       z=0.15
        %dimen
-       L=1
-       W=1
-       H=1
+       L=0.3
+       W=0.3
+       H=0.3
+       %rotation
+       theta1=0.0
+       theta2=0.0
+       theta3=0.0
+       %movpara
+       speedLaw=1
+       movingDirectionX=0
+       movingDirectionY=0
+       movingDirectionZ=0.5
    #brick
        %param
        c=2
-       s=0.1
+       s=0.08
        r=0
        %coord
        x=0
        y=0
        z=0
        %dimen
-       L=2.5
-       W=2.5
-       H=0.2
+       L=0.5
+       W=0.5
+       H=0.08
+       %rotation
+       theta1=0.0
+       theta2=0.0
+       theta3=0.0
+       %movpara
+       speedLaw=0
+       movingDirectionX=0
+       movingDirectionY=0
+       movingDirectionZ=0.5
 #END_G

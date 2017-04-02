@@ -1,6 +1,6 @@
 #PARA1
 %********************************************
-% PLAYGROUND : Parameter example
+% PLAYGROUND : Parameter Pool
 % #param
 %
 % kh = smothing length
@@ -11,21 +11,22 @@
 % B & gamma = fluid constants
 % g = gravity
 % writeInteval = time interval between two outputs file are generated
-% integrationMethod = euler ou RK2
+% integrationMethod = euler or RK2
+% adaptativeTimeStep= yes or no
 % densityInitMethod = hydrosatic, etc.
 % stateEquationMethod = quasiIncompressible, perfectGas, etc.
 % massInitMethod = violeau2012 (all particles have same volumes), etc.
 % speedLaw = To be determined, will dictate the behaviour of moving boundaries
 %********************************************
 #param
-   kh=0.12
-   k=0.00002
-   T=0.6
+   kh=0.06
+   k=0.00001
+   T=1
    densityRef=1000.0
    B=1280000
    gamma=7.0
    g=9.81
-   writeInterval=0.01
+   writeInterval=0.002
    charactTime=1.0
    c=100
    alpha=0.1
@@ -33,7 +34,7 @@
    epsilon=0.1
    movingDirectionX=0
    movingDirectionY=0
-   movingDirectionZ=0.5
+   movingDirectionZ=0.05
    molarMass=1
    temperature=293.15
    theta=0.5

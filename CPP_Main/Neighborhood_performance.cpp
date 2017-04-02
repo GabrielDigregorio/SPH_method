@@ -25,13 +25,13 @@ int main(int argc, char *argv[])
 
     double o[3] = {0.0,0.0,0.0};
     double L[3] = {l,4,5};
-
+    double teta[3]={0.0,0.0,0.0};
 
     //Generate cube
     std::vector<double> pos;
     int nPart;
     double volPart;
-    meshcube(o, L, s, pos, &nPart, &volPart, eps);
+    meshcube(o, L,teta, s, pos, &nPart, &volPart, eps);
 
     double ll[3] = {-L[0]/2, -L[1]/2, -L[2]/2};
     double uu[3] = {L[0]/2, L[1]/2, L[2]/2};

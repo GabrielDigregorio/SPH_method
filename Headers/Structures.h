@@ -30,10 +30,13 @@ enum StateEquationMethod {quasiIncompressible, perfectGas, NB_STATEEQUATION_VALU
 enum MassInitMethod {violeau2012, NB_MASSINIT_VALUE};
 
 // speedLaw = Will dictate the behaviour of moving boundaries: constant, sine, exponential
-enum SpeedLaw {constant, sine, exponential, NB_SPEEDLAW_VALUE};
+enum SpeedLaw {constant, sine, exponential,level_arm, NB_SPEEDLAW_VALUE};
 
 // Write Format output
 enum Format {ParaView, Matlab, Both, NB_FORMAT_VALUE};
+
+// Particle type (Necessary to impose value here!)
+enum ParticleType {freePart=0, fixedPart=1, movingPart=2};
 
 // charactTime = characteristic time of movement or period of oscillations
 
@@ -53,8 +56,7 @@ enum Format {ParaView, Matlab, Both, NB_FORMAT_VALUE};
 
 
 struct Parameter {
-    double kh, k, T, densityRef, B, gamma, g, writeInterval, charactTime, c, alpha, beta, epsilon, molarMass, temperature, theta;
-    double movingDirection[3];
+    double kh, k, T, densityRef, B, gamma, g, writeInterval, c, alpha, beta, epsilon, molarMass, temperature, theta;
     Kernel kernel;
     ViscosityModel viscosityModel;
     IntegrationMethod integrationMethod;
@@ -62,29 +64,25 @@ struct Parameter {
     DensityInitMethod densityInitMethod;
     StateEquationMethod stateEquationMethod;
     MassInitMethod massInitMethod;
-    SpeedLaw speedLaw;
     Format format;
+    std::vector<SpeedLaw> speedLaw;
+    std::vector<double> teta[3];
+    std::vector<double> charactTime;
+    std::vector<double> movingDirection[3];
 };
 
 
 struct Field {
     int nFree, nFixed, nMoving, nTotal;
-
     double l[3];
     double u[3];
-
     double nextK=0.0;
-
-    std::vector<double> pos;
-
-    std::vector<double> speed;
-
+    std::vector<double> pos[3];
+    std::vector<double> speed[3];
     std::vector<double> density;
-
     std::vector<double> pressure;
-
     std::vector<double> mass;
-
+    std::vector<int> type;
 };
 
 

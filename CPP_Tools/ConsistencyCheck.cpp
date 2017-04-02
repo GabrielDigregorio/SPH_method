@@ -14,16 +14,16 @@ Error consistency(Parameter* parameter, Field* field)
   }
 
   int cntOutOfDomain = 0;
-  for(int i = 0; i < field->nTotal; i += 3)
+  for(int i = 0; i < field->nTotal; i++)
   for (int j=0;j<3;j++)
   {
     {
-      if(field->pos[i+j] > field->u[j])
+      if(field->pos[j][i] > field->u[j])
       {
         cntOutOfDomain++;
         break;
       }
-      else if (field->pos[i+j] < field->l[j])
+      else if (field->pos[j][i] < field->l[j])
       {
         cntOutOfDomain++;
         break;

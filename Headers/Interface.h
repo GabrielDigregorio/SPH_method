@@ -14,7 +14,7 @@
 
 // inputReader.cpp
 Error readParameter(std::string filename, Parameter* parameter);
-Error readGeometry(std::string filename, Field* currentField, std::vector<double>* volVector);
+Error readGeometry(std::string filename, Field* currentField,Parameter* parameter, std::vector<double>* volVector);
 
 // writeField.cpp
 std::string creatDirectory(std::string dirname);
@@ -26,9 +26,9 @@ void writeField(Field* field, double t, Parameter* parameter,
 
 void paraView(std::string const &filename,
               int step,
-              std::vector<double> const &pos,
+              std::vector<double> (&pos)[3],
               std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors);
+              std::map<std::string, std::vector<double> (*)[3] > const &vectors);
 
 void matlab(std::string const &filename,
               std::string const &parameterFilename,

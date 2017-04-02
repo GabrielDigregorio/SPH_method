@@ -21,7 +21,7 @@
 #param
    kh=0.12
    k=0.00001
-   T=0.25
+   T=0.2
    Ref=1000.0
    B=1280000
    gamma=7.0
@@ -32,16 +32,15 @@
    alpha=0.1
    beta=0
    epsilon=0.1
-   movingDirectionX=0
-   movingDirectionY=0
-   movingDirectionZ=0.5
-   kernel=0
+   molarMass=10.0
+   temperature=300
+   theta=1
+   kernel=1
    viscosityModel=0
    integrationMethod=0
    adaptativeTimeStep=0
    densityInitMethod=0
    stateEquationMethod=0
    massInitMethod=0
-   speedLaw=0
    format=0
 #END_F
