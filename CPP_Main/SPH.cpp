@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 		start = std::clock();
     	if (writeCount*parameter->writeInterval <= currentTime)
 		{
-			gatherField(Field* globalField, Field* currentField);
+			gatherField(globalField, currentField);
 			if(procID==0){writeField(currentField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}
