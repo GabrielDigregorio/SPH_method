@@ -278,7 +278,6 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
     Rx[6]=0;
     Rx[7]=sin(teta_x/180.0*M_PI);
     Rx[8]=cos(teta_x/180.0*M_PI);
-
     Ry[0]=cos(teta_y/180.0*M_PI);
     Ry[1]=0;
     Ry[2]=sin(teta_y/180.0*M_PI);
@@ -308,17 +307,27 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
         for(int i=start; i<(n_total)/3; ++i)
         {
            // first Rx
-            pos[3*i]= Rx[0]*pos[3*i]+Rx[1]*pos[3*i+1]+Rx[2]*pos[3*i+2];
-            pos[3*i+1]= Rx[3]*pos[3*i]+Rx[4]*pos[3*i+1]+Rx[5]*pos[3*i+2];
-            pos[3*i+2]= Rx[6]*pos[3*i]+Rx[7]*pos[3*i+1]+Rx[8]*pos[3*i+2];
+            double var_x=pos[3*i];
+            double var_y=pos[3*i+1];
+            double var_z=pos[3*i+2];
+            pos[3*i]= Rx[0]*var_x+Rx[1]*var_y+Rx[2]*var_z;
+            pos[3*i+1]= Rx[3]*var_x+Rx[4]*var_y+Rx[5]*var_z;
+            pos[3*i+2]= Rx[6]*var_x+Rx[7]*var_y+Rx[8]*pos[3*i+2];
+            
             // second Ry
-            pos[3*i]= Ry[0]*pos[3*i]+Ry[1]*pos[3*i+1]+Ry[2]*pos[3*i+2];
-            pos[3*i+1]= Ry[3]*pos[3*i]+Ry[4]*pos[3*i+1]+Ry[5]*pos[3*i+2];
-            pos[3*i+2]= Ry[6]*pos[3*i]+Ry[7]*pos[3*i+1]+Ry[8]*pos[3*i+2];
+            var_x=pos[3*i];
+            var_y=pos[3*i+1];
+            var_z=pos[3*i+2];
+            pos[3*i]= Ry[0]*var_x+Ry[1]*var_y+Ry[2]*var_z;
+            pos[3*i+1]= Ry[3]*var_x+Ry[4]*var_y+Ry[5]*var_z;
+            pos[3*i+2]= Ry[6]*var_x+Ry[7]*var_y+Ry[8]*var_z;
             // thrid Rz
-            pos[3*i]= Rz[0]*pos[3*i]+Rz[1]*pos[3*i+1]+Rz[2]*pos[3*i+2];
-            pos[3*i+1]= Rz[3]*pos[3*i]+Rz[4]*pos[3*i+1]+Rz[5]*pos[3*i+2];
-            pos[3*i+2]= Rz[6]*pos[3*i]+Rz[7]*pos[3*i+1]+Rz[8]*pos[3*i+2];
+            var_x=pos[3*i];
+            var_y=pos[3*i+1];
+            var_z=pos[3*i+2];
+            pos[3*i]= Rz[0]*var_x+Rz[1]*var_y+Rz[2]*var_z;
+            pos[3*i+1]= Rz[3]*var_x+Rz[4]*var_y+Rz[5]*var_z;
+            pos[3*i+2]= Rz[6]*var_x+Rz[7]*var_y+Rz[8]*var_z;
         }
         // translation back at the first place
         for(int i=start; i<(n_total)/3; ++i)
