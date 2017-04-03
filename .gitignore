@@ -19,4 +19,5 @@ Makefile
 test.*
 Test.*
 .DS_Store
+.vscode/
 !CMakeLists.txt
