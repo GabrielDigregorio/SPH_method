@@ -1,6 +1,6 @@
 #GEOM1
 %********************************************
-% PLAYGROUND : Geometry Pool
+% PLAYGROUND : Geometry example
 %
 % #GEOM
 % #domain
@@ -31,53 +31,35 @@
 %   speedLaw = dictate the behaviour of moving boundaries
 %********************************************
 
-
 #domsz
-    ux = 0.3
-    uy = 0.3
-    uz = 0.6
-    lx = -0.3
-    ly = -0.3
-    lz = -0.1
+    ux = 150
+    uy = 150
+    uz = 50
+    lx = -10
+    ly = -10
+    lz = -10
 
-% Fluid
+   #bathy
+	batFile=Playgrounds/obliqueWave.dat
+	s=3
+	r=0
+	numberGroundParticles=2
+	height0=0
+	hFreeSurface=20
+
     #brick
         %param
-            c=0
-            s=0.05
+            c=1
+            s=3
             r=0
         %coord
-            x=0
-            y=0
-            z=0.26
+            x=-3
+            y=50
+            z=20
         %dimen
-            L=0.4
-            W=0.4
-            H=0.4
-        %inclin
-            tetax=0.0
-            tetay=0.0
-            tetaz=0.0
-        %movpara
-            speedLaw=0
-            charactTime = 0
-            movingDirectionX=0
-            movingDirectionY=0
-            movingDirectionZ=0
-% Walls
-    #brick
-        %param
-            c=2
-            s=0.05
-            r=0
-        %coord
-            x=0
-            y=0
-            z=0
-        %dimen
-            L=0.6
-            W=0.6
-            H=0.1
+            L=6
+            W=112
+            H=40
         %inclin
             tetax=0.0
             tetay=0.0
@@ -91,17 +73,17 @@
 
     #brick
         %param
-            c=2
-            s=0.05
+            c=1
+            s=3
             r=0
         %coord
-            x=0.25
-            y=0
-            z=0.3
+            x=103
+            y=50
+            z=20
         %dimen
-            L=0.1
-            W=0.5
-            H=0.5
+            L=6
+            W=112
+            H=40
         %inclin
             tetax=0.0
             tetay=0.0
@@ -115,17 +97,17 @@
 
     #brick
         %param
-            c=2
-            s=0.05
+            c=1
+            s=3
             r=0
         %coord
-            x=-0.25
-            y=0
-            z=0.3
+            x=50
+            y=-3
+            z=20
         %dimen
-            L=0.1
-            W=0.5
-            H=0.5
+            L=100
+            W=6
+            H=40
         %inclin
             tetax=0.0
             tetay=0.0
@@ -139,17 +121,17 @@
 
     #brick
         %param
-            c=2
-            s=0.05
+            c=1
+            s=3
             r=0
         %coord
-            x=0
-            y=0.25
-            z=0.3
+            x=50
+            y=103
+            z=20
         %dimen
-            L=0.6
-            W=0.1
-            H=0.5
+            L=100
+            W=6
+            H=40
         %inclin
             tetax=0.0
             tetay=0.0
@@ -160,28 +142,4 @@
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
-
-    #brick
-        %param
-            c=2
-            s=0.05
-            r=0
-        %coord
-            x=0
-            y=-0.25
-            z=0.3
-        %dimen
-            L=0.6
-            W=0.1
-            H=0.5
-        %inclin
-            tetax=0.0
-            tetay=0.0
-            tetaz=0.0
-        %movpara
-            speedLaw=0
-            charactTime = 0
-            movingDirectionX=0
-            movingDirectionY=0
-            movingDirectionZ=0       
 #END_G

@@ -11,7 +11,7 @@
 #define N_UL 3
 #define N_DATA 17
 #define N_DATA_BATHYMETRY 5
-#define N_PARAM 23
+#define N_PARAM 24
 
 enum geomType{cube,cylinder,sphere};
 
@@ -434,38 +434,8 @@ Error readParameter(std::string filename, Parameter* parameter)
                     std::getline(inFile, buf);
                     if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
                     {
-                        // Numerical parameters
+                         // Numerical parameters
                         if(cnt==0)
-                            parameter->kh=atof(valueArray);
-                        if(cnt==1)
-                            parameter->k=atof(valueArray);
-                        if(cnt==2)
-                            parameter->T=atof(valueArray);
-                        if(cnt==3)
-                            parameter->densityRef=atof(valueArray);
-                        if(cnt==4)
-                            parameter->B=atof(valueArray);
-                        if(cnt==5)
-                            parameter->gamma=atof(valueArray);
-                        if(cnt==6)
-                            parameter->g=atof(valueArray);
-                        if(cnt==7)
-                            parameter->writeInterval=atof(valueArray);
-                        if(cnt==8)
-                            parameter->c=atof(valueArray);
-                        if(cnt==9)
-                            parameter->alpha=atof(valueArray);
-                        if(cnt==10)
-                            parameter->beta=atof(valueArray);
-                        if(cnt==11)
-                            parameter->epsilon=atof(valueArray);
-                        if(cnt==12)
-                            parameter->molarMass = atof(valueArray);
-                        if (cnt==13)
-                            parameter->temperature = atof(valueArray);
-                        if (cnt==14)
-                            parameter->theta = atof(valueArray);
-                        if(cnt==15)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_KERNEL_VALUE) )
                           {
@@ -477,19 +447,9 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==16)
-                        {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_VISCOSITY_VALUE) )
-                          {
-                            parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid viscosityModel.\n" << std::endl;
-                            return parameterError;
-                          }
-                        }
-                        if(cnt==17)
+                        if(cnt==1)
+                            parameter->kh=atof(valueArray);
+                        if(cnt==2)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_INTEGRATION_VALUE) )
                           {
@@ -501,7 +461,9 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==18)
+                        if(cnt==3)
+                            parameter->theta = atof(valueArray);
+                        if(cnt==4)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_ADAPTATIVE_VALUE) )
                           {
@@ -513,7 +475,15 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==19)
+                        if(cnt==5)
+                            parameter->k=atof(valueArray);
+                        if(cnt==6)
+                            parameter->T=atof(valueArray);
+                        
+                        // Physical Parameters 
+                        if(cnt==7)
+                            parameter->densityRef=atof(valueArray);
+                        if(cnt==8)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_DENSITYINIT_VALUE) )
                           {
@@ -525,7 +495,33 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==20)
+                        if(cnt==9)
+                            parameter->B=atof(valueArray);
+                        if(cnt==10)
+                            parameter->gamma=atof(valueArray);
+                        if(cnt==11)
+                            parameter->g=atof(valueArray);
+                        if(cnt==12)
+                            parameter->c=atof(valueArray);
+                        if(cnt==13)
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_VISCOSITY_VALUE) )
+                          {
+                            parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid viscosityModel.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
+                        if(cnt==14)
+                            parameter->alpha=atof(valueArray);
+                        if(cnt==15)
+                            parameter->beta=atof(valueArray);
+                        if(cnt==16)
+                            parameter->epsilon=atof(valueArray);
+                        if(cnt==17)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_STATEEQUATION_VALUE) )
                           {
@@ -537,7 +533,11 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==21)
+                        if(cnt==18)
+                            parameter->molarMass = atof(valueArray);
+                        if(cnt==19)
+                            parameter->temperature = atof(valueArray);
+                        if(cnt==20)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MASSINIT_VALUE) )
                           {
@@ -549,11 +549,27 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
+
+                        // Output Parameters
+                        if(cnt==21)
+                            parameter->writeInterval=atof(valueArray);
                         if(cnt==22)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_FORMAT_VALUE) )
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MATLAB_VALUE) )
                           {
-                            parameter->format=(Format) atoi(valueArray);
+                            parameter->matlab=(Matlab) atoi(valueArray);
+                          }
+                          else
+                          {
+                            std::cout <<"Invalid outputFormat.\n" << std::endl;
+                            return parameterError;
+                          }
+                        }
+                        if(cnt==23)
+                        {
+                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_PARAVIEW_VALUE) )
+                          {
+                            parameter->paraview=(Paraview) atoi(valueArray);
                           }
                           else
                           {

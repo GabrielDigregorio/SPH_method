@@ -26,6 +26,9 @@
 %   tetax ==> Angle of rotation around the x axis (in degre)
 %   tetay ==> Angle of rotation around the y axis (in degre)
 %   tetaz ==> Angle of rotation around the z axis (in degre)
+% %movpara
+%   movingDirection X, Y & Z = 
+%   speedLaw = dictate the behaviour of moving boundaries
 %********************************************
 
 
@@ -57,9 +60,10 @@
             tetaz=0.0 
         %movpara
             speedLaw=0
+            charactTime = 0
             movingDirectionX=0
             movingDirectionY=0
-            movingDirectionZ=0           
+            movingDirectionZ=0       
                        
 % Wall
     #brick
@@ -81,7 +85,8 @@
             tetaz=0.0
         %movpara
             speedLaw=0
+            charactTime = 0
             movingDirectionX=0
             movingDirectionY=0
-            movingDirectionZ=0.5    
+            movingDirectionZ=0.5
 #END_G

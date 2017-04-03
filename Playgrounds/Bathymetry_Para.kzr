@@ -1,6 +1,6 @@
 #PARA1
-%**********************************************************************************************
-% PLAYGROUND : Parameter  Free Falling Cube
+%********************************************
+% PLAYGROUND : Parameter example
 % #param
 %
 % kernel = type of kernel : Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline 
@@ -23,8 +23,6 @@
 % temperature = 
 % massInitMethod = violeau2012 (all particles have same volumes), etc.
 %
-% movingDirection X, Y & Z = 
-% speedLaw = dictate the behaviour of moving boundaries
 %
 % writeInteval = time interval between two outputs file are generated
 % matlab = write .txt for matlab analysis:  noMatlab or fullMatlab
@@ -33,26 +31,27 @@
 %**********************************************************************************************
 
 #param
-    % Numerical parameters
-        kernel=2  
-        kh=0.6
 
-        integrationMethod=0
+    % Numerical parameters
+        kernel=2
+        kh=3.6
+
+        integrationMethod=1
         theta=1
 
-        adaptativeTimeStep=0
-        k=0.05
+        adaptativeTimeStep=1
+        k=0.01
 
-        T=1
+        T=5
 
-    % Physical Parameters 
+    % Physical Parameters
         densityRef=1000.0
-        densityInitMethod=1 
+        densityInitMethod=0
 
         B=1280000
         gamma=7.0
         g=9.81
-        c=300.0
+        c=100
 
         viscosityModel=0
         alpha=0.1
@@ -60,14 +59,14 @@
         epsilon=0.1
 
         stateEquationMethod=0
-        molarMass=1
-        temperature=293.15
-        
+        molarMass=10.0
+        temperature=300
+
         massInitMethod=0
 
     % Output Parameters
-        writeInterval=0.1
+        writeInterval=0.01
         matlab=1
         paraview=1
-
+     
 #END_F

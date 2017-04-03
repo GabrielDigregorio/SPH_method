@@ -10,7 +10,6 @@
 % adaptativeTimeStep= no or yes
 % k = time step
 % T = simulation time
-% charactTime = 
 %
 % densityRef = density of the fluid at atmospheric pressure
 % densityInitMethod = hydrosatic, etc.
@@ -24,8 +23,6 @@
 % temperature = 
 % massInitMethod = violeau2012 (all particles have same volumes), etc.
 %
-% movingDirection X, Y & Z = 
-% speedLaw = dictate the behaviour of moving boundaries
 %
 % writeInteval = time interval between two outputs file are generated
 % matlab = write .txt for matlab analysis:  noMatlab or fullMatlab
@@ -46,8 +43,6 @@
         k=0.00001
 
         T=0.2
-
-        charactTime=1.0
 
     % Physical Parameters 
         densityRef=1000.0

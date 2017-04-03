@@ -53,7 +53,7 @@ target_link_libraries(sph ${MPI_LIBRARIES})
 
 IF(MINGW)
     TARGET_LINK_LIBRARIES(sph psapi) # for "GetProcessMemoryInfo"
-    TARGET_LINK_LIBRARIES(neighbors psapi)
+    #TARGET_LINK_LIBRARIES(neighbors psapi)
 ENDIF(MINGW)
 
 # - OpenMP --

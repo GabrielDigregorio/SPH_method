@@ -10,7 +10,6 @@
 % adaptativeTimeStep= no or yes
 % k = time step
 % T = simulation time
-% charactTime = 
 %
 % densityRef = density of the fluid at atmospheric pressure
 % densityInitMethod = hydrosatic, etc.
@@ -46,8 +45,6 @@
         k=0.00001
 
         T=1
-
-        charactTime=1.0
 
     % Physical Parameters 
         densityRef=1000.0

@@ -34,7 +34,8 @@ enum MassInitMethod {violeau2012, NB_MASSINIT_VALUE};
 enum SpeedLaw {constant, sine, exponential,level_arm, NB_SPEEDLAW_VALUE};
 
 // Write Format output
-enum Format {ParaView, Matlab, Both, NB_FORMAT_VALUE};
+enum Matlab {noMatlab, fullMatlab, NB_MATLAB_VALUE};
+enum Paraview {noParaview, fullParaview, nFreeParaview, nMovingFixedParaview, nFree_nMovingFixedParaview, NB_PARAVIEW_VALUE};
 
 // Particle type (Necessary to impose value here!)
 enum ParticleType {freePart=0, fixedPart=1, movingPart=2};
@@ -69,7 +70,8 @@ struct Parameter {
     std::vector<double> teta[3];
     std::vector<double> charactTime;
     std::vector<double> movingDirection[3];
-    Format format;
+    Matlab matlab;
+    Paraview paraview;
 };
 
 
