@@ -57,11 +57,12 @@
             tetaz=0.0
         %movpara
             speedLaw=1
+            charactTime = 1
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
 
-% Wall          
+% Wall
    #brick
         %param
             c=2
@@ -81,8 +82,9 @@
             tetaz=0.0
         %movpara
             speedLaw=0
+            charactTime = 1
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
-                       
+
 #END_G
