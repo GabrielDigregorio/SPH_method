@@ -22,9 +22,10 @@ if(WIN32)
         set(MS_MPI_ARCH_DIR x86)
         find_library(MPI_LIBRARIES msmpi PATHS "$ENV{MSMPI_LIB32}")
     endif()
-   IF( CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    message(STATUS "MPI_LIBRARIES = ${MPI_LIBRARIES}")
+    IF( CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         add_definitions(-DMSMPI_NO_SAL -D"__int64=long long") # MinGW
-   ENDIF()
+    ENDIF()
 else()
     find_package(MPI REQUIRED)
 endif()
@@ -56,6 +57,9 @@ IF(MINGW)
 ENDIF(MINGW)
 
 # - OpenMP --
+if(POLICY CMP0012)
+  cmake_policy(SET CMP0012 OLD)  # "if() recognizes numbers and boolean constants."
+endif()
 find_package(OpenMP)
 if(OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
