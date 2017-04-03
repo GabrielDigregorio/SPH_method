@@ -75,7 +75,7 @@
         %dimen
             L=0.5
             W=0.5
-            H=0.08
+            H=0.1
         %inclin
             tetax=0.0
             tetay=0.0
