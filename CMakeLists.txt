@@ -10,10 +10,26 @@ IF(MSVC)
     add_definitions(-D_USE_MATH_DEFINES -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_DEPRECATE)
 ENDIF(MSVC)
 
-# !!!!!!!!!!!!!!! Minimum working commands (to modify !)
-find_package(MPI)
+# --------------------------------------------------------------
+# Finds MPI (including MSMPI)
+# --------------------------------------------------------------
+if(WIN32)  
+    FIND_PATH(MPI_INCLUDE_PATH NAMES  mpi.h HINTS "$ENV{MSMPI_INC}")
+    if("${CMAKE_SIZEOF_VOID_P}" EQUAL 8)
+        set(MS_MPI_ARCH_DIR x64)
+        find_library(MPI_LIBRARIES msmpi PATHS "$ENV{MSMPI_LIB64}")
+    else()
+        set(MS_MPI_ARCH_DIR x86)
+        find_library(MPI_LIBRARIES msmpi PATHS "$ENV{MSMPI_LIB32}")
+    endif()
+   IF( CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        add_definitions(-DMSMPI_NO_SAL -D"__int64=long long") # MinGW
+   ENDIF()
+else()
+    find_package(MPI REQUIRED)
+endif()
 include_directories(SYSTEM ${MPI_INCLUDE_PATH})
-# !!!!!!!!!!!!!!!
+# --------------------------------------------------------------
 
 check_cxx_compiler_flag("-std=c++11" STD11CHECK)
 IF(STD11CHECK)
@@ -32,9 +48,7 @@ INCLUDE_DIRECTORIES(CPP_Interface CPP_Physics CPP_Tools Headers)
 ADD_EXECUTABLE(sph ${SRCS1} ${SRCS2} ${SRCS3} ${SRCS4} CPP_Main/SPH.cpp)
 #ADD_EXECUTABLE(neighbors ${SRCS1} ${SRCS2} ${SRCS3} ${SRCS4} CPP_Main/Neighborhood_performance.cpp)
 
-# !!!!!!!!!!!!!!!
-target_link_libraries(sph ${MPI_C_LIBRARIES})
-# !!!!!!!!!!!!!!!
+target_link_libraries(sph ${MPI_LIBRARIES})
 
 IF(MINGW)
     TARGET_LINK_LIBRARIES(sph psapi) # for "GetProcessMemoryInfo"
