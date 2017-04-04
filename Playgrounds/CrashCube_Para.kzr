@@ -3,7 +3,7 @@
 % PLAYGROUND : Parameter example
 % #param
 %
-% kernel = type of kernel : Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline 
+% kernel = type of kernel : Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline
 % kh = smothing length
 % integrationMethod = euler or RK2
 % theta = RK2 parameter : 1 for mid point method, 0.5 for Heun's method, 1.5 for Ralston's method
@@ -19,11 +19,11 @@
 % viscosityModel = violeauArtificial
 % alpha, beta & epsilon = viscosity parameters
 % stateEquationMethod = quasiIncompressible, perfectGas, etc.
-% molarMass = 
-% temperature = 
+% molarMass =
+% temperature =
 % massInitMethod = violeau2012 (all particles have same volumes), etc.
 %
-% movingDirection X, Y & Z = 
+% movingDirection X, Y & Z =
 % speedLaw = dictate the behaviour of moving boundaries
 %
 % writeInteval = time interval between two outputs file are generated
@@ -35,14 +35,14 @@
 #param
 
     % Numerical parameters
-        kernel=1
+        kernel=3
         kh=0.12
 
-        integrationMethod=0
+        integrationMethod=1
         theta=1
 
         adaptativeTimeStep=0
-        k=0.00001
+        k=0.0001
 
         T=1
 
@@ -68,7 +68,7 @@
 
     % Output Parameters
         writeInterval=0.005
-        matlab=1
-        paraview=4
-     
+        matlab=0
+        paraview=1
+
 #END_F
