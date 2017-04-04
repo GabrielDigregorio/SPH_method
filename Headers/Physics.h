@@ -90,9 +90,14 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity);
 
 // MPI.cpp
-void scatterField(Field* globalField, Field* currentField);
+void scatterField(Field* globalField, Field* currentField, Parameter* parameter);
 void gatherField(Field* globalField, Field* currentField);
 void processUpdate(Field* currentField);
 void timeStepFinding(Field* currentField);
+int getDomainNumber(double x, std::vector<double> &limits, int nTasks);
+void computeDomainIndex(std::vector<double> &posX,
+    std::vector<double> &limits, std::vector<int> &nbPartNode,
+    std::vector< std::pair<int,int> > &index, int nTasks);
+void sortParticles(Field& field, std::vector< std::pair<int,int> >& index);
 
 #endif

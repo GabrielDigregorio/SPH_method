@@ -44,7 +44,7 @@
         adaptativeTimeStep=0
         k=0.0001
 
-        T=1
+        T=0.01
 
     % Physical Parameters
         densityRef=1000.0

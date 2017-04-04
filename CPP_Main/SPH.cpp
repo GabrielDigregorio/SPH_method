@@ -85,7 +85,9 @@ int main(int argc, char *argv[])
 	if(procID==0){writeField(globalField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);}
 	unsigned int writeCount = 1;
 	// Scatters the globalField from node 0 into the currentField of all nodes
-	scatterField(globalField, currentField); // will really start
+	scatterField(globalField, currentField, parameter); // will really start
+	MPI_Finalize();
+	/*
 
 	// Copies the invariant information about the field
 	copyField(currentField, nextField);
@@ -178,6 +180,8 @@ int main(int argc, char *argv[])
 		std::cout << "\t- TOTAL  \t" << (std::clock() - startExperimentTimeClock) / (double)CLOCKS_PER_SEC << "\n";
 		std::cout << "NB : Total - sum of times = time capture duration (!!)\n";
 	}
+
+	*/
 
 	return 0;
 }

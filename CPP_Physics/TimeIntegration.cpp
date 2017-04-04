@@ -59,7 +59,7 @@ a list with the box ID of the boxes that are adjacent to this box
 *- currentDensityDerivative: vector containing derivative of density for each particle at time t
 *- currentSpeedDerivative: vector containing derivative of velocity for each particle at time t
 *- timeInfo: pointer to the array containing the duration of each part of the code
-*Decscription:
+*Description:
 * Knowing the field (currentField), computes the density and velocity derivatives and store them in vectors
 */
 void derivativeComputation(Field* currentField, Parameter* parameter, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, std::vector<double> &timeInfo)
@@ -115,7 +115,7 @@ a list with the box ID of the boxes that are adjacent to this box
 *- timeInfo: pointer to the array containing the duration of each part of the code
 *Output:
 *- Reboxing: flag that indicates if the box division need to be recomputed
-*Decscription:
+*Description:
 * Knowing the field at time t(currentField), computes the field at time t+k with euler integration method and store it in structure nextField
 */
 bool timeIntegration(Field* currentField, Field* nextField,
