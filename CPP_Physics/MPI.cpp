@@ -63,7 +63,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
 
     // Computes indices and sorts particles
     std::vector<int> nPartNode(nTasks, 0);
-    std::vector< std::pair<int,int> > domainIndex(globalField->nTotal);
+    std::vector< std::pair<int,int> > domainIndex;
     std::vector<double> limits(nTasks); // left boundary of each domain along x
     std::vector<int> offset(nTasks);
 
@@ -77,34 +77,34 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
         for(int i=1 ; i<nTasks ; i++){
             offset[i] = offset[i-1]+nPartNode[i-1];
         }
-        /* DISPLAY
+        ///* DISPLAY
         for(int i=0; i<domainIndex.size(); ++i){
             std::cout<<domainIndex[i].first <<" "<< domainIndex[i].second <<std::endl;
         }
         for(int i=0 ; i<nTasks ; i++)
             std::cout << nPartNode[i] << " ";
         std::cout << std::endl;
-        */
+        //*/
     }
 
 
     // Shares the number of particle per domain and prepares the vector size
     MPI_Scatter(&nPartNode[0], 1, MPI_INT, &localField->nTotal, 1, MPI_INT, 0, MPI_COMM_WORLD);
     for(int i=0 ; i<3 ; i++){
-        localField->pos[i].reserve(localField->nTotal);
-        localField->speed[i].reserve(localField->nTotal);
+        localField->pos[i].resize(localField->nTotal);
+        localField->speed[i].resize(localField->nTotal);
     }
-    localField->density.reserve(localField->nTotal);
-    localField->pressure.reserve(localField->nTotal);
-    localField->mass.reserve(localField->nTotal);
-    localField->type.reserve(localField->nTotal);
+    localField->density.resize(localField->nTotal);
+    localField->pressure.resize(localField->nTotal);
+    localField->mass.resize(localField->nTotal);
+    localField->type.resize(localField->nTotal);
 
     std::cout << procID << ": "<<localField->nTotal << std::endl;
 
     // Scatters globalField into localFields
     for(int i=0 ; i<3 ; i++){
-        MPI_Scatterv(&globalField->pos[i][0], &nPartNode[0], &offset[0], MPI_DOUBLE,
-                &localField->pos[i][0], localField->nTotal, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Scatterv(&(globalField->pos[i][0]), &nPartNode[0], &offset[0], MPI_DOUBLE,
+                &(localField->pos[i][0]), localField->nTotal, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         MPI_Scatterv(&globalField->speed[i][0], &nPartNode[0], &offset[0], MPI_DOUBLE,
                 &localField->speed[i][0], localField->nTotal, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
@@ -114,19 +114,21 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
             &localField->pressure[0], localField->nTotal, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Scatterv(&globalField->mass[0], &nPartNode[0], &offset[0], MPI_DOUBLE,
             &localField->mass[0], localField->nTotal, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Scatterv(&globalField->type[0], &nPartNode[0], &offset[0], MPI_INT,
-            &localField->type[0], localField->nTotal, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(&(globalField->type[0]), &nPartNode[0], &offset[0], MPI_INT,
+            &(localField->type[0]), localField->nTotal, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Computes nFree, nMoving and nFixed
     localField->nFree = 0;
     localField->nFixed = 0;
     localField->nMoving = 0;
-    for(int i=0 ; i<localField->pos[0].size() ; i++){
+    for(int i=0 ; i<localField->nTotal ; i++){
         switch(localField->type[i]){
             case freePart:
             localField->nFree++;
+            break;
             case fixedPart:
             localField->nFixed++;
+            break;
             default:
             localField->nMoving++;
         }
@@ -136,9 +138,10 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
 
     std::cout << "Processor " << procID << " has " << localField->nFree << " free particles, " << localField->nFixed << " fixed particles and " << localField->nMoving << " moving particles." << std::endl;
 
-    // Share edges to halos and determine starting/ending boxes
+    // Up to there, the whole domain is separated. What remains to be done
+    // is to share the edges and to determine the starting/ending boxes
 
-
+    // .....
 
 }
 
