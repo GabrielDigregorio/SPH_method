@@ -50,13 +50,13 @@ void neighborAllPair (std::vector<double> (&pos)[3],
 /// Advanced method to find the neighbors of all particles.
 
 // Creates a mesh to sort the particles and gives the box adjacent relations
-void boxMesh(double l[3], double u[3], double kh,
+void boxMesh(double l[3], double u[3], double boxSize,
             std::vector<std::vector<int> > &boxes,
             std::vector<std::vector<int> > &surrBoxesAll){
   // Determination of the number of boxes in each direction
-  int nBoxesX = ceil((u[0] - l[0])/kh); // Extra box if non integer quotient
-  int nBoxesY = ceil((u[1] - l[1])/kh);
-  int nBoxesZ = ceil((u[2] - l[2])/kh);
+  int nBoxesX = ceil((u[0] - l[0])/boxSize); // Extra box if non integer quotient
+  int nBoxesY = ceil((u[1] - l[1])/boxSize);
+  int nBoxesZ = ceil((u[2] - l[2])/boxSize);
   int nBoxes = nBoxesX * nBoxesY * nBoxesZ;
 
   // Determines the neighboring relations (DOES NOT CREATE THE BOXES)
@@ -68,6 +68,13 @@ void boxMesh(double l[3], double u[3], double kh,
       surrBoxesAll.push_back(surrBoxes); // Add the (filled) surrounding box list.
   }
   return;
+}
+
+
+// Determines the box size depending on the integrationMethod
+double boxSizeCalc(double kh, IntegrationMethod method){
+    double multiplicator = (method)? 1.1 : 1.0;
+    return kh * multiplicator;
 }
 
 // Sorts the particles into cubic boxes
@@ -96,7 +103,7 @@ void sortParticles(std::vector<double> (&pos)[3], double l[3], double u[3], doub
         if(temp < 0){boxZ = 0;}
         else{boxZ = (temp < nBoxesZ-1) ? temp : nBoxesZ-1;}
         // Put the particle identifier in the corresponding box array
-        boxes[boxX + boxY*nBoxesX + boxZ*nBoxesX*nBoxesY].push_back(i);
+        boxes[boxZ + boxY*nBoxesZ + boxX*nBoxesZ*nBoxesY].push_back(i);
     }
 }
 
@@ -136,7 +143,7 @@ void sortParticles(std::vector<double> (&pos)[3], double l[3], double u[3], doub
                             // Put the particle identifier in the corresponding box array
                             boxes[boxNumber].erase(boxes[boxNumber].begin()+i);
                             size--;
-                            boxes[boxX + boxY*nBoxesX + boxZ*nBoxesX*nBoxesY].push_back(particleID);
+                            boxes[boxZ + boxY*nBoxesZ + boxX*nBoxesZ*nBoxesY].push_back(particleID);
                         }
                     }
                     boxNumber++;
@@ -218,27 +225,27 @@ void findNeighbors(int particleID, std::vector<double> (&pos)[3], double kh,
     }
 }
 
-
+//*
 // Gives the list of the surrounding boxes
 void surroundingBoxes(int box, int nBoxesX, int nBoxesY, int nBoxesZ, std::vector<int> &surrBoxes){
     int index_x, index_y, index_z;
-    index_z = box/(nBoxesX*nBoxesY);
-    index_y = (box-index_z*nBoxesX*nBoxesY)/nBoxesX;
-    index_x = box-index_z*nBoxesX*nBoxesY-index_y*nBoxesX;
+    index_x = box/(nBoxesZ*nBoxesY);
+    index_y = (box-index_x*nBoxesZ*nBoxesY)/nBoxesZ;
+    index_z = box-index_x*nBoxesZ*nBoxesY-index_y*nBoxesZ;
 
     std::vector<int> tab(6, 1); // Initialized to 1
     std::vector<int> value(9, 0); // Initialized to 0
     value[0]=-1; value[2]=1;
-    value[3]=-nBoxesX; value[5]=nBoxesX;
-    value[6]=-nBoxesX*nBoxesY; value[8]=nBoxesX*nBoxesY;
+    value[3]=-nBoxesZ; value[5]=nBoxesZ;
+    value[6]=-nBoxesZ*nBoxesY; value[8]=nBoxesZ*nBoxesY;
 
     // Filling of the tab vector.
-    if (index_x>0){tab[0]=0;}
-    if (index_x<nBoxesX-1){tab[1]=2;}
+    if (index_z>0){tab[0]=0;}
+    if (index_z<nBoxesZ-1){tab[1]=2;}
+    if (index_x>0){tab[4]=0;}
+    if (index_x<nBoxesX-1){tab[5]=2;}
     if (index_y>0){tab[2]=0;}
     if (index_y<nBoxesY-1){tab[3]=2;}
-    if (index_z>0){tab[4]=0;}
-    if (index_z<nBoxesZ-1){tab[5]=2;}
 
     // Finding the neighbors
     for (int k = tab[4]; k <= tab[5]; k++){

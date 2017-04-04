@@ -87,6 +87,8 @@ int main(int argc, char *argv[])
 	// Scatters the globalField from node 0 into the currentField of all nodes
 	scatterField(globalField, currentField, parameter); // will really start
 	MPI_Finalize();
+
+
 	/*
 
 	// Copies the invariant information about the field
@@ -134,7 +136,7 @@ int main(int argc, char *argv[])
 			start = std::clock();
 			boxes.resize(0);// VERY BAD, TO CHANGE !!! How to do this properly ?
 			surrBoxesAll.resize(0);// VERY BAD, TO CHANGE !!! How to do this properly ?
-			boxMesh(currentField->l, currentField->u, parameter->kh, boxes, surrBoxesAll);
+			boxMesh(currentField->l, currentField->u, boxSizeCalc(parameter->kh, parameter->integrationMethod), boxes, surrBoxesAll);
 			timeInfo[1] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
         }
 		// Solve the time step

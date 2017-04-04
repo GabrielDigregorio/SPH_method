@@ -52,7 +52,7 @@ void sortParticles(std::vector<double> (&pos)[3], double l[3], double u[3], doub
 void boxMesh(double l[3], double u[3], double kh,
              std::vector<std::vector<int> > &boxes,
              std::vector<std::vector<int> > &surrBoxesAll);
-
+double boxSizeCalc(double kh, IntegrationMethod method);
 
 // TimeIntegration.cpp
 bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter,

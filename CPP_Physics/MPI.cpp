@@ -28,8 +28,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
 	MPI_Comm_size(MPI_COMM_WORLD, &nTasks);
 	MPI_Comm_rank(MPI_COMM_WORLD, &procID);
     // Box size (bigger if RK2 to avoid sorting twice at each time step)
-    double multiplicator = (parameter->integrationMethod)? 1.1 : 1.0;
-    double boxSize = parameter->kh * multiplicator;
+    double boxSize = boxSizeCalc(parameter->kh, parameter->integrationMethod);
     // Checks if the number of processor appropriate (only node 0 has the info)
     int nTotalBoxesX;
     if(procID == 0){
@@ -71,7 +70,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
         for(int i=0 ; i<nTasks ; i++)
             limits[i] = globall0 + startBoxX[i]*boxSize;
         computeDomainIndex(globalField->pos[0], limits, nPartNode, domainIndex, nTasks);
-        sortParticles(*globalField, domainIndex); // BE SURE NOT COPY IS PERFOMED !!!!!!!!!!
+        sortParticles(*globalField, domainIndex); // BE SURE NOT COPY IS PERFORMED !!!!!!!!!!
         // Offset vector
         offset[0] = 0;
         for(int i=1 ; i<nTasks ; i++){
@@ -117,7 +116,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
     MPI_Scatterv(&(globalField->type[0]), &nPartNode[0], &offset[0], MPI_INT,
             &(localField->type[0]), localField->nTotal, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // Computes nFree, nMoving and nFixed
+    // Computes nFree, nMoving and nFixed (IS IT REALLY USEFUL ??)
     localField->nFree = 0;
     localField->nFixed = 0;
     localField->nMoving = 0;
@@ -141,9 +140,26 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
     // Up to there, the whole domain is separated. What remains to be done
     // is to share the edges and to determine the starting/ending boxes
 
+
+    //int nBoxesY = ceil((u[1] - l[1])/kh);
+    //int nBoxesZ = ceil((u[2] - l[2])/kh);
+
+
+
+
     // .....
 
 }
+
+void shareBoundaries(Field *localField, double boxSize, int procID, int nTasks){
+
+    // Sort the vectors
+
+    // Send/Receive from the surrounding domains
+
+}
+
+
 
 void gatherField(Field* globalField, Field* localField){
     // Gather all the current fields into the global Field (for output file writing for example)
@@ -167,9 +183,13 @@ void gatherField(Field* globalField, Field* localField){
 }
 
 void processUpdate(Field* localField){
+
+    // --- call particleFlux ---
     // Sorts the particles
     // Sends the particles that leave the domain
     // Receives the particles that enter the domain
+
+    // --- call shareBoundaries ---
     // Sorts the particles
     // Sends the edges to halos of surrounding domains
     // Receives the halos from edges of surrounding domains

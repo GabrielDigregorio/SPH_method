@@ -35,7 +35,7 @@
 #param
 
     % Numerical parameters
-        kernel=3
+        kernel=1
         kh=0.12
 
         integrationMethod=1
@@ -44,7 +44,7 @@
         adaptativeTimeStep=0
         k=0.0001
 
-        T=0.01
+        T=0.5
 
     % Physical Parameters
         densityRef=1000.0
