@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 	if(procID==0){writeField(globalField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);}
 	unsigned int writeCount = 1;
 	// Scatters the globalField from node 0 into the currentField of all nodes
-	scatterField(globalField, currentField);
+	scatterField(globalField, currentField); // will really start
 
 	// Copies the invariant information about the field
 	copyField(currentField, nextField);
