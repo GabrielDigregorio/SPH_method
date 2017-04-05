@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 
 	//*
 
-	gatherField(currentField, globalField); // TEMPORARY !!!!!
+	gatherField(currentField, globalField); // TEMPORARY !!!!!!
 
 
 	// Declares the box mesh and determines their adjacent relations variables
