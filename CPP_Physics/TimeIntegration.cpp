@@ -118,7 +118,7 @@ a list with the box ID of the boxes that are adjacent to this box
 *Description:
 * Knowing the field at time t(currentField), computes the field at time t+k with euler integration method and store it in structure nextField
 */
-bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter,
+void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter,
   SubdomainInfo &subdomainInfo, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
   double t, double k, std::vector<double> &timeInfo)
   {
@@ -178,11 +178,5 @@ bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
       }
       break;
     }
-
-    // Reboxing criterion
-    start = std::clock();
-    bool reBoxing = false; // A fonction should be implemented to choose if we rebox or not
-    timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
-    return reBoxing;
+    return;
   }

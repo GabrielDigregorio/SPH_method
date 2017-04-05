@@ -227,6 +227,15 @@ void shareBoundaries(Field *localField, double boxSize, int procID, int nTasks){
 }
 
 
+void gatherField(Field* globalField, Field* localField, SubdomainInfo &SubdomainInfo){
+    // Gather all the current fields into the global Field (for output file writing for example)
+
+
+}
+
+
+
+
 
 void gatherField(Field* globalField, Field* localField){
     // Gather all the current fields into the global Field (for output file writing for example)

@@ -55,7 +55,7 @@ void boxMesh(double l[3], double u[3], double kh,
 double boxSizeCalc(double kh, IntegrationMethod method);
 
 // TimeIntegration.cpp
-bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, SubdomainInfo &subdomainInfo,
+void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, SubdomainInfo &subdomainInfo,
     std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
     double t, double k, std::vector<double> &timeInfo);
 
