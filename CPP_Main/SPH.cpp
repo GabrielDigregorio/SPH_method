@@ -25,9 +25,9 @@ int main(int argc, char *argv[])
 
 	// MPI Initialization
 	MPI_Init(&argc, &argv);
-	int nTasks, procID;
-	MPI_Comm_size(MPI_COMM_WORLD, &nTasks);
-	MPI_Comm_rank(MPI_COMM_WORLD, &procID);
+	SubdomainInfo subdomainInfo;
+	MPI_Comm_size(MPI_COMM_WORLD, &(subdomainInfo.nTasks));
+	MPI_Comm_rank(MPI_COMM_WORLD, &(subdomainInfo.procID));
 
 	// Creates an error flag
 	Error errorFlag = noError;
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	std::vector<double> timeInfo(6, 0.0);
 
 	// Checks and gets the arguments
-	if(procID==0){std::cout << "Initialization..." << std::endl;}
+	if(subdomainInfo.procID==0){std::cout << "Initialization..." << std::endl;}
 	std::string parameterFilename;
 	std::string geometryFilename;
 	std::string experimentFilename;
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	// Reads parameters (each process) and geometry (process 0) and checks their consistency
 	errorFlag = readParameter(parameterFilename, parameter);
 	if(errorFlag != noError){MPI_Finalize(); return errorFlag;}
-	if(procID==0)
+	if(subdomainInfo.procID==0)
 	{
 		errorFlag = initializeField(geometryFilename, globalField, parameter);
 	}
@@ -82,23 +82,26 @@ int main(int argc, char *argv[])
 	if(errorFlag != noError){MPI_Finalize(); return errorFlag;}
 
 	// Writes the initial configuration
-	if(procID==0){writeField(globalField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);}
+	if(subdomainInfo.procID==0){writeField(globalField, 0.0, parameter, parameterFilename, geometryFilename, experimentFilename);}
 	unsigned int writeCount = 1;
 	// Scatters the globalField from node 0 into the currentField of all nodes
-	scatterField(globalField, currentField, parameter); // will really start
+	scatterField(globalField, currentField, parameter, subdomainInfo);
 	MPI_Finalize();
 
 
 	/*
+	gatherField(currentField, globalField); // TEMPORARY !!!!!
+
+
 
 	// Copies the invariant information about the field
 	copyField(currentField, nextField);
 
 	// Initialization done
-	if(procID==0){std::cout << "Done.\n"  << std::endl;}
+	if(subdomainInfo.procID==0){std::cout << "Done.\n"  << std::endl;}
 
 	// Information on the simulation
-	if(procID==0){
+	if(subdomainInfo.procID==0){
 		if (parameter->adaptativeTimeStep == no){
 			unsigned int nMax = (unsigned int)ceil(parameter->T / parameter->k);
 			std::cout << "Number of time steps = " << nMax << "\n" << std::endl;
@@ -118,7 +121,7 @@ int main(int argc, char *argv[])
 	timeInfo[0] = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
 	// ------------ LOOP ON TIME ------------
-	if(procID==0){
+	if(subdomainInfo.procID==0){
 		std::cout << "Time integration progress:\n" << std::endl;
 		std::cout << "0%-----------------------------------------------100%\n[";
 	}
@@ -140,7 +143,7 @@ int main(int argc, char *argv[])
 			timeInfo[1] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
         }
 		// Solve the time step
-        reBoxing = timeIntegration(currentField, nextField, parameter, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
+        reBoxing = timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
 
 		// Adaptative time step
 		timeStepFinding(currentField);
@@ -155,13 +158,13 @@ int main(int argc, char *argv[])
     	if (writeCount*parameter->writeInterval <= currentTime)
 		{
 			gatherField(globalField, currentField);
-			if(procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
+			if(subdomainInfo.procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}
 		timeInfo[5] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
 		// Fancy progress bar (ok if at least 50 time step)
-		if ( procID==0 && currentTime > loadingBar * parameter->T/50.0){
+		if ( subdomainInfo.procID==0 && currentTime > loadingBar * parameter->T/50.0){
 			std::cout << ">" << std::flush;
 			loadingBar++;
 		}
@@ -170,7 +173,7 @@ int main(int argc, char *argv[])
 	// MPI Finalize
 	MPI_Finalize();
 
-	if(procID==0){
+	if(subdomainInfo.procID==0){
 		std::cout << "]\n" << std::endl;
 		std::cout << "TIME INFORMATION:\n";
 		std::cout << "\t- Initial\t" << timeInfo[0] << "\n";
@@ -183,7 +186,7 @@ int main(int argc, char *argv[])
 		std::cout << "NB : Total - sum of times = time capture duration (!!)\n";
 	}
 
-	*/
+	//*/
 
 	return 0;
 }

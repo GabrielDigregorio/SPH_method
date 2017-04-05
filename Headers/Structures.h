@@ -88,6 +88,11 @@ struct Field {
     std::vector<int> type;
 };
 
+struct SubdomainInfo{
+    int procID, nTasks;
+    int startingBox, endingBox;
+    int startingParticle, endingParticle;
+};
 
 
 #endif

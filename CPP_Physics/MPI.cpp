@@ -22,11 +22,11 @@ Input:
 Ouput:
     - errorFlag: tells if the number of processor was acceptable or not
 */
-void scatterField(Field* globalField, Field* localField, Parameter* parameter){
+void scatterField(Field* globalField, Field* localField, Parameter* parameter,
+    SubdomainInfo &subdomainInfo){
     // Basic MPI process information
-    int nTasks, procID;
-	MPI_Comm_size(MPI_COMM_WORLD, &nTasks);
-	MPI_Comm_rank(MPI_COMM_WORLD, &procID);
+    int nTasks = subdomainInfo.nTasks;
+    int procID = subdomainInfo.procID;
     // Box size (bigger if RK2 to avoid sorting twice at each time step)
     double boxSize = boxSizeCalc(parameter->kh, parameter->integrationMethod);
     // Checks if the number of processor appropriate (only node 0 has the info)
@@ -60,30 +60,27 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
     int nBoxesY = ceil((localField->u[1] - localField->l[1])/boxSize);
     int nBoxesZ = ceil((localField->u[2] - localField->l[2])/boxSize);
 
-
-    int startingBox;
-    int endingBox;
     // Left boundary and starting box
     if(procID == 0){
         localField->l[0] = globall0;
-        startingBox = 0;
+        subdomainInfo.startingBox = 0;
     }
     else{
         localField->l[0] = globall0 + (startBoxX[procID]-1)*boxSize;
-        startingBox = nBoxesY*nBoxesZ;
+        subdomainInfo.startingBox = nBoxesY*nBoxesZ;
     }
     // Right boundary and ending box
     if(procID == nTasks - 1){
         localField->u[0] = globall0 + startBoxX[procID+1]*boxSize;
-        endingBox = startingBox + (startBoxX[procID+1]-startBoxX[procID])*nBoxesY*nBoxesZ;
+        subdomainInfo.endingBox = subdomainInfo.startingBox + (startBoxX[procID+1]-startBoxX[procID])*nBoxesY*nBoxesZ;
     }
     else{
         localField->u[0] = globall0 + (startBoxX[procID+1]+1) *boxSize;
-        endingBox = startingBox + (startBoxX[procID+1]-startBoxX[procID])*nBoxesY*nBoxesZ;
+        subdomainInfo.endingBox = subdomainInfo.startingBox + (startBoxX[procID+1]-startBoxX[procID])*nBoxesY*nBoxesZ;
     }
 
     std::cout << procID << " l and u : " << localField->l[0] << " " << localField->u[0] << std::endl;
-    std::cout << procID << " boxes   : " << startingBox << " " << endingBox << std::endl;
+    std::cout << procID << " boxes   : " << subdomainInfo.startingBox << " " << subdomainInfo.endingBox << std::endl;
 
 
     // Computes indices and sorts particles
@@ -160,12 +157,13 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
     }
 
     std::cout << localField->pos[0].size() << std::endl;
-
     std::cout << "Processor " << procID << " has " << localField->nFree << " free particles, " << localField->nFixed << " fixed particles and " << localField->nMoving << " moving particles." << std::endl;
 
     // Sharing boundaries
     shareBoundaries(localField, boxSize, procID, nTasks);
 
+    // NEED TO DETERMINE STARTINGPARTICLE AND ENDINGPARTICLE
+    // !!!!!
 
 
 }

@@ -55,7 +55,7 @@ void boxMesh(double l[3], double u[3], double kh,
 double boxSizeCalc(double kh, IntegrationMethod method);
 
 // TimeIntegration.cpp
-bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter,
+bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, SubdomainInfo &subdomainInfo,
     std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
     double t, double k, std::vector<double> &timeInfo);
 
@@ -90,7 +90,8 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity);
 
 // MPI.cpp
-void scatterField(Field* globalField, Field* currentField, Parameter* parameter);
+void scatterField(Field* globalField, Field* currentField, Parameter* parameter,
+    SubdomainInfo &subdomainInfo);
 void gatherField(Field* globalField, Field* currentField);
 void processUpdate(Field* currentField);
 void timeStepFinding(Field* currentField);
