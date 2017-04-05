@@ -92,7 +92,8 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
 // MPI.cpp
 void scatterField(Field* globalField, Field* currentField, Parameter* parameter,
     SubdomainInfo &subdomainInfo);
-void gatherField(Field* globalField, Field* currentField);
+void gatherField(Field* globalField, Field* localField, SubdomainInfo &subdomainInfo);
+void gatherField(Field* globalField, Field* currentField); // TEMPORARY
 void processUpdate(Field* currentField);
 void timeStepFinding(Field* currentField);
 int getDomainNumber(double x, std::vector<double> &limits, int nTasks);

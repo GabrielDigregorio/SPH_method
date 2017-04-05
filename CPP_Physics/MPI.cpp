@@ -79,8 +79,8 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
         subdomainInfo.endingBox = subdomainInfo.startingBox + (startBoxX[procID+1]-startBoxX[procID])*nBoxesY*nBoxesZ;
     }
 
-    std::cout << procID << " l and u : " << localField->l[0] << " " << localField->u[0] << std::endl;
-    std::cout << procID << " boxes   : " << subdomainInfo.startingBox << " " << subdomainInfo.endingBox << std::endl;
+    std::cout << procID << ": l and u: " << localField->l[0] << " " << localField->u[0] << std::endl;
+    std::cout << procID << ": boxes  : " << subdomainInfo.startingBox << " " << subdomainInfo.endingBox << std::endl;
 
 
     // Computes indices and sorts particles
@@ -156,8 +156,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
         }
     }
 
-    std::cout << localField->pos[0].size() << std::endl;
-    std::cout << "Processor " << procID << " has " << localField->nFree << " free particles, " << localField->nFixed << " fixed particles and " << localField->nMoving << " moving particles." << std::endl;
+    std::cout << "Processor " << procID << " has " << localField->nFree << " free particles, " << localField->nFixed << " fixed particles and " << localField->nMoving << " moving particles.\n" << std::endl;
 
     // Sharing boundaries
     shareBoundaries(localField, boxSize, procID, nTasks);
@@ -226,10 +225,59 @@ void shareBoundaries(Field *localField, double boxSize, int procID, int nTasks){
 
 }
 
+/* Gathers all the current fields into the global Field */
+void gatherField(Field* globalField, Field* localField, SubdomainInfo &subdomainInfo){
+    // Gathers the number of particles for each node in node 0
+    int nbPart = subdomainInfo.endingParticle - subdomainInfo.startingParticle;
+    std::vector<int> allNbPart;
+    if(subdomainInfo.procID == 0)
+        allNbPart.resize(subdomainInfo.nTasks);
+    MPI_Gather(&nbPart, 1, MPI_INT, &(allNbPart[0]), 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-void gatherField(Field* globalField, Field* localField, SubdomainInfo &SubdomainInfo){
-    // Gather all the current fields into the global Field (for output file writing for example)
+    // Computes the offsets for scatterv
+    std::vector<int> offsets;
+    if(subdomainInfo.procID == 0){
+        offsets.resize(subdomainInfo.nTasks);
+        offsets[0] = 0;
+        for(int i = 1 ; i<subdomainInfo.nTasks ; i++)
+            offsets[i] = offsets[i-1] + allNbPart[i-1];
+    }
 
+    // Gathers the fields
+    for(int i=0 ; i<3 ; i++){
+        MPI_Gatherv(&(localField->pos[i][0]), nbPart, MPI_DOUBLE,
+                &(globalField->pos[i][0]), &(allNbPart[0]), &(offsets[0]), MPI_DOUBLE,
+                0, MPI_COMM_WORLD);
+        MPI_Gatherv(&(localField->speed[i][0]), nbPart, MPI_DOUBLE,
+                &(globalField->speed[i][0]), &(allNbPart[0]), &(offsets[0]), MPI_DOUBLE,
+                0, MPI_COMM_WORLD);
+    }
+    MPI_Gatherv(&(localField->density[0]), nbPart, MPI_DOUBLE,
+            &(globalField->density[0]), &(allNbPart[0]), &(offsets[0]), MPI_DOUBLE,
+            0, MPI_COMM_WORLD);
+    MPI_Gatherv(&(localField->pressure[0]), nbPart, MPI_DOUBLE,
+            &(globalField->pressure[0]), &(allNbPart[0]), &(offsets[0]), MPI_DOUBLE,
+            0, MPI_COMM_WORLD);
+    MPI_Gatherv(&(localField->mass[0]), nbPart, MPI_DOUBLE,
+            &(globalField->mass[0]), &(allNbPart[0]), &(offsets[0]), MPI_DOUBLE,
+            0, MPI_COMM_WORLD);
+    MPI_Gatherv(&(localField->type[0]), nbPart, MPI_INT,
+            &(globalField->type[0]), &(allNbPart[0]), &(offsets[0]), MPI_INT,
+            0, MPI_COMM_WORLD);
+
+
+
+    // INFORMATION
+    if(subdomainInfo.procID == 0){
+        std::cout << "\n\n\nGather information: " << std::endl;
+        std::cout << "Number of particles per domain: " << std::endl;
+        for(int i = 0 ; i<subdomainInfo.nTasks ; i++)
+            std::cout << allNbPart[i] << " ";
+        std::cout << "\nOffset for each domain: " << std::endl;
+        for(int i = 0 ; i<subdomainInfo.nTasks ; i++)
+            std::cout << offsets[i] << " ";
+        std::cout << std::endl;
+    }
 
 }
 

@@ -87,11 +87,20 @@ int main(int argc, char *argv[])
 	unsigned int writeCount = 1;
 
 	// Scatters the globalField from node 0 into the currentField of all nodes
-	//scatterField(globalField, currentField, parameter, subdomainInfo);
-	//MPI_Finalize();
+	scatterField(globalField, currentField, parameter, subdomainInfo);
 
 
-	//*
+	// --- JUST FOR MPI TESTS ----
+	subdomainInfo.startingParticle = 0; // TEMPORARY (needs to be done in scatter !!!)
+	subdomainInfo.endingParticle = (currentField->pos[0]).size(); // IDEM
+	gatherField(globalField, currentField, subdomainInfo);
+
+	if(subdomainInfo.procID==0){writeField(globalField, 1, parameter, parameterFilename, geometryFilename, experimentFilename);}
+
+	MPI_Finalize();
+	// ---------------------------
+
+	/*
 
 	gatherField(currentField, globalField); // TEMPORARY !!!!!!
 
