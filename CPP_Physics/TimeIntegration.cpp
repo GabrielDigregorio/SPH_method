@@ -18,10 +18,10 @@
 *Decscription:
 * Knowing the field at time t (currentField) and the density and velocity derivative, computes the field at time t+k with euler integration method and store it in structure nextField
 */
-void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, double t, double k)
+void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
-    for(int i=0 ; i<currentField->nTotal ; i++){
+    for(int i=subdomainInfo.startingParticle ; i<subdomainInfo.endingParticle ; i++){
         switch (currentField->type[i]){
             // Free particles update
             case freePart:
@@ -59,21 +59,21 @@ a list with the box ID of the boxes that are adjacent to this box
 *- currentDensityDerivative: vector containing derivative of density for each particle at time t
 *- currentSpeedDerivative: vector containing derivative of velocity for each particle at time t
 *- timeInfo: pointer to the array containing the duration of each part of the code
-*Decscription:
+*Description:
 * Knowing the field (currentField), computes the density and velocity derivatives and store them in vectors
 */
-void derivativeComputation(Field* currentField, Parameter* parameter, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, std::vector<double> &timeInfo)
+void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, std::vector<double> &timeInfo)
 {
   // CPU time information
   std::clock_t start;
 
   // Sort the particles at the current time step
   start = std::clock();
-  sortParticles(currentField->pos, currentField->l, currentField->u, parameter->kh, boxes); // At each time step, restart it (to optimize with lists?)
+  sortParticles(currentField->pos, currentField->l, currentField->u, boxSizeCalc(parameter->kh, parameter->integrationMethod), boxes); // At each time step, restart it (to optimize with lists?)
   timeInfo[1] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
   // Spans the boxes
-  for(int box=0 ; box<boxes.size() ; box++){
+  for(int box=subdomainInfo.startingBox ; box<subdomainInfo.endingBox ; box++){
     // Spans the particles in the box
     for(unsigned int part=0 ; part<boxes[box].size() ; part++){
       start = std::clock();
@@ -115,11 +115,11 @@ a list with the box ID of the boxes that are adjacent to this box
 *- timeInfo: pointer to the array containing the duration of each part of the code
 *Output:
 *- Reboxing: flag that indicates if the box division need to be recomputed
-*Decscription:
+*Description:
 * Knowing the field at time t(currentField), computes the field at time t+k with euler integration method and store it in structure nextField
 */
-bool timeIntegration(Field* currentField, Field* nextField,
-  Parameter* parameter, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
+void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter,
+  SubdomainInfo &subdomainInfo, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
   double t, double k, std::vector<double> &timeInfo)
   {
     std::vector<double> currentSpeedDerivative;
@@ -130,14 +130,14 @@ bool timeIntegration(Field* currentField, Field* nextField,
     // CPU time information
     std::clock_t start;
 
-    derivativeComputation(currentField, parameter, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, timeInfo);
+    derivativeComputation(currentField, parameter, subdomainInfo, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, timeInfo);
 
     switch (parameter->integrationMethod)
     {
       case euler:
       {
           start = std::clock();
-          eulerUpdate(currentField, nextField, parameter, currentDensityDerivative, currentSpeedDerivative, t, k);
+          eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, k);
           timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
       }
       break;
@@ -153,11 +153,11 @@ bool timeIntegration(Field* currentField, Field* nextField,
 
           start = std::clock();
           // Storing midpoint in nextField
-          eulerUpdate(currentField, nextField, parameter, currentDensityDerivative, currentSpeedDerivative, t, kMid);
+          eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, kMid);
           timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
           // Compute derivatives at midPoint
-          derivativeComputation(nextField, parameter, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, timeInfo);
+          derivativeComputation(nextField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, timeInfo);
 
           // Compute weighted mean derivative then update
           start = std::clock();
@@ -171,18 +171,12 @@ bool timeIntegration(Field* currentField, Field* nextField,
             currentDensityDerivative[i] =  (1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i];
           }
 
-          eulerUpdate(currentField, nextField, parameter, currentDensityDerivative, currentSpeedDerivative, t, k);
+          eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, k);
 
           timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
       }
       break;
     }
-
-    // Reboxing criterion
-    start = std::clock();
-    bool reBoxing = false; // A fonction should be implemented to choose if we rebox or not
-    timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
-    return reBoxing;
+    return;
   }

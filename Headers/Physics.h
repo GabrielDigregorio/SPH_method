@@ -52,10 +52,10 @@ void sortParticles(std::vector<double> (&pos)[3], double l[3], double u[3], doub
 void boxMesh(double l[3], double u[3], double kh,
              std::vector<std::vector<int> > &boxes,
              std::vector<std::vector<int> > &surrBoxesAll);
-
+double boxSizeCalc(double kh, IntegrationMethod method);
 
 // TimeIntegration.cpp
-bool timeIntegration(Field* currentField, Field* nextField, Parameter* parameter,
+void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, SubdomainInfo &subdomainInfo,
     std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
     double t, double k, std::vector<double> &timeInfo);
 
@@ -90,9 +90,18 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity);
 
 // MPI.cpp
-void scatterField(Field* globalField, Field* currentField);
+void scatterField(Field* globalField, Field* currentField, Parameter* parameter,
+    SubdomainInfo &subdomainInfo);
 void gatherField(Field* globalField, Field* currentField);
 void processUpdate(Field* currentField);
 void timeStepFinding(Field* currentField);
+int getDomainNumber(double x, std::vector<double> &limits, int nTasks);
+void computeDomainIndex(std::vector<double> &posX,
+    std::vector<double> &limits, std::vector<int> &nbPartNode,
+    std::vector< std::pair<int,int> > &index, int nTasks);
+void shareBoundaries(Field *localField, double boxSize, int procID, int nTasks);
+void sortParticles(Field& field, std::vector< std::pair<int,int> >& index);
+
+
 
 #endif
