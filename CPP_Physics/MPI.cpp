@@ -48,17 +48,43 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
 
     std::vector<int> startBoxX(nTasks+1); // The last element helps the last process
     for(int i=0 ; i <= nTasks ; i++){
-        startBoxX[i] = (nTotalBoxesX*i) / nTasks;
+        startBoxX[i] = (nTotalBoxesX*i) / nTasks; // TO OPTIMIZE ???
     }
 
     // Broadcasts the global l and u and determines the correct l[0] and u[0]
     MPI_Bcast(localField->l, 3, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast(localField->u, 3, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     double globall0 = localField->l[0];
-    localField->l[0] = globall0 + startBoxX[procID]*boxSize;
-    localField->u[0] = globall0 + startBoxX[procID+1]*boxSize;
 
-    std::cout << procID << ": " <<localField->l[0] << " " << localField->u[0] << std::endl;
+    // Number of boxes along the Y and Z directions
+    int nBoxesY = ceil((localField->u[1] - localField->l[1])/boxSize);
+    int nBoxesZ = ceil((localField->u[2] - localField->l[2])/boxSize);
+
+
+    int startingBox;
+    int endingBox;
+    // Left boundary and starting box
+    if(procID == 0){
+        localField->l[0] = globall0;
+        startingBox = 0;
+    }
+    else{
+        localField->l[0] = globall0 + (startBoxX[procID]-1)*boxSize;
+        startingBox = nBoxesY*nBoxesZ;
+    }
+    // Right boundary and ending box
+    if(procID == nTasks - 1){
+        localField->u[0] = globall0 + startBoxX[procID+1]*boxSize;
+        endingBox = startingBox + (startBoxX[procID+1]-startBoxX[procID])*nBoxesY*nBoxesZ;
+    }
+    else{
+        localField->u[0] = globall0 + (startBoxX[procID+1]+1) *boxSize;
+        endingBox = startingBox + (startBoxX[procID+1]-startBoxX[procID])*nBoxesY*nBoxesZ;
+    }
+
+    std::cout << procID << " l and u : " << localField->l[0] << " " << localField->u[0] << std::endl;
+    std::cout << procID << " boxes   : " << startingBox << " " << endingBox << std::endl;
+
 
     // Computes indices and sorts particles
     std::vector<int> nPartNode(nTasks, 0);
@@ -68,7 +94,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
 
     if(procID==0){
         for(int i=0 ; i<nTasks ; i++)
-            limits[i] = globall0 + startBoxX[i]*boxSize;
+            limits[i] = globall0 + startBoxX[i]*boxSize; // Without overlap
         computeDomainIndex(globalField->pos[0], limits, nPartNode, domainIndex, nTasks);
         sortParticles(*globalField, domainIndex); // BE SURE NOT COPY IS PERFORMED !!!!!!!!!!
         // Offset vector
@@ -76,7 +102,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
         for(int i=1 ; i<nTasks ; i++){
             offset[i] = offset[i-1]+nPartNode[i-1];
         }
-        ///* DISPLAY
+        /* DISPLAY
         for(int i=0; i<domainIndex.size(); ++i){
             std::cout<<domainIndex[i].first <<" "<< domainIndex[i].second <<std::endl;
         }
@@ -137,25 +163,68 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter){
 
     std::cout << "Processor " << procID << " has " << localField->nFree << " free particles, " << localField->nFixed << " fixed particles and " << localField->nMoving << " moving particles." << std::endl;
 
-    // Up to there, the whole domain is separated. What remains to be done
-    // is to share the edges and to determine the starting/ending boxes
+    // Sharing boundaries
+    shareBoundaries(localField, boxSize, procID, nTasks);
 
 
-    //int nBoxesY = ceil((u[1] - l[1])/kh);
-    //int nBoxesZ = ceil((u[2] - l[2])/kh);
-
-
-
-
-    // .....
 
 }
 
 void shareBoundaries(Field *localField, double boxSize, int procID, int nTasks){
+    // Different possible cases (trivial if only one node)
+    if(nTasks > 1){
+        if(procID == 0){ // No left neighbor domain
+            // inner domain: [l[0] , u[0] - 2*boxSize[
+            // right edge: [u[0] - 2*boxSize , u[0] - boxSize[
+            // right halo: [u[0] - boxSize , u[0]]
 
-    // Sort the vectors
 
-    // Send/Receive from the surrounding domains
+            // Sorts with respect to the limits defined above
+
+
+            // Sends the edge to the right
+
+            // Receives the halo from the right
+
+        }
+        else if(procID == nTasks - 1){ // No right neighbor domain
+            // left halo: [l[0] , l[0] + boxSize[
+            // left edge: [l[0] + boxSize , l[0] + 2*boxSize[
+            // inner domain: [l[0] + 2*boxSize , u[0][
+
+
+            // Sorts with respect to the limits defined above
+
+
+            // Sends/Receives the edge to/from the left (procID is even/odd)
+
+            // Receives/Send the halo from/to the left (procID is even/odd)
+
+        }
+        else{ // Domain in the middle
+            // left halo: [l[0] , l[0] + boxSize[
+            // left edge: [l[0] + boxSize , l[0] + 2*boxSize[
+            // inner domain: [l[0] + 2*boxSize , u[0] - 2*boxSize[
+            // right edge: [u[0] - 2*boxSize , u[0] - boxSize[
+            // right halo: [u[0] - boxSize , u[0]]
+
+            // Sorts with respect to the limits defined above
+
+
+            // Sends/Receives the edge to/from the right (procID is even/odd)
+
+            // Receives/Send the halo from/to the right (procID is even/odd)
+
+
+            // Sends/Receives the edge to/from the left (procID is even/odd)
+
+            // Receives/Send the halo from/to the left (procID is even/odd)
+        }
+    }
+    else{
+        // Do nothing!
+        return;
+    }
 
 }
 

@@ -98,6 +98,9 @@ int getDomainNumber(double x, std::vector<double> &limits, int nTasks);
 void computeDomainIndex(std::vector<double> &posX,
     std::vector<double> &limits, std::vector<int> &nbPartNode,
     std::vector< std::pair<int,int> > &index, int nTasks);
+void shareBoundaries(Field *localField, double boxSize, int procID, int nTasks);
 void sortParticles(Field& field, std::vector< std::pair<int,int> >& index);
+
+
 
 #endif
