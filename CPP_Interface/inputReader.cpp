@@ -121,7 +121,7 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
       case movingPart :
       {
         int IDMovingBoundary;
-        *numberMovingBoundaries++;
+        (*numberMovingBoundaries)++;
         IDMovingBoundary = *numberMovingBoundaries - 1;
 
         for(int j=0 ; j<3 ; j++)

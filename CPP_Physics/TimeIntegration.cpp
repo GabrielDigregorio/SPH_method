@@ -39,11 +39,19 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
             for (int j = 0; j <= 2; j++){
                 nextField->pos[j][i] = currentField->pos[j][i] + k*currentField->speed[j][i];
             }
+            //case movingPart:
+            //updateMovingSpeed(nextField,parameter,t+k);//,i);
+            // comment faire un switch avec n=2,3,4... indétermimé? 
+        }
+        if(currentField->type[i]>=2)// then we have a moving boundary
+        {
+          int IDmovingBoundary=currentField->type[i]-2;
+          updateMovingSpeed(nextField,parameter,t+k,IDmovingBoundary,i);
         }
     }
 
     // To be modified !! This just entered in the switch about particles type !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(currentField->nMoving != 0){updateMovingSpeed(nextField,parameter,t+k);}
+    //if(currentField->nMoving != 0){updateMovingSpeed(nextField,parameter,t+k);}
     // Pressure (all particles at the same time)
     pressureComputation(nextField,parameter);
 }
