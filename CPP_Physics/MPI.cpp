@@ -271,6 +271,77 @@ void deleteHalos(Field &field, SubdomainInfo &subdomainInfo){
     field.type.erase(field.type.begin(), field.type.begin()+start);
 }
 
+// Generalizes the MPI_Send function to all fields to send
+void MPI_Send_All(Field &field, int startingPoint, int size, int recvProcID, mpiMessage message){
+    for(int i=0 ; i<3 ; i++){
+        MPI_Send(&field.pos[i][startingPoint], size, MPI_DOUBLE, recvProcID, message, MPI_COMM_WORLD);
+        MPI_Send(&field.speed[i][startingPoint], size, MPI_DOUBLE, recvProcID, message, MPI_COMM_WORLD);
+    }
+    MPI_Send(&field.density[startingPoint], size, MPI_DOUBLE, recvProcID, message, MPI_COMM_WORLD);
+    MPI_Send(&field.pressure[startingPoint], size, MPI_DOUBLE, recvProcID, message, MPI_COMM_WORLD);
+    MPI_Send(&field.mass[startingPoint], size, MPI_DOUBLE, recvProcID, message, MPI_COMM_WORLD);
+    MPI_Send(&field.type[startingPoint], size, MPI_INT, recvProcID, message, MPI_COMM_WORLD);
+}
+
+// Generalizes the MPI_Receive function to all fields to receive from the left
+void MPI_Recv_All_L(Field &field, int size, int sendProcID, mpiMessage message){
+    MPI_Status *status = NULL;
+    // Reception buffers
+    std::vector<double> recvBufferL[9];
+    for(int i=0 ; i<9 ; i++){recvBufferL[i].resize(size);}
+    std::vector<int> recvBufferTypeL(size);
+    // Elements: 0,x | 1,u | 2,y | 3,v | 4,z | 5,w | 6,density | 7,pressure | 8,mass
+    for(int i=0 ; i<9 ; i++){
+        MPI_Recv(&recvBufferL[i][0], size, MPI_DOUBLE, sendProcID, message, MPI_COMM_WORLD, status);
+    }
+    MPI_Recv(&recvBufferTypeL[0], size, MPI_INT, sendProcID, message, MPI_COMM_WORLD, status);
+    // Insertion in the local field
+    if(message == recvMigrate){ // Put it at the end
+        for(int i = 0 ; i<3 ; i++){
+            field.pos[i].insert(field.pos[i].end(), recvBufferL[2*i].begin(), recvBufferL[2*i].end());
+            field.speed[i].insert(field.speed[i].end(), recvBufferL[2*i+1].begin(), recvBufferL[2*i+1].end());
+        }
+        field.density.insert(field.density.end(), recvBufferL[6].begin(), recvBufferL[6].end());
+        field.pressure.insert(field.pressure.end(), recvBufferL[6].begin(), recvBufferL[6].end());
+        field.mass.insert(field.mass.end(), recvBufferL[6].begin(), recvBufferL[6].end());
+        field.type.insert(field.type.end(), recvBufferTypeL.begin(), recvBufferTypeL.end());
+    }
+    else if(message == recvOverlap){ // Put it at the beginning
+        for(int i = 0 ; i<3 ; i++){
+            field.pos[i].insert(field.pos[i].begin(), recvBufferL[2*i].begin(), recvBufferL[2*i].end());
+            field.speed[i].insert(field.speed[i].begin(), recvBufferL[2*i+1].begin(), recvBufferL[2*i+1].end());
+        }
+        field.density.insert(field.density.begin(), recvBufferL[6].begin(), recvBufferL[6].end());
+        field.pressure.insert(field.pressure.begin(), recvBufferL[7].begin(), recvBufferL[7].end());
+        field.mass.insert(field.mass.begin(), recvBufferL[8].begin(), recvBufferL[8].end());
+        field.type.insert(field.type.begin(), recvBufferTypeL.begin(), recvBufferTypeL.end());
+    }
+    else{std::cout << "Not acceptable receive operation." << std::endl;}
+}
+
+// Generalizes the MPI_Receive function to all fields to receive from the right
+void MPI_Recv_All_R(Field &field, int size, int sendProcID, mpiMessage message){
+    MPI_Status *status = NULL;
+    // Reception buffers
+    std::vector<double> recvBufferR[9];
+    for(int i=0 ; i<9 ; i++){recvBufferR[i].resize(size);}
+    std::vector<int> recvBufferTypeR(size);
+    // Elements: 0,x | 1,u | 2,y | 3,v | 4,z | 5,w | 6,density | 7,pressure | 8,mass
+    for(int i=0 ; i<9 ; i++){
+        MPI_Recv(&recvBufferR[i][0], size, MPI_DOUBLE, sendProcID, message, MPI_COMM_WORLD, status);
+    }
+    MPI_Recv(&recvBufferTypeR[0], size, MPI_INT, sendProcID, message, MPI_COMM_WORLD, status);
+    // Insertion in the local field at the end
+    for(int i = 0 ; i<3 ; i++){
+        field.pos[i].insert(field.pos[i].end(), recvBufferR[2*i].begin(), recvBufferR[2*i].end());
+        field.speed[i].insert(field.speed[i].end(), recvBufferR[2*i+1].begin(), recvBufferR[2*i+1].end());
+    }
+    field.density.insert(field.density.end(), recvBufferR[6].begin(), recvBufferR[6].end());
+    field.pressure.insert(field.pressure.end(), recvBufferR[7].begin(), recvBufferR[7].end());
+    field.mass.insert(field.mass.end(), recvBufferR[8].begin(), recvBufferR[8].end());
+    field.type.insert(field.type.end(), recvBufferTypeR.begin(), recvBufferTypeR.end());
+}
+
 void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
     // Declarations
     MPI_Status *status = NULL;
