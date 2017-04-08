@@ -89,35 +89,21 @@ int main(int argc, char *argv[])
 	// Scatters the globalField from node 0 into the currentField of all nodes
 	scatterField(globalField, currentField, parameter, subdomainInfo);
 
-
+	/*
 	// --- JUST FOR MPI TESTS ----
-	subdomainInfo.startingParticle = 0; // TEMPORARY (needs to be done in scatter !!!)
-	subdomainInfo.endingParticle = (currentField->pos[0]).size(); // IDEM
+	//subdomainInfo.startingParticle = 0; // TEMPORARY (needs to be done in scatter !!!)
+	//subdomainInfo.endingParticle = (currentField->pos[0]).size(); // IDEM
 	gatherField(globalField, currentField, subdomainInfo);
 
 	if(subdomainInfo.procID==0){writeField(globalField, 1, parameter, parameterFilename, geometryFilename, experimentFilename);}
 
 	MPI_Finalize();
-	// ---------------------------
-
-	/*
-
-	gatherField(currentField, globalField); // TEMPORARY !!!!!!
-
+	// ---------------------------*/
 
 	// Declares the box mesh and determines their adjacent relations variables
 	std::vector<std::vector<int> > boxes;
 	std::vector<std::vector<int> > surrBoxesAll;
 	boxMesh(currentField->l, currentField->u, subdomainInfo.boxSize, boxes, surrBoxesAll);
-
-
-	// ---- TEMPORARY UNTIL WORKING MPI ----
-	subdomainInfo.startingBox = 0;
-	subdomainInfo.endingBox = boxes.size();
-	subdomainInfo.startingParticle = 0;
-	subdomainInfo.endingParticle = (currentField->pos[0]).size();
-	// -------------------------------------
-
 
 	// Copies the invariant information about the field
 	copyField(currentField, nextField);
@@ -133,9 +119,9 @@ int main(int argc, char *argv[])
 		}
 		else
 	        std::cout << "Number of time steps = " << "not defined (adaptative time step)" << "\n" << std::endl;
-		std::cout << "Number of free particles = " << currentField->nFree << "\n" << std::endl;
-		std::cout << "Number of fixed particles = " << currentField->nFixed << "\n" << std::endl;
-		std::cout << "Number of particles with imposed speed = " << currentField->nMoving << "\n" << std::endl;
+		std::cout << "Number of free particles = " << globalField->nFree << "\n" << std::endl;
+		std::cout << "Number of fixed particles = " << globalField->nFixed << "\n" << std::endl;
+		std::cout << "Number of particles with imposed speed = " << globalField->nMoving << "\n" << std::endl;
 	}
 
 	timeInfo[0] = (std::clock() - start) / (double)CLOCKS_PER_SEC;
@@ -151,24 +137,29 @@ int main(int argc, char *argv[])
 		// Time step handler
 		currentField->nextK = parameter->k; // Temporary !!
 
+		// Next field !!!!! TO OPTIMIZE !!!!
+		copyField(currentField, nextField);
+		// ---
+
+
 		// Solve the time step
         timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
 
 		// Adaptative time step
-		timeStepFinding(currentField); // ALREADY DONE IN ANOTHER PLACE?
 		currentTime += parameter->k; // Temporary !!
 		parameter->k = currentField->nextK; // Temporary !!
 
 		// Swap the two fields
 		swapField(&currentField, &nextField);
+		// ---
 
 		// Major MPI communication: the local field is updated
-		processUpdate(currentField);
+		processUpdate(*currentField, subdomainInfo);
 
 		// Write field when needed
 		start = std::clock();
     	if (writeCount*parameter->writeInterval <= currentTime){
-			gatherField(globalField, currentField);
+			gatherField(globalField, currentField, subdomainInfo);
 			if(subdomainInfo.procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}

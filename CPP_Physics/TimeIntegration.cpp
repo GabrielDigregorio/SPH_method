@@ -28,6 +28,7 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             for (int j = 0; j <= 2; j++){
                 nextField->speed[j][i] = currentField->speed[j][i] + k*currentSpeedDerivative[3*i + j];
+                //std::cout << currentSpeedDerivative[3*i + j] << " ";
                 nextField->pos[j][i] = currentField->pos[j][i] + k*currentField->speed[j][i];
             }
             // Fixed particles update
@@ -100,6 +101,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
       timeInfo[3] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     }
   }
+
 }
 
 /*
@@ -124,12 +126,11 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
   {
     std::vector<double> currentSpeedDerivative;
     std::vector<double> currentDensityDerivative;
-    currentSpeedDerivative.assign(3*currentField->nFree, 0.0);
+    currentSpeedDerivative.assign(3*currentField->nTotal, 0.0);
     currentDensityDerivative.assign(currentField->nTotal, 0.0);
 
     // CPU time information
     std::clock_t start;
-
     derivativeComputation(currentField, parameter, subdomainInfo, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, timeInfo);
 
     switch (parameter->integrationMethod)
@@ -148,7 +149,7 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           double kMid = 0.5*k/parameter->theta;
           std::vector<double> midSpeedDerivative;
           std::vector<double> midDensityDerivative;
-          midSpeedDerivative.assign(3*currentField->nFree, 0.0);
+          midSpeedDerivative.assign(3*currentField->nTotal, 0.0);
           midDensityDerivative.assign(currentField->nTotal, 0.0);
 
           start = std::clock();

@@ -68,7 +68,7 @@
 % Wall
    #brick
         %param
-            c=2
+            c=1
             s=0.08
             r=0
         %coord

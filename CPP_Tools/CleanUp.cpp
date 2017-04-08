@@ -17,6 +17,18 @@ void boxClear(std::vector<std::vector<int> > &boxes)
 */
 void copyField(Field *sourceField,Field *copiedField)
 {
+    // TO CHECK !!!!!!
+    for(int i=0 ; i<3 ; i++){
+        copiedField->pos[i].clear();
+        copiedField->speed[i].clear();
+    }
+    copiedField->density.clear();
+    copiedField->mass.clear();
+    copiedField->pressure.clear();
+    copiedField->type.clear();
+    // !!!!!
+
+
   int nTotal = sourceField->nTotal;
   for (int i = 0; i < 3; i++)
   {
@@ -30,12 +42,19 @@ void copyField(Field *sourceField,Field *copiedField)
 
   copiedField->mass = sourceField->mass;
   copiedField->type = sourceField->type;
+  copiedField->pressure = sourceField->pressure;
+  copiedField->density = sourceField->density;
+
   for(int j=0 ; j<3 ; j++){
-      copiedField->pos[j].resize(nTotal);
-      copiedField->speed[j].resize(nTotal);
+      copiedField->pos[j] = sourceField->pos[j];//resize(nTotal);
+      copiedField->speed[j] = sourceField->speed[j];//.resize(nTotal);
   }
-  copiedField->pressure.resize(nTotal);
-  copiedField->density.resize(nTotal);
+  //copiedField->pressure.resize(nTotal);
+  //copiedField->density.resize(nTotal);
+
+
+
+  /*
   // Copying fixed positions and particle type
     for(int i = 0 ; i<nTotal ; i++){
         if(sourceField->type[i] == fixedPart){
@@ -43,6 +62,7 @@ void copyField(Field *sourceField,Field *copiedField)
                 copiedField->pos[j][i] = sourceField->pos[j][i];
         }
     }
+    */
 }
 
 /*
