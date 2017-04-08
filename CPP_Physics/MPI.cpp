@@ -144,7 +144,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
     // Sharing boundaries
     shareOverlap(*localField, subdomainInfo);
 
-
+    // Computes nTotal
     localField->nTotal = localField->pos[0].size();
     // Computes nFree, nMoving and nFixed (IS IT REALLY USEFUL ??)
     localField->nFree = 0;
@@ -162,9 +162,18 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
             localField->nMoving++;
         }
     }
-    //std::cout << "Processor " << procID << " has " << localField->nFree << " free particles, " << localField->nFixed << " fixed particles and " << localField->nMoving << " moving particles.\n" << std::endl;
 
+    // Shares the moving boundaries information
+    int nbMB;
+    if(procID == 0){nbMB = parameter->speedLaw.size();}
+    MPI_Bcast(&nbMB, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
+    MPI_Bcast(&parameter->speedLaw[0], nbMB, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&parameter->charactTime[0], nbMB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    for(int i=0 ; i<3 ; i++){
+        MPI_Bcast(&parameter->teta[i][0], nbMB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&parameter->movingDirection[i][0], nbMB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    }
 
 }
 

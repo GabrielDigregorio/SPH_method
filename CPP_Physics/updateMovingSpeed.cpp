@@ -20,32 +20,31 @@
      case sine:
      {
        // uniform periodic movement in each direction
-       
+
          // x
          field->speed[0][i]=movX*sin(charactTime*t);
-         // 
+         //
          field->speed[1][i]=movY*sin(charactTime*t);
          // z
          field->speed[2][i]=movZ*sin(charactTime*t);
-       
+
      }
      break;
      case constant:
      {
-       
+
          // x
          field->speed[0][i]=movX;
          // y
          field->speed[1][i]=movY;
          // z
          field->speed[2][i]=movZ;
-       
+
      }
      break;
      case exponential:
      std::cout << "Exponential moving not yet implemented\n"; // ATTENTION !!!
      break;
    }
-   
- }
 
+ }
