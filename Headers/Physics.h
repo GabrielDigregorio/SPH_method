@@ -100,9 +100,17 @@ int getDomainNumber(double x, std::vector<double> &limits, int nTasks);
 void computeDomainIndex(std::vector<double> &posX,
     std::vector<double> &limits, std::vector<int> &nbPartNode,
     std::vector< std::pair<int,int> > &index, int nTasks);
-void shareBoundaries(Field *localField, double boxSize, int procID, int nTasks);
+void processUpdate(Field& localField, SubdomainInfo& subdomainInfo);
+void resizeField(Field& field, int nMigrate);
+void computeMigrateIndex(std::vector<double>& posX,
+    std::vector< std::pair<int,int> >& index, int* nMigrate,
+    double Xmin, double Xmax);
+void computeOverlapIndex(std::vector<double>& posX,
+    std::vector< std::pair<int,int> >& index, int* nOverlap,
+    double leftMinX, double leftMaxX, double rightMinX, double rightMaxX);
 void sortParticles(Field& field, std::vector< std::pair<int,int> >& index);
-
-
+void resizeField(Field& field, int nMigrate);
+void shareMigrate(Field& field, double u0, double l0, double boxSize, int procID, int nTasks);
+void shareOverlap(Field& field, double u0, double l0, double boxSize, int procID, int nTasks);
 
 #endif
