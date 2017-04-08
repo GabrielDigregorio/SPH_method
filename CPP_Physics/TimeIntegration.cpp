@@ -157,6 +157,9 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, kMid);
           timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
+          // Share the mid point
+          // ?????????? (the number of particles should remain constant !)
+
           // Compute derivatives at midPoint
           derivativeComputation(nextField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, timeInfo);
 

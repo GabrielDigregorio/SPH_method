@@ -38,11 +38,11 @@
         kernel=1
         kh=0.12
 
-        integrationMethod=0
+        integrationMethod=1
         theta=1
 
         adaptativeTimeStep=0
-        k=0.00001
+        k=0.0001
 
         T=0.5
 

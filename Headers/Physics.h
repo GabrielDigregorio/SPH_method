@@ -93,9 +93,7 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
 void scatterField(Field* globalField, Field* currentField, Parameter* parameter,
     SubdomainInfo &subdomainInfo);
 void gatherField(Field* globalField, Field* localField, SubdomainInfo &subdomainInfo);
-void gatherField(Field* globalField, Field* currentField); // TEMPORARY
 void processUpdate(Field* currentField);
-void timeStepFinding(Field* currentField);
 int getDomainNumber(double x, std::vector<double> &limits, int nTasks);
 void computeDomainIndex(std::vector<double> &posX,
     std::vector<double> &limits, std::vector<int> &nbPartNode,
@@ -111,5 +109,6 @@ void computeOverlapIndex(std::vector<double>& posX,
 void sortParticles(Field& field, std::vector< std::pair<int,int> >& index);
 void resizeField(Field& field, int nMigrate);
 void shareOverlap(Field& field, SubdomainInfo &subdomainInfo);
+void deleteHalos(Field &field, SubdomainInfo &subdomainInfo);
 
 #endif

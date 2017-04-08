@@ -227,28 +227,6 @@ void gatherField(Field* globalField, Field* localField, SubdomainInfo &subdomain
 
 }
 
-/* OLD VERSION, JUST FOR THE PREVIOUS SEQUENTIAL VERSION TO WORK */
-void gatherField(Field* globalField, Field* localField){
-    // Gather all the current fields into the global Field (for output file writing for example)
-
-    globalField->nFree = localField->nFree;
-    globalField->nFixed = localField->nFixed;
-    globalField->nMoving = localField->nMoving;
-    globalField->nTotal = localField->nTotal;
-    for (int i = 0; i < 3; i++){
-      globalField->l[i] = localField->l[i];
-      globalField->u[i] = localField->u[i];
-      globalField->pos[i] = localField->pos[i];
-      globalField->speed[i] = localField->speed[i];
-    }
-    globalField->mass = localField->mass;
-    globalField->type = localField->type;
-    globalField->density = localField->density;
-    globalField->pressure = localField->pressure;
-
-
-}
-
 void deleteHalos(Field &field, SubdomainInfo &subdomainInfo){
     // Starting and ending particles
     int start = subdomainInfo.startingParticle;
@@ -353,15 +331,12 @@ void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
                 l0, l0, u0-2*boxSize, u0-boxSize); // No Left Overlap
             sortParticles(field, indexOverlap);
 
-            //std::cout << nOverlap[0] << " " << nOverlap[1] << std::endl;
-
             // Start position to send
             startOverlapToRight = field.pos[0].size() - nOverlap[1];
 
             // Sends the edge to the right
             MPI_Send(&nOverlap[1], 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD);
             MPI_Send_All(field, startOverlapToRight, nOverlap[1], procID+1, overlap);
-            //MPI_Send(&field.pos[0][startOverlapToRight], nOverlap[1], MPI_DOUBLE, procID+1, overlap, MPI_COMM_WORLD);
 
             // Receives the halo from the right
             MPI_Recv(&sizeRecvOverlapR, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD, status);
@@ -369,11 +344,9 @@ void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
             for(int i=0 ; i<9 ; i++){recvVectR[i].resize(sizeRecvOverlapR);}
             recvVectTypeR.resize(sizeRecvOverlapR);
             MPI_Recv_All(recvVectR, recvVectTypeR, sizeRecvOverlapR, procID+1, overlap);
-            //MPI_Recv(&recvVectR[0], sizeRecvOverlapR, MPI_DOUBLE, procID+1, overlap, MPI_COMM_WORLD, status);
 
             // Adding the particles to the field (at the end of the vector)
             insertParticles(field, recvVectR, recvVectTypeR, end);
-            //field.pos[0].insert(field.pos[0].end(), recvVectR.begin(), recvVectL.end());
 
             // Update the starting/ending particles
             subdomainInfo.startingParticle = 0;
@@ -386,43 +359,35 @@ void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
             computeOverlapIndex(field.pos[0],indexOverlap, nOverlap,
             l0+boxSize, l0+2*boxSize, u0, u0); // No right Overlap
             sortParticles(field, indexOverlap);
-            //std::cout << "OK here" << std::endl;
 
             if(procID%2==0){
                 // Nothing to send to the right
                 // Sends the edge to the left (procID is even)
                 MPI_Send(&nOverlap[0], 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, 0, nOverlap[0], procID-1, overlap);
-                //MPI_Send(&field.pos[0][0], nOverlap[0], MPI_DOUBLE, procID-1, overlap, MPI_COMM_WORLD);
 
                 // Receives the edge from the left (procID is even)
                 MPI_Recv(&sizeRecvOverlapL, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectL.resize(sizeRecvOverlapL);
                 for(int i=0 ; i<9 ; i++){recvVectL[i].resize(sizeRecvOverlapL);}
                 recvVectTypeL.resize(sizeRecvOverlapL);
                 MPI_Recv_All(recvVectL, recvVectTypeL, sizeRecvOverlapL, procID-1, overlap);
-                //MPI_Recv(&recvVectL[0], sizeRecvOverlapL, MPI_DOUBLE, procID-1, overlap, MPI_COMM_WORLD, status);
                 // Nothing to receive from the right
            }else{
                 // Receives the edge from the left (procID is odd)
                 MPI_Recv(&sizeRecvOverlapL, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectL.resize(sizeRecvOverlapL);
                 for(int i=0 ; i<9 ; i++){recvVectL[i].resize(sizeRecvOverlapL);}
                 recvVectTypeL.resize(sizeRecvOverlapL);
                 MPI_Recv_All(recvVectL, recvVectTypeL, sizeRecvOverlapL, procID-1, overlap);
-                //MPI_Recv(&recvVectL[0], sizeRecvOverlapL, MPI_DOUBLE, procID-1, overlap, MPI_COMM_WORLD, status);
                 // Nothing to receive from the right
 
                 // Nothing to send to the right
                 // Sends the edge to the left (procID is odd)
                 MPI_Send(&nOverlap[0], 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, 0, nOverlap[0], procID-1, overlap);
-                //MPI_Send(&field.pos[0][0], nOverlap[0], MPI_DOUBLE, procID-1, overlap, MPI_COMM_WORLD);
             }
 
             // Adding the particles to the field
             insertParticles(field, recvVectL, recvVectTypeL, begin);
-            //field.pos[0].insert(field.pos[0].begin(), recvVectL.begin(), recvVectL.end());
 
             // Update the starting/ending particles
             subdomainInfo.startingParticle = sizeRecvOverlapL;
@@ -446,60 +411,45 @@ void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
                 // Sends the edge to the right (procID is even)
                 MPI_Send(&nOverlap[1], 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, startOverlapToRight, nOverlap[1], procID+1, overlap);
-                //MPI_Send(&field.pos[0][startOverlapToRight], nOverlap[1], MPI_DOUBLE, procID+1, overlap, MPI_COMM_WORLD);
                 // Sends the edge to the left (procID is even)
                 MPI_Send(&nOverlap[0], 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, 0, nOverlap[0], procID-1, overlap);
-                //MPI_Send(&field.pos[0][0], nOverlap[0], MPI_DOUBLE, procID-1, overlap, MPI_COMM_WORLD);
 
                 // Receives the edge from the left (procID is even)
                 MPI_Recv(&sizeRecvOverlapL, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectL.resize(sizeRecvOverlapL);
                 for(int i=0 ; i<9 ; i++){recvVectL[i].resize(sizeRecvOverlapL);}
                 recvVectTypeL.resize(sizeRecvOverlapL);
                 MPI_Recv_All(recvVectL, recvVectTypeL, sizeRecvOverlapL, procID-1, overlap);
-                //MPI_Recv(&recvVectL[0], sizeRecvOverlapL, MPI_DOUBLE, procID-1, overlap, MPI_COMM_WORLD, status);
                 // Receives the edge from the right (procID is even)
                 MPI_Recv(&sizeRecvOverlapR, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectR.resize(sizeRecvOverlapR);
                 for(int i=0 ; i<9 ; i++){recvVectR[i].resize(sizeRecvOverlapR);}
                 recvVectTypeR.resize(sizeRecvOverlapR);
                 MPI_Recv_All(recvVectR, recvVectTypeR, sizeRecvOverlapR, procID+1, overlap);
-                //MPI_Recv(&recvVectR[0], sizeRecvOverlapR, MPI_DOUBLE, procID+1, overlap, MPI_COMM_WORLD, status);
 
                 // Adding the particles to the field
-                //field.pos[0].insert(field.pos[0].begin(), recvVectL.begin(), recvVectL.end());
-                //field.pos[0].insert(field.pos[0].end(), recvVectR.begin(), recvVectR.end());
             }else{
                 // Receives the edge from the left (procID is even)
                 MPI_Recv(&sizeRecvOverlapL, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectL.resize(sizeRecvOverlapL);
                 for(int i=0 ; i<9 ; i++){recvVectL[i].resize(sizeRecvOverlapL);}
                 recvVectTypeL.resize(sizeRecvOverlapL);
                 MPI_Recv_All(recvVectL, recvVectTypeL, sizeRecvOverlapL, procID-1, overlap);
-                //MPI_Recv(&recvVectL[0], sizeRecvOverlapL, MPI_DOUBLE, procID-1, overlap, MPI_COMM_WORLD, status);
                 // Receives the edge from the right (procID is even)
                 MPI_Recv(&sizeRecvOverlapR, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectR.resize(sizeRecvOverlapR);
                 for(int i=0 ; i<9 ; i++){recvVectR[i].resize(sizeRecvOverlapR);}
                 recvVectTypeR.resize(sizeRecvOverlapR);
                 MPI_Recv_All(recvVectR, recvVectTypeR, sizeRecvOverlapR, procID+1, overlap);
-                //MPI_Recv(&recvVectR[0], sizeRecvOverlapR, MPI_DOUBLE, procID+1, overlap, MPI_COMM_WORLD, status);
 
                 // Sends the edge to the right (procID is even)
                 MPI_Send(&nOverlap[1], 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, startOverlapToRight, nOverlap[1], procID+1, overlap);
-                //MPI_Send(&field.pos[0][startOverlapToRight], nOverlap[1], MPI_DOUBLE, procID+1, overlap, MPI_COMM_WORLD);
                 // Sends the edge to the left (procID is even)
                 MPI_Send(&nOverlap[0], 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, 0, nOverlap[0], procID-1, overlap);
-                //MPI_Send(&field.pos[0][0], nOverlap[0], MPI_DOUBLE, procID-1, overlap, MPI_COMM_WORLD);
             }
 
             // Adding the particles to the field
             insertParticles(field, recvVectL, recvVectTypeL, begin);
             insertParticles(field, recvVectR, recvVectTypeR, end);
-            //field.pos[0].insert(field.pos[0].begin(), recvVectL.begin(), recvVectL.end());
 
             // Update the starting/ending particles
             subdomainInfo.startingParticle = sizeRecvOverlapL;
@@ -545,22 +495,18 @@ void shareMigrate(Field& field, SubdomainInfo &subdomainInfo){
             // Sends the edge to the right
             MPI_Send(&nMigrate[1], 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD);
             MPI_Send_All(field, startMigrateToRight, nMigrate[1], procID+1, migration);
-            //MPI_Send(&field.pos[0][startMigrateToRight], nMigrate[1], MPI_DOUBLE, procID+1, migration, MPI_COMM_WORLD);
             // Nothing to send to the left
 
             // Nothing to receive from the left
             // Receives the halo from the right
             MPI_Recv(&sizeRecvMigrate, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD, status);
-            //recvVectR.resize(sizeRecvMigrate);
             for(int i=0 ; i<9 ; i++){recvVectR[i].resize(sizeRecvMigrate);}
             recvVectTypeR.resize(sizeRecvMigrate);
             MPI_Recv_All(recvVectR, recvVectTypeR, sizeRecvMigrate, procID+1, migration);
-            //MPI_Recv(&recvVectR[0], sizeRecvMigrate, MPI_DOUBLE, procID+1, migration, MPI_COMM_WORLD, status);
             // Removing previous particles (even those who go out of the domain! Keep it? )
             resizeField(field, nMigrate[0]+nMigrate[1]); // OR: remove only the right ones (on the left, out of the domain but keep them)
             // Adding the particles to the field
             insertParticles(field, recvVectR, recvVectTypeR, end);
-            //field.pos[0].insert(field.pos[0].end(), recvVectR.begin(), recvVectR.end());
         }
         else if(procID == nTasks - 1){ // No right neighbor domain
             // left halo: [l[0] , l[0] + boxSize[
@@ -578,41 +524,32 @@ void shareMigrate(Field& field, SubdomainInfo &subdomainInfo){
                 // Sends the edge to the left (procID is even)
                 MPI_Send(&nMigrate[0], 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, startMigrateToLeft, nMigrate[0], procID-1, migration);
-                //MPI_Send(&field.pos[0][startMigrateToLeft], nMigrate[0], MPI_DOUBLE, procID-1, migration, MPI_COMM_WORLD);
 
                 // Receives the edge from the left (procID is even)
                 MPI_Recv(&sizeRecvMigrate, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectL.resize(sizeRecvMigrate);
                 for(int i=0 ; i<9 ; i++){recvVectL[i].resize(sizeRecvMigrate);}
                 recvVectTypeL.resize(sizeRecvMigrate);
                 MPI_Recv_All(recvVectL, recvVectTypeL, sizeRecvMigrate, procID-1, migration);
-                //MPI_Recv(&recvVectL[0], sizeRecvMigrate, MPI_DOUBLE, procID-1, migration, MPI_COMM_WORLD, status);
                 // Nothing to receive from the right
 
                 // Removing previous particles
                 resizeField(field, nMigrate[0]+nMigrate[1]);
                 // Adding the particles to the field
-                //field.pos[0].insert(field.pos[0].end(), recvVectL.begin(), recvVectL.end());
             }else{
                 // Receives the edge from the left (procID is odd)
                 MPI_Recv(&sizeRecvMigrate, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectL.resize(sizeRecvMigrate);
                 for(int i=0 ; i<9 ; i++){recvVectL[i].resize(sizeRecvMigrate);}
                 recvVectTypeL.resize(sizeRecvMigrate);
                 MPI_Recv_All(recvVectL, recvVectTypeL, sizeRecvMigrate, procID-1, migration);
-                //MPI_Recv(&recvVectL[0], sizeRecvMigrate, MPI_DOUBLE, procID-1, migration, MPI_COMM_WORLD, status);
                 // Nothing to receive from the right
 
                 // Nothing to send to the right
                 // Sends the edge to the left (procID is odd)
                 MPI_Send(&nMigrate[0], 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, startMigrateToLeft, nMigrate[0], procID-1, migration);
-                //MPI_Send(&field.pos[0][startMigrateToLeft], nMigrate[0], MPI_DOUBLE, procID-1, migration, MPI_COMM_WORLD);
 
                 // Removing previous particles
                 resizeField(field, nMigrate[0]+nMigrate[1]);
-                // Adding the particles to the field
-                //field.pos[0].insert(field.pos[0].end(), recvVectL.begin(), recvVectL.end());
             }
             // Adding the particles to the field
             insertParticles(field, recvVectL, recvVectTypeL, end);
@@ -636,53 +573,41 @@ void shareMigrate(Field& field, SubdomainInfo &subdomainInfo){
                 // Sends the edge to the right (procID is even)
                 MPI_Send(&nMigrate[1], 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, startMigrateToRight, nMigrate[1], procID+1, migration);
-                //MPI_Send(&field.pos[0][startMigrateToRight], nMigrate[1], MPI_DOUBLE, procID+1, migration, MPI_COMM_WORLD);
                 // Sends the edge to the left (procID is even)
                 MPI_Send(&nMigrate[0], 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, startMigrateToLeft, nMigrate[0], procID-1, migration);
-                //MPI_Send(&field.pos[0][startMigrateToLeft], nMigrate[0], MPI_DOUBLE, procID-1, migration, MPI_COMM_WORLD);
 
                 // Receives the edge from the left (procID is even)
                 MPI_Recv(&sizeRecvMigrate, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectL.resize(sizeRecvMigrate);
                 for(int i=0 ; i<9 ; i++){recvVectL[i].resize(sizeRecvMigrate);}
                 recvVectTypeL.resize(sizeRecvMigrate);
                 MPI_Recv_All(recvVectL, recvVectTypeL, sizeRecvMigrate, procID-1, migration);
-                //MPI_Recv(&recvVectL[0], sizeRecvMigrate, MPI_DOUBLE, procID-1, migration, MPI_COMM_WORLD, status);
                 // Receives the edge from the right (procID is even)
                 MPI_Recv(&sizeRecvMigrate, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectR.resize(sizeRecvMigrate);
                 for(int i=0 ; i<9 ; i++){recvVectR[i].resize(sizeRecvMigrate);}
                 recvVectTypeR.resize(sizeRecvMigrate);
                 MPI_Recv_All(recvVectR, recvVectTypeR, sizeRecvMigrate, procID+1, migration);
-                //MPI_Recv(&recvVectR[0], sizeRecvMigrate, MPI_DOUBLE, procID+1, migration, MPI_COMM_WORLD, status);
 
                 // Removing previous particles
                 resizeField(field, nMigrate[0]+nMigrate[1]);
             }else{
                 // Receives the edge from the left (procID is odd)
                 MPI_Recv(&sizeRecvMigrate, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectL.resize(sizeRecvMigrate);
                 for(int i=0 ; i<9 ; i++){recvVectL[i].resize(sizeRecvMigrate);}
                 recvVectTypeL.resize(sizeRecvMigrate);
                 MPI_Recv_All(recvVectL, recvVectTypeL, sizeRecvMigrate, procID-1, migration);
-                //MPI_Recv(&recvVectL[0], sizeRecvMigrate, MPI_DOUBLE, procID-1, migration, MPI_COMM_WORLD, status);
                 // Receives the edge from the right (procID is odd)
                 MPI_Recv(&sizeRecvMigrate, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD, status);
-                //recvVectR.resize(sizeRecvMigrate);
                 for(int i=0 ; i<9 ; i++){recvVectR[i].resize(sizeRecvMigrate);}
                 recvVectTypeR.resize(sizeRecvMigrate);
                 MPI_Recv_All(recvVectR, recvVectTypeR, sizeRecvMigrate, procID+1, migration);
-                //MPI_Recv(&recvVectR[0], sizeRecvMigrate, MPI_DOUBLE, procID+1, migration, MPI_COMM_WORLD, status);
 
                 // Sends the edge to the right (procID is odd)
                 MPI_Send(&nMigrate[1], 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, startMigrateToRight, nMigrate[1], procID+1, migration);
-                //MPI_Send(&field.pos[0][startMigrateToRight], nMigrate[1], MPI_DOUBLE, procID+1, migration, MPI_COMM_WORLD);
                 // Sends the edge to the left (procID is odd)
                 MPI_Send(&nMigrate[0], 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
                 MPI_Send_All(field, startMigrateToLeft, nMigrate[0], procID-1, migration);
-                //MPI_Send(&field.pos[0][startMigrateToLeft], nMigrate[0], MPI_DOUBLE, procID-1, migration, MPI_COMM_WORLD);
 
                 // Removing previous particles
                 resizeField(field, nMigrate[0]+nMigrate[1]);
@@ -724,14 +649,6 @@ void processUpdate(Field& localField, SubdomainInfo& subdomainInfo){
             localField.nMoving++;
         }
     }
-
-}
-
-/* USELESS? */
-void timeStepFinding(Field* currentField){
-    // Find on each process the maximum acceptable time step
-
-    // Reduce this information among all processes
 }
 
 void computeDomainIndex(std::vector<double> &posX,

@@ -89,17 +89,6 @@ int main(int argc, char *argv[])
 	// Scatters the globalField from node 0 into the currentField of all nodes
 	scatterField(globalField, currentField, parameter, subdomainInfo);
 
-	/*
-	// --- JUST FOR MPI TESTS ----
-	//subdomainInfo.startingParticle = 0; // TEMPORARY (needs to be done in scatter !!!)
-	//subdomainInfo.endingParticle = (currentField->pos[0]).size(); // IDEM
-	gatherField(globalField, currentField, subdomainInfo);
-
-	if(subdomainInfo.procID==0){writeField(globalField, 1, parameter, parameterFilename, geometryFilename, experimentFilename);}
-
-	MPI_Finalize();
-	// ---------------------------*/
-
 	// Declares the box mesh and determines their adjacent relations variables
 	std::vector<std::vector<int> > boxes;
 	std::vector<std::vector<int> > surrBoxesAll;
@@ -135,19 +124,18 @@ int main(int argc, char *argv[])
 	double currentTime = 0.0; // Current time of the simulation
 	for (unsigned int n = 1; currentTime < parameter->T; n++){
 		// Time step handler
-		currentField->nextK = parameter->k; // Temporary !!
+		currentField->nextK = parameter->k;
 
 		// Next field !!!!! TO OPTIMIZE !!!!
 		copyField(currentField, nextField);
 		// ---
 
-
 		// Solve the time step
         timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
 
 		// Adaptative time step
-		currentTime += parameter->k; // Temporary !!
-		parameter->k = currentField->nextK; // Temporary !!
+		currentTime += parameter->k;
+		parameter->k = currentField->nextK;
 
 		// Swap the two fields
 		swapField(&currentField, &nextField);
