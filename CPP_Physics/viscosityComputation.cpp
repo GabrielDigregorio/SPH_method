@@ -59,6 +59,8 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
     {
         case yes :
         {
+            std::cout << "TIME STEP MUST BE CONSTANT IN THE CURRENT VERSION" << std::endl;
+
             double t_f  = 0.25 * sqrt(h/parameter->g);
             double t_cv = 0.4  * (h/(parameter->c+0.6*parameter->alpha*parameter->c+0.6*parameter->beta*maxMu));
 
