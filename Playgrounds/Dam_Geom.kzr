@@ -33,27 +33,29 @@
 
 
 #domsz
-    ux = 50
-    uy = 20
-    uz = 10
-    lx = 0
-    ly = 0
-    lz = 0
+    ux = 0.5
+    uy = 0.5
+    uz = 0.6
+    lx = -0.5
+    ly = -0.5
+    lz = -0.1
 
 % Walls
     #brick
         %param
             c=2
-            s=1
+            s=0.08
             r=0
         %coord
-            x=0.5
-            y=10
-            z=5
+            x=0
+            y=0
+            z=0
         %dimen
-            L=1.5
-            W=20
-            H=10
+
+            L=1
+            W=1
+            H=0.1
+
         %inclin
             tetax=0.0
             tetay=0.0
@@ -68,16 +70,18 @@
     #brick
         %param
             c=2
-            s=1
+            s=0.08
             r=0
         %coord
-            x=49.5
-            y=10
-            z=5
+            x=-0.45
+            y=0
+            z=0.26
         %dimen
-            L=1.5
-            W=20
-            H=10
+
+            L=0.1
+            W=1
+            H=0.4
+
         %inclin
             tetax=0.0
             tetay=0.0
@@ -92,16 +96,18 @@
     #brick
         %param
             c=2
-            s=1
+            s=0.08
             r=0
         %coord
-            x=25
-            y=0.5
-            z=5
+            x=0
+            y=0.45
+            z=0.26
         %dimen
-            L=48
-            W=1.5
-            H=10
+
+            L=0.8
+            W=0.1
+            H=0.4
+
         %inclin
             tetax=0.0
             tetay=0.0
@@ -116,16 +122,18 @@
     #brick
         %param
             c=2
-            s=1
+            s=0.08
             r=0
         %coord
-            x=25
-            y=19.5
-            z=5
+            x=0
+            y=-0.45
+            z=0.26
         %dimen
-            L=48
-            W=1.5
-            H=10
+
+            L=0.8
+            W=0.1
+            H=0.4
+
         %inclin
             tetax=0.0
             tetay=0.0
@@ -140,16 +148,18 @@
     #brick
         %param
             c=2
-            s=1
+            s=0.08
             r=0
         %coord
-            x=25
-            y=10
-            z=0.5
+            x=0.45
+            y=0
+            z=0.26
         %dimen
-            L=48
-            W=18
-            H=1.5
+
+            L=0.1
+            W=1
+            H=0.4
+
         %inclin
             tetax=0.0
             tetay=0.0
@@ -165,16 +175,16 @@
     #brick
         %param
             c=0
-            s=1
+            s=0.08
             r=0
         %coord
-            x=3.5
-            y=10
-            z=3
+            x=-0.29
+            y=0
+            z=0.25
         %dimen
-            L=5
-            W=18
-            H=5
+            L=0.2
+            W=0.78
+            H=0.4
         %inclin
             tetax=0.0
             tetay=0.0
