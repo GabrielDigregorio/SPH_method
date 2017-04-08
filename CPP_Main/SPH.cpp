@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 	// Declares the box mesh and determines their adjacent relations variables
 	std::vector<std::vector<int> > boxes;
 	std::vector<std::vector<int> > surrBoxesAll;
-	boxMesh(currentField->l, currentField->u, boxSizeCalc(parameter->kh, parameter->integrationMethod), boxes, surrBoxesAll);
+	boxMesh(currentField->l, currentField->u, subdomainInfo.boxSize, boxes, surrBoxesAll);
 
 
 	// ---- TEMPORARY UNTIL WORKING MPI ----
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
         timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
 
 		// Adaptative time step
-		timeStepFinding(currentField);
+		timeStepFinding(currentField); // ALREADY DONE IN ANOTHER PLACE?
 		currentTime += parameter->k; // Temporary !!
 		parameter->k = currentField->nextK; // Temporary !!
 

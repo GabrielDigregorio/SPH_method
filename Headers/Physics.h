@@ -110,7 +110,6 @@ void computeOverlapIndex(std::vector<double>& posX,
     double leftMinX, double leftMaxX, double rightMinX, double rightMaxX);
 void sortParticles(Field& field, std::vector< std::pair<int,int> >& index);
 void resizeField(Field& field, int nMigrate);
-void shareMigrate(Field& field, double u0, double l0, double boxSize, int procID, int nTasks);
-void shareOverlap(Field& field, double u0, double l0, double boxSize, int procID, int nTasks);
+void shareOverlap(Field& field, SubdomainInfo &subdomainInfo);
 
 #endif

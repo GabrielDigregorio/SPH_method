@@ -21,7 +21,7 @@
 void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
-    for(int i=subdomainInfo.startingParticle ; i<subdomainInfo.endingParticle ; i++){
+    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
         switch (currentField->type[i]){
             // Free particles update
             case freePart:
@@ -69,11 +69,11 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
 
   // Sort the particles at the current time step
   start = std::clock();
-  sortParticles(currentField->pos, currentField->l, currentField->u, boxSizeCalc(parameter->kh, parameter->integrationMethod), boxes); // At each time step, restart it (to optimize with lists?)
+  sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes); // At each time step, restart it (to optimize with lists?)
   timeInfo[1] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
   // Spans the boxes
-  for(int box=subdomainInfo.startingBox ; box<subdomainInfo.endingBox ; box++){
+  for(int box=subdomainInfo.startingBox ; box<=subdomainInfo.endingBox ; box++){
     // Spans the particles in the box
     for(unsigned int part=0 ; part<boxes[box].size() ; part++){
       start = std::clock();

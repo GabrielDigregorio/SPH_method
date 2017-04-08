@@ -92,6 +92,7 @@ struct SubdomainInfo{
     int procID, nTasks;
     int startingBox, endingBox;
     int startingParticle, endingParticle;
+    double boxSize;
 };
 
 
