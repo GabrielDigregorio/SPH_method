@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #define N_UL 3
-#define N_DATA 17
+#define N_DATA 18
 #define N_DATA_BATHYMETRY 5
 #define N_PARAM 24
 
@@ -67,6 +67,7 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
     int speedLaw= brickData[12];
     int charactTime = brickData[13];
     double movingDirection[3]={brickData[14],brickData[15],brickData[16]};
+    double ampliRota={brickData[17]};
     for(int j = 0; j<3; j++)
     {
       if(L[j] < s)
@@ -128,9 +129,12 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
         {
           parameter->teta[j].push_back(teta[j]);
           parameter->movingDirection[j].push_back(movingDirection[j]);
+          parameter->Dimension[j].push_back(L[j]);
         }
         parameter->charactTime.push_back(charactTime);
         parameter->speedLaw.push_back(speedLaw);
+        parameter->spacingS.push_back(s);
+        parameter->ampliRota.push_back(ampliRota);
         switch(type)
         {
           case cube :
@@ -147,6 +151,7 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
         {
           (*volVectorMoving).push_back(volPart);
           (*typeMoving).push_back(IDMovingBoundary + 2);  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
+           parameter->PosIndex.push_back(cnt);// As  the meshcube procedure is known, allows us to identify where particule are relative to each other. 
         }
       }
       break;

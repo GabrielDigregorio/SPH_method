@@ -70,6 +70,10 @@ struct Parameter {
     std::vector<double> teta[3];
     std::vector<double> charactTime;
     std::vector<double> movingDirection[3];
+    std::vector<double> Dimension[3];
+    std::vector<double> ampliRota;
+    std::vector<double> spacingS;
+    std::vector<double> PosIndex;
     Matlab matlab;
     Paraview paraview;
 };
