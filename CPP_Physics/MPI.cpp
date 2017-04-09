@@ -167,14 +167,27 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
     int nbMB;
     if(procID == 0){nbMB = parameter->speedLaw.size();}
     MPI_Bcast(&nbMB, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-    MPI_Bcast(&parameter->speedLaw[0], nbMB, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&parameter->charactTime[0], nbMB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    for(int i=0 ; i<3 ; i++){
-        MPI_Bcast(&parameter->teta[i][0], nbMB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        MPI_Bcast(&parameter->movingDirection[i][0], nbMB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    if(procID != 0)
+    {
+        parameter->speedLaw.resize(nbMB);
+         parameter->charactTime.resize(nbMB);
+          for(int i=0 ; i<3 ; i++){
+       parameter->teta[i].resize(nbMB);
+       parameter->movingDirection[i].resize(nbMB);
+          }
     }
-
+    
+    //Parameter parameterInstance;
+	//Parameter* parameter = &parameterInstance;
+     MPI_Bcast(&(parameter->speedLaw[0]), nbMB, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&(parameter->charactTime[0]), nbMB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+   
+     std::cout << "nbMB " << nbMB <<std::endl;       
+    for(int i=0 ; i<3 ; i++){
+        MPI_Bcast(&(parameter->teta[i][0]), nbMB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&(parameter->movingDirection[i][0]), nbMB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    }
+        //std::cout << "bite 1" <<std::endl;
 }
 
 /* Gathers all the current fields into the global Field */

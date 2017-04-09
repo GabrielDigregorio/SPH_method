@@ -130,7 +130,7 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
           parameter->movingDirection[j].push_back(movingDirection[j]);
         }
         parameter->charactTime.push_back(charactTime);
-        parameter->speedLaw.push_back( (SpeedLaw) speedLaw);
+        parameter->speedLaw.push_back(speedLaw);
         switch(type)
         {
           case cube :

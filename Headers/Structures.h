@@ -66,7 +66,7 @@ struct Parameter {
     DensityInitMethod densityInitMethod;
     StateEquationMethod stateEquationMethod;
     MassInitMethod massInitMethod;
-    std::vector<SpeedLaw> speedLaw;
+    std::vector<int> speedLaw;
     std::vector<double> teta[3];
     std::vector<double> charactTime;
     std::vector<double> movingDirection[3];
