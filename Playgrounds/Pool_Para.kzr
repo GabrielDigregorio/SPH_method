@@ -36,15 +36,15 @@
 
     % Numerical parameters
         kernel=2  
-        kh=0.06
+        kh=0.048
 
         integrationMethod=1
         theta=0.5
 
-        adaptativeTimeStep=1
+        adaptativeTimeStep=0
         k=0.00001
 
-        T=1
+        T=0.2
 
     % Physical Parameters 
         densityRef=1000.0
@@ -66,15 +66,10 @@
         
         massInitMethod=0
 
-    % Moving Block Parameters
-        movingDirectionX=0
-        movingDirectionY=0
-        movingDirectionZ=-1.5
-        speedLaw=0
-
     % Output Parameters
         writeInterval=0.002
         matlab=1
         paraview=4
+
 
 #END_F

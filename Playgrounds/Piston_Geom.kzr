@@ -9,7 +9,7 @@
 %
 % geometry : #brick, #cylin or #spher
 % %param
-%   c ==> 0=free, 1=moving, 2=fixed
+%   c ==> 0=free, 1=fixed, 2=moving
 %   s ==> spacing between particles
 %   r ==> % randomness in particle's position
 % %coord
@@ -64,11 +64,11 @@
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-
+        ampliRota=0.0             
 % Moving part of the piston
 #brick
     %param
-        c=1
+        c=2
         s=0.04
         r=0
     %coord
@@ -89,11 +89,11 @@
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=-0.5
-           
+        ampliRota=0.0              
 % Fixed part of the piston       
 #brick
     %param
-        c=2
+        c=1
         s=0.04
         r=0
     %coord
@@ -114,10 +114,10 @@
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-
+        ampliRota=0.0             
 #brick
     %param
-        c=2
+        c=1
         s=0.04
         r=0
     %coord
@@ -138,10 +138,10 @@
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-
+        ampliRota=0.0             
 #brick
     %param
-        c=2
+        c=1
         s=0.04
         r=0
     %coord
@@ -162,10 +162,10 @@
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-
+        ampliRota=0.0             
 #brick
     %param
-        c=2
+        c=1
         s=0.04
         r=0
     %coord
@@ -186,10 +186,10 @@
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-
+        ampliRota=0.0             
 #brick
     %param
-        c=2
+        c=1
         s=0.04
         r=0
     %coord
@@ -210,5 +210,5 @@
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-
+        ampliRota=0.0             
 #END_G

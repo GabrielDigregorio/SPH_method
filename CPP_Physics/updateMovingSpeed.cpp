@@ -7,9 +7,16 @@
  * Out: Mise à jour des vitesses des parois mobiles
  */
 
- void updateMovingSpeed(Field* field, Parameter* parameter, double t,int IDmovingboundary,int i )//,int i)
+ void updateMovingSpeed(Field* field, Parameter* parameter, double t,int indexI,int ii )
  {
-   
+   int IDmovingboundary=0;
+    for(int i=0; i<parameter->Index.size();i++)
+    {
+      if(indexI>=parameter->Index[i])
+      {
+        IDmovingboundary=i;
+      }
+    }
     double movX=parameter->movingDirection[0][IDmovingboundary];
     double movY=parameter->movingDirection[1][IDmovingboundary];
     double movZ=parameter->movingDirection[2][IDmovingboundary];
@@ -20,26 +27,22 @@
      case sine:
      {
        // uniform periodic movement in each direction
-       
          // x
-         field->speed[0][i]=movX*sin(charactTime*t);
+         field->speed[0][ii]=movX*sin(charactTime*t);
          // 
-         field->speed[1][i]=movY*sin(charactTime*t);
+         field->speed[1][ii]=movY*sin(charactTime*t);
          // z
-         field->speed[2][i]=movZ*sin(charactTime*t);
-       
+         field->speed[2][ii]=movZ*sin(charactTime*t);
      }
      break;
      case constant:
-     {
-       
+     {    
          // x
-         field->speed[0][i]=movX;
+         field->speed[0][ii]=movX;
          // y
-         field->speed[1][i]=movY;
+         field->speed[1][ii]=movY;
          // z
-         field->speed[2][i]=movZ;
-       
+         field->speed[2][ii]=movZ; 
      }
      break;
      case exponential:
@@ -50,26 +53,18 @@
        double tetax=(parameter->teta[0][IDmovingboundary]);
        double tetay=(parameter->teta[1][IDmovingboundary]);
        double tetaz=(parameter->teta[2][IDmovingboundary]);
-       // Identify the corresponding position in the block of the partciule based on its index i 
-       int identifier=i-(field->nFree+field->nFixed);
+       
+       int identifier=indexI-2;
        int counter=0;
        while(counter<IDmovingboundary)
        {
-        // stack is always true...
         double s=parameter->spacingS[counter];
         double L1= parameter->Dimension[0][counter];
         double L2= parameter->Dimension[1][counter];
         double L3= parameter->Dimension[2][counter];
-        L1 -= s;
-        L2 -= s; 
-        L3 -= s;
-        // calculate nb of particles along each direction from target size "s"
         int ni = int(ceil(L1/s));
-        double dx = L1/ni; ++ni;
         int nj = int(ceil(L2/s));
-        double dy = L2/nj; ++nj;
         int nk = int(ceil(L3/s));
-        double dz = L3/nk; ++nk;
         identifier=identifier-(ni*nk*nj);
         counter++;
        }
@@ -77,19 +72,16 @@
         double L1= parameter->Dimension[0][IDmovingboundary];
         double L2= parameter->Dimension[1][IDmovingboundary];
         double L3= parameter->Dimension[2][IDmovingboundary];
-        L1 -= s;
-        L2 -= s; 
-        L3 -= s;
+        
         // calculate nb of particles along each direction from target size "s"
         int ni = int(ceil(L1/s));
-        double dx = L1/ni; ++ni;
         int nj = int(ceil(L2/s));
-        double dy = L2/nj; ++nj;
         int nk = int(ceil(L3/s));
-        double dz = L3/nk; ++nk;
-        int levierI=identifier/(ni*nj);// donne le bras de levier--> toujours selon y, sur le coté du bas du block, eventuellment tourner
+
+        int levierI=identifier/(ni*nj);// give the lever arm , based on the construction block
         double levier=levierI/(double)20;
         double Ampli=parameter->ampliRota[IDmovingboundary];
+
         double angle=Ampli/180.0*M_PI*cos(charactTime*t);
         double angleDot=-charactTime*Ampli/180.0*M_PI*sin(charactTime*t);
         // in the basis relative to the block
@@ -110,7 +102,7 @@
         Rx[7]=sin(tetax/180.0*M_PI);
         Rx[8]=cos(tetax/180.0*M_PI);
         
-        Ry[0]=cos(tetay/180.0*M_PI);
+       /* Ry[0]=cos(tetay/180.0*M_PI);
         Ry[1]=0;
         Ry[2]=sin(tetay/180.0*M_PI);
         Ry[3]=0;
@@ -118,7 +110,16 @@
         Ry[5]=0;
         Ry[6]=-sin(tetay/180.0*M_PI);
         Ry[7]=0;
-        Ry[8]=cos(tetay/180.0*M_PI);
+        Ry[8]=cos(tetay/180.0*M_PI);*/
+        Ry[0]=1;
+        Ry[1]=0;
+        Ry[2]=0;
+        Ry[3]=0;
+        Ry[4]=1;
+        Ry[5]=0;
+        Ry[6]=0;
+        Ry[7]=0;
+        Ry[8]=1;
 
         Rz[0]=cos(tetaz/180.0*M_PI);
         Rz[1]=-sin(tetaz/180.0*M_PI);
@@ -145,11 +146,11 @@
         double temp2=R21*vxRelBasis+R23*vzRelBasis;
         double temp3=R31*vxRelBasis+R33*vzRelBasis;
          // x
-         field->speed[0][i]=temp1;
+         field->speed[0][ii]=temp1;
          // y
-         field->speed[1][i]=temp2;
+         field->speed[1][ii]=temp2;
          // z
-         field->speed[2][i]=temp3;
+         field->speed[2][ii]=temp3;
         
      }
      break;

@@ -350,14 +350,36 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
  {
      L[0] -= s; L[1] -= s; L[2] -= s;
  }
-
+ int flag1=0;
+ int flag2=0;
+ int flag3=0;
  // calculate nb of particles along each direction from target size "s"
+ if(L[0]==0)
+ {
+     L[0]=s;
+     flag1=1;
+ }
  int ni = int(ceil(L[0]/s));
  double dx = L[0]/ni; ++ni;
+ if(flag1==1){ni=1;}
+ 
+ if(L[1]==0)
+ {
+     L[1]=s;
+     flag2=1;
+ }
  int nj = int(ceil(L[1]/s));
  double dy = L[1]/nj; ++nj;
+ if(flag2==1){nj=1;}
+ 
+ if(L[2]==0)
+ {
+     L[2]=s;
+     flag3=1;
+ }
  int nk = int(ceil(L[2]/s));
  double dz = L[2]/nk; ++nk;
+ if(flag3==1){nk=1;}
  // Volume & number of particles computation
  (*nPart)=ni*nj*nk;
  (*volPart)=dx*dy*dz;

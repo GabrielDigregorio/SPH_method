@@ -41,7 +41,7 @@
         integrationMethod=1
         theta=0.5
 
-        adaptativeTimeStep=1
+        adaptativeTimeStep=0
         k=0.00002
 
         T=0.6

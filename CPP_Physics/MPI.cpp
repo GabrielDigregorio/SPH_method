@@ -165,20 +165,17 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
 
     // Shares the moving boundaries information
     int nbMB1;
-    int nbMB2;
     if(procID == 0){
         nbMB1 = parameter->speedLaw.size();
-        nbMB2 = parameter->PosIndex.size();
     }
     MPI_Bcast(&nbMB1, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&nbMB2, 1, MPI_INT, 0, MPI_COMM_WORLD);
     if(procID != 0)
     {
         parameter->speedLaw.resize(nbMB1);
         parameter->charactTime.resize(nbMB1);
         parameter->spacingS.resize(nbMB1);
         parameter->ampliRota.resize(nbMB1);
-        parameter->PosIndex.resize(nbMB2);
+        parameter->Index.resize(nbMB1);
         for(int i=0 ; i<3 ; i++){
         parameter->teta[i].resize(nbMB1);
         parameter->movingDirection[i].resize(nbMB1);
@@ -188,16 +185,14 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
     
     MPI_Bcast(&(parameter->speedLaw[0]), nbMB1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&(parameter->charactTime[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&( parameter->spacingS[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&( parameter->ampliRota[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&( parameter->PosIndex[0]), nbMB2, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    
+    MPI_Bcast(&(parameter->spacingS[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&(parameter->ampliRota[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&(parameter->Index[0]), nbMB1, MPI_INT, 0, MPI_COMM_WORLD);
     for(int i=0 ; i<3 ; i++){
         MPI_Bcast(&(parameter->teta[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         MPI_Bcast(&(parameter->movingDirection[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         MPI_Bcast(&(parameter->Dimension[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
-
 }
 
 /* Gathers all the current fields into the global Field */

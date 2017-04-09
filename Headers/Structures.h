@@ -73,7 +73,7 @@ struct Parameter {
     std::vector<double> Dimension[3];
     std::vector<double> ampliRota;
     std::vector<double> spacingS;
-    std::vector<double> PosIndex;
+    std::vector<int> Index;
     Matlab matlab;
     Paraview paraview;
 };

@@ -9,7 +9,7 @@
 %
 % geometry : #brick, #cylin or #spher
 % %param
-%   c ==> 0=free, 1=moving, 2=fixed
+%   c ==> 0=free, 1=fixed, 2=moving
 %   s ==> spacing between particles
 %   r ==> % randomness in particle's position
 % %coord
@@ -43,7 +43,7 @@
 % Walls
     #brick
         %param
-            c=2
+            c=1
             s=0.08
             r=0
         %coord
@@ -66,10 +66,11 @@
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
+            ampliRota=0.0
 
     #brick
         %param
-            c=2
+            c=1
             s=0.08
             r=0
         %coord
@@ -92,10 +93,11 @@
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
+            ampliRota=0.0
 
     #brick
         %param
-            c=2
+            c=1
             s=0.08
             r=0
         %coord
@@ -118,10 +120,11 @@
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
+            ampliRota=0.0
 
     #brick
         %param
-            c=2
+            c=1
             s=0.08
             r=0
         %coord
@@ -144,10 +147,11 @@
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
+            ampliRota=0.0
 
     #brick
         %param
-            c=2
+            c=1
             s=0.08
             r=0
         %coord
@@ -170,6 +174,7 @@
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
+            ampliRota=0.0
 
 % Fluid
     #brick
@@ -195,5 +200,6 @@
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
+            ampliRota=0.0
 
 #END_G

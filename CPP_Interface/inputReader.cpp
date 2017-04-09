@@ -147,12 +147,22 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
           meshsphere(o, L, s, *posMoving, &nPart, &volPart, r, true);
           break;
         }
-        for(cnt=0; cnt<nPart; ++cnt)
+         int size=(*typeMoving).size();
+         int start=0;
+         if(size!=0)
+         {
+          start=(*typeMoving)[size-1]-1;
+         }
+        
+         int counter=0;
+        for(cnt=start; cnt<(nPart+start); ++cnt)
         {
-          (*volVectorMoving).push_back(volPart);
-          (*typeMoving).push_back(IDMovingBoundary + 2);  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
-           parameter->PosIndex.push_back(cnt);// As  the meshcube procedure is known, allows us to identify where particule are relative to each other. 
+          (*volVectorMoving).push_back(volPart);         
+          (*typeMoving).push_back( 2+cnt);  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
+          counter++;
         }
+        size=(*typeMoving).size();
+        parameter->Index.push_back((*typeMoving)[size-counter]);
       }
       break;
     }
