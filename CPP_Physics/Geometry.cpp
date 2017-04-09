@@ -2,85 +2,6 @@
 #include "Physics.h"
 #define M_PI     3.14159265358979323846
 
-//Documentation left to do
-int interpBathymetry(double* sTrue, int* n, double xa, double xb, double ya, double yb, double height0, double hFreeSurface,
-  int Nx, int Ny, double* bath, std::vector<double>& posFree, std::vector<double>& posFixed, double perturbation)
-  {
-    int nFreeTotal = 0;
-    double dx = (xb-xa)/(double)Nx;
-    double dy = (yb-ya)/(double)Ny;
-    int i,j,k,l, k_low,l_low, k_up, l_up;
-    double x, y, x_up, x_low, y_up, y_low;
-    for(int i=0;i<=n[0];i++)
-    {
-      k = (int)floor( ( ((double)i) + 0.5)*sTrue[0]/dx);
-      if(k< Nx)
-      {
-        k_low = k; k_up = k+1;
-      }
-      else if(k == Nx)
-      {
-        //should not appear
-        k_low = k-1; k_up = k;
-      }
-      else
-      {
-        printf("Error reading bathemetry\n");
-      }
-      x = xa + ((double)i+0.5)*sTrue[0];
-      for(int j=0;j<=n[1];j++)
-      {
-        l = (int)floor( ( ((double)j)+0.5)*sTrue[1]/dy );
-        if(l < Ny)
-        {
-          l_low = l; l_up = l+1;
-        }
-        else if(l == Ny)
-        {
-          //should not appear
-          l_low = l-1; l_up = l;
-        }
-        else{printf("Error reading bathemetry\n");
-      }
-
-      y = ya + ((double)j+0.5)*sTrue[1];
-
-      //Bathemetric nodes around mesh nodes (x,y)
-      x_up = xa + ((double)k_up)*dx;
-      x_low = xa + ((double)k_low)*dx;
-      y_up = ya + ((double)l_up)*dy;
-      y_low = ya + ((double)l_low*dy);
-      double z =( bath[k_low*(Ny+1) + l_low]*(x_up - x)*(y_up - y)
-      + bath[k_up*(Ny+1) + l_low]*(x - x_low)*(y_up-y)
-      + bath[k_low*(Ny+1) + l_up]*(x_up - x)*(y-y_low)
-      + bath[k_up*(Ny+1) + l_up]*(x - x_low)*(y-y_low) )/(dx*dy) + height0;
-
-
-      // generates number in the range -s*perturbation % and s*perturbation %
-      std::default_random_engine generator; // A SEED MUST BE USE TO CHANGE VALUE AT EACH CALL
-      std::uniform_real_distribution<double> distribution(-sTrue[0]*perturbation/100,sTrue[0]*perturbation/100);
-      for(int m = 0; m <= n[2]; m++)
-      {
-        posFixed.push_back(x + distribution(generator));
-        posFixed.push_back(y + distribution(generator));
-        posFixed.push_back(z - ((double)m)*sTrue[2] + distribution(generator));
-      }
-      int nzFree = std::max((int) round( (hFreeSurface - z)/sTrue[2]),0); //round because it is allowed to go a bit up of the free surface !
-
-      //Implement a possible difference for szFree and szFixed !!
-      for(int p = 1; p <= nzFree;p++)
-      {
-        posFree.push_back(x + distribution(generator));
-        posFree.push_back(y + distribution(generator));
-        posFree.push_back(z + ((double)p)*sTrue[2] + distribution(generator));
-      }
-      nFreeTotal += nzFree;
-    }
-  }
-  return nFreeTotal;
-}
-
-
 void RotateVector(std::vector<double> &pos,double teta[3],int i )
 {
     std::vector<double> Rx(9,0);
@@ -128,7 +49,7 @@ void RotateVector(std::vector<double> &pos,double teta[3],int i )
     double R13=(Rz[0]*Ry[0]+Rz[1]*Ry[3]+Rz[2]*Ry[6])*Rx[2]+(Rz[0]*Ry[1]+Rz[1]*Ry[4]+Rz[2]*Ry[7])*Rx[5]+(Rz[0]*Ry[2]+Rz[1]*Ry[5]+Rz[2]*Ry[8])*Rx[8];
     double R23=(Rz[3]*Ry[0]+Rz[4]*Ry[3]+Rz[5]*Ry[6])*Rx[2]+(Rz[3]*Ry[1]+Rz[4]*Ry[4]+Rz[5]*Ry[7])*Rx[5]+(Rz[3]*Ry[2]+Rz[4]*Ry[5]+Rz[5]*Ry[8])*Rx[8];
     double R33=(Rz[6]*Ry[0]+Rz[7]*Ry[3]+Rz[8]*Ry[6])*Rx[2]+(Rz[6]*Ry[1]+Rz[7]*Ry[4]+Rz[8]*Ry[7])*Rx[5]+(Rz[6]*Ry[2]+Rz[7]*Ry[5]+Rz[8]*Ry[8])*Rx[8];
-    
+
     double temp1 = R11*pos[3*i]+R12*pos[3*i+1]+R13*pos[3*i+2];
     double temp2 = R21*pos[3*i]+R22*pos[3*i+1]+R23*pos[3*i+2];
     double temp3 = R31*pos[3*i]+R32*pos[3*i+1]+R33*pos[3*i+2];
@@ -267,81 +188,6 @@ void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, in
             }
     }
 }
-/*Documentation left to do*/
-/*Add error handling*/
-Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, double hFreeSurface, double s, std::vector<double> &posFree,std::vector<double> &posFixed,  int* nPartFree, int* nPartFixed, double* volPart,
-     double perturbation, bool stack)
-     {
-
-             double* bath;
-             char buf[1000];
-             // Opening files
-             FILE *fp_bat;
-             fp_bat = fopen(batFile, "r");
-             /*
-             if (access(batFile, 0)==0)
-              {
-               std::cout << "Bathymetry file not valid" << std::endl;
-               return argumentError;
-             }
-
-
-             */
-             // Reading bathymetry parameters
-             unsigned int bytesRead;
-             bytesRead = fread(&buf, 8, 1, fp_bat);
-             double xa = (*(double*)buf);
-             //std::cout << xa << std::endl;
-             bytesRead = fread(&buf, 8, 1, fp_bat);
-             double xb = (*(double*)buf);
-             //std::cout << xb << std::endl;
-             bytesRead = fread(&buf, 8, 1, fp_bat);
-             double ya = (*(double*)buf);
-             //std::cout << ya << std::endl;
-             bytesRead = fread(&buf, 8, 1, fp_bat);
-             double yb = (*(double*)buf);
-             //std::cout << yb << std::endl;
-             bytesRead = fread(&buf, 4, 1, fp_bat);
-             int Nx = (*(int*)buf);
-             //std::cout << Nx << std::endl;
-             bytesRead = fread(&buf, 4, 1, fp_bat);
-             int Ny = (*(int*)buf);
-             //std::cout << Ny << std::endl;
-
-
-             // Reading the bathymetry
-             bath = (double*) malloc((Nx+1)*(Ny+1)*sizeof(double));
-             for(int i=0; i < ((Nx+1)*(Ny+1)); ++i)
-             {
-               bytesRead = fread(&buf, 8, 1, fp_bat);
-               bath[i] = (*(double*)buf);
-             }
-             fclose(fp_bat);
-             // Interpolating the bathymetry
-             // Number of grid points -1 along x and y
-             // Number of fixed particles along z
-             int n[3];
-             n[0] = (int) floor( (xb-xa)/s -(stack == true));
-             n[1] = (int) floor( (yb-ya)/s -(stack == true));
-             n[2] = numberGroundParticles -1 ;
-
-
-             double sTrue[3];
-             sTrue[0] = (xb-xa)/((double) (n[0]+(stack == true)));
-             sTrue[1] = (yb-ya)/((double) (n[1]+(stack == true)));
-             sTrue[2] = s;
-             *volPart = sTrue[0]*sTrue[1]*sTrue[2];
-             *nPartFixed = (n[0]+1)*(n[1]+1)*(n[2]+1);
-
-             // memory allocation
-             posFixed.reserve(posFixed.size() + *nPartFixed*3);
-             // Impossible to know the posFree size at this point
-
-             *nPartFree = interpBathymetry(sTrue, n, xa, xb, ya, yb,height0, hFreeSurface, Nx,Ny,bath, posFree, posFixed, perturbation);
-             free(bath);
-
-             return noError;
-     }
 
 void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation, bool stack)
 {
@@ -467,20 +313,20 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
     double R13=(Rz[0]*Ry[0]+Rz[1]*Ry[3]+Rz[2]*Ry[6])*Rx[2]+(Rz[0]*Ry[1]+Rz[1]*Ry[4]+Rz[2]*Ry[7])*Rx[5]+(Rz[0]*Ry[2]+Rz[1]*Ry[5]+Rz[2]*Ry[8])*Rx[8];
     double R23=(Rz[3]*Ry[0]+Rz[4]*Ry[3]+Rz[5]*Ry[6])*Rx[2]+(Rz[3]*Ry[1]+Rz[4]*Ry[4]+Rz[5]*Ry[7])*Rx[5]+(Rz[3]*Ry[2]+Rz[4]*Ry[5]+Rz[5]*Ry[8])*Rx[8];
     double R33=(Rz[6]*Ry[0]+Rz[7]*Ry[3]+Rz[8]*Ry[6])*Rx[2]+(Rz[6]*Ry[1]+Rz[7]*Ry[4]+Rz[8]*Ry[7])*Rx[5]+(Rz[6]*Ry[2]+Rz[7]*Ry[5]+Rz[8]*Ry[8])*Rx[8];
-    
+
         for(int i=start; i<(n_total)/3; ++i)
             {
                 pos[3*i]  = pos[3*i]-o[0];
                 pos[3*i+1]= pos[3*i+1]-o[1];
                 pos[3*i+2]= pos[3*i+2]-o[2];
-                
+
                 double temp1 = R11*pos[3*i]+R12*pos[3*i+1]+R13*pos[3*i+2];
                 double temp2 = R21*pos[3*i]+R22*pos[3*i+1]+R23*pos[3*i+2];
                 double temp3 = R31*pos[3*i]+R32*pos[3*i+1]+R33*pos[3*i+2];
                 pos[3*i] = temp1;
                 pos[3*i+1] = temp2;
                 pos[3*i+2] = temp3;
-                
+
                 pos[3*i]  = pos[3*i]+o[0];
                 pos[3*i+1]= pos[3*i+1]+o[1];
                 pos[3*i+2]= pos[3*i+2]+o[2];
@@ -490,4 +336,151 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
 }
 
 
- 
+int interpBathymetry(double* sTrue, int* n, double xa, double xb, double ya, double yb, double height0, double hFreeSurface,
+  int Nx, int Ny, double* bath, std::vector<double>& posFree, std::vector<double>& posFixed, double perturbation)
+  {
+    int nFreeTotal = 0;
+    double dx = (xb-xa)/(double)Nx;
+    double dy = (yb-ya)/(double)Ny;
+    int i,j,k,l, k_low,l_low, k_up, l_up;
+    double x, y, x_up, x_low, y_up, y_low;
+    for(int i=0;i<=n[0];i++)
+    {
+      k = (int)floor( ( ((double)i) + 0.5)*sTrue[0]/dx);
+      if(k< Nx)
+      {
+        k_low = k; k_up = k+1;
+      }
+      else if(k == Nx)
+      {
+        //should not appear as we stop s/2 before end of domain
+        k_low = k-1; k_up = k;
+      }
+      else
+      {
+        printf("Error reading bathemetry\n");
+      }
+      x = xa + ((double)i+0.5)*sTrue[0];
+      for(int j=0;j<=n[1];j++)
+      {
+        l = (int)floor( ( ((double)j)+0.5)*sTrue[1]/dy );
+        if(l < Ny)
+        {
+          l_low = l; l_up = l+1;
+        }
+        else if(l == Ny)
+        {
+          //should not appear as we stop s/2 before end of domain
+          l_low = l-1; l_up = l;
+        }
+        else{printf("Error reading bathemetry\n");
+      }
+
+      y = ya + ((double)j+0.5)*sTrue[1];
+
+      //Bathemetric nodes around mesh nodes (x,y)
+      x_up = xa + ((double)k_up)*dx;
+      x_low = xa + ((double)k_low)*dx;
+      y_up = ya + ((double)l_up)*dy;
+      y_low = ya + ((double)l_low*dy);
+      double z =( bath[k_low*(Ny+1) + l_low]*(x_up - x)*(y_up - y)
+      + bath[k_up*(Ny+1) + l_low]*(x - x_low)*(y_up-y)
+      + bath[k_low*(Ny+1) + l_up]*(x_up - x)*(y-y_low)
+      + bath[k_up*(Ny+1) + l_up]*(x - x_low)*(y-y_low) )/(dx*dy) + height0;
+
+
+      // generates number in the range -s*perturbation % and s*perturbation %
+      std::default_random_engine generator; // A SEED MUST BE USE TO CHANGE VALUE AT EACH CALL
+      std::uniform_real_distribution<double> distribution(-sTrue[0]*perturbation/100,sTrue[0]*perturbation/100);
+      for(int m = 0; m <= n[2]; m++)
+      {
+        posFixed.push_back(x + distribution(generator));
+        posFixed.push_back(y + distribution(generator));
+        posFixed.push_back(z - ((double)m)*sTrue[2] + distribution(generator));
+      }
+      int nzFree = std::max((int) round( (hFreeSurface - z)/sTrue[2]),0); //round because it is allowed to go a bit up of the free surface !
+
+      //Implement a possible difference for szFree and szFixed !!
+      for(int p = 1; p <= nzFree;p++)
+      {
+        posFree.push_back(x + distribution(generator));
+        posFree.push_back(y + distribution(generator));
+        posFree.push_back(z + ((double)p)*sTrue[2] + distribution(generator));
+      }
+      nFreeTotal += nzFree;
+    }
+  }
+  return nFreeTotal;
+}
+
+Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, double hFreeSurface, double s, std::vector<double> &posFree,std::vector<double> &posFixed,  int* nPartFree, int* nPartFixed, double* volPart,
+     double perturbation, bool stack)
+     {
+
+             double* bath;
+             char buf[1000];
+             // Opening files
+             FILE *fp_bat;
+             fp_bat = fopen(batFile, "r");
+
+             if (fp_bat == NULL)
+             {
+               std::cout << "Bathymetry file not valid" << std::endl;
+               return argumentError;
+             }
+
+             // Reading bathymetry parameters
+             unsigned int bytesRead;
+             bytesRead = fread(&buf, 8, 1, fp_bat);
+             double xa = (*(double*)buf);
+             //std::cout << xa << std::endl;
+             bytesRead = fread(&buf, 8, 1, fp_bat);
+             double xb = (*(double*)buf);
+             //std::cout << xb << std::endl;
+             bytesRead = fread(&buf, 8, 1, fp_bat);
+             double ya = (*(double*)buf);
+             //std::cout << ya << std::endl;
+             bytesRead = fread(&buf, 8, 1, fp_bat);
+             double yb = (*(double*)buf);
+             //std::cout << yb << std::endl;
+             bytesRead = fread(&buf, 4, 1, fp_bat);
+             int Nx = (*(int*)buf);
+             //std::cout << Nx << std::endl;
+             bytesRead = fread(&buf, 4, 1, fp_bat);
+             int Ny = (*(int*)buf);
+             //std::cout << Ny << std::endl;
+
+
+             // Reading the bathymetry
+             bath = (double*) malloc((Nx+1)*(Ny+1)*sizeof(double));
+             for(int i=0; i < ((Nx+1)*(Ny+1)); ++i)
+             {
+               bytesRead = fread(&buf, 8, 1, fp_bat);
+               bath[i] = (*(double*)buf);
+             }
+             fclose(fp_bat);
+             // Interpolating the bathymetry
+             // Number of grid points -1 along x and y
+             // Number of fixed particles along z
+             int n[3];
+             n[0] = (int) floor( (xb-xa)/s -(stack == true));
+             n[1] = (int) floor( (yb-ya)/s -(stack == true));
+             n[2] = numberGroundParticles -1 ;
+
+
+             double sTrue[3];
+             sTrue[0] = (xb-xa)/((double) (n[0]+(stack == true)));
+             sTrue[1] = (yb-ya)/((double) (n[1]+(stack == true)));
+             sTrue[2] = s;
+             *volPart = sTrue[0]*sTrue[1]*sTrue[2];
+             *nPartFixed = (n[0]+1)*(n[1]+1)*(n[2]+1);
+
+             // memory allocation
+             posFixed.reserve(posFixed.size() + *nPartFixed*3);
+             // Impossible to know the posFree size at this point
+
+             *nPartFree = interpBathymetry(sTrue, n, xa, xb, ya, yb,height0, hFreeSurface, Nx,Ny,bath, posFree, posFixed, perturbation);
+             free(bath);
+
+             return noError;
+     }
