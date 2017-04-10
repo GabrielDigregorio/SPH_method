@@ -79,7 +79,7 @@
         int nk = int(ceil(L3/s));
 
         int levierI=identifier/(ni*nj);// give the lever arm , based on the construction block
-        double levier=levierI/(double)20;
+        double levier=levierI/(double)5;
         double Ampli=parameter->ampliRota[IDmovingboundary];
 
         double angle=Ampli/180.0*M_PI*cos(charactTime*t);
