@@ -405,7 +405,56 @@ DATA.stdHydrostatic = std_Pressure;
 save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
 
+%% CrashCube
+%  ************************************************************************
+case 4
+
     
+    % Parameters
+    g = 9.81;
+    z0_center = 10; %[m]
+    
+    for i=1 : nstep 
+        % Open File nbr i
+        %disp(dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i).name);
+        Experiment = importdata(filename); % Import Data
+        
+        % Compute the Mean in Z coordinate
+        MeanZ_experiment(i) = mean(abs(Experiment.data(:,3)));
+    end
+ 
+    
+    % Plot
+    figure(1)
+    hold on
+    plot(time, MeanZ_experiment);
+        title('')
+        xlabel('Time [s]')
+        ylabel('Z')
+        text =  strcat('Simulation (time step = ', num2str(timeStep), ')');
+        legend( text)
+        grid
+        %print('FreeFallingCube_error', '-depsc')
+    hold off  
+    
+
+    
+% Save data
+DATA.name = dirName(1).name;
+DATA.path = nameExperiment;
+DATA.nbrFiles = nstep;
+DATA.timeStep = timeStep;
+DATA.timeWrite = timeWrite;
+DATA.timeSimu = timeSimu;
+DATA.CPUtime = CPU_Time;
+DATA.memory = Memory;
+DATA.memoryPeak = Memory_Peak;
+DATA.time = time;
+DATA.meanZexperiment = MeanZ_experiment;
+
+save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
+
 %% Not Valid Experiment
 %  ************************************************************************
 otherwise

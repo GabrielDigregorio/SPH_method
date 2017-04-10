@@ -42,7 +42,7 @@
         adaptativeTimeStep=1
         k=0.00001
 
-        T=0.2
+        T=2
 
     % Physical Parameters 
         densityRef=1000.0
@@ -65,7 +65,7 @@
         massInitMethod=0
 
     % Output Parameters
-        writeInterval=0.002
+        writeInterval=0.02
         matlab=1
         paraview=4
 
