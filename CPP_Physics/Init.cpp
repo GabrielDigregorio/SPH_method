@@ -21,7 +21,7 @@ void speedInit(Field* field, Parameter* parameter)
 		int end=field->nTotal;
 		 for(int i=start ; i<end ; i++)
 		 {
-			int IDmovingBoundary=field->type[i]-2;
+			int IDmovingBoundary=field->type[i];
             updateMovingSpeed(field,parameter,0.0,IDmovingBoundary,i);
 		 }
  
