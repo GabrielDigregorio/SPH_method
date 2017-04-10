@@ -8,6 +8,7 @@
 
 // Geometry.cpp
 #include <random>
+void RotateVector(std::vector<double> &pos,double teta[3],int i );
 void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
 void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
 void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
@@ -92,16 +93,23 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
 // MPI.cpp
 void scatterField(Field* globalField, Field* currentField, Parameter* parameter,
     SubdomainInfo &subdomainInfo);
-void gatherField(Field* globalField, Field* currentField);
+void gatherField(Field* globalField, Field* localField, SubdomainInfo &subdomainInfo);
 void processUpdate(Field* currentField);
-void timeStepFinding(Field* currentField);
 int getDomainNumber(double x, std::vector<double> &limits, int nTasks);
 void computeDomainIndex(std::vector<double> &posX,
     std::vector<double> &limits, std::vector<int> &nbPartNode,
     std::vector< std::pair<int,int> > &index, int nTasks);
-void shareBoundaries(Field *localField, double boxSize, int procID, int nTasks);
+void processUpdate(Field& localField, SubdomainInfo& subdomainInfo);
+void resizeField(Field& field, int nMigrate);
+void computeMigrateIndex(std::vector<double>& posX,
+    std::vector< std::pair<int,int> >& index, int* nMigrate,
+    double Xmin, double Xmax);
+void computeOverlapIndex(std::vector<double>& posX,
+    std::vector< std::pair<int,int> >& index, int* nOverlap,
+    double leftMinX, double leftMaxX, double rightMinX, double rightMaxX);
 void sortParticles(Field& field, std::vector< std::pair<int,int> >& index);
-
-
+void resizeField(Field& field, int nMigrate);
+void shareOverlap(Field& field, SubdomainInfo &subdomainInfo);
+void deleteHalos(Field &field, SubdomainInfo &subdomainInfo);
 
 #endif

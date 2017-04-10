@@ -21,13 +21,14 @@
 void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
-    for(int i=subdomainInfo.startingParticle ; i<subdomainInfo.endingParticle ; i++){
+    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
         switch (currentField->type[i]){
             // Free particles update
             case freePart:
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             for (int j = 0; j <= 2; j++){
                 nextField->speed[j][i] = currentField->speed[j][i] + k*currentSpeedDerivative[3*i + j];
+                //std::cout << currentSpeedDerivative[3*i + j] << " ";
                 nextField->pos[j][i] = currentField->pos[j][i] + k*currentField->speed[j][i];
             }
             // Fixed particles update
@@ -45,7 +46,7 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
         }
         if(currentField->type[i]>=2)// then we have a moving boundary
         {
-          int IDmovingBoundary=currentField->type[i]-2;
+          int IDmovingBoundary=currentField->type[i]; 
           updateMovingSpeed(nextField,parameter,t+k,IDmovingBoundary,i);
         }
     }
@@ -77,11 +78,11 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
 
   // Sort the particles at the current time step
   start = std::clock();
-  sortParticles(currentField->pos, currentField->l, currentField->u, boxSizeCalc(parameter->kh, parameter->integrationMethod), boxes); // At each time step, restart it (to optimize with lists?)
+  sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes); // At each time step, restart it (to optimize with lists?)
   timeInfo[1] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
   // Spans the boxes
-  for(int box=subdomainInfo.startingBox ; box<subdomainInfo.endingBox ; box++){
+  for(int box=subdomainInfo.startingBox ; box<=subdomainInfo.endingBox ; box++){
     // Spans the particles in the box
     for(unsigned int part=0 ; part<boxes[box].size() ; part++){
       start = std::clock();
@@ -108,6 +109,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
       timeInfo[3] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     }
   }
+
 }
 
 /*
@@ -132,12 +134,11 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
   {
     std::vector<double> currentSpeedDerivative;
     std::vector<double> currentDensityDerivative;
-    currentSpeedDerivative.assign(3*currentField->nFree, 0.0);
+    currentSpeedDerivative.assign(3*currentField->nTotal, 0.0);
     currentDensityDerivative.assign(currentField->nTotal, 0.0);
 
     // CPU time information
     std::clock_t start;
-
     derivativeComputation(currentField, parameter, subdomainInfo, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, timeInfo);
 
     switch (parameter->integrationMethod)
@@ -156,13 +157,16 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           double kMid = 0.5*k/parameter->theta;
           std::vector<double> midSpeedDerivative;
           std::vector<double> midDensityDerivative;
-          midSpeedDerivative.assign(3*currentField->nFree, 0.0);
+          midSpeedDerivative.assign(3*currentField->nTotal, 0.0);
           midDensityDerivative.assign(currentField->nTotal, 0.0);
 
           start = std::clock();
           // Storing midpoint in nextField
           eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, kMid);
           timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+
+          // Share the mid point
+          // ?????????? (the number of particles should remain constant !)
 
           // Compute derivatives at midPoint
           derivativeComputation(nextField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, timeInfo);

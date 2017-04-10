@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #define N_UL 3
-#define N_DATA 17
+#define N_DATA 18
 #define N_DATA_BATHYMETRY 5
 #define N_PARAM 24
 
@@ -67,6 +67,7 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
     int speedLaw= brickData[12];
     int charactTime = brickData[13];
     double movingDirection[3]={brickData[14],brickData[15],brickData[16]};
+    double ampliRota={brickData[17]};
     for(int j = 0; j<3; j++)
     {
       if(L[j] < s)
@@ -128,9 +129,12 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
         {
           parameter->teta[j].push_back(teta[j]);
           parameter->movingDirection[j].push_back(movingDirection[j]);
+          parameter->Dimension[j].push_back(L[j]);
         }
         parameter->charactTime.push_back(charactTime);
-        parameter->speedLaw.push_back( (SpeedLaw) speedLaw);
+        parameter->speedLaw.push_back(speedLaw);
+        parameter->spacingS.push_back(s);
+        parameter->ampliRota.push_back(ampliRota);
         switch(type)
         {
           case cube :
@@ -143,11 +147,22 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
           meshsphere(o, L, s, *posMoving, &nPart, &volPart, r, true);
           break;
         }
-        for(cnt=0; cnt<nPart; ++cnt)
+         int size=(*typeMoving).size();
+         int start=0;
+         if(size!=0)
+         {
+          start=(*typeMoving)[size-1]-1;
+         }
+        
+         int counter=0;
+        for(cnt=start; cnt<(nPart+start); ++cnt)
         {
-          (*volVectorMoving).push_back(volPart);
-          (*typeMoving).push_back(IDMovingBoundary + 2);  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
+          (*volVectorMoving).push_back(volPart);         
+          (*typeMoving).push_back( 2+cnt);  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
+          counter++;
         }
+        size=(*typeMoving).size();
+        parameter->Index.push_back((*typeMoving)[size-counter]);
       }
       break;
     }

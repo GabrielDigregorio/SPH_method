@@ -33,15 +33,15 @@
 
 
 #domsz
-    ux = 4
-    uy = 4
-    uz = 4
+    ux = 5
+    uy = 5
+    uz = 5
     lx = -1.5
     ly = -1.5
     lz = -1.5
 #brick
         %param
-            c=0
+            c=2
             s=0.08
             r=0
         %coord
@@ -49,44 +49,21 @@
             y=0
             z=3
         %dimen
-            L=0.6
-            W=0.6
-            H=0.1
+            L=0.16
+            W=0.5
+            H=0.5
         %inclin
             tetax=0.0
-            tetay=0.0
+            tetay=30.0
             tetaz=0.0
         %movpara
-            speedLaw=0
-            charactTime = 3
+            speedLaw=3
+            charactTime = 15
             movingDirectionX=-1
             movingDirectionY=-1
             movingDirectionZ=-1
+            ampliRota=30.0
 #brick
-        %param
-            c=1
-            s=0.08
-            r=0
-        %coord
-            x=-1
-            y=-1
-            z=-1
-        %dimen
-            L=0.6
-            W=0.6
-            H=0.1
-        %inclin
-            tetax=0.0
-            tetay=0.0
-            tetaz=0.0
-        %movpara
-            speedLaw=0
-            charactTime = 3
-            movingDirectionX=-1
-            movingDirectionY=-1
-            movingDirectionZ=-1
-% Wall
-   #brick
         %param
             c=2
             s=0.08
@@ -94,43 +71,47 @@
         %coord
             x=0
             y=0
-            z=0
+            z=4
         %dimen
-            L=1.2
-            W=1.2
-            H=0.1
+            L=0.16
+            W=0.5
+            H=0.5
         %inclin
-            tetax=0.0
-            tetay=0.0
+            tetax=90.0
+            tetay=-30.0
             tetaz=0.0
         %movpara
-            speedLaw=0
-            charactTime = 3
+            speedLaw=3
+            charactTime = 15
             movingDirectionX=-1
             movingDirectionY=-1
             movingDirectionZ=-1
-    #brick
+            ampliRota=30.0
+
+#brick
         %param
-            c=2
+            c=0
             s=0.08
             r=0
         %coord
-            x=2
-            y=2
+            x=0
+            y=1
             z=2
         %dimen
-            L=1.2
-            W=1.2
-            H=0.1
+            L=0.16
+            W=0.32
+            H=0.32
         %inclin
-            tetax=0.0
-            tetay=0.0
+            tetax=90.0
+            tetay=-30.0
             tetaz=0.0
         %movpara
-            speedLaw=0
-            charactTime = 1
-            movingDirectionX=1
-            movingDirectionY=1
-            movingDirectionZ=1
+            speedLaw=3
+            charactTime = 15
+            movingDirectionX=-1
+            movingDirectionY=-1
+            movingDirectionZ=-1
+            ampliRota=30.0
+
 
 #END_G

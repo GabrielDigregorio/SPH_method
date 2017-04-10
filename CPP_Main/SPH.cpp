@@ -87,28 +87,12 @@ int main(int argc, char *argv[])
 	unsigned int writeCount = 1;
 
 	// Scatters the globalField from node 0 into the currentField of all nodes
-	//scatterField(globalField, currentField, parameter, subdomainInfo);
-	//MPI_Finalize();
-
-
-	//*
-
-	gatherField(currentField, globalField); // TEMPORARY !!!!!
-
-
+	scatterField(globalField, currentField, parameter, subdomainInfo);
+	    
 	// Declares the box mesh and determines their adjacent relations variables
 	std::vector<std::vector<int> > boxes;
 	std::vector<std::vector<int> > surrBoxesAll;
-	boxMesh(currentField->l, currentField->u, boxSizeCalc(parameter->kh, parameter->integrationMethod), boxes, surrBoxesAll);
-
-
-	// ---- TEMPORARY UNTIL WORKING MPI ----
-	subdomainInfo.startingBox = 0;
-	subdomainInfo.endingBox = boxes.size();
-	subdomainInfo.startingParticle = 0;
-	subdomainInfo.endingParticle = (currentField->pos[0]).size();
-	// -------------------------------------
-
+	boxMesh(currentField->l, currentField->u, subdomainInfo.boxSize, boxes, surrBoxesAll);
 
 	// Copies the invariant information about the field
 	copyField(currentField, nextField);
@@ -124,9 +108,9 @@ int main(int argc, char *argv[])
 		}
 		else
 	        std::cout << "Number of time steps = " << "not defined (adaptative time step)" << "\n" << std::endl;
-		std::cout << "Number of free particles = " << currentField->nFree << "\n" << std::endl;
-		std::cout << "Number of fixed particles = " << currentField->nFixed << "\n" << std::endl;
-		std::cout << "Number of particles with imposed speed = " << currentField->nMoving << "\n" << std::endl;
+		std::cout << "Number of free particles = " << globalField->nFree << "\n" << std::endl;
+		std::cout << "Number of fixed particles = " << globalField->nFixed << "\n" << std::endl;
+		std::cout << "Number of particles with imposed speed = " << globalField->nMoving << "\n" << std::endl;
 	}
 
 	timeInfo[0] = (std::clock() - start) / (double)CLOCKS_PER_SEC;
@@ -140,26 +124,31 @@ int main(int argc, char *argv[])
 	double currentTime = 0.0; // Current time of the simulation
 	for (unsigned int n = 1; currentTime < parameter->T; n++){
 		// Time step handler
-		currentField->nextK = parameter->k; // Temporary !!
+		currentField->nextK = parameter->k;
+
+		// Next field !!!!! TO OPTIMIZE !!!!
+		copyField(currentField, nextField);
+		// ---
 
 		// Solve the time step
+		
         timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
 
 		// Adaptative time step
-		timeStepFinding(currentField);
-		currentTime += parameter->k; // Temporary !!
-		parameter->k = currentField->nextK; // Temporary !!
+		currentTime += parameter->k;
+		parameter->k = currentField->nextK;
 
 		// Swap the two fields
 		swapField(&currentField, &nextField);
+		// ---
 
 		// Major MPI communication: the local field is updated
-		processUpdate(currentField);
+		processUpdate(*currentField, subdomainInfo);
 
 		// Write field when needed
 		start = std::clock();
     	if (writeCount*parameter->writeInterval <= currentTime){
-			gatherField(globalField, currentField);
+			gatherField(globalField, currentField, subdomainInfo);
 			if(subdomainInfo.procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}
