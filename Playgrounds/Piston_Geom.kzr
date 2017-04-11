@@ -45,15 +45,15 @@
     %param
         c=0
         s=0.04
-        r=0
+        r=10
     %coord
         x=0
         y=0
-        z=0.24
+        z=0.25
     %dimen
-        L=0.4
-        W=0.4
-        H=0.4
+        L=0.38
+        W=0.38
+        H=0.38
     %inclin
         tetax=0.0
         tetay=0.0
@@ -64,7 +64,8 @@
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-        ampliRota=0.0             
+        ampliRota=0.0
+
 % Moving part of the piston
 #brick
     %param
@@ -74,11 +75,11 @@
     %coord
         x=0
         y=0
-        z=0.52
+        z=0.46
     %dimen
         L=0.4
         W=0.4
-        H=0.1
+        H=0.05
     %inclin
         tetax=0.0
         tetay=0.0
@@ -100,11 +101,11 @@
     %coord
         x=0
         y=0
-        z=0
+        z=0.05
     %dimen
-        L=0.6
-        W=0.6
-        H=0.1
+        L=0.45
+        W=0.45
+        H=0.05
     %inclin
         tetax=0.0
         tetay=0.0
@@ -122,13 +123,13 @@
         s=0.04
         r=0
     %coord
-        x=0.25
+        x=0.20
         y=0
-        z=0.3
+        z=0.26
     %dimen
-        L=0.1
-        W=0.5
-        H=0.5
+        L=0.05
+        W=0.45
+        H=0.42
     %inclin
         tetax=0.0
         tetay=0.0
@@ -146,13 +147,13 @@
         s=0.04
         r=0
     %coord
-        x=-0.25
+        x=-0.20
         y=0
-        z=0.3
+        z=0.26
     %dimen
-        L=0.1
-        W=0.5
-        H=0.5
+        L=0.05
+        W=0.45
+        H=0.42
     %inclin
         tetax=0.0
         tetay=0.0
@@ -171,12 +172,12 @@
         r=0
     %coord
         x=0
-        y=0.25
-        z=0.3
+        y=0.20
+        z=0.26
     %dimen
-        L=0.6
-        W=0.1
-        H=0.5
+        L=0.45
+        W=0.05
+        H=0.42
     %inclin
         tetax=0.0
         tetay=0.0
@@ -195,12 +196,12 @@
         r=0
     %coord
         x=0
-        y=-0.25
-        z=0.3
+        y=-0.20
+        z=0.26
     %dimen
-        L=0.6
-        W=0.1
-        H=0.5
+        L=0.45
+        W=0.05
+        H=0.42
     %inclin
         tetax=0.0
         tetay=0.0

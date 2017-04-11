@@ -52,16 +52,59 @@ void writeField(Field* field, double t, Parameter* parameter,
 {
     std::map<std::string, std::vector<double> *> scalars;
     std::map<std::string, std::vector<double> (*)[3]> vectors;
+    Field newFieldInstance;
+    Field* newField = &newFieldInstance;
+
+    // TO BE CHANGED LATER
+    if(parameter->paraview != noParaview || parameter->matlab != noMatlab)
+    {
+        newField->nFree = field->nFree;
+        newField->nFixed = field->nFixed;
+        newField->nMoving = field->nMoving;
+        newField->l[0] = field->l[0]; newField->l[1] = field->l[1]; newField->l[2] = field->l[2];
+        newField->u[0] = field->u[0]; newField->u[1] = field->u[1]; newField->u[2] = field->u[2];
+
+        for(int i=0; i<field->pos[0].size(); ++i)
+        {
+            if(field->type[i] == 0)
+            {
+                newField->pos[0].push_back(field->pos[0][i]);
+                newField->pos[1].push_back(field->pos[1][i]);
+                newField->pos[2].push_back(field->pos[2][i]);
+                newField->speed[0].push_back(field->speed[0][i]);
+                newField->speed[1].push_back(field->speed[1][i]);
+                newField->speed[2].push_back(field->speed[2][i]);
+                newField->density.push_back(field->density[i]);
+                newField->pressure.push_back(field->pressure[i]);
+                newField->mass.push_back(field->mass[i]);
+            }
+        }
+        for(int i=0; i<field->pos[0].size(); ++i)
+        {
+            if(field->type[i] != 0)
+            {
+                newField->pos[0].push_back(field->pos[0][i]);
+                newField->pos[1].push_back(field->pos[1][i]);
+                newField->pos[2].push_back(field->pos[2][i]);
+                newField->speed[0].push_back(field->speed[0][i]);
+                newField->speed[1].push_back(field->speed[1][i]);
+                newField->speed[2].push_back(field->speed[2][i]);
+                newField->density.push_back(field->density[i]);
+                newField->pressure.push_back(field->pressure[i]);
+                newField->mass.push_back(field->mass[i]);
+            }
+        }
+    }
 
     // Save results to disk (ParaView or Matlab)
     if (parameter->paraview != noParaview)// .vtk in ParaView
     {
-        scalars["pressure"] = &field->pressure;
-        scalars["density"]  = &field->density;
-        vectors["velocity"] = &field->speed;
+        scalars["pressure"] = &newField->pressure;
+        scalars["density"]  = &newField->density;
+        vectors["velocity"] = &newField->speed;
 
         // nbr of particles should be multiple of 3
-        int nbp = field->pos[0].size(), nbpStart, nbpEnd;
+        int nbp = newField->pos[0].size(), nbpStart, nbpEnd;
 
         // Selection of the output format
         // Full
@@ -69,28 +112,40 @@ void writeField(Field* field, double t, Parameter* parameter,
         {
             nbpStart = 0;
             nbpEnd   = nbp; 
-            paraView(filename+"_Full", t, field->pos, scalars, vectors, nbpStart, nbpEnd);
+            paraView(filename+"_Full", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
         }
 
         // Only nFree
         if(parameter->paraview == nFreeParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
             nbpStart = 0;
-            nbpEnd   = field->nFree; 
-            paraView(filename + "_Free", t, field->pos, scalars, vectors, nbpStart, nbpEnd);  
+            nbpEnd   = newField->nFree; 
+            paraView(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);  
         }
 
         // Only nFree and nMoving
         if(parameter->paraview == nMovingFixedParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
-            nbpStart = field->nFree;
+            nbpStart = newField->nFree;
             nbpEnd   = nbp; 
-            paraView(filename + "_MovingFixed", t, field->pos, scalars, vectors, nbpStart, nbpEnd);                         
+            paraView(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);                         
         }
     }
 
     if (parameter->matlab != noMatlab) // .txt in Matlab
-        matlab(filename, parameterFilename, geometryFilename,  t, parameter, field);
+        matlab(filename, parameterFilename, geometryFilename,  t, parameter, newField);
+
+    // Free Memory
+    newField->pos[0].clear(); newField->pos[0].shrink_to_fit();
+    newField->pos[1].clear(); newField->pos[1].shrink_to_fit();
+    newField->pos[2].clear(); newField->pos[2].shrink_to_fit();
+    newField->speed[0].clear(); newField->speed[0].shrink_to_fit();
+    newField->speed[1].clear(); newField->speed[1].shrink_to_fit();
+    newField->speed[2].clear(); newField->speed[2].shrink_to_fit();
+    newField->density.clear(); newField->density.shrink_to_fit();
+    newField->pressure.clear(); newField->pressure.shrink_to_fit();
+    newField->mass.clear(); newField->mass.shrink_to_fit();
+
 }
 
 

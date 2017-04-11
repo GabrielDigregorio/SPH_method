@@ -40,13 +40,13 @@
         theta=0.5
 
         adaptativeTimeStep=0
-        k=0.00001
+        k=0.0001
 
         T=2
 
     % Physical Parameters 
-        densityRef=1000.0
-        densityInitMethod=1 
+        densityRef=1000
+        densityInitMethod=0 
 
         B=1280000
         gamma=7.0
@@ -67,6 +67,5 @@
     % Output Parameters
         writeInterval=0.02
         matlab=1
-        paraview=4
-
+        paraview=4 
 #END_F
