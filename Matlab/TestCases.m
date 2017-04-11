@@ -310,11 +310,6 @@ save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 %  ************************************************************************
 case 3
 
-    % Parameters
-    nbrWindows = 1;
-    % Cube:
-
-
     for i=1 : nstep 
         
         % Open File nbr i
@@ -325,7 +320,8 @@ case 3
         % Pressure mean of the gas inside the piston
         mean_Pressure(i) = mean(Experiment.data(1:limit(1),8));
         std_Pressure(i)  =  std(Experiment.data(1:limit(1),8));
-        volumePiston(i) = 0.4*0.4*(mean(Experiment.data(limit(1)+limit(3):end,3))-0.1);
+        index = find(Experiment.data(limit(1):end,6) == -0.05);
+        volumePiston(i) = 0.38*0.38*(mean(Experiment.data(index,3))-0.1);
     end
 
 
@@ -339,9 +335,9 @@ hold on
     ylabel('Mean Pressure [Pa]','FontSize',22,'Interpreter','latex');
     NumTicks=5;
     L = get(gca,'XLim');
-    set(gca,'XTick',linspace(L(1),L(2),NumTicks))
+    %set(gca,'XTick',linspace(L(1),L(2),NumTicks))
     L = get(gca,'YLim');
-    set(gca,'YTick',linspace(L(1),L(2),NumTicks))
+    %set(gca,'YTick',linspace(L(1),L(2),NumTicks))
     %legendInfo={'t = 0 [s]'; 't = 1 [s]';'t = 2 [s]';'Analytical solution'};
     %legend(legendInfo,'Interpreter','latex','Location','Best');
     grid
