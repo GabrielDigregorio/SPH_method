@@ -321,15 +321,15 @@ case 3
         mean_Pressure(i) = mean(Experiment.data(1:limit(1),8));
         std_Pressure(i)  =  std(Experiment.data(1:limit(1),8));
         index = find(Experiment.data(limit(1):end,6) == -0.05);
-        volumePiston(i) = 0.38*0.38*(mean(Experiment.data(index,3))-0.1);
+        volumePiston(i) = 0.4*0.4*(mean(Experiment.data(index,3)));
     end
-
+transpose(volumePiston)
 
 figure(1)
 hold on
     errorbar(time, mean_Pressure, std_Pressure, '*','LineWidth', 2)
 
-    axis([0 0.2 -0.1e5 4e5])
+    %axis([0 0.2 -0.1e5 4e5])
     set(gca,'FontSize',22);
     xlabel('Time [s]','FontSize',22,'Interpreter','latex');
     ylabel('Mean Pressure [Pa]','FontSize',22,'Interpreter','latex');

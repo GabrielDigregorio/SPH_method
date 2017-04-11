@@ -34,7 +34,7 @@
 
     % Numerical parameters
         kernel=2  
-        kh=0.092
+        kh=0.048
 
         integrationMethod=1
         theta=0.5
