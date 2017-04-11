@@ -1,6 +1,6 @@
 #PARA1
 %**********************************************************************************************
-% PLAYGROUND : Parameter Dam
+% PLAYGROUND : Parameter example
 % #param
 %
 % kernel = type of kernel : Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline
@@ -35,20 +35,20 @@
 #param
 
     % Numerical parameters
-        kernel=1  
-        kh=0.96
+        kernel=1
+        kh=0.12
 
         integrationMethod=1
-        theta=0.5
+        theta=1
 
         adaptativeTimeStep=0
-        k=0.001
+        k=0.0001
 
-        T=2
+        T=50
 
-  % Physical Parameters
+    % Physical Parameters
         densityRef=1000.0
-        densityInitMethod=1
+        densityInitMethod=0
 
         B=1280000
         gamma=7.0
@@ -61,14 +61,14 @@
         epsilon=0.1
 
         stateEquationMethod=0
-        molarMass=1
-        temperature=293.15
+        molarMass=10.0
+        temperature=300
 
         massInitMethod=0
 
     % Output Parameters
-        writeInterval=0.01
-        matlab=1
-        paraview=4
+        writeInterval=0.005
+        matlab=0
+        paraview=1
 
 #END_F
