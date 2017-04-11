@@ -4,7 +4,7 @@ v.1 (7/02/2017)
 
 
 ## Teasing
-[![SPH Method]()](https://youtu.be/k7f6HWMVLPA "SPH Method")
+[![Alt text](https://img.youtube.com/vi/VID/0.jpg)](https://youtu.be/k7f6HWMVLPA)
 
 
 ## Assignment
