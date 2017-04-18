@@ -42,7 +42,7 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
             }
             //case movingPart:
             //updateMovingSpeed(nextField,parameter,t+k);//,i);
-            // comment faire un switch avec n=2,3,4... indétermimé? 
+            // comment faire un switch avec n=2,3,4... indétermimé?
         }
         if(currentField->type[i]>=2)// then we have a moving boundary
         {
@@ -76,6 +76,9 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
   // CPU time information
   std::clock_t start;
 
+  std::vector<int> neighbors; // ICI
+  std::vector<double> kernelGradients;
+
   // Sort the particles at the current time step
   start = std::clock();
   sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes); // At each time step, restart it (to optimize with lists?)
@@ -89,8 +92,9 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
 
       // Declarations
       int particleID = boxes[box][part];
-      std::vector<int> neighbors;
-      std::vector<double> kernelGradients;
+      neighbors.resize(0); // ICI 
+      kernelGradients.resize(0);
+
 
       // Neighbor search
       findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, parameter->kernel);
