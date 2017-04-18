@@ -9,7 +9,7 @@
 %
 % geometry : #brick, #cylin or #spher
 % %param
-%   c ==> 0=free, 1=moving, 2=fixed
+%   c ==> 0=free, 1=fixed, 2=moving
 %   s ==> spacing between particles
 %   r ==> % randomness in particle's position
 % %coord
@@ -51,9 +51,9 @@
             y=0
             z=0.4
         %dimen
-            L=0.5
-            W=0.5
-            H=0.5
+            L=0.12
+            W=0.12
+            H=0.12
         %inclin
             tetax=0.0
             tetay=0.0
@@ -63,22 +63,23 @@
             charactTime = 0
             movingDirectionX=0
             movingDirectionY=0
-            movingDirectionZ=0       
+            movingDirectionZ=0
+            ampliRota=0.0       
                        
 % Wall
     #brick
         %param
-            c=1
-            s=0.05
+            c=2
+            s=0.1
             r=0
         %coord
             x=0
             y=0
             z=0
         %dimen
-            L=1
-            W=1
-            H=0.1
+            L=0.5
+            W=0.5
+            H=0.12
         %inclin
             tetax=0.0
             tetay=0.0
@@ -89,4 +90,5 @@
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0.5
+            ampliRota=0.0
 #END_G

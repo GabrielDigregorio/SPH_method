@@ -18,6 +18,7 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
 {
     double h = gethFromkh(parameter->kernel ,parameter->kh);
     double maxMu = 0.0;
+    double mean_rho = 0.0;
 
     switch(parameter->viscosityModel)
     {
@@ -39,13 +40,19 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
                 double rho  = 0.5 * (currentField->density[particleID] + currentField->density[neighbors[i]]);
 
                 viscosity[i] = ( -parameter->alpha*parameter->c*mu + parameter->beta*mu*mu ) / (rho);
-                if (maxMu < mu){maxMu = mu;}
+
+                if (maxMu < mu)
+                { 
+                  maxMu = mu;
+                }
+                mean_rho += rho;
             }
             else
             {
                 viscosity[i]=0.0;
             }
         }
+        mean_rho = mean_rho/neighbors.size();
         break;
 
         default :
@@ -59,11 +66,22 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
     {
         case yes :
         {
-            std::cout << "TIME STEP MUST BE CONSTANT IN THE CURRENT VERSION" << std::endl;
+            std::cout << "TIME STEP MUST BE CONSTANT IN THE CURRENT VERSION (MPI)" << std::endl;
+            double t_cv, t_f;
+            
+            
+            t_f  = 0.25 * sqrt(h/parameter->g);
 
-            double t_f  = 0.25 * sqrt(h/parameter->g);
-            double t_cv = 0.4  * (h/(parameter->c+0.6*parameter->alpha*parameter->c+0.6*parameter->beta*maxMu));
-
+            if(1)
+            {
+               t_cv = 0.4  * (h/(parameter->c+0.6*parameter->alpha*parameter->c+0.6*parameter->beta*maxMu)); 
+            }
+            else
+            {
+                double gamma_air = 1.4;
+                double c = sqrt(gamma_air* currentField->pressure[particleID] /mean_rho);
+                t_cv = 0.4  * (h/(c+0.6*parameter->alpha*c+0.6*parameter->beta*maxMu));
+            }
             if (t_f < t_cv)
                 currentField->nextK = t_f ;
             else if(t_cv < t_f)

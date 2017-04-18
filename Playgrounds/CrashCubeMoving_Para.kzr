@@ -38,13 +38,13 @@
         kernel=2
         kh=0.12
 
-        integrationMethod=1
+        integrationMethod=0
         theta=0.5
 
-        adaptativeTimeStep=1
-        k=0.00002
+        adaptativeTimeStep=0
+        k=0.005
 
-        T=0.6
+        T=0.4
 
     % Physical Parameters 
         densityRef=1000.0
@@ -69,6 +69,6 @@
     % Output Parameters
         writeInterval=0.01
         matlab=1
-        paraview=4
+        paraview=2
         
 #END_F

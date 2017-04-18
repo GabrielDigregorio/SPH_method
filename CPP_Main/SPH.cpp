@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 
 	// Scatters the globalField from node 0 into the currentField of all nodes
 	scatterField(globalField, currentField, parameter, subdomainInfo);
-
+	    
 	// Declares the box mesh and determines their adjacent relations variables
 	std::vector<std::vector<int> > boxes;
 	std::vector<std::vector<int> > surrBoxesAll;
@@ -131,6 +131,7 @@ int main(int argc, char *argv[])
 		// ---
 
 		// Solve the time step
+		
         timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
 
 		// Adaptative time step

@@ -66,10 +66,14 @@ struct Parameter {
     DensityInitMethod densityInitMethod;
     StateEquationMethod stateEquationMethod;
     MassInitMethod massInitMethod;
-    std::vector<SpeedLaw> speedLaw;
+    std::vector<int> speedLaw;
     std::vector<double> teta[3];
     std::vector<double> charactTime;
     std::vector<double> movingDirection[3];
+    std::vector<double> Dimension[3];
+    std::vector<double> ampliRota;
+    std::vector<double> spacingS;
+    std::vector<int> Index;
     Matlab matlab;
     Paraview paraview;
 };

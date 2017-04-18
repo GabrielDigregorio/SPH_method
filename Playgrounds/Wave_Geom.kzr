@@ -33,104 +33,156 @@
 
 
 #domsz
-    ux = 4
-    uy = 4
-    uz = 4
+    ux = 17
+    uy = 11
+    uz = 11
     lx = -1.5
     ly = -1.5
     lz = -1.5
-#brick
-        %param
-            c=0
-            s=0.08
-            r=0
-        %coord
-            x=0
-            y=0
-            z=3
-        %dimen
-            L=0.6
-            W=0.6
-            H=0.1
-        %inclin
-            tetax=0.0
-            tetay=0.0
-            tetaz=0.0
-        %movpara
-            speedLaw=0
-            charactTime = 3
-            movingDirectionX=-1
-            movingDirectionY=-1
-            movingDirectionZ=-1
-#brick
+%wall
+  #brick
         %param
             c=1
-            s=0.08
+            s=0.8
             r=0
         %coord
-            x=-1
-            y=-1
-            z=-1
+            x=8
+            y=5
+            z=1.6
         %dimen
-            L=0.6
-            W=0.6
-            H=0.1
+            L=16
+            W=10
+            H=1.6
         %inclin
             tetax=0.0
             tetay=0.0
             tetaz=0.0
         %movpara
-            speedLaw=0
-            charactTime = 3
+            speedLaw=3
+            charactTime = 15
             movingDirectionX=-1
             movingDirectionY=-1
             movingDirectionZ=-1
-% Wall
-   #brick
+            ampliRota=30.0
+    #brick
         %param
-            c=2
-            s=0.08
+            c=1
+            s=0.8
+            r=0
+        %coord
+            x=8
+            y=10
+            z=6.1
+        %dimen
+            L=16
+            W=1.6
+            H=9
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=3
+            charactTime = 15
+            movingDirectionX=-1
+            movingDirectionY=-1
+            movingDirectionZ=-1
+            ampliRota=30.0
+    #brick
+        %param
+            c=1
+            s=0.8
+            r=0
+        %coord
+            x=8
+            y=0
+            z=6.1
+        %dimen
+            L=16
+            W=1.6
+            H=9
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=3
+            charactTime = 15
+            movingDirectionX=-1
+            movingDirectionY=-1
+            movingDirectionZ=-1
+            ampliRota=30.0
+    #brick
+        %param
+            c=1
+            s=0.8
             r=0
         %coord
             x=0
-            y=0
-            z=0
+            y=5
+            z=6.1
         %dimen
-            L=1.2
-            W=1.2
-            H=0.1
+            L=1.6
+            W=9.2
+            H=9
         %inclin
             tetax=0.0
             tetay=0.0
             tetaz=0.0
         %movpara
-            speedLaw=0
-            charactTime = 3
+            speedLaw=3
+            charactTime = 15
             movingDirectionX=-1
             movingDirectionY=-1
             movingDirectionZ=-1
+            ampliRota=30.0
     #brick
         %param
             c=2
-            s=0.08
+            s=0.8
             r=0
         %coord
-            x=2
-            y=2
-            z=2
+            x=15
+            y=5
+            z=6.3
         %dimen
-            L=1.2
-            W=1.2
-            H=0.1
+            L=1.6
+            W=9.2
+            H=9
+        %inclin
+            tetax=0.0
+            tetay=15.0
+            tetaz=0.0
+        %movpara
+            speedLaw=3
+            charactTime = 20
+            movingDirectionX=-1
+            movingDirectionY=-1
+            movingDirectionZ=-1
+            ampliRota=45.0
+   #brick
+        %param
+            c=0
+            s=0.4
+            r=0
+        %coord
+            x=7
+            y=5
+            z=5.75
+        %dimen
+            L=12
+            W=8
+            H=5.5
         %inclin
             tetax=0.0
             tetay=0.0
             tetaz=0.0
         %movpara
-            speedLaw=0
-            charactTime = 1
-            movingDirectionX=1
-            movingDirectionY=1
-            movingDirectionZ=1
+            speedLaw=3
+            charactTime = 20
+            movingDirectionX=-1
+            movingDirectionY=-1
+            movingDirectionZ=-1
+            ampliRota=45.0
 
 #END_G

@@ -46,7 +46,7 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
         }
         if(currentField->type[i]>=2)// then we have a moving boundary
         {
-          int IDmovingBoundary=currentField->type[i]-2;
+          int IDmovingBoundary=currentField->type[i]; 
           updateMovingSpeed(nextField,parameter,t+k,IDmovingBoundary,i);
         }
     }

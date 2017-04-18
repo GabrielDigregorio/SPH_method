@@ -35,16 +35,16 @@
 #param
 
     % Numerical parameters
-        kernel=2  
-        kh=0.096
+        kernel=1  
+        kh=0.96
 
         integrationMethod=1
         theta=0.5
 
         adaptativeTimeStep=0
-        k=0.0001
+        k=0.001
 
-        T=3
+        T=2
 
   % Physical Parameters
         densityRef=1000.0

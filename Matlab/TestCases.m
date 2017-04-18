@@ -310,11 +310,6 @@ save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 %  ************************************************************************
 case 3
 
-    % Parameters
-    nbrWindows = 1;
-    % Cube:
-
-
     for i=1 : nstep 
         
         % Open File nbr i
@@ -325,23 +320,24 @@ case 3
         % Pressure mean of the gas inside the piston
         mean_Pressure(i) = mean(Experiment.data(1:limit(1),8));
         std_Pressure(i)  =  std(Experiment.data(1:limit(1),8));
-        volumePiston(i) = 0.4*0.4*(mean(Experiment.data(limit(1)+limit(3):end,3))-0.1);
+        index = find(Experiment.data(limit(1):end,6) == -0.05);
+        volumePiston(i) = 0.4*0.4*(mean(Experiment.data(index,3)));
     end
-
+transpose(volumePiston)
 
 figure(1)
 hold on
     errorbar(time, mean_Pressure, std_Pressure, '*','LineWidth', 2)
 
-    axis([0 0.2 -0.1e5 4e5])
+    %axis([0 0.2 -0.1e5 4e5])
     set(gca,'FontSize',22);
     xlabel('Time [s]','FontSize',22,'Interpreter','latex');
     ylabel('Mean Pressure [Pa]','FontSize',22,'Interpreter','latex');
     NumTicks=5;
     L = get(gca,'XLim');
-    set(gca,'XTick',linspace(L(1),L(2),NumTicks))
+    %set(gca,'XTick',linspace(L(1),L(2),NumTicks))
     L = get(gca,'YLim');
-    set(gca,'YTick',linspace(L(1),L(2),NumTicks))
+    %set(gca,'YTick',linspace(L(1),L(2),NumTicks))
     %legendInfo={'t = 0 [s]'; 't = 1 [s]';'t = 2 [s]';'Analytical solution'};
     %legend(legendInfo,'Interpreter','latex','Location','Best');
     grid
@@ -405,7 +401,56 @@ DATA.stdHydrostatic = std_Pressure;
 save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
 
+%% CrashCube
+%  ************************************************************************
+case 4
+
     
+    % Parameters
+    g = 9.81;
+    z0_center = 10; %[m]
+    
+    for i=1 : nstep 
+        % Open File nbr i
+        %disp(dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i).name);
+        Experiment = importdata(filename); % Import Data
+        
+        % Compute the Mean in Z coordinate
+        MeanZ_experiment(i) = mean(abs(Experiment.data(:,3)));
+    end
+ 
+    
+    % Plot
+    figure(1)
+    hold on
+    plot(time, MeanZ_experiment);
+        title('')
+        xlabel('Time [s]')
+        ylabel('Z')
+        text =  strcat('Simulation (time step = ', num2str(timeStep), ')');
+        legend( text)
+        grid
+        %print('FreeFallingCube_error', '-depsc')
+    hold off  
+    
+
+    
+% Save data
+DATA.name = dirName(1).name;
+DATA.path = nameExperiment;
+DATA.nbrFiles = nstep;
+DATA.timeStep = timeStep;
+DATA.timeWrite = timeWrite;
+DATA.timeSimu = timeSimu;
+DATA.CPUtime = CPU_Time;
+DATA.memory = Memory;
+DATA.memoryPeak = Memory_Peak;
+DATA.time = time;
+DATA.meanZexperiment = MeanZ_experiment;
+
+save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
+
 %% Not Valid Experiment
 %  ************************************************************************
 otherwise
