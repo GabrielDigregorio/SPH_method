@@ -46,7 +46,7 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
         }
         if(currentField->type[i]>=2)// then we have a moving boundary
         {
-          int IDmovingBoundary=currentField->type[i]; 
+          int IDmovingBoundary=currentField->type[i];
           updateMovingSpeed(nextField,parameter,t+k,IDmovingBoundary,i);
         }
     }
@@ -80,37 +80,37 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
   std::vector<double> kernelGradients;
 
   // Sort the particles at the current time step
-  start = std::clock();
+  start = getTime();
   sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes); // At each time step, restart it (to optimize with lists?)
-  timeInfo[1] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+  timeInfo[1] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
   // Spans the boxes
   for(int box=subdomainInfo.startingBox ; box<=subdomainInfo.endingBox ; box++){
     // Spans the particles in the box
     for(unsigned int part=0 ; part<boxes[box].size() ; part++){
-      start = std::clock();
+      start = getTime();
 
       // Declarations
       int particleID = boxes[box][part];
-      neighbors.resize(0); // ICI 
+      neighbors.resize(0); // ICI
       kernelGradients.resize(0);
 
 
       // Neighbor search
       findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, parameter->kernel);
 
-      timeInfo[1] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+      timeInfo[1] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
       // Continuity equation
-      start = std::clock();
+      start = getTime();
       currentDensityDerivative[particleID] = continuity(particleID, neighbors, kernelGradients,currentField);
-      timeInfo[2] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+      timeInfo[2] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
       // Momentum equation only for free particles
-      start = std::clock();
+      start = getTime();
       if(currentField->type[particleID] == freePart)
         momentum(particleID, neighbors, kernelGradients, currentField, parameter, currentSpeedDerivative);
-      timeInfo[3] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+      timeInfo[3] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
     }
   }
 
@@ -149,9 +149,9 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
     {
       case euler:
       {
-          start = std::clock();
+          start = getTime();
           eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, k);
-          timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+          timeInfo[4] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
       }
       break;
 
@@ -164,10 +164,10 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           midSpeedDerivative.assign(3*currentField->nTotal, 0.0);
           midDensityDerivative.assign(currentField->nTotal, 0.0);
 
-          start = std::clock();
+          start = getTime();
           // Storing midpoint in nextField
           eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, kMid);
-          timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+          timeInfo[4] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
           // Share the mid point
           // ?????????? (the number of particles should remain constant !)
@@ -176,7 +176,7 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           derivativeComputation(nextField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, timeInfo);
 
           // Compute weighted mean derivative then update
-          start = std::clock();
+          start = getTime();
 
           for(int i = 0; i < currentField->nTotal ;i++){
             if(currentField->type[i] == freePart){
@@ -189,7 +189,7 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
 
           eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, k);
 
-          timeInfo[4] += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+          timeInfo[4] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
       }
       break;

@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 	Field globalFieldInstance; // Used by node 0 only
 	Field* globalField = &globalFieldInstance; // Used by node 0 only
 
-	start = std::clock();
+	start = getTime();
 
 	// Reads parameters (each process) and geometry (process 0) and checks their consistency
 	errorFlag = readParameter(parameterFilename, parameter);
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 
 	// Scatters the globalField from node 0 into the currentField of all nodes
 	scatterField(globalField, currentField, parameter, subdomainInfo);
-	    
+
 	// Declares the box mesh and determines their adjacent relations variables
 	std::vector<std::vector<int> > boxes;
 	std::vector<std::vector<int> > surrBoxesAll;
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 		std::cout << "Number of particles with imposed speed = " << globalField->nMoving << "\n" << std::endl;
 	}
 
-	timeInfo[0] = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	timeInfo[0] = (getTime() - start) / (double)CLOCKS_PER_SEC;
 
 	// ------------ LOOP ON TIME ------------
 	if(subdomainInfo.procID==0){
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 		// ---
 
 		// Solve the time step
-		
+
         timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
 
 		// Adaptative time step
@@ -146,13 +146,13 @@ int main(int argc, char *argv[])
 		processUpdate(*currentField, subdomainInfo);
 
 		// Write field when needed
-		start = std::clock();
+		start = getTime();
     	if (writeCount*parameter->writeInterval <= currentTime){
 			gatherField(globalField, currentField, subdomainInfo);
 			if(subdomainInfo.procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}
-		timeInfo[5] += (std::clock() - start) / (double)CLOCKS_PER_SEC;
+		timeInfo[5] += (getTime() - start) / (double)CLOCKS_PER_SEC;
 
 		// Fancy progress bar (ok if at least 50 time step)
 		if ( subdomainInfo.procID==0 && currentTime > loadingBar * parameter->T/50.0){

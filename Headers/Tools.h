@@ -39,6 +39,7 @@ size_t GetMemoryProcess(bool screen, bool print);
 size_t GetMemoryProcessPeak(bool screen, bool print);
 
 // CleanUp.cpp
+std::clock_t getTime();
 void boxClear(std::vector<std::vector<int> > &boxes);
 void copyField(Field *sourceField,Field *copiedField);
 void swapField(Field** hopField, Field** cornField);

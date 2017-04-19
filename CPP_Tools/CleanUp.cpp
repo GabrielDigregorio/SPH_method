@@ -8,6 +8,13 @@ void boxClear(std::vector<std::vector<int> > &boxes)
         boxes[i].clear();
 }
 
+// Get the time (or not)
+std::clock_t getTime(){
+    return 0.0;
+}
+
+
+
 /*
 *Input:
 *- sourceField: pointer to the field to be copied
