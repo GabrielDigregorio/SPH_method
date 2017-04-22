@@ -28,7 +28,7 @@
 %
 % writeInteval = time interval between two outputs file are generated
 % matlab = write .txt for matlab analysis:  noMatlab or fullMatlab
-% paraview = write .vtx for paraview analysis: noParaview, fullParaview, nFreeParaview,
+% paraview = write .vtk for paraview analysis: noParaview, fullParaview, nFreeParaview,
 %                                              nMovingFixedParaview, nFree_nMovingFixedParaview
 %**********************************************************************************************
 
@@ -36,7 +36,7 @@
 
     % Numerical parameters
         kernel=1
-        kh=0.92
+        kh=0.45
 
         integrationMethod=1
         theta=0.5

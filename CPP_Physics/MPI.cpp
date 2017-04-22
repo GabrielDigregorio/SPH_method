@@ -10,7 +10,7 @@
 // For particle exchange/sharing
 enum overlap {leftOverlap, noOverlap, rightOverlap, NB_OVERLAP_VALUE};
 enum migrate {noMigrate, leftMigrate, rightMigrate, NB_MIGRATE_VALUE};
-enum mpiMessage {overlap, migration, dataExch, NB_MPIMESSAGE_VALUE};
+enum mpiMessage {overlap, migration, dataExch, RK2Exch, NB_MPIMESSAGE_VALUE};
 enum insertion {begin, end};
 
 /*
@@ -81,7 +81,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
         subdomainInfo.endingBox = subdomainInfo.startingBox + (startBoxX[procID+1]-startBoxX[procID])*nBoxesY*nBoxesZ - 1;
     }
 
-    std::cout << procID << ": l and u: " << localField->l[0] << " " << localField->u[0] << std::endl;
+    //std::cout << procID << ": l and u: " << localField->l[0] << " " << localField->u[0] << std::endl;
     //std::cout << procID << ": boxes  : " << subdomainInfo.startingBox << " " << subdomainInfo.endingBox << std::endl;
 
 
@@ -141,6 +141,8 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
     MPI_Scatterv(&(globalField->type[0]), &nPartNode[0], &offset[0], MPI_INT,
             &(localField->type[0]), localField->nTotal, MPI_INT, 0, MPI_COMM_WORLD);
 
+    std::cout << localField->pos[0].size() << " particles on node " << procID << std::endl;
+
     // Sharing boundaries
     shareOverlap(*localField, subdomainInfo);
 
@@ -163,6 +165,8 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
         }
     }
 
+    std::cout << localField->nTotal << " total particles on node " << procID << std::endl;
+
     // Shares the moving boundaries information
     int nbMB1;
     if(procID == 0){
@@ -182,7 +186,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
         parameter->Dimension[i].resize(nbMB1);
         }
     }
-    
+
     MPI_Bcast(&(parameter->speedLaw[0]), nbMB1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&(parameter->charactTime[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast(&(parameter->spacingS[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -283,8 +287,6 @@ void deleteHalos(Field &field, SubdomainInfo &subdomainInfo){
 
 // Generalizes the MPI_Send function to all fields to send
 void MPI_Send_All(Field &field, int startingPoint, int size, int recvProcID, mpiMessage message){
-    //std::cout << "OK there for receiving from "<< recvProcID << std::endl;
-    //std::cout << startingPoint << "<- start and size -> " << size << std::endl;
     for(int i=0 ; i<3 ; i++){
         MPI_Send(&field.pos[i][startingPoint], size, MPI_DOUBLE, recvProcID, message, MPI_COMM_WORLD);
         MPI_Send(&field.speed[i][startingPoint], size, MPI_DOUBLE, recvProcID, message, MPI_COMM_WORLD);
@@ -298,13 +300,26 @@ void MPI_Send_All(Field &field, int startingPoint, int size, int recvProcID, mpi
 // Generalizes the MPI_Receive function to all fields to receive
 void MPI_Recv_All(std::vector<double> (&recvBuffer)[9], std::vector <int> &recvBufferType,
     int size, int sendProcID, mpiMessage message){
-    MPI_Status *status = NULL;
     // Elements: 0,x | 1,u | 2,y | 3,v | 4,z | 5,w | 6,density | 7,pressure | 8,mass
     for(int i=0 ; i<9 ; i++){
         MPI_Recv(&recvBuffer[i][0], size, MPI_DOUBLE, sendProcID, message, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     MPI_Recv(&recvBufferType[0], size, MPI_INT, sendProcID, message, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 }
+
+// Generalizes the MPI_Receive function in the case where we write directly in the field
+// Use: for sharing the mid-point information of RK2
+void MPI_Recv_All_RK2(Field &field, int startingPoint, int size, int sendProcID, mpiMessage message){
+    for(int i=0 ; i<3 ; i++){
+        MPI_Recv(&field.pos[i][startingPoint], size, MPI_DOUBLE, sendProcID, message, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&field.speed[i][startingPoint], size, MPI_DOUBLE, sendProcID, message, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+    MPI_Recv(&field.density[startingPoint], size, MPI_DOUBLE, sendProcID, message, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(&field.pressure[startingPoint], size, MPI_DOUBLE, sendProcID, message, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(&field.mass[startingPoint], size, MPI_DOUBLE, sendProcID, message, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(&field.type[startingPoint], size, MPI_INT, sendProcID, message, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+}
+
 
 void insertParticles(Field &field, std::vector<double> (&recvBuffer)[9], std::vector <int> &recvBufferType, insertion place){
     if(place == end){ // Put it at the end
@@ -330,11 +345,94 @@ void insertParticles(Field &field, std::vector<double> (&recvBuffer)[9], std::ve
     else{std::cout << "Not acceptable insertion operation." << std::endl;}
 }
 
-void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
-    //std::cout << "Node " << subdomainInfo.procID << " enters" << std::endl;
-
+void shareRKMidpoint(Field& field, SubdomainInfo &subdomainInfo){
+    // Useful information
+    int start = subdomainInfo.startingParticle;
+    int end = subdomainInfo.endingParticle;
+    int procID = subdomainInfo.procID;
+    int nTasks = subdomainInfo.nTasks;
     // Declarations
-    MPI_Status *status = NULL;
+    int sizeToLeft;
+    int sizeToRight;
+    int sizeFromLeft = start;
+    int sizeFromRight = field.nTotal - end - 1;
+    // Different possible cases
+    if(nTasks > 1){
+        if(procID == 0){
+            // Sends the edge to the right
+            MPI_Recv(&sizeToRight, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Send_All(field, end-sizeToRight+1, sizeToRight, procID+1, RK2Exch);
+            // Nothing to send to the left
+
+            // Nothing to reveive from the left
+            // Receives the halo from the right
+            MPI_Send(&sizeFromRight, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD);
+            MPI_Recv_All_RK2(field, end+1, sizeFromRight, procID+1, RK2Exch);
+        }
+        else if(procID == nTasks - 1){
+            if(procID%2==0){
+                // Nothing to send to the right
+                // Sends the edge to the left (procID is even)
+                MPI_Recv(&sizeToLeft, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Send_All(field, start, sizeToLeft, procID-1, RK2Exch);
+
+                // Receives the edge from the left (procID is even)
+                MPI_Send(&sizeFromLeft, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
+                MPI_Recv_All_RK2(field, 0, sizeFromLeft, procID-1, RK2Exch);
+                // Nothing to receive from the right
+           }else{
+                // Receives the edge from the left (procID is odd)
+                MPI_Send(&sizeFromLeft, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
+                MPI_Recv_All_RK2(field, 0, sizeFromLeft, procID-1, RK2Exch);
+                // Nothing to receive from the right
+
+                // Nothing to send to the right
+                // Sends the edge to the left (procID is odd)
+                MPI_Recv(&sizeToLeft, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Send_All(field, start, sizeToLeft, procID-1, RK2Exch);
+            }
+        }
+        else{
+            if(procID%2==0){
+                // Sends the edge to the right (procID is even)
+                MPI_Recv(&sizeToRight, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Send_All(field, end-sizeToRight+1, sizeToRight, procID+1, RK2Exch);
+                // Sends the edge to the left (procID is even)
+                MPI_Recv(&sizeToLeft, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Send_All(field, start, sizeToLeft, procID-1, RK2Exch);
+
+                // Receives the edge from the left (procID is even)
+                MPI_Send(&sizeFromLeft, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
+                MPI_Recv_All_RK2(field, 0, sizeFromLeft, procID-1, RK2Exch);
+                // Receives the edge from the right (procID is even)
+                MPI_Send(&sizeFromRight, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD);
+                MPI_Recv_All_RK2(field, end+1, sizeFromRight, procID+1, RK2Exch);
+            }else{
+                // Receives the edge from the left (procID is odd)
+                MPI_Send(&sizeFromLeft, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD);
+                MPI_Recv_All_RK2(field, 0, sizeFromLeft, procID-1, RK2Exch);
+                // Receives the edge from the right (procID is odd)
+                MPI_Send(&sizeFromRight, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD);
+                MPI_Recv_All_RK2(field, end+1, sizeFromRight, procID+1, RK2Exch);
+
+                // Sends the edge to the right (procID is odd)
+                MPI_Recv(&sizeToRight, 1, MPI_INT, procID+1, dataExch, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Send_All(field, end-sizeToRight+1, sizeToRight, procID+1, RK2Exch);
+                // Sends the edge to the left (procID is odd)
+                MPI_Recv(&sizeToLeft, 1, MPI_INT, procID-1, dataExch, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Send_All(field, start, sizeToLeft, procID-1, RK2Exch);
+            }
+        }
+    }
+    else{
+        return;
+    }
+
+}
+
+
+void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
+    // Declarations
     std::vector< std::pair<int,int> >  indexOverlap;
     std::vector<double> recvVectL[9], recvVectR[9];
     std::vector<int> recvVectTypeL, recvVectTypeR;
@@ -494,7 +592,6 @@ void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
 
 void shareMigrate(Field& field, SubdomainInfo &subdomainInfo){
     // Declarations
-    MPI_Status *status = NULL;
     std::vector< std::pair<int,int> >  indexMigrate;
     std::vector<double> recvVectL[9], recvVectR[9];
     std::vector<int> recvVectTypeL, recvVectTypeR;
@@ -652,6 +749,7 @@ void shareMigrate(Field& field, SubdomainInfo &subdomainInfo){
 }
 
 void processUpdate(Field& localField, SubdomainInfo& subdomainInfo){
+    if(subdomainInfo.nTasks==0){return;}
     // --- call deleteHalos ---
     deleteHalos(localField, subdomainInfo);
     // --- call sendMigrate ---

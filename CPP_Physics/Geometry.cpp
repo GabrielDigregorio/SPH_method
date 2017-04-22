@@ -208,7 +208,7 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
  int ni = int(ceil(L[0]/s));
  double dx = L[0]/ni; ++ni;
  if(flag1==1){ni=1;}
- 
+
  if(L[1]==0)
  {
      L[1]=s;
@@ -217,7 +217,7 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
  int nj = int(ceil(L[1]/s));
  double dy = L[1]/nj; ++nj;
  if(flag2==1){nj=1;}
- 
+
  if(L[2]==0)
  {
      L[2]=s;
@@ -248,13 +248,13 @@ void meshcube(double o[3], double L[3],double teta[3],double s, std::vector<doub
     // particle generation
     for(int k=0; k<nk; ++k)
     {
-        double z = o[2] - L[2]/2 + k*dz;
+        double z = o[2] - L[2]/2 + k*dz; if(flag3==1){z = o[2];}
         for(int j=0; j<nj; ++j)
         {
-            double y = o[1] - L[1]/2 +j*dy;
+            double y = o[1] - L[1]/2 +j*dy; if(flag2==1){y = o[1];}
             for(int i=0; i<ni; ++i)
             {
-                double x = o[0] - L[0]/2 +i*dx;
+                double x = o[0] - L[0]/2 +i*dx; if(flag1==1){x = o[0];}
                 pos.push_back(x + distribution(generator));
                 pos.push_back(y + distribution(generator));
                 pos.push_back(z + distribution(generator));

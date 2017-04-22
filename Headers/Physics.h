@@ -78,7 +78,7 @@ void massInit(Field* field,Parameter* parameter,std::vector<double> &vol);
 
 // updateMovingSpeed.cpp
 void updateMovingSpeed(Field* field, Parameter* parameter, double t,int IDmovingboundary,int i );
- 
+
 // navierStokes.cpp
 double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
 void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
@@ -109,6 +109,7 @@ void computeOverlapIndex(std::vector<double>& posX,
     double leftMinX, double leftMaxX, double rightMinX, double rightMaxX);
 void sortParticles(Field& field, std::vector< std::pair<int,int> >& index);
 void resizeField(Field& field, int nMigrate);
+void shareRKMidpoint(Field& field, SubdomainInfo &subdomainInfo);
 void shareOverlap(Field& field, SubdomainInfo &subdomainInfo);
 void deleteHalos(Field &field, SubdomainInfo &subdomainInfo);
 

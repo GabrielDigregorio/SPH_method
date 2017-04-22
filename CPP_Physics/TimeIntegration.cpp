@@ -71,17 +71,17 @@ a list with the box ID of the boxes that are adjacent to this box
 *Description:
 * Knowing the field (currentField), computes the density and velocity derivatives and store them in vectors
 */
-void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, std::vector<double> &timeInfo)
+void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, std::vector<double> &timeInfo, bool midPoint)
 {
   // CPU time information
   std::clock_t start;
-
+  // Neighbors vectors (declaration outside)
   std::vector<int> neighbors; // ICI
   std::vector<double> kernelGradients;
 
   // Sort the particles at the current time step
   start = getTime();
-  sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes); // At each time step, restart it (to optimize with lists?)
+  if(!midPoint){sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes);} // At each time step, restart it (to optimize with lists?)
   timeInfo[1] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
   // Spans the boxes
@@ -95,10 +95,8 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
       neighbors.resize(0); // ICI
       kernelGradients.resize(0);
 
-
       // Neighbor search
       findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, parameter->kernel);
-
       timeInfo[1] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
       // Continuity equation
@@ -143,7 +141,7 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
 
     // CPU time information
     std::clock_t start;
-    derivativeComputation(currentField, parameter, subdomainInfo, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, timeInfo);
+    derivativeComputation(currentField, parameter, subdomainInfo, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, timeInfo, false);
 
     switch (parameter->integrationMethod)
     {
@@ -170,10 +168,10 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           timeInfo[4] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
           // Share the mid point
-          // ?????????? (the number of particles should remain constant !)
+          shareRKMidpoint(*nextField, subdomainInfo);
 
           // Compute derivatives at midPoint
-          derivativeComputation(nextField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, timeInfo);
+          derivativeComputation(nextField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, timeInfo, true);
 
           // Compute weighted mean derivative then update
           start = getTime();

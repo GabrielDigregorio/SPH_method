@@ -58,6 +58,8 @@ void writeField(Field* field, double t, Parameter* parameter,
     // TO BE CHANGED LATER
     if(parameter->paraview != noParaview || parameter->matlab != noMatlab)
     {
+
+        
         newField->nFree = field->nFree;
         newField->nFixed = field->nFixed;
         newField->nMoving = field->nMoving;
@@ -111,7 +113,7 @@ void writeField(Field* field, double t, Parameter* parameter,
         if(parameter->paraview == fullParaview)
         {
             nbpStart = 0;
-            nbpEnd   = nbp; 
+            nbpEnd   = nbp;
             paraView(filename+"_Full", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
         }
 
@@ -119,16 +121,16 @@ void writeField(Field* field, double t, Parameter* parameter,
         if(parameter->paraview == nFreeParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
             nbpStart = 0;
-            nbpEnd   = newField->nFree; 
-            paraView(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);  
+            nbpEnd   = newField->nFree;
+            paraView(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
         }
 
         // Only nFree and nMoving
         if(parameter->paraview == nMovingFixedParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
             nbpStart = newField->nFree;
-            nbpEnd   = nbp; 
-            paraView(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);                         
+            nbpEnd   = nbp;
+            paraView(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
         }
     }
 
@@ -283,7 +285,7 @@ void matlab(std::string const &filename,
     f << " posX\t        posY\t        posZ\t     velocityX\t     velocityY\t     velocityZ\t     density\t     pressure\t     mass"<<std::endl;
 
 
-    
+
     // Fill f:
     for(int i=0; i<nbp; ++i)
     {

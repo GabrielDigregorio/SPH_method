@@ -153,11 +153,11 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
          {
           start=(*typeMoving)[size-1]-1;
          }
-        
+
          int counter=0;
         for(cnt=start; cnt<(nPart+start); ++cnt)
         {
-          (*volVectorMoving).push_back(volPart);         
+          (*volVectorMoving).push_back(volPart);
           (*typeMoving).push_back( 2+cnt);  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
           counter++;
         }
@@ -494,8 +494,8 @@ Error readParameter(std::string filename, Parameter* parameter)
                             parameter->k=atof(valueArray);
                         if(cnt==6)
                             parameter->T=atof(valueArray);
-                        
-                        // Physical Parameters 
+
+                        // Physical Parameters
                         if(cnt==7)
                             parameter->densityRef=atof(valueArray);
                         if(cnt==8)
