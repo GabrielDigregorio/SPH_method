@@ -85,7 +85,7 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 
 // navierStokes.cpp
 double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
-void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
+void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter, std::vector<double>& speedDerivative, std::vector<double> &viscosity);
 
 // viscosityComputation.cpp
 void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity);

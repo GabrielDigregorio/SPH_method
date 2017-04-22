@@ -58,13 +58,21 @@ void writeField(Field* field, double t, Parameter* parameter,
     // TO BE CHANGED LATER
     if(parameter->paraview != noParaview || parameter->matlab != noMatlab)
     {
-
-        
         newField->nFree = field->nFree;
         newField->nFixed = field->nFixed;
         newField->nMoving = field->nMoving;
         newField->l[0] = field->l[0]; newField->l[1] = field->l[1]; newField->l[2] = field->l[2];
         newField->u[0] = field->u[0]; newField->u[1] = field->u[1]; newField->u[2] = field->u[2];
+
+        // Reserves the space for the vectors
+        for(int i = 0 ; i<3 ; i++){
+            newField->pos[i].reserve(field->nTotal);
+            newField->speed[i].reserve(field->nTotal);
+        }
+        newField->density.reserve(field->nTotal);
+        newField->pressure.reserve(field->nTotal);
+        newField->mass.reserve(field->nTotal);
+        newField->type.reserve(field->nTotal);
 
         for(int i=0; i<field->pos[0].size(); ++i)
         {

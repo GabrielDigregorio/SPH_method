@@ -789,9 +789,6 @@ void timeStepUpdate(double &nextK, double &localProposition, SubdomainInfo &subd
     MPI_Bcast(&nextK, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 }
 
-
-
-
 void computeDomainIndex(std::vector<double> &posX,
     std::vector<double> &limits, std::vector<int> &nbPartNode,
     std::vector< std::pair<int,int> > &index, int nTasks){

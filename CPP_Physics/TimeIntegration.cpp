@@ -129,6 +129,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
   // Neighbors vectors (declaration outside)
   std::vector<int> neighbors; // ICI
   std::vector<double> kernelGradients;
+  std::vector<double> viscosity;
 
   // Sort the particles at the current time step
   start = getTime();
@@ -158,7 +159,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
       // Momentum equation only for free particles
       start = getTime();
       if(currentField->type[particleID] == freePart)
-        momentum(particleID, neighbors, kernelGradients, currentField, parameter, currentSpeedDerivative);
+        momentum(particleID, neighbors, kernelGradients, currentField, parameter, currentSpeedDerivative, viscosity);
       timeInfo[3] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
     }
   }
