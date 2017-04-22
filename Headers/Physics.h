@@ -58,7 +58,7 @@ double boxSizeCalc(double kh, IntegrationMethod method);
 // TimeIntegration.cpp
 void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, SubdomainInfo &subdomainInfo,
     std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
-    double t, double k, std::vector<double> &timeInfo);
+    double t, double k);
 
 
 // Kernel.cpp

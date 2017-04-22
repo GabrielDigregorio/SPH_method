@@ -22,6 +22,10 @@ int main(int argc, char *argv[])
 {
 	// Record algorithm performance
 	startExperimentTimeClock = std::clock();
+	struct timeval time;
+	gettimeofday(&time,NULL);
+	double start = (double)time.tv_sec + (double)time.tv_usec * .000001;
+
 
 	// MPI Initialization
 	MPI_Init(&argc, &argv);
@@ -31,10 +35,6 @@ int main(int argc, char *argv[])
 
 	// Creates an error flag
 	Error errorFlag = noError;
-
-	// CPU time repartition information variables
-	std::clock_t start;
-	std::vector<double> timeInfo(6, 0.0);
 
 	// Checks and gets the arguments
 	if(subdomainInfo.procID==0){std::cout << "Initialization..." << std::endl;}
@@ -69,8 +69,6 @@ int main(int argc, char *argv[])
 	Field* nextField = &nextFieldInstance;
 	Field globalFieldInstance; // Used by node 0 only
 	Field* globalField = &globalFieldInstance; // Used by node 0 only
-
-	start = getTime();
 
 	// Reads parameters (each process) and geometry (process 0) and checks their consistency
 	errorFlag = readParameter(parameterFilename, parameter);
@@ -113,8 +111,6 @@ int main(int argc, char *argv[])
 		std::cout << "Number of particles with imposed speed = " << globalField->nMoving << "\n" << std::endl;
 	}
 
-	timeInfo[0] = (getTime() - start) / (double)CLOCKS_PER_SEC;
-
 	// ------------ LOOP ON TIME ------------
 	if(subdomainInfo.procID==0){
 		std::cout << "Time integration progress:\n" << std::endl;
@@ -131,7 +127,7 @@ int main(int argc, char *argv[])
 		// ---
 
 		// Solve the time step
-        timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
+        timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k);
 		currentTime += parameter->k;
 
 		// Adaptive time step
@@ -146,13 +142,11 @@ int main(int argc, char *argv[])
 		processUpdate(*currentField, subdomainInfo);
 
 		// Write field when needed
-		start = getTime();
     	if (writeCount*parameter->writeInterval <= currentTime){
 			gatherField(globalField, currentField, subdomainInfo);
 			if(subdomainInfo.procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}
-		timeInfo[5] += (getTime() - start) / (double)CLOCKS_PER_SEC;
 
 		// Fancy progress bar (ok if at least 50 time step)
 		if ( subdomainInfo.procID==0 && currentTime > loadingBar * parameter->T/50.0){
@@ -161,18 +155,15 @@ int main(int argc, char *argv[])
 		}
 	}
 
+
 	// Time information printing
 	if(subdomainInfo.procID==0){
+		// Gets final time
+		gettimeofday(&time,NULL);
+		double final = (double)time.tv_sec + (double)time.tv_usec * .000001;
 		std::cout << "]\n" << std::endl;
-		std::cout << "TIME INFORMATION:\n";
-		std::cout << "\t- Initial\t" << timeInfo[0] << "\n";
-		std::cout << "\t- Neighbors\t" << timeInfo[1] << "\n";
-		std::cout << "\t- Continuity\t" << timeInfo[2] << "\n";
-		std::cout << "\t- Momentum\t" << timeInfo[3] << "\n";
-		std::cout << "\t- Update\t" << timeInfo[4] << "\n";
-		std::cout << "\t- Writing\t" << timeInfo[5] << "\n";
-		std::cout << "\t- TOTAL  \t" << (std::clock() - startExperimentTimeClock) / (double)CLOCKS_PER_SEC << "\n";
-		std::cout << "NB : Total - sum of times = time capture duration (!!)\n";
+		std::cout << "Real elapsed time \t" << final - start << "\n";
+		std::cout << "Clock estimated time \t" << (std::clock() - startExperimentTimeClock) / (double)CLOCKS_PER_SEC << "\n";
 	}
 
 	// MPI Finalize
