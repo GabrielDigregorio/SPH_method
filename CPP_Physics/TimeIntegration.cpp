@@ -5,6 +5,57 @@
 #include "Physics.h"
 #include "Tools.h"
 
+/*
+*Input:
+*- currentField: field that contains all the information at time t
+*- nextField: field in which results of step n are stored
+*- midField: field that contains all the information at mid time
+*- parameter: pointer to the field containing the user defined parameters
+*- currentDensityDerivative: vector containing derivative of density for each particle at time t
+*- currentSpeedDerivative: vector containing derivative of velocity for each particle at time t
+*- midDensityDerivative: vector containing derivative of density for each particle at mid time
+*- midSpeedDerivative: vector containing derivative of velocity for each particle at mid time
+*- t: current simulation time
+*- k: timestep
+*/
+void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, std::vector<double>& midDensityDerivative, std::vector<double>& midSpeedDerivative, double t, double k)
+{
+    // Loop on all the particles
+    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
+        switch (currentField->type[i]){
+            // Free particles update
+            case freePart:
+            nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
+            for (int j = 0; j <= 2; j++){
+                nextField->speed[j][i] = currentField->speed[j][i] + k*((1-parameter->theta)*currentSpeedDerivative[3*i+j] + parameter->theta*midSpeedDerivative[3*i+j]);
+                //std::cout << currentSpeedDerivative[3*i + j] << " ";
+                nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]);
+            }
+            // Fixed particles update
+            case fixedPart:
+            nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
+            // Moving boundary particles update
+            default:
+            nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
+            for (int j = 0; j <= 2; j++){
+                nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]);
+            }
+            //case movingPart:
+            //updateMovingSpeed(nextField,parameter,t+k);//,i);
+            // comment faire un switch avec n=2,3,4... indétermimé?
+        }
+        if(currentField->type[i]>=2)// then we have a moving boundary
+        {
+          int IDmovingBoundary=currentField->type[i];
+          updateMovingSpeed(nextField,parameter,t+k,IDmovingBoundary,i);
+        }
+    }
+
+    // To be modified !! This just entered in the switch about particles type !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //if(currentField->nMoving != 0){updateMovingSpeed(nextField,parameter,t+k);}
+    // Pressure (all particles at the same time)
+    pressureComputation(nextField,parameter);
+}
 
 /*
 *Input:
@@ -136,6 +187,7 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
   SubdomainInfo &subdomainInfo, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
   double t, double k, std::vector<double> &timeInfo)
   {
+    //It would be nice to change functions so that currentSpeedDerivative has the same structure (array[i][j]) that pos and speed.
     std::vector<double> currentSpeedDerivative;
     std::vector<double> currentDensityDerivative;
     currentSpeedDerivative.assign(3*currentField->nTotal, 0.0);
@@ -159,36 +211,28 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
       case RK2:
       {
           double kMid = 0.5*k/parameter->theta;
+          Field midFieldInstance;
+          Field* midField = &midFieldInstance;
           std::vector<double> midSpeedDerivative;
           std::vector<double> midDensityDerivative;
           midSpeedDerivative.assign(3*currentField->nTotal, 0.0);
           midDensityDerivative.assign(currentField->nTotal, 0.0);
+          copyField(currentField,midField);
 
           start = getTime();
-          // Storing midpoint in nextField
-          eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, kMid);
+          // Storing midpoint in midField
+          eulerUpdate(currentField, midField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, kMid);
           timeInfo[4] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
           // Share the mid point
           // ?????????? (the number of particles should remain constant !)
 
           // Compute derivatives at midPoint
-          derivativeComputation(nextField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, timeInfo);
+          derivativeComputation(midField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, timeInfo);
 
-          // Compute weighted mean derivative then update
+          // Update
           start = getTime();
-
-          for(int i = 0; i < currentField->nTotal ;i++){
-            if(currentField->type[i] == freePart){
-              for(int j = 0; j < 3;j++){
-                currentSpeedDerivative[3*i + j] =  (1-parameter->theta)*currentSpeedDerivative[3*i + j] + parameter->theta*midSpeedDerivative[3*i + j];
-              }
-            }
-            currentDensityDerivative[i] =  (1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i];
-          }
-
-          eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, k);
-
+          RK2Update(currentField, midField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, midDensityDerivative, midSpeedDerivative, t, k);
           timeInfo[4] += ( getTime() - start ) / (double) CLOCKS_PER_SEC;
 
       }
