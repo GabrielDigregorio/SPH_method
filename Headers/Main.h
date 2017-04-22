@@ -16,7 +16,7 @@
 #include <sys/time.h>
 #include <algorithm>
 #include <mpi.h>
-#include <omp.h>
+//#include <omp.h>
 extern std::clock_t startExperimentTimeClock;
 
 
