@@ -112,5 +112,6 @@ void resizeField(Field& field, int nMigrate);
 void shareRKMidpoint(Field& field, SubdomainInfo &subdomainInfo);
 void shareOverlap(Field& field, SubdomainInfo &subdomainInfo);
 void deleteHalos(Field &field, SubdomainInfo &subdomainInfo);
+void timeStepUpdate(double &nextK, double &localProposition, SubdomainInfo &subdomainInfo);
 
 #endif

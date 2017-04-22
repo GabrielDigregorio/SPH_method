@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 	unsigned int loadingBar = 0;
 	double currentTime = 0.0; // Current time of the simulation
 	for (unsigned int n = 1; currentTime < parameter->T; n++){
-		// Time step handler
+		// Previous time step for reference
 		currentField->nextK = parameter->k;
 
 		// Next field !!!!! TO OPTIMIZE !!!!
@@ -131,12 +131,12 @@ int main(int argc, char *argv[])
 		// ---
 
 		// Solve the time step
-
         timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k, timeInfo);
-
-		// Adaptative time step
 		currentTime += parameter->k;
-		parameter->k = currentField->nextK;
+
+		// Adaptive time step
+		if(parameter->adaptativeTimeStep)
+			timeStepUpdate(parameter->k, currentField->nextK, subdomainInfo);
 
 		// Swap the two fields
 		swapField(&currentField, &nextField);

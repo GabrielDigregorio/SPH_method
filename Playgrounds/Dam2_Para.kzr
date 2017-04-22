@@ -44,7 +44,7 @@
         adaptativeTimeStep=0
         k=0.001
 
-        T=2
+        T=4
 
   % Physical Parameters
         densityRef=1000.0
@@ -56,7 +56,7 @@
         c=100
 
         viscosityModel=0
-        alpha=0.1
+        alpha=0.08
         beta=0
         epsilon=0.1
 

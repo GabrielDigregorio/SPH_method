@@ -430,7 +430,6 @@ void shareRKMidpoint(Field& field, SubdomainInfo &subdomainInfo){
 
 }
 
-
 void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
     // Declarations
     std::vector< std::pair<int,int> >  indexOverlap;
@@ -749,7 +748,7 @@ void shareMigrate(Field& field, SubdomainInfo &subdomainInfo){
 }
 
 void processUpdate(Field& localField, SubdomainInfo& subdomainInfo){
-    if(subdomainInfo.nTasks==0){return;}
+    if(subdomainInfo.nTasks==1){return;}
     // --- call deleteHalos ---
     deleteHalos(localField, subdomainInfo);
     // --- call sendMigrate ---
@@ -775,6 +774,23 @@ void processUpdate(Field& localField, SubdomainInfo& subdomainInfo){
         }
     }
 }
+
+void timeStepUpdate(double &nextK, double &localProposition, SubdomainInfo &subdomainInfo){
+    // If only one task, no communication is needed
+    if(subdomainInfo.nTasks==1){nextK = localProposition; return;}
+    // Declarations
+    std::vector<double> allPropositions(subdomainInfo.nTasks);
+    // Gathering information
+    MPI_Gather(&localProposition, 1, MPI_DOUBLE, &(allPropositions[0]), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    if(subdomainInfo.procID == 0){
+        nextK = *std::min_element(allPropositions.begin(), allPropositions.begin()+subdomainInfo.nTasks-1);
+    }
+    // Scattering information
+    MPI_Bcast(&nextK, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+}
+
+
+
 
 void computeDomainIndex(std::vector<double> &posX,
     std::vector<double> &limits, std::vector<int> &nbPartNode,
