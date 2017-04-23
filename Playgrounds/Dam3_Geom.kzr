@@ -61,7 +61,7 @@
       %movpara
             speedLaw=0
             angleLaw=0
-            charactTime=0
+            charactTime=0.0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
@@ -69,7 +69,6 @@
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
-
 
 % Wall
    #brick
@@ -92,7 +91,7 @@
         %movpara
             speedLaw=0
             angleLaw=0
-            charactTime=0
+            charactTime=0.0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
@@ -100,7 +99,6 @@
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
-
 
     #brick
          %param
@@ -119,6 +117,7 @@
              tetax=0.0
              tetay=0.0
              tetaz=0.0
+
           %movpara
             speedLaw=0
             angleLaw=0
@@ -130,7 +129,6 @@
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
-
 
    #brick
         %param
@@ -152,7 +150,7 @@
         %movpara
             speedLaw=0
             angleLaw=0
-            charactTime=0
+            charactTime=0.0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
@@ -160,7 +158,6 @@
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
-
 
    #brick
         %param
@@ -182,7 +179,7 @@
         %movpara
             speedLaw=0
             angleLaw=0
-            charactTime=0
+            charactTime=0.0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
@@ -212,7 +209,7 @@
          %movpara
             speedLaw=0
             angleLaw=0
-            charactTime=0
+            charactTime=0.0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
@@ -220,7 +217,6 @@
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
-
 
    #brick
         %param
@@ -242,7 +238,7 @@
         %movpara
             speedLaw=0
             angleLaw=0
-            charactTime=0
+            charactTime=0.0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
