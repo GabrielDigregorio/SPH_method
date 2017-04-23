@@ -166,32 +166,29 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
     // Shares the moving boundaries information
     int nbMB1;
     if(procID == 0){
-        nbMB1 = parameter->speedLaw.size();
+        nbMB1 = parameter->posLaw.size();
     }
     MPI_Bcast(&nbMB1, 1, MPI_INT, 0, MPI_COMM_WORLD);
     if(procID != 0)
     {
-        parameter->speedLaw.resize(nbMB1);
+        parameter->posLaw.resize(nbMB1);
         parameter->charactTime.resize(nbMB1);
-        parameter->spacingS.resize(nbMB1);
-        parameter->ampliRota.resize(nbMB1);
-        parameter->Index.resize(nbMB1);
+        parameter->amplitude.resize(nbMB1);
+        parameter->angleLaw.resize(nbMB1);
         for(int i=0 ; i<3 ; i++){
         parameter->teta[i].resize(nbMB1);
         parameter->movingDirection[i].resize(nbMB1);
-        parameter->Dimension[i].resize(nbMB1);
         }
     }
-    
-    MPI_Bcast(&(parameter->speedLaw[0]), nbMB1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    MPI_Bcast(&(parameter->posLaw[0]), nbMB1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&(parameter->angleLaw[0]), nbMB1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&(parameter->charactTime[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&(parameter->spacingS[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&(parameter->ampliRota[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&(parameter->Index[0]), nbMB1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&(parameter->amplitude[0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     for(int i=0 ; i<3 ; i++){
         MPI_Bcast(&(parameter->teta[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         MPI_Bcast(&(parameter->movingDirection[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        MPI_Bcast(&(parameter->Dimension[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&(parameter->rotationCenter[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
 }
 

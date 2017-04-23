@@ -16,15 +16,14 @@ void speedInit(Field* field, Parameter* parameter)
 {
 	for(int j=0 ; j<3 ; j++)
 		field->speed[j].assign(field->nTotal, 0.0); // Initial state is zero speed; other choice could be implemented
-	if (field->nMoving != 0) { 
+	if (field->nMoving != 0) {
 		int start=field->nFree+field->nFixed;
 		int end=field->nTotal;
 		 for(int i=start ; i<end ; i++)
 		 {
-			int IDmovingBoundary=field->type[i];
-            updateMovingSpeed(field,parameter,0.0,IDmovingBoundary,i);
+            updateMovingSpeed(field,parameter,0.0,0.0,i);
 		 }
- 
+
 	}
 }
 

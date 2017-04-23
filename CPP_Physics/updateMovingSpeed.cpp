@@ -1,160 +1,207 @@
 #include "Main.h"
 #include "Physics.h"
 #define M_PI           3.14159265358979323846  /* pi */
+
+double angleComputation(double amplitude,double charactTime,AngleLaw angleLaw, double t)
+{
+  switch (angleLaw)
+  {
+    case linearAngle:
+    return 2.0*M_PI/charactTime*t;
+    break;
+    case sineAngle:
+    return amplitude*sin(2.0*M_PI/charactTime*t);
+    break;
+    case exponentialAngle:
+    return amplitude*(1.0-exp(-t/charactTime));
+    break;
+  }
+}
+
+double angleDerivativeComputation(double amplitude,double charactTime,AngleLaw angleLaw,double t)
+{
+  switch (angleLaw)
+  {
+    case linearAngle:
+    return 2.0*M_PI/charactTime;
+    break;
+    case sineAngle:
+    return 2.0*M_PI/charactTime*amplitude*cos(2*M_PI/charactTime*t);
+    break;
+    case exponentialAngle:
+    return amplitude/charactTime*exp(-t/charactTime);
+    break;
+  }
+}
+void timeDerivativeQuaternionRotation(double* mD, double angle, double angleDerivative, double* pos)
+{
+  double s = sin(angle)*angleDerivative;
+  double c = cos(angle)*angleDerivative;
+  double posTmp[3] = {0,0,0};
+  double RDot[3][3] =
+  {
+    {-s + mD[0]*mD[0]*s, mD[0]*mD[1]*s-mD[2]*c, mD[0]*mD[2]*s+mD[1]*c},
+    {mD[0]*mD[1]*s+mD[2]*c, -s + mD[1]*mD[1]*s, mD[1]*mD[2]*s - mD[0]*c},
+    {mD[0]*mD[2]*s-mD[1]*c,  mD[1]*mD[2]*s + mD[0]*c, -s + mD[2]*mD[2]*s}
+  };
+  for(int i=0; i<3;i++)
+  {
+    for(int j=0;j<3;j++)
+    {
+      posTmp[i] += RDot[i][j]*pos[j];
+    }
+  }
+  for(int i=0; i<3;i++)
+  {
+    pos[i] = posTmp[i];
+  }
+}
+
+void quaternionRotation(double* mD, double angle, double* pos)
+{
+  double s = sin(angle);
+  double c = cos(angle);
+  double posTmp[3] = {0,0,0};
+  double R[3][3] =
+  {
+    {c + mD[0]*mD[0]*(1.0-c), mD[0]*mD[1]*(1.0-c)-mD[2]*s, mD[0]*mD[2]*(1.0-c)+mD[1]*s},
+    {mD[0]*mD[1]*(1.0-c)+mD[2]*s, c + mD[1]*mD[1]*(1.0-c), mD[1]*mD[2]*(1.0-c) - mD[0]*s},
+    {mD[0]*mD[2]*(1.0-c)-mD[1]*s,  mD[1]*mD[2]*(1.0-c) + mD[0]*s, c + mD[2]*mD[2]*(1.0-c)}
+  };
+  for(int i=0; i<3;i++)
+  {
+    for(int j=0;j<3;j++)
+    {
+      posTmp[i] += R[i][j]*pos[j];
+    }
+  }
+  for(int i=0; i<3;i++)
+  {
+    pos[i] = posTmp[i];
+  }
+}
+
 /*
  * In: field = structure containing the speed of particules (among others)
  *     parameter = structure containing the parameter usefull to know the movement of the wall
  * Out: Mise à jour des vitesses des parois mobiles
  */
-
- void updateMovingSpeed(Field* field, Parameter* parameter, double t,int indexI,int ii )
+ void updateMovingSpeed(Field* field, Parameter* parameter, double t,double k, int particleID)
  {
-   int IDmovingboundary=0;
-    for(int i=0; i<parameter->Index.size();i++)
-    {
-      if(indexI>=parameter->Index[i])
-      {
-        IDmovingboundary=i;
-      }
-    }
-    double movX=parameter->movingDirection[0][IDmovingboundary];
-    double movY=parameter->movingDirection[1][IDmovingboundary];
-    double movZ=parameter->movingDirection[2][IDmovingboundary];
-    //std::vector<double> teta[3];
-    double charactTime=parameter->charactTime[IDmovingboundary];
-   switch(parameter->speedLaw[IDmovingboundary])
+  int movingBoundaryID = field->type[particleID]-2;
+  double mD[3]= {parameter->movingDirection[0][movingBoundaryID],parameter->movingDirection[1][movingBoundaryID],parameter->movingDirection[2][movingBoundaryID]};
+  double rC[3]= {parameter->rotationCenter[0][movingBoundaryID],parameter->rotationCenter[1][movingBoundaryID],parameter->rotationCenter[2][movingBoundaryID]};
+  double charactTime=parameter->charactTime[movingBoundaryID];
+  double amplitude = parameter->amplitude[movingBoundaryID];
+  PosLaw posLaw = (PosLaw) parameter->posLaw[movingBoundaryID];
+  AngleLaw angleLaw = (AngleLaw) parameter->angleLaw[movingBoundaryID];
+
+  switch(posLaw)
    {
      case sine:
      {
        // uniform periodic movement in each direction
          // x
-         field->speed[0][ii]=movX*sin(charactTime*t);
-         // 
-         field->speed[1][ii]=movY*sin(charactTime*t);
+         field->speed[0][particleID]=amplitude*mD[0]*2*M_PI/charactTime*cos(2*M_PI/charactTime*(t+k));
+         // y
+         field->speed[1][particleID]=amplitude*mD[1]*2*M_PI/charactTime*cos(2*M_PI/charactTime*(t+k));
          // z
-         field->speed[2][ii]=movZ*sin(charactTime*t);
+         field->speed[2][particleID]=amplitude*mD[2]*2*M_PI/charactTime*cos(2*M_PI/charactTime*(t+k));
      }
      break;
      case constant:
-     {    
+     {
+       // uniform movement in each direction
          // x
-         field->speed[0][ii]=movX;
+         field->speed[0][particleID]=amplitude*mD[0];
          // y
-         field->speed[1][ii]=movY;
+         field->speed[1][particleID]=amplitude*mD[1];
          // z
-         field->speed[2][ii]=movZ; 
+         field->speed[2][particleID]=amplitude*mD[2];
      }
      break;
      case exponential:
-     std::cout << "Exponential moving not yet implemented\n"; // ATTENTION !!!
+     // x
+     field->speed[0][particleID]=amplitude/charactTime*mD[0]*exp(-(t+k)/charactTime);
+     // y
+     field->speed[1][particleID]=amplitude/charactTime*mD[1]*exp(-(t+k)/charactTime);
+     // z
+     field->speed[2][particleID]=amplitude/charactTime*mD[2]*exp(-(t+k)/charactTime);
      break;
-     case level_arm:
-     {  
-       double tetax=(parameter->teta[0][IDmovingboundary]);
-       double tetay=(parameter->teta[1][IDmovingboundary]);
-       double tetaz=(parameter->teta[2][IDmovingboundary]);
-       
-       int identifier=indexI-2;
-       int counter=0;
-       while(counter<IDmovingboundary)
+     case rotating:
+     {
+       double pos[3] = {field->pos[0][particleID]-rC[0],field->pos[1][particleID]-rC[1],field->pos[2][particleID]-rC[2]};
+       double deltaAngle = angleComputation(amplitude,charactTime,angleLaw,t+k)-angleComputation(amplitude,charactTime,angleLaw,t);
+       double angleDerivative = angleDerivativeComputation(amplitude,charactTime,angleLaw,t+k);
+       timeDerivativeQuaternionRotation(mD, deltaAngle, angleDerivative, pos);
+       for(int i = 0;i<3;i++)
        {
-        double s=parameter->spacingS[counter];
-        double L1= parameter->Dimension[0][counter];
-        double L2= parameter->Dimension[1][counter];
-        double L3= parameter->Dimension[2][counter];
-        int ni = int(ceil(L1/s));
-        int nj = int(ceil(L2/s));
-        int nk = int(ceil(L3/s));
-        identifier=identifier-(ni*nk*nj);
-        counter++;
+         field->speed[i][particleID] = pos[i];
        }
-        double s=parameter->spacingS[IDmovingboundary];
-        double L1= parameter->Dimension[0][IDmovingboundary];
-        double L2= parameter->Dimension[1][IDmovingboundary];
-        double L3= parameter->Dimension[2][IDmovingboundary];
-        
-        // calculate nb of particles along each direction from target size "s"
-        int ni = int(ceil(L1/s));
-        int nj = int(ceil(L2/s));
-        int nk = int(ceil(L3/s));
-
-        int levierI=identifier/(ni*nj);// give the lever arm , based on the construction block
-        double levier=levierI/(double)5;
-        double Ampli=parameter->ampliRota[IDmovingboundary];
-
-        double angle=Ampli/180.0*M_PI*cos(charactTime*t);
-        double angleDot=-charactTime*Ampli/180.0*M_PI*sin(charactTime*t);
-        // in the basis relative to the block
-        double vxRelBasis=levier*cos(angle)*angleDot;
-        double vyRelBasis=0.0;
-        double vzRelBasis=-levier*sin(angle)*angleDot;
-        std::vector<double> Rx(9,0);
-        std::vector<double> Ry(9,0);
-        std::vector<double> Rz(9,0);
-       // in hte real basis 
-        Rx[0]=1;
-        Rx[1]=0;
-        Rx[2]=0;
-        Rx[3]=0;
-        Rx[4]=cos(tetax/180.0*M_PI);
-        Rx[5]=-sin(tetax/180.0*M_PI);
-        Rx[6]=0;
-        Rx[7]=sin(tetax/180.0*M_PI);
-        Rx[8]=cos(tetax/180.0*M_PI);
-        
-       /* Ry[0]=cos(tetay/180.0*M_PI);
-        Ry[1]=0;
-        Ry[2]=sin(tetay/180.0*M_PI);
-        Ry[3]=0;
-        Ry[4]=1;
-        Ry[5]=0;
-        Ry[6]=-sin(tetay/180.0*M_PI);
-        Ry[7]=0;
-        Ry[8]=cos(tetay/180.0*M_PI);*/
-        Ry[0]=1;
-        Ry[1]=0;
-        Ry[2]=0;
-        Ry[3]=0;
-        Ry[4]=1;
-        Ry[5]=0;
-        Ry[6]=0;
-        Ry[7]=0;
-        Ry[8]=1;
-
-        Rz[0]=cos(tetaz/180.0*M_PI);
-        Rz[1]=-sin(tetaz/180.0*M_PI);
-        Rz[2]=0;
-        Rz[3]=sin(tetaz/180.0*M_PI);
-        Rz[4]=cos(tetaz/180.0*M_PI);
-        Rz[5]=0;
-        Rz[6]=0;
-        Rz[7]=0;
-        Rz[8]=1;
-        double R11=(Rz[0]*Ry[0]+Rz[1]*Ry[3]+Rz[2]*Ry[6])*Rx[0]+(Rz[0]*Ry[1]+Rz[1]*Ry[4]+Rz[2]*Ry[7])*Rx[3]+(Rz[0]*Ry[2]+Rz[1]*Ry[5]+Rz[2]*Ry[8])*Rx[6];
-        double R21=(Rz[3]*Ry[0]+Rz[4]*Ry[3]+Rz[5]*Ry[6])*Rx[0]+(Rz[3]*Ry[1]+Rz[4]*Ry[4]+Rz[5]*Ry[7])*Rx[3]+(Rz[3]*Ry[2]+Rz[4]*Ry[5]+Rz[5]*Ry[8])*Rx[6];
-        double R31=(Rz[6]*Ry[0]+Rz[7]*Ry[3]+Rz[8]*Ry[6])*Rx[0]+(Rz[6]*Ry[1]+Rz[7]*Ry[4]+Rz[8]*Ry[7])*Rx[3]+(Rz[6]*Ry[2]+Rz[7]*Ry[5]+Rz[8]*Ry[8])*Rx[6];
-
-        double R12=(Rz[0]*Ry[0]+Rz[1]*Ry[3]+Rz[2]*Ry[6])*Rx[1]+(Rz[0]*Ry[1]+Rz[1]*Ry[4]+Rz[2]*Ry[7])*Rx[4]+(Rz[0]*Ry[2]+Rz[1]*Ry[5]+Rz[2]*Ry[8])*Rx[7];
-        double R22=(Rz[3]*Ry[0]+Rz[4]*Ry[3]+Rz[5]*Ry[6])*Rx[1]+(Rz[3]*Ry[1]+Rz[4]*Ry[4]+Rz[5]*Ry[7])*Rx[4]+(Rz[3]*Ry[2]+Rz[4]*Ry[5]+Rz[5]*Ry[8])*Rx[7];
-        double R32=(Rz[6]*Ry[0]+Rz[7]*Ry[3]+Rz[8]*Ry[6])*Rx[1]+(Rz[6]*Ry[1]+Rz[7]*Ry[4]+Rz[8]*Ry[7])*Rx[4]+(Rz[6]*Ry[2]+Rz[7]*Ry[5]+Rz[8]*Ry[8])*Rx[7];
-
-        double R13=(Rz[0]*Ry[0]+Rz[1]*Ry[3]+Rz[2]*Ry[6])*Rx[2]+(Rz[0]*Ry[1]+Rz[1]*Ry[4]+Rz[2]*Ry[7])*Rx[5]+(Rz[0]*Ry[2]+Rz[1]*Ry[5]+Rz[2]*Ry[8])*Rx[8];
-        double R23=(Rz[3]*Ry[0]+Rz[4]*Ry[3]+Rz[5]*Ry[6])*Rx[2]+(Rz[3]*Ry[1]+Rz[4]*Ry[4]+Rz[5]*Ry[7])*Rx[5]+(Rz[3]*Ry[2]+Rz[4]*Ry[5]+Rz[5]*Ry[8])*Rx[8];
-        double R33=(Rz[6]*Ry[0]+Rz[7]*Ry[3]+Rz[8]*Ry[6])*Rx[2]+(Rz[6]*Ry[1]+Rz[7]*Ry[4]+Rz[8]*Ry[7])*Rx[5]+(Rz[6]*Ry[2]+Rz[7]*Ry[5]+Rz[8]*Ry[8])*Rx[8];
-        
-        double temp1=R11*vxRelBasis+R13*vzRelBasis;
-        double temp2=R21*vxRelBasis+R23*vzRelBasis;
-        double temp3=R31*vxRelBasis+R33*vzRelBasis;
-         // x
-         field->speed[0][ii]=temp1;
-         // y
-         field->speed[1][ii]=temp2;
-         // z
-         field->speed[2][ii]=temp3;
-        
      }
      break;
    }
-   
+
  }
 
+ /*
+  * In: field = structure containing the speed of particules (among others)
+  *     parameter = structure containing the parameter usefull to know the movement of the wall
+  * Out: Mise à jour des vitesses des parois mobiles
+  */
+  void updateMovingPos(Field* field, Parameter* parameter, double t,double k, int particleID)
+  {
+   int movingBoundaryID = field->type[particleID]-2;
+   double mD[3]= {parameter->movingDirection[0][movingBoundaryID],parameter->movingDirection[1][movingBoundaryID],parameter->movingDirection[2][movingBoundaryID]};
+   double rC[3]= {parameter->rotationCenter[0][movingBoundaryID],parameter->rotationCenter[1][movingBoundaryID],parameter->rotationCenter[2][movingBoundaryID]};
+   double charactTime=parameter->charactTime[movingBoundaryID];
+   double amplitude = parameter->amplitude[movingBoundaryID];
+   PosLaw posLaw = (PosLaw) parameter->posLaw[movingBoundaryID];
+   AngleLaw angleLaw = (AngleLaw) parameter->angleLaw[movingBoundaryID];
+
+   switch(posLaw)
+    {
+      case sine:
+      {
+        // uniform periodic movement in each direction
+          // x
+          field->pos[0][particleID]+=(amplitude*mD[0]*sin(2*M_PI/charactTime*(t+k))-amplitude*mD[0]*sin(2*M_PI/charactTime*(t)));
+          // y
+          field->pos[1][particleID]+=(amplitude*mD[1]*sin(2*M_PI/charactTime*(t+k))-amplitude*mD[1]*sin(2*M_PI/charactTime*(t)));
+          // z
+          field->pos[2][particleID]+=(amplitude*mD[2]*sin(2*M_PI/charactTime*(t+k))-amplitude*mD[2]*sin(2*M_PI/charactTime*(t)));
+      }
+      break;
+      case constant:
+      {
+        // uniform movement in each direction
+          // x
+          field->pos[0][particleID]+=amplitude*mD[0]*k;
+          // y
+          field->pos[1][particleID]+=amplitude*mD[1]*k;
+          // z
+          field->pos[2][particleID]+=amplitude*mD[2]*k;
+      }
+      break;
+      case exponential:
+      // x
+      field->pos[0][particleID]+=amplitude*mD[0]*(exp(-(t)/charactTime) - exp(-(t+k)/charactTime));
+      // y
+      field->pos[1][particleID]+=amplitude*mD[1]*(exp(-(t)/charactTime) - exp(-(t+k)/charactTime));
+      // z
+      field->pos[2][particleID]+=amplitude*mD[2]*(exp(-(t)/charactTime) - exp(-(t+k)/charactTime));
+      break;
+      case rotating:
+      {
+        double pos[3] = {field->pos[0][particleID]-rC[0],field->pos[1][particleID]-rC[1],field->pos[2][particleID]-rC[2]};
+        double deltaAngle = angleComputation(amplitude,charactTime,angleLaw,t+k)-angleComputation(amplitude,charactTime,angleLaw,t);
+        quaternionRotation(mD, deltaAngle, pos);
+        for(int i = 0;i<3;i++)
+        {
+          field->pos[i][particleID] = pos[i] + rC[i];
+        }
+      }
+      break;
+    }
+
+  }

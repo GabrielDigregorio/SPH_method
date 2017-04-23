@@ -21,12 +21,15 @@
 void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, std::vector<double>& midDensityDerivative, std::vector<double>& midSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
-    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
-        switch (currentField->type[i]){
+    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++)
+    {
+        switch (currentField->type[i])
+        {
             // Free particles update
             case freePart:
             nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
-            for (int j = 0; j <= 2; j++){
+            for (int j = 0; j <= 2; j++)
+            {
                 nextField->speed[j][i] = currentField->speed[j][i] + k*((1-parameter->theta)*currentSpeedDerivative[3*i+j] + parameter->theta*midSpeedDerivative[3*i+j]);
                 //std::cout << currentSpeedDerivative[3*i + j] << " ";
                 nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]);
@@ -37,22 +40,12 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
             // Moving boundary particles update
             default:
             nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
-            for (int j = 0; j <= 2; j++){
-                nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]);
-            }
-            //case movingPart:
-            //updateMovingSpeed(nextField,parameter,t+k);//,i);
-            // comment faire un switch avec n=2,3,4... indétermimé?
-        }
-        if(currentField->type[i]>=2)// then we have a moving boundary
-        {
-          int IDmovingBoundary=currentField->type[i];
-          updateMovingSpeed(nextField,parameter,t+k,IDmovingBoundary,i);
+            updateMovingPos(nextField,parameter,t,k,i);
+            //nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]); could be use instead of updateMovingPos if one wants to integrate the speeds!
+            updateMovingSpeed(nextField,parameter,t,k,i);
         }
     }
 
-    // To be modified !! This just entered in the switch about particles type !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //if(currentField->nMoving != 0){updateMovingSpeed(nextField,parameter,t+k);}
     // Pressure (all particles at the same time)
     pressureComputation(nextField,parameter);
 }
@@ -72,12 +65,15 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
 void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
-    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
-        switch (currentField->type[i]){
+    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++)
+    {
+        switch (currentField->type[i])
+        {
             // Free particles update
             case freePart:
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
-            for (int j = 0; j <= 2; j++){
+            for (int j = 0; j <= 2; j++)
+            {
                 nextField->speed[j][i] = currentField->speed[j][i] + k*currentSpeedDerivative[3*i + j];
                 //std::cout << currentSpeedDerivative[3*i + j] << " ";
                 nextField->pos[j][i] = currentField->pos[j][i] + k*currentField->speed[j][i];
@@ -88,22 +84,11 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
             // Moving boundary particles update
             default:
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
-            for (int j = 0; j <= 2; j++){
-                nextField->pos[j][i] = currentField->pos[j][i] + k*currentField->speed[j][i];
-            }
-            //case movingPart:
-            //updateMovingSpeed(nextField,parameter,t+k);//,i);
-            // comment faire un switch avec n=2,3,4... indétermimé?
-        }
-        if(currentField->type[i]>=2)// then we have a moving boundary
-        {
-          int IDmovingBoundary=currentField->type[i];
-          updateMovingSpeed(nextField,parameter,t+k,IDmovingBoundary,i);
+            updateMovingPos(nextField,parameter,t,k,i);
+            //nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]); could be use instead of updateMovingPos if one wants to integrate the speeds!
+            updateMovingSpeed(nextField,parameter,t,k,i);
         }
     }
-
-    // To be modified !! This just entered in the switch about particles type !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //if(currentField->nMoving != 0){updateMovingSpeed(nextField,parameter,t+k);}
     // Pressure (all particles at the same time)
     pressureComputation(nextField,parameter);
 }
