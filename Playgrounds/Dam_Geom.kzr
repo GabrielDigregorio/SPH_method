@@ -61,22 +61,16 @@
         %movpara
             speedLaw=0
             angleLaw=0
-<<<<<<< HEAD
-=======
             charactTime=0.0
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-<<<<<<< HEAD
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
 
-=======
-            
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
+
 
 % Wall
    #brick
@@ -99,23 +93,14 @@
        %movpara
             speedLaw=0
             angleLaw=0
-<<<<<<< HEAD
-            charactTime=0
-=======
             charactTime=0.0
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-<<<<<<< HEAD
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
-
-=======
-            
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
 
    #brick
         %param
@@ -137,24 +122,15 @@
         %movpara
             speedLaw=0
             angleLaw=0
-<<<<<<< HEAD
-            charactTime=0
-=======
             charactTime=0.0
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-<<<<<<< HEAD
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
 
-
-=======
-           
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
    #brick
         %param
             c=1
@@ -175,23 +151,14 @@
         %movpara
             speedLaw=0
             angleLaw=0
-<<<<<<< HEAD
-            charactTime=0
-=======
             charactTime=0.0
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-<<<<<<< HEAD
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
-
-=======
-           
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
 
    #brick
         %param
@@ -213,23 +180,14 @@
         %movpara
             speedLaw=0
             angleLaw=0
-<<<<<<< HEAD
-            charactTime=0
-=======
             charactTime=0.0
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-<<<<<<< HEAD
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
-
-=======
-           
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
 
    #brick
         %param
@@ -251,22 +209,13 @@
         %movpara
             speedLaw=0
             angleLaw=0
-<<<<<<< HEAD
-            charactTime=0
-=======
             charactTime=0.0
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-<<<<<<< HEAD
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
-
-=======
->>>>>>> c5eeccd83a09b2ce940f722f4a20ffd211fb7a37
-
 
 #END_G
