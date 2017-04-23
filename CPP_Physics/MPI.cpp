@@ -39,9 +39,9 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
             localField->u[i] = globalField->u[i]; // x component will be changed
         }
         nTotalBoxesX = ceil((globalField->u[0] - globalField->l[0])/boxSize);
-        if(nTotalBoxesX < 3*nTasks){
+        if(nTotalBoxesX < 2*nTasks){
             std::cout << "Too much processors for the domain" << std::endl;
-            std::cout << "-> not yet handled !!!" << std::endl;
+            std::cout << "The size along x must be sufficient" << std::endl;
         }
         else{std::cout << "Appropriate number of processors" << std::endl;}
     }
@@ -850,8 +850,9 @@ void computeOverlapIndex(std::vector<double>& posX,
             ++nOverlap[0];
         }
         else if(posX[i]<leftMinX || posX[i] > rightMaxX){ // TO MAKE SURE EVERYTHING IS OK !
-            std::cout << "Particle " << i << " with position " << posX[i] << " should not be here !!" << std::endl;
-            std::cout << "The remaining will be completely wrong..." << std::endl;
+            std::cout << "Particle " << i << " with position " << posX[i] << " should not be here!" << std::endl;
+            std::cout << "This particle has travelled more than one subdomain in one time step." << std::endl;
+            std::cout << "The time step is probably too small and the numerical integration diverges." << std::endl;
         }
         else{
             index.push_back( std::make_pair(noOverlap, i) );
