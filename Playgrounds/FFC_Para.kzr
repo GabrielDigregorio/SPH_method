@@ -41,11 +41,9 @@
         theta=1
 
         adaptativeTimeStep=0
+        k=0.1
 
-        k=0.001
-
-        T=2
-
+        T=10
 
     % Physical Parameters
         densityRef=1000.0
@@ -68,7 +66,7 @@
         massInitMethod=0
 
     % Output Parameters
-        writeInterval=0.05
+        writeInterval=0.1
         matlab=0
         paraview=1
 

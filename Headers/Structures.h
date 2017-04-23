@@ -31,14 +31,17 @@ enum StateEquationMethod {quasiIncompressible, perfectGas, NB_STATEEQUATION_VALU
 enum MassInitMethod {violeau2012, NB_MASSINIT_VALUE};
 
 // speedLaw = Will dictate the behaviour of moving boundaries: constant, sine, exponential
-enum SpeedLaw {constant, sine, exponential,level_arm, NB_SPEEDLAW_VALUE};
+enum PosLaw {constant, sine, exponential,rotating, NB_SPEEDLAW_VALUE};
+
+// angleLaw = Will dictate the behaviour of moving boundaries: linear, sine, exponential
+enum AngleLaw {linearAngle, sineAngle, exponentialAngle, NB_ANGLELAW_VALUE};
 
 // Write Format output
 enum Matlab {noMatlab, fullMatlab, NB_MATLAB_VALUE};
 enum Paraview {noParaview, fullParaview, nFreeParaview, nMovingFixedParaview, nFree_nMovingFixedParaview, NB_PARAVIEW_VALUE};
 
 // Particle type (Necessary to impose value here!)
-enum ParticleType {freePart=0, fixedPart=1, movingPart=2};
+enum ParticleType {freePart=0, fixedPart=1,movingPart=2};
 
 // charactTime = characteristic time of movement or period of oscillations
 
@@ -66,14 +69,12 @@ struct Parameter {
     DensityInitMethod densityInitMethod;
     StateEquationMethod stateEquationMethod;
     MassInitMethod massInitMethod;
-    std::vector<int> speedLaw;
-    std::vector<double> teta[3];
+    std::vector<double> teta[3]; //To be changed to another greek letter, this is misleading with theta from RK2 scheme !!
+    std::vector<int> posLaw;
+    std::vector<int> angleLaw;
     std::vector<double> charactTime;
-    std::vector<double> movingDirection[3];
-    std::vector<double> Dimension[3];
-    std::vector<double> ampliRota;
-    std::vector<double> spacingS;
-    std::vector<int> Index;
+    std::vector<double> movingDirection[3], rotationCenter[3];
+    std::vector<double> amplitude;
     Matlab matlab;
     Paraview paraview;
 };

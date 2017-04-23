@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #define N_UL 3
-#define N_DATA 18
+#define N_DATA 22
 #define N_DATA_BATHYMETRY 5
 #define N_PARAM 24
 
@@ -64,10 +64,13 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
     double o[3] = {brickData[3],brickData[4],brickData[5]};
     double L[3] = {brickData[6],brickData[7],brickData[8]};
     double teta[3]= {brickData[9],brickData[10],brickData[11]};
-    int speedLaw= brickData[12];
-    int charactTime = brickData[13];
-    double movingDirection[3]={brickData[14],brickData[15],brickData[16]};
-    double ampliRota={brickData[17]};
+    int posLaw= brickData[12];
+    int angleLaw= brickData[13];
+    double charactTime = brickData[14];
+    double norm = sqrt(brickData[15]*brickData[15]+brickData[16]*brickData[16]+brickData[17]*brickData[17]);
+    double movingDirection[3]={brickData[15]/norm,brickData[16]/norm,brickData[17]/norm};
+    double rotationCenter[3]={brickData[18]/norm,brickData[19]/norm,brickData[20]/norm};
+    double amplitude={brickData[21]};
     for(int j = 0; j<3; j++)
     {
       if(L[j] < s)
@@ -121,20 +124,19 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
       break;
       case movingPart :
       {
-        int IDMovingBoundary;
         (*numberMovingBoundaries)++;
-        IDMovingBoundary = *numberMovingBoundaries - 1;
+        int movingBoundaryID = (*numberMovingBoundaries) - 1 + 2;  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
 
         for(int j=0 ; j<3 ; j++)
         {
           parameter->teta[j].push_back(teta[j]);
           parameter->movingDirection[j].push_back(movingDirection[j]);
-          parameter->Dimension[j].push_back(L[j]);
+          parameter->rotationCenter[j].push_back(rotationCenter[j]);
         }
         parameter->charactTime.push_back(charactTime);
-        parameter->speedLaw.push_back(speedLaw);
-        parameter->spacingS.push_back(s);
-        parameter->ampliRota.push_back(ampliRota);
+        parameter->posLaw.push_back(posLaw);
+        parameter->angleLaw.push_back(angleLaw);
+        parameter->amplitude.push_back(amplitude);
         switch(type)
         {
           case cube :
@@ -147,22 +149,11 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
           meshsphere(o, L, s, *posMoving, &nPart, &volPart, r, true);
           break;
         }
-         int size=(*typeMoving).size();
-         int start=0;
-         if(size!=0)
-         {
-          start=(*typeMoving)[size-1]-1;
-         }
-
-         int counter=0;
-        for(cnt=start; cnt<(nPart+start); ++cnt)
+        for(cnt=0; cnt<nPart; ++cnt)
         {
           (*volVectorMoving).push_back(volPart);
-          (*typeMoving).push_back( 2+cnt);  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
-          counter++;
+          (*typeMoving).push_back(movingBoundaryID);
         }
-        size=(*typeMoving).size();
-        parameter->Index.push_back((*typeMoving)[size-counter]);
       }
       break;
     }
