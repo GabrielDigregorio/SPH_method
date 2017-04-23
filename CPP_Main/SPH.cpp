@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 		// Next field !!!!! TO OPTIMIZE !!!!
 		copyField(currentField, nextField);
 		// ---
-
+		
 		// Solve the time step
         timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k);
 		currentTime += parameter->k;

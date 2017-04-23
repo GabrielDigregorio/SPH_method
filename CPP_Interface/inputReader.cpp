@@ -149,8 +149,11 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
           meshsphere(o, L, s, *posMoving, &nPart, &volPart, r, true);
           break;
         }
-        (*volVectorMoving).insert((*volVectorMoving).end(),nPart,volPart);
-        (*typeMoving).insert((*typeMoving).end(),nPart,movingBoundaryID);
+        for(cnt=0; cnt<nPart; ++cnt)
+        {
+          (*volVectorMoving).push_back(volPart);
+          (*typeMoving).push_back(movingBoundaryID);
+        }
       }
       break;
     }
