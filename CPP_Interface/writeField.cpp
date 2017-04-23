@@ -64,6 +64,16 @@ void writeField(Field* field, double t, Parameter* parameter,
         newField->l[0] = field->l[0]; newField->l[1] = field->l[1]; newField->l[2] = field->l[2];
         newField->u[0] = field->u[0]; newField->u[1] = field->u[1]; newField->u[2] = field->u[2];
 
+        // Reserves the space for the vectors
+        for(int i = 0 ; i<3 ; i++){
+            newField->pos[i].reserve(field->nTotal);
+            newField->speed[i].reserve(field->nTotal);
+        }
+        newField->density.reserve(field->nTotal);
+        newField->pressure.reserve(field->nTotal);
+        newField->mass.reserve(field->nTotal);
+        newField->type.reserve(field->nTotal);
+
         for(int i=0; i<field->pos[0].size(); ++i)
         {
             if(field->type[i] == 0)
@@ -111,7 +121,7 @@ void writeField(Field* field, double t, Parameter* parameter,
         if(parameter->paraview == fullParaview)
         {
             nbpStart = 0;
-            nbpEnd   = nbp; 
+            nbpEnd   = nbp;
             paraView(filename+"_Full", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
         }
 
@@ -119,16 +129,16 @@ void writeField(Field* field, double t, Parameter* parameter,
         if(parameter->paraview == nFreeParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
             nbpStart = 0;
-            nbpEnd   = newField->nFree; 
-            paraView(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);  
+            nbpEnd   = newField->nFree;
+            paraView(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
         }
 
         // Only nFree and nMoving
         if(parameter->paraview == nMovingFixedParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
             nbpStart = newField->nFree;
-            nbpEnd   = nbp; 
-            paraView(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);                         
+            nbpEnd   = nbp;
+            paraView(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
         }
     }
 
@@ -283,7 +293,7 @@ void matlab(std::string const &filename,
     f << " posX\t        posY\t        posZ\t     velocityX\t     velocityY\t     velocityZ\t     density\t     pressure\t     mass"<<std::endl;
 
 
-    
+
     // Fill f:
     for(int i=0; i<nbp; ++i)
     {

@@ -58,7 +58,7 @@ double boxSizeCalc(double kh, IntegrationMethod method);
 // TimeIntegration.cpp
 void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter, SubdomainInfo &subdomainInfo,
     std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
-    double t, double k, std::vector<double> &timeInfo);
+    double t, double k);
 
 
 // Kernel.cpp
@@ -86,7 +86,7 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 
 // navierStokes.cpp
 double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
-void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
+void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter, std::vector<double>& speedDerivative, std::vector<double> &viscosity);
 
 // viscosityComputation.cpp
 void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity);
@@ -110,7 +110,9 @@ void computeOverlapIndex(std::vector<double>& posX,
     double leftMinX, double leftMaxX, double rightMinX, double rightMaxX);
 void sortParticles(Field& field, std::vector< std::pair<int,int> >& index);
 void resizeField(Field& field, int nMigrate);
+void shareRKMidpoint(Field& field, SubdomainInfo &subdomainInfo);
 void shareOverlap(Field& field, SubdomainInfo &subdomainInfo);
 void deleteHalos(Field &field, SubdomainInfo &subdomainInfo);
+void timeStepUpdate(double &nextK, double &localProposition, SubdomainInfo &subdomainInfo);
 
 #endif

@@ -42,7 +42,7 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
                 viscosity[i] = ( -parameter->alpha*parameter->c*mu + parameter->beta*mu*mu ) / (rho);
 
                 if (maxMu < mu)
-                { 
+                {
                   maxMu = mu;
                 }
                 mean_rho += rho;
@@ -66,15 +66,14 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
     {
         case yes :
         {
-            std::cout << "TIME STEP MUST BE CONSTANT IN THE CURRENT VERSION (MPI)" << std::endl;
             double t_cv, t_f;
-            
-            
+
+
             t_f  = 0.25 * sqrt(h/parameter->g);
 
             if(1)
             {
-               t_cv = 0.4  * (h/(parameter->c+0.6*parameter->alpha*parameter->c+0.6*parameter->beta*maxMu)); 
+               t_cv = 0.4  * (h/(parameter->c+0.6*parameter->alpha*parameter->c+0.6*parameter->beta*maxMu));
             }
             else
             {

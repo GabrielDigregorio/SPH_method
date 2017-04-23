@@ -28,7 +28,7 @@
 %
 % writeInteval = time interval between two outputs file are generated
 % matlab = write .txt for matlab analysis:  noMatlab or fullMatlab
-% paraview = write .vtx for paraview analysis: noParaview, fullParaview, nFreeParaview,
+% paraview = write .vtk for paraview analysis: noParaview, fullParaview, nFreeParaview,
 %                                              nMovingFixedParaview, nFree_nMovingFixedParaview
 %**********************************************************************************************
 
@@ -36,29 +36,29 @@
 
     % Numerical parameters
         kernel=1
-        kh=0.92
+        kh=0.24
 
         integrationMethod=1
         theta=0.5
 
         adaptativeTimeStep=0
-        k=0.001
+        k=0.0005
 
-        T=2
+        T=6
 
   % Physical Parameters
         densityRef=1000.0
         densityInitMethod=1
 
-        B=1280000
+        B=175000
         gamma=7.0
         g=9.81
-        c=100
+        c=35
 
         viscosityModel=0
-        alpha=0.1
+        alpha=0.5
         beta=0
-        epsilon=0.1
+        epsilon=0.01
 
         stateEquationMethod=0
         molarMass=1
@@ -67,7 +67,7 @@
         massInitMethod=0
 
     % Output Parameters
-        writeInterval=0.01
+        writeInterval=0.05
         matlab=0
         paraview=4
 

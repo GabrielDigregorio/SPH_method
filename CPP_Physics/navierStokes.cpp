@@ -43,9 +43,8 @@ double continuity(int particleID, std::vector<int>& neighbors, std::vector<doubl
 * Compute the speed derivative related to particleID and store it in the speedDerivative vector
 */
 // We could make it such that gravity is a vector ?
-void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter, std::vector<double>& speedDerivative)
+void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter, std::vector<double>& speedDerivative, std::vector<double> &viscosity)
 {
-  std::vector<double> viscosity;
   viscosity.resize(neighbors.size());
   viscosityComputation(particleID, neighbors, currentField, parameter, viscosity);
 
