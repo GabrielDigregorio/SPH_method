@@ -182,6 +182,7 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
         for(int i=0 ; i<3 ; i++){
         parameter->teta[i].resize(nbMB1);
         parameter->movingDirection[i].resize(nbMB1);
+        parameter->rotationCenter[i].resize(nbMB1);
         }
     }
 
