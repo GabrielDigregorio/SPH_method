@@ -68,7 +68,7 @@
 
     % Output Parameters
         writeInterval=0.05
-        matlab=0
+        matlab=1
         paraview=4
 
 #END_F
