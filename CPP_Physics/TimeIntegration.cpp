@@ -33,15 +33,18 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
                 //std::cout << currentSpeedDerivative[3*i + j] << " ";
                 nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]);
             }
+            break;
             // Fixed particles update
             case fixedPart:
             nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
+            break;
             // Moving boundary particles update
             default:
             nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
             updateMovingPos(nextField,parameter,t,k,i);
             //nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]); could be use instead of updateMovingPos if one wants to integrate the speeds!
             updateMovingSpeed(nextField,parameter,t,k,i);
+            break;
         }
     }
 
@@ -68,7 +71,9 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
     for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
         switch (currentField->type[i]){
             // Free particles update
+
             case freePart:
+            //std::cout << "Checkpoint 2.71" << std::endl;
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             for (int j = 0; j <= 2; j++)
             {
@@ -77,14 +82,19 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
                 nextField->pos[j][i] = currentField->pos[j][i] + k*currentField->speed[j][i];
             }
             // Fixed particles update
+            break;
             case fixedPart:
+            //std::cout << "Checkpoint 2.72" << std::endl;
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
+            break;
             // Moving boundary particles update
             default:
+            //std::cout << "Checkpoint 2.73" << std::endl;
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             updateMovingPos(nextField,parameter,t,k,i);
             //nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]); could be use instead of updateMovingPos if one wants to integrate the speeds!
             updateMovingSpeed(nextField,parameter,t,k,i);
+            break;
         }
     }
     // Pressure (all particles at the same time)
@@ -159,7 +169,7 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
     std::vector<double> currentDensityDerivative;
     currentSpeedDerivative.assign(3*currentField->nTotal, 0.0);
     currentDensityDerivative.assign(currentField->nTotal, 0.0);
-
+    //std::cout << "Checkpoint 2.5" << std::endl;
     // CPU time information
     derivativeComputation(currentField, parameter, subdomainInfo, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, false);
 
@@ -174,6 +184,7 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
 
       case RK2:
       {
+        //std::cout << "Checkpoint 2.6" << std::endl;
           double kMid = 0.5*k/parameter->theta;
           Field midFieldInstance;
           Field* midField = &midFieldInstance;
@@ -183,14 +194,17 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           midDensityDerivative.assign(currentField->nTotal, 0.0);
           copyField(currentField,midField);
           // Storing midpoint in midField
+          //std::cout << "Checkpoint 2.7" << std::endl;
           eulerUpdate(currentField, midField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, kMid);
           // Share the mid point
+          //std::cout << "Checkpoint 2.8" << std::endl;
           shareRKMidpoint(*midField, subdomainInfo);
           // Compute derivatives at midPoint
           derivativeComputation(midField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, true);
           // Update
+          //std::cout << "Checkpoint 3" << std::endl;
           RK2Update(currentField, midField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, midDensityDerivative, midSpeedDerivative, t, k);
-
+          //std::cout << "Checkpoint 4" << std::endl;
       }
       break;
     }

@@ -196,6 +196,8 @@ void scatterField(Field* globalField, Field* localField, Parameter* parameter,
         MPI_Bcast(&(parameter->movingDirection[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         MPI_Bcast(&(parameter->rotationCenter[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
+
+    if(procID == 0){std::cout << "Checkpoint 1" << std::endl;}
 }
 
 /* Gathers all the current fields into the global Field */
