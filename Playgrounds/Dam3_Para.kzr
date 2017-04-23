@@ -36,15 +36,15 @@
 
     % Numerical parameters
         kernel=1
-        kh=0.45
+        kh=0.24
 
         integrationMethod=1
         theta=0.5
 
         adaptativeTimeStep=0
-        k=0.001
+        k=0.0005
 
-        T=4
+        T=6
 
   % Physical Parameters
         densityRef=1000.0

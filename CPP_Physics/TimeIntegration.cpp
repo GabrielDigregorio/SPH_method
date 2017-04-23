@@ -73,6 +73,7 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
 void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
+    //#pragma omp parallel for
     for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
         switch (currentField->type[i]){
             // Free particles update
@@ -125,7 +126,7 @@ a list with the box ID of the boxes that are adjacent to this box
 void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, bool midPoint)
 {
   // Neighbors vectors (declaration outside)
-  std::vector<int> neighbors; // ICI
+  std::vector<int> neighbors;
   std::vector<double> kernelGradients;
   std::vector<double> viscosity;
 
@@ -139,7 +140,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
     for(unsigned int part=0 ; part<boxes[box].size() ; part++){
       // Declarations
       int particleID = boxes[box][part];
-      neighbors.resize(0); // ICI
+      neighbors.resize(0);
       kernelGradients.resize(0);
       // Neighbor search
       findNeighbors(particleID, currentField->pos, parameter->kh, boxes, surrBoxesAll[box], neighbors, kernelGradients, parameter->kernel);
