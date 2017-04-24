@@ -92,7 +92,7 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity);
 
 // MPI.cpp
-void scatterField(Field* globalField, Field* currentField, Parameter* parameter,
+Error scatterField(Field* globalField, Field* currentField, Parameter* parameter,
     SubdomainInfo &subdomainInfo);
 void gatherField(Field* globalField, Field* localField, SubdomainInfo &subdomainInfo);
 void processUpdate(Field* currentField);
