@@ -66,9 +66,11 @@
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-            rotationCenterY=1.0
-            rotationCenterZ=4.0
+            rotationCenterY=0
+            rotationCenterZ=0
             amplitude=0
+
+
 
 % Wall
    #brick
@@ -88,7 +90,7 @@
             tetax=0.0
             tetay=0.0
             tetaz=0.0
-        %movpara
+       %movpara
             speedLaw=0
             angleLaw=0
             charactTime=0.0
@@ -96,8 +98,8 @@
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-            rotationCenterY=1.0
-            rotationCenterZ=4.0
+            rotationCenterY=0
+            rotationCenterZ=0
             amplitude=0
 
    #brick
@@ -125,9 +127,10 @@
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-            rotationCenterY=1.0
-            rotationCenterZ=4.0
+            rotationCenterY=0
+            rotationCenterZ=0
             amplitude=0
+
    #brick
         %param
             c=1
@@ -153,8 +156,8 @@
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-            rotationCenterY=1.0
-            rotationCenterZ=4.0
+            rotationCenterY=0
+            rotationCenterZ=0
             amplitude=0
 
    #brick
@@ -182,8 +185,8 @@
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-            rotationCenterY=1.0
-            rotationCenterZ=4.0
+            rotationCenterY=0
+            rotationCenterZ=0
             amplitude=0
 
    #brick
@@ -211,9 +214,8 @@
             movingDirectionY=0
             movingDirectionZ=0
             rotationCenterX=0
-            rotationCenterY=1.0
-            rotationCenterZ=4.0
+            rotationCenterY=0
+            rotationCenterZ=0
             amplitude=0
-
 
 #END_G
