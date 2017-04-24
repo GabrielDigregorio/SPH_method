@@ -142,8 +142,9 @@ int main(int argc, char *argv[])
 		processUpdate(*currentField, subdomainInfo);
 
 		// Write field when needed
-    	if (writeCount*parameter->writeInterval <= currentTime){
+    	if (writeCount*parameter->writeInterval <= currentTime+0.000001*currentTime){
 			gatherField(globalField, currentField, subdomainInfo);
+			globalField->currentTime = currentTime;
 			if(subdomainInfo.procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}

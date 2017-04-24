@@ -39,12 +39,17 @@ end
     Index = strfind(Str, Key);
     timeSimu = sscanf(Str(Index(1) + length(Key):end), '%g', 1); %[s]
 
+    % Current Simulation time
+    Str = char(InitExperiment.textdata(12));Key = 'Current Time Simulation : ';
+    Index = strfind(Str, Key);
+    currTimeSimu = sscanf(Str(Index(1) + length(Key):end), '%g', 1); %[s]
+    
     % Domain and nbr particules
-    Str1 = char(InitExperiment.textdata(12));
+    Str1 = char(InitExperiment.textdata(13));
     Key1 = 'Domain (lower l) : ';
-    Str2 = char(InitExperiment.textdata(13));
+    Str2 = char(InitExperiment.textdata(14));
     Key2 = 'Domain (upper u) : ';
-    Str3 = char(InitExperiment.textdata(14));
+    Str3 = char(InitExperiment.textdata(15));
     Key3 = 'Number of Particules (nFree/nMoving/nFixed) : ';             
     Index1 = strfind(Str1, Key1); Index2 = strfind(Str2, Key2); Index3 = strfind(Str3, Key3);
     
@@ -145,19 +150,7 @@ case 1
         %print('FreeFallingCube_error', '-depsc')
     hold off  
     
-    %     figure(3)
-    %     hold on
-    %     plot(time, XY_move, '*');
-    %         %axis([0 0 0 0])
-    %         title('')
-    %         xlabel('Time [s]')
-    %         ylabel('Error in %')
-    %         legend('')
-    %         grid
-    %         %print(strcat(path,'FreeFallingCube_XY_move'), '-depsc')
-    %     hold off  
-    
-    figure(4)
+    figure(3)
     hold on
     plot(time, Memory*1.25e-7, time, Memory_Peak*1.25e-7);
         title('Memory Consumption')
@@ -168,7 +161,7 @@ case 1
         %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
     hold off 
     
-    figure(5)
+    figure(4)
     hold on
     plot(time, CPU_Time);
         title('Time Consumption')
@@ -185,6 +178,7 @@ DATA.nbrFiles = nstep;
 DATA.timeStep = timeStep;
 DATA.timeWrite = timeWrite;
 DATA.timeSimu = timeSimu;
+DATA.currTimeSimu = currTimeSimu;
 DATA.CPUtime = CPU_Time;
 DATA.memory = Memory;
 DATA.memoryPeak = Memory_Peak;
@@ -291,6 +285,7 @@ DATA.nbrFiles = nstep;
 DATA.timeStep = timeStep;
 DATA.timeWrite = timeWrite;
 DATA.timeSimu = timeSimu;
+DATA.currTimeSimu = currTimeSimu;
 DATA.CPUtime = CPU_Time;
 DATA.memory = Memory;
 DATA.memoryPeak = Memory_Peak;
@@ -391,6 +386,7 @@ DATA.nbrFiles = nstep;
 DATA.timeStep = timeStep;
 DATA.timeWrite = timeWrite;
 DATA.timeSimu = timeSimu;
+DATA.currTimeSimu = currTimeSimu;
 DATA.CPUtime = CPU_Time;
 DATA.memory = Memory;
 DATA.memoryPeak = Memory_Peak;
@@ -443,6 +439,7 @@ DATA.nbrFiles = nstep;
 DATA.timeStep = timeStep;
 DATA.timeWrite = timeWrite;
 DATA.timeSimu = timeSimu;
+DATA.currTimeSimu = currTimeSimu;
 DATA.CPUtime = CPU_Time;
 DATA.memory = Memory;
 DATA.memoryPeak = Memory_Peak;
