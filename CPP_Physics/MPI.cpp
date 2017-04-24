@@ -26,10 +26,8 @@ Input:
 Ouput:
     - errorFlag: tells if the number of processor was acceptable or not
 */
-Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
+void scatterField(Field* globalField, Field* localField, Parameter* parameter,
     SubdomainInfo &subdomainInfo){
-    // Error flag
-    Error errorFlag = noError;
     // Basic MPI process information
     int nTasks = subdomainInfo.nTasks;
     int procID = subdomainInfo.procID;
@@ -44,22 +42,19 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
             localField->u[i] = globalField->u[i]; // x component will be changed
         }
         nTotalBoxesX = ceil((globalField->u[0] - globalField->l[0])/boxSize);
-        if(nTotalBoxesX < 2*nTasks){
-            std::cout << "Too much processors for the domain. ";
-            std::cout << "The size along x must be sufficient to contain at least 2*nTasks boxes." << std::endl;
-            errorFlag = consistencyError;
+        if(nTotalBoxesX < 3*nTasks){
+            std::cout << "Too much processors for the domain" << std::endl;
+            std::cout << "-> not yet handled !!!" << std::endl;
         }
         else{std::cout << "Appropriate number of processors" << std::endl;}
     }
-    MPI_Bcast(&errorFlag, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    if(errorFlag != noError){return errorFlag;}
     // Broadcasts the total number of boxes along x
     MPI_Bcast(&nTotalBoxesX, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     std::vector<int> startBoxX(nTasks+1); // The last element helps the last process
     #pragma omp for schedule(static)
     for(int i=0 ; i <= nTasks ; i++){
-        startBoxX[i] = (nTotalBoxesX*i) / nTasks; // can be optimzed
+        startBoxX[i] = (nTotalBoxesX*i) / nTasks; // TO OPTIMIZE ???
     }
 
     // Broadcasts the global l and u and determines the correct l[0] and u[0]
@@ -90,6 +85,10 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
         subdomainInfo.endingBox = subdomainInfo.startingBox + (startBoxX[procID+1]-startBoxX[procID])*nBoxesY*nBoxesZ - 1;
     }
 
+    //std::cout << procID << ": l and u: " << localField->l[0] << " " << localField->u[0] << std::endl;
+    //std::cout << procID << ": boxes  : " << subdomainInfo.startingBox << " " << subdomainInfo.endingBox << std::endl;
+
+
     // Computes indices and sorts particles
     std::vector<int> nPartNode(nTasks, 0);
     std::vector< std::pair<int,int> > domainIndex;
@@ -107,12 +106,21 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
         for(int i=1 ; i<nTasks ; i++){
             offset[i] = offset[i-1]+nPartNode[i-1];
         }
+        /* DISPLAY
+        for(int i=0; i<domainIndex.size(); ++i){
+            std::cout<<domainIndex[i].first <<" "<< domainIndex[i].second <<std::endl;
+        }
+        for(int i=0 ; i<nTasks ; i++)
+            std::cout << nPartNode[i] << " ";
+        std::cout << std::endl;
+        //*/
     }
+
 
     // Shares the number of particle per domain and prepares the vector size
     MPI_Scatter(&nPartNode[0], 1, MPI_INT, &localField->nTotal, 1, MPI_INT, 0, MPI_COMM_WORLD);
     /*    #pragma omp for schedule(static)
-    Necessary ??? */
+    Necessary ??? Could gain some time*/
     for(int i=0 ; i<3 ; i++){
         localField->pos[i].resize(localField->nTotal);
         localField->speed[i].resize(localField->nTotal);
@@ -121,6 +129,8 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
     localField->pressure.resize(localField->nTotal);
     localField->mass.resize(localField->nTotal);
     localField->type.resize(localField->nTotal);
+
+    //std::cout << procID << ": "<<localField->nTotal << std::endl;
 
     // Scatters globalField into localFields
     for(int i=0 ; i<3 ; i++){
@@ -193,7 +203,8 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
         MPI_Bcast(&(parameter->movingDirection[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         MPI_Bcast(&(parameter->rotationCenter[i][0]), nbMB1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
-    return noError;
+
+    if(procID == 0){std::cout << "Checkpoint 1" << std::endl;}
 }
 
 /* Gathers all the current fields into the global Field */
@@ -236,6 +247,23 @@ void gatherField(Field* globalField, Field* localField, SubdomainInfo &subdomain
     MPI_Gatherv(&(localField->type[start]), nbPart, MPI_INT,
             &(globalField->type[0]), &(allNbPart[0]), &(offsets[0]), MPI_INT,
             0, MPI_COMM_WORLD);
+
+
+
+    // INFORMATION
+    /*
+    if(subdomainInfo.procID == 0){
+        std::cout << "\n\n\nGather information: " << std::endl;
+        std::cout << "Number of particles per domain: " << std::endl;
+        for(int i = 0 ; i<subdomainInfo.nTasks ; i++)
+            std::cout << allNbPart[i] << " ";
+        std::cout << "\nOffset for each domain: " << std::endl;
+        for(int i = 0 ; i<subdomainInfo.nTasks ; i++)
+            std::cout << offsets[i] << " ";
+        std::cout << std::endl;
+    }
+    */
+
 }
 
 void deleteHalos(Field &field, SubdomainInfo &subdomainInfo){
@@ -828,10 +856,9 @@ void computeOverlapIndex(std::vector<double>& posX,
             index.push_back( std::make_pair(leftOverlap,i) );
             ++nOverlap[0];
         }
-        else if(posX[i]<leftMinX || posX[i] > rightMaxX){ // To predict a divergence
-            std::cout << "Particle " << i << " with x position " << posX[i] << " should not be here!" << std::endl;
-            std::cout << "This particle has travelled more than one subdomain in one time step." << std::endl;
-            std::cout << "The time step is probably too small and the numerical integration has diverged." << std::endl;
+        else if(posX[i]<leftMinX || posX[i] > rightMaxX){ // TO MAKE SURE EVERYTHING IS OK !
+            std::cout << "Particle " << i << " with position " << posX[i] << " should not be here !!" << std::endl;
+            std::cout << "The remaining will be completely wrong..." << std::endl;
         }
         else{
             index.push_back( std::make_pair(noOverlap, i) );
@@ -883,6 +910,11 @@ void sortParticles(Field& field, std::vector< std::pair<int,int> >& index){
     for(int i=0; i<N; ++i)
         tmpType[i]=field.type[ index[i].second ];
     (field.type).swap(tmpType);
+
+    tmp.clear();// Ok?
+    tmp.shrink_to_fit();// Ok?
+    tmpType.clear();// Ok?
+    tmpType.shrink_to_fit();// Ok?
 }
 
 void resizeField(Field& field, int nMigrate){
@@ -890,15 +922,21 @@ void resizeField(Field& field, int nMigrate){
     for(int coord=0 ; coord<3 ; coord++){
         // Position resize
         (field.pos[coord]).resize(finalSize);
-        // Speed resize
+        (field.pos[coord]).shrink_to_fit();
+        // Speed reordering
         (field.speed[coord]).resize(finalSize);
+        (field.speed[coord]).shrink_to_fit();
     }
-    // Density resize
+    // Density reordering
     (field.density).resize(finalSize);
-    // Pressure resize
+    (field.density).shrink_to_fit();
+    // Pressure reordering
     (field.pressure).resize(finalSize);
-    // Mass resize
+    (field.pressure).shrink_to_fit();
+    // Mass reordering
     (field.mass).resize(finalSize);
-    // Type resize
+    (field.mass).shrink_to_fit();
+    // Type reordering
     (field.type).resize(finalSize);
+    (field.type).shrink_to_fit();
 }
