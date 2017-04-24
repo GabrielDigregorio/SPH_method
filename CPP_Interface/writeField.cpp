@@ -175,7 +175,7 @@ void paraView(std::string const &filename,
     std::map<std::string, std::vector<double> *>::const_iterator it=scalars.begin();
     for(; it!=scalars.end(); ++it)
     {
-        assert(it->second->size()==nbp);
+        //assert(it->second->size()==nbp);
         f << it->first << " 1 " << nbp << " float"<<std::endl;
         for(int i=nbpStart; i<nbpEnd; ++i)
             f << (*it->second)[i] << '\n';
@@ -185,7 +185,7 @@ void paraView(std::string const &filename,
     std::map<std::string, std::vector<double> (*)[3]>::const_iterator itV=vectors.begin();
     for(; itV!=vectors.end(); ++itV)
     {
-        assert(itV->second->size()==3*nbp);
+        //assert(itV->second->size()==3*nbp);
         f << itV->first << " 3 " << nbp << " float"<<std::endl;
         for(int i=nbpStart; i<nbpEnd; ++i)
             f << (*itV->second)[0][i] << " " << (*itV->second)[1][i] << " " << (*itV->second)[2][i] << std::endl;
