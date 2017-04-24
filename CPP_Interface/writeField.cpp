@@ -3,40 +3,6 @@
 #include "Tools.h"
 
 
-// Creat directory to store data
-// In: name of the directory
-/* std::string creatDirectory(std::string dirname){
-
-    std::stringstream newdir, outdir; outdir<< dirname; newdir <<"Results/"<< dirname;
-    DIR* dir = opendir(newdir.str().c_str());
-    int i=1;
-
-    while(dir)
-    {
-         Directory exists.
-        closedir(dir);
-        newdir << i;
-        outdir << i;
-        dir = opendir(newdir.str().c_str());
-        i++;
-    }
-
-    mode_t nMode = 0733; // UNIX style permissions
-    int nError = 0;
-    #if defined(_WIN32)
-    nError = _mkdir(newdir.str().c_str()); // can be used on Windows
-    #else
-    nError = mkdir(newdir.str().c_str(),nMode); // can be used on non-Windows
-    #endif
-    // handle your error here
-    }
-
-    //mkdir(newdir.str().c_str());
-    outdir<< "/"<<dirname;
-    std::cout <<"\n"<<  outdir.str()<<"\n";
-    return outdir.str();
-} */
-
 /*
  * In: field = stucture containing value to write
  *     t = time corresponding to the file to write
@@ -63,7 +29,8 @@ void writeField(Field* field, double t, Parameter* parameter,
         newField->nMoving = field->nMoving;
         newField->l[0] = field->l[0]; newField->l[1] = field->l[1]; newField->l[2] = field->l[2];
         newField->u[0] = field->u[0]; newField->u[1] = field->u[1]; newField->u[2] = field->u[2];
-
+        newField->currentTime = field->currentTime;
+        
         // Reserves the space for the vectors
         for(int i = 0 ; i<3 ; i++){
             newField->pos[i].reserve(field->nTotal);
@@ -285,13 +252,13 @@ void matlab(std::string const &filename,
     f << "Step Time (k) : "<< parameter->k << " [s]" << std::endl;
     f << "Write interval : "<< parameter->writeInterval << " [s]" << std::endl;
     f << "Simulation Time (T) : "<< parameter->T << " [s]" << std::endl;
+    f << "Current Time Simulation : "<< field->currentTime << " [s]" << std::endl;
     f << std::endl;
     f << "Domain (lower l) : "<< field->l[0] << "   " << field->l[1] << "   " << field->l[2] << "    [m]" << std::endl;
     f << "Domain (upper u) : "<< field->u[0] << "   " << field->u[1] << "   " << field->u[2] << "    [m]" << std::endl;
     f << "Number of Particules (nFree/nMoving/nFixed) : "<< field->nFree << "   "<< field->nMoving<< "   "<< field->nFixed <<  std::endl;
     f << "\n";
     f << " posX\t        posY\t        posZ\t     velocityX\t     velocityY\t     velocityZ\t     density\t     pressure\t     mass"<<std::endl;
-
 
 
     // Fill f:

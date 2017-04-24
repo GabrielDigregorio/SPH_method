@@ -85,7 +85,8 @@ int main(int argc, char *argv[])
 	unsigned int writeCount = 1;
 
 	// Scatters the globalField from node 0 into the currentField of all nodes
-	scatterField(globalField, currentField, parameter, subdomainInfo);
+	errorFlag = scatterField(globalField, currentField, parameter, subdomainInfo);
+	if(errorFlag != noError){MPI_Finalize(); return errorFlag;}
 
 	// Declares the box mesh and determines their adjacent relations variables
 	std::vector<std::vector<int> > boxes;
@@ -125,7 +126,7 @@ int main(int argc, char *argv[])
 		// Next field !!!!! TO OPTIMIZE !!!!
 		copyField(currentField, nextField);
 		// ---
-		
+
 		// Solve the time step
         timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k);
 		currentTime += parameter->k;
@@ -142,8 +143,9 @@ int main(int argc, char *argv[])
 		processUpdate(*currentField, subdomainInfo);
 
 		// Write field when needed
-    	if (writeCount*parameter->writeInterval <= currentTime){
+    	if (writeCount*parameter->writeInterval <= currentTime+0.000001*currentTime){
 			gatherField(globalField, currentField, subdomainInfo);
+			globalField->currentTime = currentTime;
 			if(subdomainInfo.procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}
 			writeCount++;
 		}

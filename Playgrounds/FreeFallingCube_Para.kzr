@@ -42,9 +42,9 @@
 
         adaptativeTimeStep=0
 
-        k=0.001
+        k=0.01
 
-        T=2
+        T=1
 
 
     % Physical Parameters
@@ -68,8 +68,8 @@
         massInitMethod=0
 
     % Output Parameters
-        writeInterval=0.05
-        matlab=0
-        paraview=1
+        writeInterval=0.1
+        matlab=1
+        paraview=0
 
 #END_F
