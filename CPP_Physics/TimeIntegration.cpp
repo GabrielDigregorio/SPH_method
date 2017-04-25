@@ -21,7 +21,7 @@
 void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, std::vector<double>& midDensityDerivative, std::vector<double>& midSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
-    //#pragma omp parallel for schedule(dynamic)
+    #pragma omp parallel for schedule(dynamic)
     for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
         switch (currentField->type[i]){
             // Free particles update
@@ -125,7 +125,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
   if(!midPoint){sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes);} // At each time step, restart it (to optimize with lists?)
 
   // Spans the boxes
-  //#pragma omp parallel for private(neighbors, kernelGradients, viscosity) schedule(guided)
+  #pragma omp parallel for private(neighbors, kernelGradients, viscosity) schedule(guided)
   for(int box=subdomainInfo.startingBox ; box<=subdomainInfo.endingBox ; box++){
     // Spans the particles in the box
     for(unsigned int part=0 ; part<boxes[box].size() ; part++){
@@ -169,7 +169,6 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
     std::vector<double> currentDensityDerivative;
     currentSpeedDerivative.assign(3*currentField->nTotal, 0.0);
     currentDensityDerivative.assign(currentField->nTotal, 0.0);
-    //std::cout << "Checkpoint 2.5" << std::endl;
     // CPU time information
     derivativeComputation(currentField, parameter, subdomainInfo, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, false);
 
@@ -184,7 +183,6 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
 
       case RK2:
       {
-        //std::cout << "Checkpoint 2.6" << std::endl;
           double kMid = 0.5*k/parameter->theta;
           Field midFieldInstance;
           Field* midField = &midFieldInstance;
@@ -194,17 +192,13 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
           midDensityDerivative.assign(currentField->nTotal, 0.0);
           copyField(currentField,midField);
           // Storing midpoint in midField
-          //std::cout << "Checkpoint 2.7" << std::endl;
           eulerUpdate(currentField, midField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, t, kMid);
           // Share the mid point
-          //std::cout << "Checkpoint 2.8" << std::endl;
           shareRKMidpoint(*midField, subdomainInfo);
           // Compute derivatives at midPoint
           derivativeComputation(midField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, true);
           // Update
-          //std::cout << "Checkpoint 3" << std::endl;
           RK2Update(currentField, midField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, midDensityDerivative, midSpeedDerivative, t, k);
-          //std::cout << "Checkpoint 4" << std::endl;
       }
       break;
     }
