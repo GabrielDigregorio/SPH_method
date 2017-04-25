@@ -79,8 +79,9 @@ cmake ..
 make
 ```
 
-* Nic4
+* Clusters
 
+On nic4
 ```
 module load slurm
 module load openmpi
@@ -92,6 +93,12 @@ mkdir build
 cd build
 cmake ..
 make
+```
+
+On other clusters, sometimes use:
+
+```
+export CXX=g++
 ```
 
 ## Launch an experiment
