@@ -101,7 +101,10 @@ void densityInit(Field* field, Parameter* parameter)
 void pressureInit(Field* field, Parameter* parameter)
 {
 	field->pressure.resize(field->nTotal);
-	pressureComputation(field, parameter);
+	for(int i =0; i<field->nTotal;i++)
+	{
+		pressureComputation(field, parameter, i);
+	}
 }
 
 /*
@@ -111,7 +114,7 @@ void pressureInit(Field* field, Parameter* parameter)
 *Decscription:
 *Compute pressure from field.
 */
-void pressureComputation(Field* field, Parameter* parameter)
+void pressureComputation(Field* field, Parameter* parameter, int particleID)
 {
 	//Parameter withdrawal
 	double rho_0 = parameter->densityRef;
@@ -122,21 +125,18 @@ void pressureComputation(Field* field, Parameter* parameter)
 	switch (parameter->stateEquationMethod)
 	{
 		case quasiIncompressible:
-
-		for (int i = 0; i<field->nTotal; i++)
 		{
-			double rho = field->density[i];
+			double rho = field->density[particleID];
 			double p = B*(pow(rho / rho_0, gamma) - 1);
-			field->pressure[i] = p;
+			field->pressure[particleID] = p;
 		}
 		break;
 
 		case perfectGas:
-		for (int i = 0; i<field->nTotal; i++)
 		{
-			double rho = field->density[i];
+			double rho = field->density[particleID];
 			double p = rho*R*parameter->temperature/parameter->molarMass;
-			field->pressure[i] = p;
+			field->pressure[particleID] = p;
 		}
 		break;
 	}

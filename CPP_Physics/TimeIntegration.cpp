@@ -21,9 +21,11 @@
 void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, std::vector<double>& midDensityDerivative, std::vector<double>& midSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
-    //#pragma omp parallel for schedule(dynamic)
-    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
-        switch (currentField->type[i]){
+    #pragma omp parallel for schedule(dynamic)
+    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++)
+    {
+        switch (currentField->type[i])
+        {
             // Free particles update
             case freePart:
             nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
@@ -46,10 +48,10 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
             updateMovingSpeed(nextField,parameter,t,k,i);
             break;
         }
+        pressureComputation(nextField,parameter,i);
     }
 
     // Pressure (all particles at the same time)
-    pressureComputation(nextField,parameter);
 }
 
 /*
@@ -67,9 +69,11 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
 void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
-    //#pragma omp parallel for schedule(dynamic)
-    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
-        switch (currentField->type[i]){
+    #pragma omp parallel for schedule(dynamic)
+    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++)
+    {
+        switch (currentField->type[i])
+        {
             // Free particles update
 
             case freePart:
@@ -96,9 +100,8 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
             updateMovingSpeed(nextField,parameter,t,k,i);
             break;
         }
+        pressureComputation(nextField,parameter,i);
     }
-    // Pressure (all particles at the same time)
-    pressureComputation(nextField,parameter);
 }
 
 /*
@@ -125,7 +128,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
   if(!midPoint){sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes);} // At each time step, restart it (to optimize with lists?)
 
   // Spans the boxes
-  //#pragma omp parallel for private(neighbors, kernelGradients, viscosity) schedule(guided)
+  #pragma omp parallel for private(neighbors, kernelGradients, viscosity) schedule(guided)
   for(int box=subdomainInfo.startingBox ; box<=subdomainInfo.endingBox ; box++){
     // Spans the particles in the box
     for(unsigned int part=0 ; part<boxes[box].size() ; part++){
