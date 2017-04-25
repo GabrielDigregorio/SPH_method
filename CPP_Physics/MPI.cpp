@@ -845,85 +845,64 @@ void sortParticles(Field& field, std::vector< std::pair<int,int> >& index){
     std::vector<int> tmpType(N);
     // --- Sorts all data one by one ---
     int i, coord;
-    #pragma omp parallel sections default(shared) private(i, coord, tmp)
-    {
-        #pragma omp section
-        { // MAYBE SPLIT ???
-            for(coord=0 ; coord<3 ; coord++){
-                // Position reordering
-                for(i=0; i<N; ++i)
-                    tmp[i]=field.pos[coord][ index[i].second ];
-                (field.pos[coord]).swap(tmp);
-                // Speed reordering
-                for(i=0; i<N; ++i)
-                    tmp[i]=field.speed[coord][ index[i].second ];
-                    (field.speed[coord]).swap(tmp);
-            }
+        for(coord=0 ; coord<3 ; coord++){
+            // Position reordering
+            for(i=0; i<N; ++i)
+                tmp[i]=field.pos[coord][ index[i].second ];
+            (field.pos[coord]).swap(tmp);
+            // Speed reordering
+            for(i=0; i<N; ++i)
+                tmp[i]=field.speed[coord][ index[i].second ];
+            (field.speed[coord]).swap(tmp);
         }
-        #pragma omp section
-        {
+        //#pragma omp parallel sections default(shared) private(i, tmp, tmpType)
+        //{
+        //#pragma omp section
+        //{
             // Density reordering
             for(i=0; i<N; ++i)
                 tmp[i]=field.density[ index[i].second ];
             (field.density).swap(tmp);
-        }
-        #pragma omp section
-        {
+        //}
+        //#pragma omp section
+        //{
             // Pressure reordering
             for(i=0; i<N; ++i)
                 tmp[i]=field.pressure[ index[i].second ];
             (field.pressure).swap(tmp);
-        }
-        #pragma omp section
-        {
+        //}
+        //#pragma omp section
+        //{
             // Mass reordering
             for(i=0; i<N; ++i)
                 tmp[i]=field.mass[ index[i].second ];
             (field.mass).swap(tmp);
-        }
-        #pragma omp section
-        {
+        //}
+        //#pragma omp section
+        //{
             // Type reordering
             for(i=0; i<N; ++i)
                 tmpType[i]=field.type[ index[i].second ];
             (field.type).swap(tmpType);
-        }
-    }
+        //}
+        //}
 }
 
 void resizeField(Field& field, int nMigrate){
     int finalSize=(field.pos[0]).size()-nMigrate;
     int coord;
-    #pragma omp parallel sections default(shared) private(coord)
-    {
-        #pragma omp section
-        {
-            for(coord=0 ; coord<3 ; coord++){
-                // Position resize
-                (field.pos[coord]).resize(finalSize);
-                // Speed resize
-                (field.speed[coord]).resize(finalSize);
-            }
-        }
-        #pragma omp section
-        {
-            // Density resize
-            (field.density).resize(finalSize);
-        }
-        #pragma omp section
-        {
-            // Pressure resize
-            (field.pressure).resize(finalSize);
-        }
-        #pragma omp section
-        {
-            // Mass resize
-            (field.mass).resize(finalSize);
-        }
-        #pragma omp section
-        {
-            // Type resize
-            (field.type).resize(finalSize);
-        }
+    for(coord=0 ; coord<3 ; coord++){
+        // Position resize
+        (field.pos[coord]).resize(finalSize);
+        // Speed resize
+        (field.speed[coord]).resize(finalSize);
     }
+    // Density resize
+    (field.density).resize(finalSize);
+    // Pressure resize
+    (field.pressure).resize(finalSize);
+    // Mass resize
+    (field.mass).resize(finalSize);
+    // Type resize
+    (field.type).resize(finalSize);
 }
