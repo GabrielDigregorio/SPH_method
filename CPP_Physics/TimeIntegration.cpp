@@ -32,7 +32,6 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
             for (int j = 0; j <= 2; j++)
             {
                 nextField->speed[j][i] = currentField->speed[j][i] + k*((1-parameter->theta)*currentSpeedDerivative[3*i+j] + parameter->theta*midSpeedDerivative[3*i+j]);
-                //std::cout << currentSpeedDerivative[3*i + j] << " ";
                 nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]);
             }
             break;
@@ -44,14 +43,11 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
             default:
             nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
             updateMovingPos(nextField,parameter,t,k,i);
-            //nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]); could be use instead of updateMovingPos if one wants to integrate the speeds!
             updateMovingSpeed(nextField,parameter,t,k,i);
             break;
         }
         pressureComputation(nextField,parameter,i);
     }
-
-    // Pressure (all particles at the same time)
 }
 
 /*
@@ -77,26 +73,21 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
             // Free particles update
 
             case freePart:
-            //std::cout << "Checkpoint 2.71" << std::endl;
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             for (int j = 0; j <= 2; j++)
             {
                 nextField->speed[j][i] = currentField->speed[j][i] + k*currentSpeedDerivative[3*i + j];
-                //std::cout << currentSpeedDerivative[3*i + j] << " ";
                 nextField->pos[j][i] = currentField->pos[j][i] + k*currentField->speed[j][i];
             }
             // Fixed particles update
             break;
             case fixedPart:
-            //std::cout << "Checkpoint 2.72" << std::endl;
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             break;
             // Moving boundary particles update
             default:
-            //std::cout << "Checkpoint 2.73" << std::endl;
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             updateMovingPos(nextField,parameter,t,k,i);
-            //nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentField->speed[j][i] + parameter->theta*midField->speed[j][i]); could be use instead of updateMovingPos if one wants to integrate the speeds!
             updateMovingSpeed(nextField,parameter,t,k,i);
             break;
         }
@@ -131,7 +122,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
   if(!midPoint){sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes);} // At each time step, restart it (to optimize with lists?)
 
   // Spans the boxes
-  #pragma omp parallel for private(neighbors, kernelGradients, viscosity) schedule(guided)
+  #pragma omp parallel for private(neighbors, kernelGradients, viscosity) schedule(dynamic)
   for(int box=subdomainInfo.startingBox ; box<=subdomainInfo.endingBox ; box++){
     // Spans the particles in the box
     for(unsigned int part=0 ; part<boxes[box].size() ; part++){
