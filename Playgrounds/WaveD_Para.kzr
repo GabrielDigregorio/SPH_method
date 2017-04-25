@@ -1,6 +1,6 @@
 #PARA1
 %**********************************************************************************************
-% PLAYGROUND : Parameter Dam
+% PLAYGROUND : Parameter example
 % #param
 %
 % kernel = type of kernel : Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline
@@ -28,27 +28,27 @@
 %
 % writeInteval = time interval between two outputs file are generated
 % matlab = write .txt for matlab analysis:  noMatlab or fullMatlab
-% paraview = write .vtk for paraview analysis: noParaview, fullParaview, nFreeParaview,
+% paraview = write .vtx for paraview analysis: noParaview, fullParaview, nFreeParaview,
 %                                              nMovingFixedParaview, nFree_nMovingFixedParaview
 %**********************************************************************************************
 
 #param
 
     % Numerical parameters
-        kernel=2
-        kh=0.45
+        kernel=1
+        kh=0.48
 
         integrationMethod=1
         theta=0.5
 
         adaptativeTimeStep=0
-        k=0.001
+        k=0.0005
 
-        T=2
+        T=50
 
-  % Physical Parameters
+    % Physical Parameters
         densityRef=1000.0
-        densityInitMethod=1
+        densityInitMethod=0
 
         B=175000
         gamma=7.0
@@ -61,14 +61,14 @@
         epsilon=0.01
 
         stateEquationMethod=0
-        molarMass=1
-        temperature=293.15
+        molarMass=10.0
+        temperature=300
 
         massInitMethod=0
 
     % Output Parameters
-        writeInterval=0.05
+        writeInterval=0.125
         matlab=0
-        paraview=2
+        paraview=4
 
 #END_F

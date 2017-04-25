@@ -6,7 +6,7 @@
 %**************************************************************************
 function sucess = TestCases(nameExperiment, n, path)
 
-close all;
+%close all;
 set(groot,'defaultLineLineWidth',2)
 
 % Check path (optional arument)

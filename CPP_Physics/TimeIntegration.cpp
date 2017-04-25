@@ -22,8 +22,10 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
 {
     // Loop on all the particles
     #pragma omp parallel for schedule(dynamic)
-    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
-        switch (currentField->type[i]){
+    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++)
+    {
+        switch (currentField->type[i])
+        {
             // Free particles update
             case freePart:
             nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
@@ -46,10 +48,10 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
             updateMovingSpeed(nextField,parameter,t,k,i);
             break;
         }
+        pressureComputation(nextField,parameter,i);
     }
 
     // Pressure (all particles at the same time)
-    pressureComputation(nextField,parameter);
 }
 
 /*
@@ -67,9 +69,11 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
 void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, double t, double k)
 {
     // Loop on all the particles
-    //#pragma omp parallel for schedule(dynamic)
-    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++){
-        switch (currentField->type[i]){
+    #pragma omp parallel for schedule(dynamic)
+    for(int i=subdomainInfo.startingParticle ; i<=subdomainInfo.endingParticle ; i++)
+    {
+        switch (currentField->type[i])
+        {
             // Free particles update
 
             case freePart:
@@ -96,9 +100,8 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
             updateMovingSpeed(nextField,parameter,t,k,i);
             break;
         }
+        pressureComputation(nextField,parameter,i);
     }
-    // Pressure (all particles at the same time)
-    pressureComputation(nextField,parameter);
 }
 
 /*
@@ -114,7 +117,10 @@ a list with the box ID of the boxes that are adjacent to this box
 *Description:
 * Knowing the field (currentField), computes the density and velocity derivatives and store them in vectors
 */
-void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainInfo &subdomainInfo, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll, std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative, bool midPoint)
+void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainInfo &subdomainInfo,
+    std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
+    std::vector<double>& currentDensityDerivative, std::vector<double>& currentSpeedDerivative,
+    bool midPoint)
 {
   // Neighbors vectors (declaration outside)
   std::vector<int> neighbors;

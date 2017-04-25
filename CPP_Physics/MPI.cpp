@@ -6,9 +6,6 @@
 #include "Physics.h"
 #include "Tools.h"
 #include "Structures.h"
-#ifdef _OPENMP
-        #include <omp.h>
-#endif
 
 // For particle exchange/sharing
 enum overlap {leftOverlap, noOverlap, rightOverlap, NB_OVERLAP_VALUE};
@@ -57,7 +54,6 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
     MPI_Bcast(&nTotalBoxesX, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     std::vector<int> startBoxX(nTasks+1); // The last element helps the last process
-    #pragma omp for schedule(static)
     for(int i=0 ; i <= nTasks ; i++){
         startBoxX[i] = (nTotalBoxesX*i) / nTasks; // can be optimized
     }
@@ -97,7 +93,6 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
     std::vector<int> offset(nTasks);
 
     if(procID==0){
-        #pragma omp for schedule(static)
         for(int i=0 ; i<nTasks ; i++)
             limits[i] = globall0 + startBoxX[i]*boxSize; // Without overlap
         computeDomainIndex(globalField->pos[0], limits, nPartNode, domainIndex, nTasks);
@@ -111,8 +106,6 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
 
     // Shares the number of particle per domain and prepares the vector size
     MPI_Scatter(&nPartNode[0], 1, MPI_INT, &localField->nTotal, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    /*    #pragma omp for schedule(static)
-    Necessary ??? Could gain some time*/
     for(int i=0 ; i<3 ; i++){
         localField->pos[i].resize(localField->nTotal);
         localField->speed[i].resize(localField->nTotal);
@@ -851,43 +844,54 @@ void sortParticles(Field& field, std::vector< std::pair<int,int> >& index){
     std::vector<double> tmp(N);
     std::vector<int> tmpType(N);
     // --- Sorts all data one by one ---
-    for(int coord=0 ; coord<3 ; coord++){
-        // Position reordering
-        #pragma omp for schedule(static)
-        for(int i=0; i<N; ++i)
-            tmp[i]=field.pos[coord][ index[i].second ];
-        (field.pos[coord]).swap(tmp);
-        // Speed reordering
-        #pragma omp for schedule(static)
-        for(int i=0; i<N; ++i)
-            tmp[i]=field.speed[coord][ index[i].second ];
-        (field.speed[coord]).swap(tmp);
-    }
-    // Density reordering
-    #pragma omp for schedule(static)
-    for(int i=0; i<N; ++i)
-        tmp[i]=field.density[ index[i].second ];
-    (field.density).swap(tmp);
-    // Pressure reordering
-    #pragma omp for schedule(static)
-    for(int i=0; i<N; ++i)
-        tmp[i]=field.pressure[ index[i].second ];
-    (field.pressure).swap(tmp);
-    // Mass reordering
-    #pragma omp for schedule(static)
-    for(int i=0; i<N; ++i)
-        tmp[i]=field.mass[ index[i].second ];
-    (field.mass).swap(tmp);
-    // Type reordering
-    #pragma omp for schedule(static)
-    for(int i=0; i<N; ++i)
-        tmpType[i]=field.type[ index[i].second ];
-    (field.type).swap(tmpType);
+    int i, coord;
+        for(coord=0 ; coord<3 ; coord++){
+            // Position reordering
+            for(i=0; i<N; ++i)
+                tmp[i]=field.pos[coord][ index[i].second ];
+            (field.pos[coord]).swap(tmp);
+            // Speed reordering
+            for(i=0; i<N; ++i)
+                tmp[i]=field.speed[coord][ index[i].second ];
+            (field.speed[coord]).swap(tmp);
+        }
+        //#pragma omp parallel sections default(shared) private(i, tmp, tmpType)
+        //{
+        //#pragma omp section
+        //{
+            // Density reordering
+            for(i=0; i<N; ++i)
+                tmp[i]=field.density[ index[i].second ];
+            (field.density).swap(tmp);
+        //}
+        //#pragma omp section
+        //{
+            // Pressure reordering
+            for(i=0; i<N; ++i)
+                tmp[i]=field.pressure[ index[i].second ];
+            (field.pressure).swap(tmp);
+        //}
+        //#pragma omp section
+        //{
+            // Mass reordering
+            for(i=0; i<N; ++i)
+                tmp[i]=field.mass[ index[i].second ];
+            (field.mass).swap(tmp);
+        //}
+        //#pragma omp section
+        //{
+            // Type reordering
+            for(i=0; i<N; ++i)
+                tmpType[i]=field.type[ index[i].second ];
+            (field.type).swap(tmpType);
+        //}
+        //}
 }
 
 void resizeField(Field& field, int nMigrate){
     int finalSize=(field.pos[0]).size()-nMigrate;
-    for(int coord=0 ; coord<3 ; coord++){
+    int coord;
+    for(coord=0 ; coord<3 ; coord++){
         // Position resize
         (field.pos[coord]).resize(finalSize);
         // Speed resize

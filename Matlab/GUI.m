@@ -4,7 +4,7 @@
 %                 - Run an experiment
 %                 - Analyse an experiment
 %**************************************************************************
-clc; clear all; close all;
+clc; clear all; %close all;
 
 % Get Environement:
 name = getenv('COMPUTERNAME');
