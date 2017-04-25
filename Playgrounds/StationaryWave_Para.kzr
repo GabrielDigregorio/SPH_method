@@ -1,4 +1,3 @@
-
 #PARA1
 %**********************************************************************************************
 % PLAYGROUND : Parameter example
@@ -32,33 +31,44 @@
 % paraview = write .vtx for paraview analysis: noParaview, fullParaview, nFreeParaview,
 %                                              nMovingFixedParaview, nFree_nMovingFixedParaview
 %**********************************************************************************************
+
 #param
+
     % Numerical parameters
         kernel=2
-        kh=0.6
+        kh=0.48
+
         integrationMethod=1
         theta=0.5
+
         adaptativeTimeStep=0
         k=0.0005
+
         T=50
-    % Physical Parameters
+
+ % Physical Parameters
         densityRef=1000.0
         densityInitMethod=0
-        B=1000000
+
+        B=175000
         gamma=7.0
         g=9.81
         c=35
+
         viscosityModel=0
-        alpha=0.4
+        alpha=0.5
         beta=0
         epsilon=0.01
+
         stateEquationMethod=0
         molarMass=10.0
         temperature=300
+
         massInitMethod=0
+
     % Output Parameters
         writeInterval=0.125
-        matlab=1
+        matlab=0
         paraview=4
-#END_F
 
+#END_F
