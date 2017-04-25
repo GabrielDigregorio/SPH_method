@@ -886,7 +886,6 @@ void sortParticles(Field& field, std::vector< std::pair<int,int> >& index){
         #pragma omp section
         {
             // Mass reordering
-            #pragma omp for schedule(static)
             for(i=0; i<N; ++i)
                 tmp[i]=field.mass[ index[i].second ];
             (field.mass).swap(tmp);
@@ -894,12 +893,12 @@ void sortParticles(Field& field, std::vector< std::pair<int,int> >& index){
         #pragma omp section
         {
             // Type reordering
-            #pragma omp for schedule(static)
             for(i=0; i<N; ++i)
                 tmpType[i]=field.type[ index[i].second ];
             (field.type).swap(tmpType);
         }
     }
+}
 
 void resizeField(Field& field, int nMigrate){
     int finalSize=(field.pos[0]).size()-nMigrate;
