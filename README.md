@@ -74,11 +74,32 @@ mingw32-make
 
 ```
 mkdir build
-cmake ..
 cd build
+cmake ..
 make
 ```
 
+* Clusters
+
+On nic4
+```
+module load slurm
+module load openmpi
+module load intel
+module load cmake
+module load gcc
+
+mkdir build
+cd build
+cmake ..
+make
+```
+
+On other clusters, sometimes use:
+
+```
+export CXX=g++
+```
 
 ## Launch an experiment
 

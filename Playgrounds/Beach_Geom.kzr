@@ -33,7 +33,7 @@
 
 
 #domsz
-    ux = 50
+    ux = 80
     uy = 16
     uz = 17
     lx = -35
@@ -46,11 +46,11 @@
             s=0.4
             r=0
         %coord
-            x=20
+            x=30
             y=5
             z=0
         %dimen
-            L=45
+            L=65
             W=20.8
             H=0.8
         %inclin
@@ -75,13 +75,13 @@
             s=0.4
             r=0
         %coord
-            x=8
+            x=18
             y=15.4
-            z=7.1
+            z=8.1
         %dimen
-            L=69
+            L=89
             W=0.8
-            H=15
+            H=17
         %inclin
             tetax=0.0
             tetay=0.0
@@ -106,13 +106,13 @@
                 s=0.4
                 r=0
             %coord
-                x=8
+                x=18
                 y=-5.4
-                z=7.1
+                z=8.1
             %dimen
-                L=69
+                L=89
                 W=0.8
-                H=15
+                H=17
             %inclin
                 tetax=0.0
                 tetay=0.0
@@ -135,7 +135,7 @@
                 s=0.4
                 r=0
             %coord
-                x=37.5
+                x=55
                 y=5
                 z=7.6 
             %dimen
@@ -156,7 +156,7 @@
                 rotationCenterX=24
                 rotationCenterY=5
                 rotationCenterZ=0.3
-                amplitude=3.5
+                amplitude=3
 #brick
         % fluid
             %param
@@ -164,11 +164,11 @@
                 s=0.4
                 r=0
             %coord
-                x=17.5
+                x=26
                 y=5
                 z=5.4
             %dimen
-                L=38.4
+                L=56.4
                 W=19.6
                 H=10
             %inclin
