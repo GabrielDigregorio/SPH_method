@@ -60,11 +60,15 @@
         tetaz=0.0
     %movpara
         speedLaw=0
-        charactTime = 0
+        angleLaw=0
+        charactTime=0
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-        ampliRota=0.0
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0
 
 % Moving part of the piston
 #brick
@@ -85,12 +89,16 @@
         tetay=0.0
         tetaz=0.0
     %movpara
-        speedLaw=0
+        posLaw=0
+        angleLaw=0
         charactTime = 1
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=-0.05
-        ampliRota=0.0              
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0              
 
 % Fixed part of the piston       
 #brick
@@ -112,11 +120,15 @@
         tetaz=0.0
     %movpara
         speedLaw=0
-        charactTime = 0
+        angleLaw=0
+        charactTime=0
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-        ampliRota=0.0             
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0             
 #brick
     %param
         c=1
@@ -136,11 +148,15 @@
         tetaz=0.0
     %movpara
         speedLaw=0
-        charactTime = 0
+        angleLaw=0
+        charactTime=0
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-        ampliRota=0.0             
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0          
 #brick
     %param
         c=1
@@ -160,11 +176,15 @@
         tetaz=0.0
     %movpara
         speedLaw=0
-        charactTime = 0
+        angleLaw=0
+        charactTime=0
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-        ampliRota=0.0             
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0           
 #brick
     %param
         c=1
@@ -184,11 +204,15 @@
         tetaz=0.0
     %movpara
         speedLaw=0
-        charactTime = 0
+        angleLaw=0
+        charactTime=0
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-        ampliRota=0.0             
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0            
 #brick
     %param
         c=1
@@ -208,9 +232,13 @@
         tetaz=0.0
     %movpara
         speedLaw=0
-        charactTime = 0
+        angleLaw=0
+        charactTime=0
         movingDirectionX=0
         movingDirectionY=0
         movingDirectionZ=0
-        ampliRota=0.0             
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0            
 #END_G

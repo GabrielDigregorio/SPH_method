@@ -31,44 +31,32 @@
 % paraview = write .vtx for paraview analysis: noParaview, fullParaview, nFreeParaview,
 %                                              nMovingFixedParaview, nFree_nMovingFixedParaview
 %**********************************************************************************************
-
 #param
-
     % Numerical parameters
-        kernel=1
+        kernel=2
         kh=0.6
-
         integrationMethod=1
-        theta=1
-
+        theta=0.5
         adaptativeTimeStep=0
-        k=0.0001
-
+        k=0.0005
         T=50
-
     % Physical Parameters
         densityRef=1000.0
         densityInitMethod=0
-
-        B=1280000
+        B=1000000
         gamma=7.0
         g=9.81
-        c=100
-
+        c=35
         viscosityModel=0
-        alpha=0.1
+        alpha=0.4
         beta=0
-        epsilon=0.1
-
+        epsilon=0.01
         stateEquationMethod=0
         molarMass=10.0
         temperature=300
-
         massInitMethod=0
-
     % Output Parameters
-        writeInterval=0.005
-        matlab=0
-        paraview=1
-
+        writeInterval=0.125
+        matlab=1
+        paraview=4
 #END_F
