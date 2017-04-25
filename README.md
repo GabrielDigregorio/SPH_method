@@ -74,11 +74,25 @@ mingw32-make
 
 ```
 mkdir build
-cmake ..
 cd build
+cmake ..
 make
 ```
 
+* Nic4
+
+```
+module load slurm
+module load openmpi
+module load intel
+module load cmake
+module load gcc
+
+mkdir build
+cd build
+cmake ..
+make
+```
 
 ## Launch an experiment
 
