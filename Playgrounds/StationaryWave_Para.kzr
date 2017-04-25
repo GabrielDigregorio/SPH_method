@@ -1,3 +1,4 @@
+
 #PARA1
 %**********************************************************************************************
 % PLAYGROUND : Parameter example
@@ -11,7 +12,7 @@
 % k = time step
 % T = simulation time
 %
-% densityRe = density of the fluid at atmospheric pressure
+% densityRef = density of the fluid at atmospheric pressure
 % densityInitMethod = hydrosatic, etc.
 % B & gamma = fluid constants
 % g = gravity
@@ -60,3 +61,4 @@
         matlab=1
         paraview=4
 #END_F
+
