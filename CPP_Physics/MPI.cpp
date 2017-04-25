@@ -849,46 +849,53 @@ void sortParticles(Field& field, std::vector< std::pair<int,int> >& index){
     std::vector<double> tmp(N);
     std::vector<int> tmpType(N);
     // --- Sorts all data one by one ---
-    #pragma omp parallel sections default(shared) private(i, coord, tmp){
-        #pragma omp section{ // maybe split ?
-            for(int coord=0 ; coord<3 ; coord++){
+    int i, coord;
+    #pragma omp parallel sections default(shared) private(i, coord, tmp)
+    {
+        #pragma omp section
+        { // MAYBE SPLIT ???
+            for(coord=0 ; coord<3 ; coord++){
                 // Position reordering
                 //#pragma omp for schedule(static)
-                for(int i=0; i<N; ++i)
+                for(i=0; i<N; ++i)
                     tmp[i]=field.pos[coord][ index[i].second ];
                 (field.pos[coord]).swap(tmp);
                 // Speed reordering
                 //#pragma omp for schedule(static)
-                for(int i=0; i<N; ++i)
+                for(i=0; i<N; ++i)
                     tmp[i]=field.speed[coord][ index[i].second ];
                     (field.speed[coord]).swap(tmp);
             }
         }
-        #pragma omp section{
+        #pragma omp section
+        {
             // Density reordering
             //#pragma omp for schedule(static)
-            for(int i=0; i<N; ++i)
+            for(i=0; i<N; ++i)
                 tmp[i]=field.density[ index[i].second ];
             (field.density).swap(tmp);
         }
-        #pragma omp section{
+        #pragma omp section
+        {
             // Pressure reordering
             //#pragma omp for schedule(static)
-            for(int i=0; i<N; ++i)
+            for(i=0; i<N; ++i)
                 tmp[i]=field.pressure[ index[i].second ];
             (field.pressure).swap(tmp);
         }
-        #pragma omp section{
+        #pragma omp section
+        {
             // Mass reordering
             #pragma omp for schedule(static)
-            for(int i=0; i<N; ++i)
+            for(i=0; i<N; ++i)
                 tmp[i]=field.mass[ index[i].second ];
             (field.mass).swap(tmp);
         }
-        #pragma omp section{
+        #pragma omp section
+        {
             // Type reordering
             #pragma omp for schedule(static)
-            for(int i=0; i<N; ++i)
+            for(i=0; i<N; ++i)
                 tmpType[i]=field.type[ index[i].second ];
             (field.type).swap(tmpType);
         }
@@ -896,28 +903,35 @@ void sortParticles(Field& field, std::vector< std::pair<int,int> >& index){
 
 void resizeField(Field& field, int nMigrate){
     int finalSize=(field.pos[0]).size()-nMigrate;
-    #pragma omp parallel sections default(shared) private(coord){
-        #pragma omp section{
-            for(int coord=0 ; coord<3 ; coord++){
+    int coord;
+    #pragma omp parallel sections default(shared) private(coord)
+    {
+        #pragma omp section
+        {
+            for(coord=0 ; coord<3 ; coord++){
                 // Position resize
                 (field.pos[coord]).resize(finalSize);
                 // Speed resize
                 (field.speed[coord]).resize(finalSize);
             }
         }
-        #pragma omp section{
+        #pragma omp section
+        {
             // Density resize
             (field.density).resize(finalSize);
         }
-        #pragma omp section{
+        #pragma omp section
+        {
             // Pressure resize
             (field.pressure).resize(finalSize);
         }
-        #pragma omp section{
+        #pragma omp section
+        {
             // Mass resize
             (field.mass).resize(finalSize);
         }
-        #pragma omp section{
+        #pragma omp section
+        {
             // Type resize
             (field.type).resize(finalSize);
         }
