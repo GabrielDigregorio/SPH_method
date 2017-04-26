@@ -124,6 +124,8 @@ open scriptTest.sh:
 nano scriptTest.sh
 Choose the number of processor allocated to the job with ntasks
 Choose the number of threads allocated to the job with cpus-per-task
+save the file, and launch it:
+sbatch scriptTest.sh
 ```
 
 ## Experiment Analysis (Matlab)
