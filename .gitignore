@@ -21,3 +21,4 @@ Test.*
 .DS_Store
 .vscode/
 !CMakeLists.txt
+Results/

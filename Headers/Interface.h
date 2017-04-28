@@ -25,13 +25,6 @@ void writeField(Field* field, double t, Parameter* parameter,
                 std::string const &geometryFilename="Undefined",
                 std::string const &filename="result");
 
-void paraView(std::string const &filename,
-              int step,
-              std::vector<double> (&pos)[3],
-              std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> (*)[3] > const &vectors,
-              int nbpStart, int nbpEnd);
-
 void matlab(std::string const &filename,
               std::string const &parameterFilename,
               std::string const &geometryFilename,
