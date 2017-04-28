@@ -84,7 +84,10 @@ void writeField(Field* field, double t, Parameter* parameter,
         // nbr of particles should be multiple of 3
         int nbp = newField->pos[0].size(), nbpStart, nbpEnd;
 
-        PFormat format = LEGACY_TXT;
+        //PFormat format = LEGACY_TXT;
+        //PFormat format = LEGACY_BIN;
+        //PFormat format = XML_BIN;
+        PFormat format = XML_BINZ;
 
         // Selection of the output format
         // Full
@@ -286,4 +289,4 @@ void matlab(std::string const &filename,
 
     f.close();
 
-    }
+}

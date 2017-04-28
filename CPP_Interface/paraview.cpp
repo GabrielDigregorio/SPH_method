@@ -23,6 +23,10 @@ const bool isCpuLittleEndian = 1 == *(char*)(&__one__); // CPU endianness
 void write_vectorLEGACY(std::ofstream &f, 
                         std::vector<double> const * pos, int dim, int nbpStart, int nbpEnd, bool binary)
 {
+    /*std::cout << "write_vectorLEGACY";
+    std::cout << "dim=" << dim << '\n';
+    std::cout << "nbpStart=" << nbpStart << '\n';
+    std::cout << "nbpEnd=" << nbpEnd << '\n';*/
     if(!binary) 
     {
         for(int i=nbpStart; i<nbpEnd; ++i)
@@ -58,6 +62,7 @@ void write_vectorLEGACY(std::ofstream &f,
                 }
         }
     }
+    //std::cout << "done.\n";
 }
 
 // export results to paraview (VTK polydata - legacy file fomat)
@@ -82,7 +87,7 @@ void paraviewLEGACY(std::string const &filename,
     std::stringstream s; s << "Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtk";
 
     // open file
-    std::cout << "writing results to " << s.str() << '\n';
+    //std::cout << "writing results to " << s.str() << '\n';
     std::ofstream f(s.str().c_str(), std::ios::binary | std::ios::out);
     f << std::scientific;
     // header
@@ -129,7 +134,7 @@ void paraviewLEGACY(std::string const &filename,
 
     // vector fields
     std::map<std::string, std::vector<double> (*)[3]>::const_iterator itV = vectors.begin();
-    for(; itV!=vectors.end(); ++it)
+    for(; itV!=vectors.end(); ++itV)
     {
         //assert(it->second->size()==3*nbp);
         f << itV->first << " 3 " << nbp << " float\n";
@@ -161,6 +166,11 @@ std::string zlibstatus(int status)
 size_t write_vectorXML(std::ofstream &f, std::vector<double> const * pos, int dim,
                        int nbpStart, int nbpEnd, bool usez)
 {
+    /*std::cout << "write_vectorXML\n";
+    std::cout << "dim="<<dim << '\n';
+    std::cout << "nbpStart="<<nbpStart << '\n';
+    std::cout << "nbpEnd="<<nbpEnd << '\n';*/
+
     size_t written=0;
     int nbp = nbpEnd-nbpStart;
 
@@ -186,7 +196,7 @@ size_t write_vectorXML(std::ofstream &f, std::vector<double> const * pos, int di
         std::vector<float> buffer(nbp*dim);
         for(int i=nbpStart; i<nbpEnd; ++i)
             for(int j=0;j<dim; ++j)
-                buffer[i*dim+j] = (float)pos[j][i];
+                buffer[(i-nbpStart)*dim+j] = (float)pos[j][i];
 
         size_t sourcelen = buffer.size() *sizeof(float);
         size_t destlen = size_t(sourcelen * 1.001) + 12;  // see doc
@@ -227,6 +237,7 @@ size_t write_vectorXML(std::ofstream &f, std::vector<double> const * pos, int di
 
 size_t write_vectorXML(std::ofstream &f, std::vector<int> const &pos, bool usez)
 {
+    //std::cout << "write_vectorXML(int)\n";
     size_t written=0;
 
     if(!usez)
@@ -301,7 +312,7 @@ void paraviewXML(std::string const &filename,
 #if !defined(USE_ZLIB)
     if(binary && usez)
     {
-        std::cout << "INFO: zlib not present - vtk file will not be compressed!\n";
+        //std::cout << "INFO: zlib not present - vtk file will not be compressed!\n";
         usez=false; 
     }
 #endif
@@ -313,7 +324,7 @@ void paraviewXML(std::string const &filename,
     std::stringstream s2; s2 << "Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtp.tmp";
 
     // open file
-    std::cout << "writing results to " << s.str() << '\n';
+    //std::cout << "writing results to " << s.str() << '\n';
     std::ofstream f(s.str().c_str(), std::ios::binary | std::ios::out);
     std::ofstream f2(s2.str().c_str(), std::ios::binary | std::ios::out); // temp binary file
     f << std::scientific;
@@ -354,7 +365,7 @@ void paraviewXML(std::string const &filename,
     {
         //assert(it->second->size()==3*nbp);
         f << "        <DataArray type=\"Float32\" ";
-        f << " Name=\"" << it->first << "\" ";
+        f << " Name=\"" << itV->first << "\" ";
         f << " NumberOfComponents=\"3\" ";
         f << " format=\"appended\" ";
         f << " RangeMin=\"0\" ";
@@ -414,7 +425,7 @@ void paraviewXML(std::string const &filename,
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n"; 
-    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez);
+    offset += write_vectorXML(f2, &empty, 1, 0, 0, usez);
       
     f << "        <DataArray type=\"Int32\" ";
     f << " Name=\"offsets\" ";
@@ -422,7 +433,7 @@ void paraviewXML(std::string const &filename,
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n"; 
-    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez);
+    offset += write_vectorXML(f2, &empty, 1, 0, 0, usez);
     f << "      </Lines>\n";
 
     // ------------------------------------------------------------------------------------
@@ -433,14 +444,14 @@ void paraviewXML(std::string const &filename,
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n";   
-    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez);
+    offset += write_vectorXML(f2, &empty, 1, 0, 0, usez);
     f << "        <DataArray type=\"Int32\" ";
     f << " Name=\"offsets\" ";
     f << " format=\"appended\" ";
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n"; 
-    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez);
+    offset += write_vectorXML(f2, &empty, 1, 0, 0, usez);
     f << "      </Strips>\n";
 
     // ------------------------------------------------------------------------------------
@@ -451,14 +462,14 @@ void paraviewXML(std::string const &filename,
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n";  
-    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez); 
+    offset += write_vectorXML(f2, &empty, 1, 0, 0, usez); 
     f << "        <DataArray type=\"Int32\" ";
     f << " Name=\"offsets\" ";
     f << " format=\"appended\" ";
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n";
-    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez); 
+    offset += write_vectorXML(f2, &empty, 1, 0, 0, usez); 
     f << "      </Polys>\n";
 
     f2.close();
