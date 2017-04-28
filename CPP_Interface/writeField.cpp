@@ -84,6 +84,7 @@ void writeField(Field* field, double t, Parameter* parameter,
         // nbr of particles should be multiple of 3
         int nbp = newField->pos[0].size(), nbpStart, nbpEnd;
 
+        // !! CHOOSE YOUR FORMAT !!
         //PFormat format = LEGACY_TXT;
         //PFormat format = LEGACY_BIN;
         //PFormat format = XML_BIN;
