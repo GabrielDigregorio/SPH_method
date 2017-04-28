@@ -1,6 +1,7 @@
 #include "Main.h"
 #include "Interface.h"
 #include "Tools.h"
+#include "paraview.h"
 
 
 /*
@@ -83,13 +84,15 @@ void writeField(Field* field, double t, Parameter* parameter,
         // nbr of particles should be multiple of 3
         int nbp = newField->pos[0].size(), nbpStart, nbpEnd;
 
+        PFormat format = LEGACY_TXT;
+
         // Selection of the output format
         // Full
         if(parameter->paraview == fullParaview)
         {
             nbpStart = 0;
             nbpEnd   = nbp;
-            paraView(filename+"_Full", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
+            paraview(filename+"_Full", t, newField->pos, scalars, vectors, nbpStart, nbpEnd, format);
         }
 
         // Only nFree
@@ -97,7 +100,7 @@ void writeField(Field* field, double t, Parameter* parameter,
         {
             nbpStart = 0;
             nbpEnd   = newField->nFree;
-            paraView(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
+            paraview(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd, format);
         }
 
         // Only nFree and nMoving
@@ -105,7 +108,7 @@ void writeField(Field* field, double t, Parameter* parameter,
         {
             nbpStart = newField->nFree;
             nbpEnd   = nbp;
-            paraView(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
+            paraview(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd, format);
         }
     }
 
@@ -133,6 +136,7 @@ void writeField(Field* field, double t, Parameter* parameter,
 //   step:    time step number
 //   scalars: scalar fields defined on particles (map linking [field name] <=> [vector of results v1, v2, v3, v4, ...]
 //   vectors: vector fields defined on particles (map linking [field name] <=> [vector of results v1x, v1y, v1z, v2x, v2y, ...]
+
 void paraView(std::string const &filename,
               int step,
               std::vector<double> (&pos)[3],

@@ -15,9 +15,10 @@ enum PFormat
 
 void paraview(std::string const &filename, 
               int step,
-              std::vector<double> const &pos,
+              std::vector<double> const (&pos)[3],
               std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors,
-              PFormat format);       
+              std::map<std::string, std::vector<double> (*)[3]> const &vectors,
+              int nbpStart, int nbpEnd, 
+              PFormat format);      
 
 #endif // PARAVIEW_H

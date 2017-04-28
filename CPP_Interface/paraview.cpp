@@ -20,27 +20,27 @@ const bool isCpuLittleEndian = 1 == *(char*)(&__one__); // CPU endianness
 // this routine writes a vector of double as a vector of float to a legacy VTK file f.
 //  the vector is converted to float (32bits) and to "big endian" format (required by the legacy VTK format)
 
-void write_vectorLEGACY(std::ofstream &f, std::vector<double> const &pos, int nbp, int nj, bool binary)
+void write_vectorLEGACY(std::ofstream &f, 
+                        std::vector<double> const * pos, int dim, int nbpStart, int nbpEnd, bool binary)
 {
-    //assert(pos.size()==nbp*nj);
     if(!binary) 
     {
-        for(int i=0; i<nbp; ++i)
+        for(int i=nbpStart; i<nbpEnd; ++i)
         {
-            for(int j=0;j<nj;++j)
-                f << pos[nj*i+j] << " ";
+            for(int j=0;j<dim;++j)
+                f << pos[j][i] << " ";
             f << '\n';
         }
     }
     else
     {
         if(isCpuLittleEndian)
-            for(int i=0; i<nbp; ++i)
+            for(int i=nbpStart; i<nbpEnd; ++i)
             {
                 // float+little endian => double should be converted to float, then swapped
-                for(int j=0; j<nj; ++j)
+                for(int j=0; j<dim; ++j)
                 {
-                    float fx = (float)pos[nj*i+j]; 
+                    float fx = (float)pos[j][i]; 
                     uint32_t x = swap_uint32(*(uint32_t*)&fx); // convert if CPU is little endian
                     f.write((char*)&x, sizeof(uint32_t));
                 }
@@ -50,10 +50,10 @@ void write_vectorLEGACY(std::ofstream &f, std::vector<double> const &pos, int nb
             // double+bigendian => vector can be written as in memory
             //f.write(reinterpret_cast<char const*>(&(pos[0])), pos.size()*sizeof(double));
             // float+bigendian => vector should be converted to float
-            for(int i=0; i<nbp; ++i)
-                for(int j=0; j<nj; ++j)
+            for(int i=nbpStart; i<nbpEnd; ++i)
+                for(int j=0; j<3; ++j)
                 {
-                    float fx = (float)pos[nj*i+j]; 
+                    float fx = (float)pos[j][i]; 
                     f.write((char*)&fx, sizeof(uint32_t));
                 }
         }
@@ -70,19 +70,16 @@ void write_vectorLEGACY(std::ofstream &f, std::vector<double> const &pos, int nb
 
 void paraviewLEGACY(std::string const &filename, 
               int step,
-              std::vector<double> const &pos,
+              std::vector<double> const (&pos)[3],
               std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors, 
+              std::map<std::string, std::vector<double> (*)[3]> const &vectors,
+              int nbpStart, int nbpEnd,  
               bool binary)
 {
-    //std::cout << "system is " << (isCpuLittleEndian? "little" : "big") << " endian\n";
-    //bool binary=false;
-
-    int nbp = pos.size()/3;
-    //assert(pos.size()==nbp*3); // should be multiple of 3
+    int nbp = nbpEnd-nbpStart;
     
     // build file name + stepno + vtk extension
-    std::stringstream s; s << filename << std::setw(8) << std::setfill('0') << step << ".vtk";
+    std::stringstream s; s << "Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtk";
 
     // open file
     std::cout << "writing results to " << s.str() << '\n';
@@ -96,14 +93,14 @@ void paraviewLEGACY(std::string const &filename,
 
     // points
     f << "POINTS " << nbp << " float\n";
-    write_vectorLEGACY(f, pos, nbp, 3, binary);
+    write_vectorLEGACY(f, pos, 3, nbpStart, nbpEnd, binary);
     
     // vertices
     f << "VERTICES " << nbp << " " << 2*nbp << "\n";
     if(!binary) 
     {    
         for(int i=0; i<nbp; ++i)
-            f << "1 " << i << '\n';
+            f << "1 " << i-nbpStart << '\n';
         f << '\n'; // empty line (required)
     }
     else
@@ -127,16 +124,16 @@ void paraviewLEGACY(std::string const &filename,
     {
         //assert(it->second->size()==nbp);
         f << it->first << " 1 " << nbp << " float\n";
-        write_vectorLEGACY(f, *it->second, nbp, 1, binary);
+        write_vectorLEGACY(f, &*it->second, 1, nbpStart, nbpEnd, binary);
     }
 
     // vector fields
-    it = vectors.begin();
-    for(; it!=vectors.end(); ++it)
+    std::map<std::string, std::vector<double> (*)[3]>::const_iterator itV = vectors.begin();
+    for(; itV!=vectors.end(); ++it)
     {
         //assert(it->second->size()==3*nbp);
-        f << it->first << " 3 " << nbp << " float\n";
-        write_vectorLEGACY(f, *it->second, nbp, 3, binary);
+        f << itV->first << " 3 " << nbp << " float\n";
+        write_vectorLEGACY(f, &(*itV->second)[0], 3, nbpStart, nbpEnd, binary);
     }
     f.close();
 }
@@ -161,31 +158,37 @@ std::string zlibstatus(int status)
 }
 
 
-size_t write_vectorXML(std::ofstream &f, std::vector<double> const &pos, bool usez)
+size_t write_vectorXML(std::ofstream &f, std::vector<double> const * pos, int dim,
+                       int nbpStart, int nbpEnd, bool usez)
 {
     size_t written=0;
+    int nbp = nbpEnd-nbpStart;
 
     if(!usez)
     {
         // data block size
-        uint32_t sz = pos.size()*sizeof(float);
+        uint32_t sz = nbp*dim*sizeof(float);
         f.write((char*)&sz, sizeof(uint32_t)); written+=sizeof(uint32_t);
         // data
-        for(int i=0; i<pos.size(); ++i)
+        for(int i=nbpStart; i<nbpEnd; ++i)
         {
-            float fx = (float)pos[i]; 
-            f.write((char*)&fx, sizeof(float));
+            for(int j=0;j<dim; ++j)
+            {
+                float fx = (float)pos[j][i]; 
+                f.write((char*)&fx, sizeof(float));
+            }
         }
         written+=sz;
     }
     else
     {
         // convert double to float
-        std::vector<float> buffer(pos.size());
-        for(int i=0; i<pos.size(); ++i)
-            buffer[i] = (float)pos[i];
+        std::vector<float> buffer(nbp*dim);
+        for(int i=nbpStart; i<nbpEnd; ++i)
+            for(int j=0;j<dim; ++j)
+                buffer[i*dim+j] = (float)pos[j][i];
 
-        size_t sourcelen = pos.size() *sizeof(float);
+        size_t sourcelen = buffer.size() *sizeof(float);
         size_t destlen = size_t(sourcelen * 1.001) + 12;  // see doc
         char *destbuffer = new char[destlen];
 #ifdef USE_ZLIB
@@ -275,8 +278,7 @@ size_t write_vectorXML(std::ofstream &f, std::vector<int> const &pos, bool usez)
 
     return written;
 }
-
-
+ 
 
 // export results to paraview (VTK polydata - XML fomat)
 //   filename: file name without vtk extension
@@ -289,15 +291,13 @@ size_t write_vectorXML(std::ofstream &f, std::vector<int> const &pos, bool usez)
 
 void paraviewXML(std::string const &filename, 
                  int step,
-                 std::vector<double> const &pos,
+                 std::vector<double> const (&pos)[3],
                  std::map<std::string, std::vector<double> *> const &scalars,
-                 std::map<std::string, std::vector<double> *> const &vectors, 
+                 std::map<std::string, std::vector<double> (*)[3]> const &vectors,
+                 int nbpStart, int nbpEnd,  
                  bool binary, 
                  bool usez)
 {
-    //std::cout << "system is " << (isCpuLittleEndian? "little" : "big") << " endian\n";
-    //bool binary=false;
-    //bool usez=true;
 #if !defined(USE_ZLIB)
     if(binary && usez)
     {
@@ -306,12 +306,11 @@ void paraviewXML(std::string const &filename,
     }
 #endif
 
-    int nbp = pos.size()/3;
-    //assert(pos.size()==nbp*3); // should be multiple of 3
+    int nbp = nbpEnd-nbpStart;
     
     // build file name + stepno + vtk extension
-    std::stringstream s; s << filename << std::setw(8) << std::setfill('0') << step << ".vtp";
-    std::stringstream s2; s2 << filename << std::setw(8) << std::setfill('0') << step << ".vtp.tmp";
+    std::stringstream s; s << "Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtp";
+    std::stringstream s2; s2 << "Results/" << filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtp.tmp";
 
     // open file
     std::cout << "writing results to " << s.str() << '\n';
@@ -347,11 +346,11 @@ void paraviewXML(std::string const &filename,
         f << " RangeMin=\"0\" ";
         f << " RangeMax=\"1\" ";
         f << " offset=\"" << offset << "\" />\n";
-        offset += write_vectorXML(f2, *it->second, usez);
+        offset += write_vectorXML(f2, &*it->second, 1, nbpStart, nbpEnd, usez);
     }
     // vector fields
-    it = vectors.begin();
-    for(; it!=vectors.end(); ++it)
+    std::map<std::string, std::vector<double> (*)[3]>::const_iterator itV = vectors.begin();
+    for(; itV!=vectors.end(); ++itV)
     {
         //assert(it->second->size()==3*nbp);
         f << "        <DataArray type=\"Float32\" ";
@@ -361,7 +360,7 @@ void paraviewXML(std::string const &filename,
         f << " RangeMin=\"0\" ";
         f << " RangeMax=\"1\" ";
         f << " offset=\"" << offset << "\" />\n";
-        offset += write_vectorXML(f2, *it->second, usez);
+        offset += write_vectorXML(f2, &(*itV->second)[0], 3, nbpStart, nbpEnd, usez);
     }
     f << "      </PointData>\n";
 
@@ -378,7 +377,7 @@ void paraviewXML(std::string const &filename,
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n";   
-    offset += write_vectorXML(f2, pos, usez);
+    offset += write_vectorXML(f2, pos, 3, nbpStart, nbpEnd, usez);
     f << "      </Points>\n";
     // ------------------------------------------------------------------------------------
     f << "      <Verts>\n";
@@ -415,7 +414,7 @@ void paraviewXML(std::string const &filename,
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n"; 
-    offset += write_vectorXML(f2, empty, usez);
+    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez);
       
     f << "        <DataArray type=\"Int32\" ";
     f << " Name=\"offsets\" ";
@@ -423,7 +422,7 @@ void paraviewXML(std::string const &filename,
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n"; 
-    offset += write_vectorXML(f2, empty, usez);
+    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez);
     f << "      </Lines>\n";
 
     // ------------------------------------------------------------------------------------
@@ -434,14 +433,14 @@ void paraviewXML(std::string const &filename,
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n";   
-    offset += write_vectorXML(f2, empty, usez);
+    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez);
     f << "        <DataArray type=\"Int32\" ";
     f << " Name=\"offsets\" ";
     f << " format=\"appended\" ";
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n"; 
-    offset += write_vectorXML(f2, empty, usez);
+    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez);
     f << "      </Strips>\n";
 
     // ------------------------------------------------------------------------------------
@@ -452,14 +451,14 @@ void paraviewXML(std::string const &filename,
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n";  
-    offset += write_vectorXML(f2, empty, usez); 
+    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez); 
     f << "        <DataArray type=\"Int32\" ";
     f << " Name=\"offsets\" ";
     f << " format=\"appended\" ";
     f << " RangeMin=\"0\" ";
     f << " RangeMax=\"1\" ";
     f << " offset=\"" << offset << "\" />\n";
-    offset += write_vectorXML(f2, empty, usez); 
+    offset += write_vectorXML(f2, &empty, 1, nbpStart, nbpEnd, usez); 
     f << "      </Polys>\n";
 
     f2.close();
@@ -484,26 +483,26 @@ void paraviewXML(std::string const &filename,
     f.close();
 }
 
-
 // interface
 
 void paraview(std::string const &filename, 
               int step,
-              std::vector<double> const &pos,
+              std::vector<double> const (&pos)[3],
               std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> *> const &vectors, 
+              std::map<std::string, std::vector<double> (*)[3]> const &vectors,
+              int nbpStart, int nbpEnd, 
               PFormat format)       
 {
     switch(format)
     {
         case LEGACY_TXT:
-            paraviewLEGACY(filename, step, pos, scalars, vectors, false); break;
+            paraviewLEGACY(filename, step, pos, scalars, vectors, nbpStart, nbpEnd, false); break;
         case XML_BIN:
-            paraviewXML(filename, step, pos, scalars, vectors, true, false); break;
+            paraviewXML(filename, step, pos, scalars, vectors, nbpStart, nbpEnd, true, false); break;
         case XML_BINZ:
-            paraviewXML(filename, step, pos, scalars, vectors, true, true); break;
+            paraviewXML(filename, step, pos, scalars, vectors, nbpStart, nbpEnd, true, true); break;
         case LEGACY_BIN:
         default:
-            paraviewLEGACY(filename, step, pos, scalars, vectors, true); break;
+            paraviewLEGACY(filename, step, pos, scalars, vectors, nbpStart, nbpEnd, true); break;
     }
 }      
