@@ -15,10 +15,9 @@ Geom="../Playgrounds/Dam_Geom.kzr"
 TestName="dam"
 
 
-module load openmpi/1.6.4/gcc-4.9.2 module load cmake/3.5.2 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK 
+module load openmpi/1.6.4/gcc-4.9.2 
+module load cmake/3.5.2 
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK 
 mpirun sph $Para $Geom $TestName 
-cd Results 
-zip -9 res.zip *.vtk
-rm *.vtk
-rm *.txt
+
 

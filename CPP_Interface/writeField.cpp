@@ -21,7 +21,7 @@ void writeField(Field* field, double t, Parameter* parameter,
     std::map<std::string, std::vector<double> (*)[3]> vectors;
     Field newFieldInstance;
     Field* newField = &newFieldInstance;
-
+    int count=0;
     // TO BE CHANGED LATER
     if(parameter->paraview != noParaview || parameter->matlab != noMatlab)
     {
@@ -55,6 +55,7 @@ void writeField(Field* field, double t, Parameter* parameter,
                 newField->density.push_back(field->density[i]);
                 newField->pressure.push_back(field->pressure[i]);
                 newField->mass.push_back(field->mass[i]);
+                count=count+1;
             }
         }
         for(int i=0; i<field->pos[0].size(); ++i)
@@ -103,14 +104,14 @@ void writeField(Field* field, double t, Parameter* parameter,
         if(parameter->paraview == nFreeParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
             nbpStart = 0;
-            nbpEnd   = newField->nFree;
+            nbpEnd   = count;
             paraview(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd, format);
         }
 
         // Only nFree and nMoving
         if(parameter->paraview == nMovingFixedParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
-            nbpStart = newField->nFree;
+            nbpStart = count;
             nbpEnd   = nbp;
             paraview(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd, format);
         }
