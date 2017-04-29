@@ -44,7 +44,7 @@
     #brick
         %param
             c=0
-            s=0.2
+            s=0.02
             r=0
         %coord
             x=0
@@ -74,7 +74,7 @@
     #brick
         %param
             c=1
-            s=0.2
+            s=0.02
             r=0
         %coord
             x=0
@@ -83,7 +83,7 @@
         %dimen
             L=0.7
             W=0.7
-            H=0.2
+            H=0.02
         %inclin
             tetax=0.0
             tetay=0.0
@@ -107,7 +107,7 @@
    #brick
         %param
             c=1
-            s=0.2
+            s=0.02
             r=0
         %coord
             x=0
@@ -116,7 +116,7 @@
         %dimen
             L=2
             W=2
-            H=0.2
+            H=0.02
         %inclin
             tetax=0.0
             tetay=0.0
@@ -137,14 +137,14 @@
     #brick
          %param
              c=1
-             s=0.2
+             s=0.02
              r=0
          %coord
              x=-1
              y=0
              z=1
          %dimen
-             L=0.2
+             L=0.02
              W=2
              H=2
          %inclin
@@ -168,7 +168,7 @@
     #brick
          %param
              c=1
-             s=0.2
+             s=0.02
              r=0
          %coord
              x=0
@@ -176,7 +176,7 @@
              z=1
          %dimen
              L=2
-             W=0.2
+             W=0.02
              H=2
          %inclin
              tetax=0.0
@@ -198,14 +198,14 @@
     #brick
          %param
              c=1
-             s=0.2
+             s=0.02
              r=0
          %coord
              x=1
              y=0
              z=1
          %dimen
-             L=0.2
+             L=0.02
              W=2
              H=2
          %inclin
@@ -228,7 +228,7 @@
     #brick
          %param
              c=1
-             s=0.2
+             s=0.02
              r=0
          %coord
              x=0
@@ -236,7 +236,7 @@
              z=1
          %dimen
              L=2
-             W=0.2
+             W=0.02
              H=2
          %inclin
              tetax=0.0

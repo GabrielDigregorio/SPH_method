@@ -36,13 +36,13 @@
 
     % Numerical parameters
         kernel=2
-        kh=0.24
+        kh=0.024
 
         integrationMethod=1
         theta=0.5
 
         adaptativeTimeStep=0
-        k=0.001
+        k=0.00004
 
         T=3
 
