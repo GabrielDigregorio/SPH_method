@@ -42,9 +42,9 @@
         theta=0.5
 
         adaptativeTimeStep=0
-        k=0.000005
+        k=0.001
 
-        T=2
+        T=3
 
     % Physical Parameters 
         densityRef=1000.0
@@ -53,10 +53,10 @@
         B=1280000
         gamma=7.0
         g=9.81
-        c=100
+        c=35
 
         viscosityModel=0
-        alpha=0.1
+        alpha=0.5
         beta=0
         epsilon=0.1
 
@@ -67,7 +67,7 @@
         massInitMethod=0
  
     % Output Parameters
-        writeInterval=0.01
+        writeInterval=0.005
         matlab=0
         paraview=4
         
