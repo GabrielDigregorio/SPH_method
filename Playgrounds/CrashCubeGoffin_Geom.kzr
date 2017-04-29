@@ -33,12 +33,12 @@
 
 
 #domsz
-    ux = 5
-    uy = 5
-    uz = 5.5
-    lx = -1
-    ly = -1
-    lz = -1
+    ux = 1.01
+    uy = 1.01
+    uz = 2.01
+    lx = -1.01
+    ly = -1.01
+    lz = -0.01
 
 % Fluid
     #brick
@@ -47,13 +47,13 @@
             s=0.2
             r=0
         %coord
-            x=2.5
-            y=2.5
-            z=4.5
+            x=0
+            y=0
+            z=1.75
         %dimen
-            L=1
-            W=1
-            H=1
+            L=0.5
+            W=0.5
+            H=0.5
         %inclin
             tetax=0.0
             tetay=0.0
@@ -77,12 +77,12 @@
             s=0.2
             r=0
         %coord
-            x=2.5
-            y=2.5
-            z=3.5
+            x=0
+            y=0
+            z=1
         %dimen
-            L=2
-            W=2
+            L=0.7
+            W=0.7
             H=0.2
         %inclin
             tetax=0.0
@@ -110,12 +110,12 @@
             s=0.2
             r=0
         %coord
-            x=2.5
-            y=2.5
-            z=0.0
+            x=0
+            y=0
+            z=0
         %dimen
-            L=5
-            W=5
+            L=2
+            W=2
             H=0.2
         %inclin
             tetax=0.0
@@ -137,47 +137,16 @@
     #brick
          %param
              c=1
-             s=0.1
-             r=0
-         %coord
-             x=0
-             y=2.5
-             z=2.5
-         %dimen
-             L=0.2
-             W=5
-             H=5
-         %inclin
-             tetax=0.0
-             tetay=0.0
-             tetaz=0.0
-          %movpara
-            speedLaw=0
-            angleLaw=0
-            charactTime=0
-            movingDirectionX=0
-            movingDirectionY=0
-            movingDirectionZ=0
-            rotationCenterX=0
-            rotationCenterY=0
-            rotationCenterZ=0
-            amplitude=0
-
-
-% right wall
-    #brick
-         %param
-             c=1
              s=0.2
              r=0
          %coord
-             x=5
-             y=2.5
-             z=2.5
+             x=-1
+             y=0
+             z=1
          %dimen
              L=0.2
-             W=5
-             H=5
+             W=2
+             H=2
          %inclin
              tetax=0.0
              tetay=0.0
@@ -193,6 +162,7 @@
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
+
 
 % front wall
     #brick
@@ -201,13 +171,13 @@
              s=0.2
              r=0
          %coord
-             x=2.5
-             y=0.0
-             z=2.5
+             x=0
+             y=-1
+             z=1
          %dimen
-             L=5
+             L=2
              W=0.2
-             H=5
+             H=2
          %inclin
              tetax=0.0
              tetay=0.0
@@ -224,20 +194,50 @@
             rotationCenterZ=0
             amplitude=0
 
-% rear wall
+%  right wall
     #brick
          %param
              c=1
              s=0.2
              r=0
          %coord
-             x=2.5
-             y=5.0
-             z=2.5
+             x=1
+             y=0
+             z=1
          %dimen
-             L=5
+             L=0.2
+             W=2
+             H=2
+         %inclin
+             tetax=0.0
+             tetay=0.0
+             tetaz=0.0
+          %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+
+% back wall
+    #brick
+         %param
+             c=1
+             s=0.2
+             r=0
+         %coord
+             x=0
+             y=1
+             z=1
+         %dimen
+             L=2
              W=0.2
-             H=5
+             H=2
          %inclin
              tetax=0.0
              tetay=0.0
