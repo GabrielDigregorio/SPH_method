@@ -46,8 +46,18 @@ FILE(GLOB SRCS4 Headers/*.h Headers/*.cpp)
 
 INCLUDE_DIRECTORIES(CPP_Interface CPP_Physics CPP_Tools Headers)
 
+FIND_PACKAGE(ZLIB)
+IF(ZLIB_FOUND)
+    add_definitions(-DUSE_ZLIB)
+    INCLUDE_DIRECTORIES( ${ZLIB_INCLUDE_DIR} )
+ENDIF()
+
 ADD_EXECUTABLE(sph ${SRCS1} ${SRCS2} ${SRCS3} ${SRCS4} CPP_Main/SPH.cpp)
 #ADD_EXECUTABLE(neighbors ${SRCS1} ${SRCS2} ${SRCS3} ${SRCS4} CPP_Main/Neighborhood_performance.cpp)
+
+IF(ZLIB_FOUND)
+    TARGET_LINK_LIBRARIES(sph ${ZLIB_LIBRARY} )
+ENDIF()
 
 target_link_libraries(sph ${MPI_LIBRARIES})
 

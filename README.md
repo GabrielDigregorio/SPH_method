@@ -101,7 +101,7 @@ On other clusters, sometimes use:
 export CXX=g++
 ```
 
-## Launch an experiment
+## Launch an experiment 
 
 * Create a new directory to store data
 
@@ -110,11 +110,22 @@ cd build
 mkdir ./Results/myExperiment
 ```
 
-* Launch a new experiment
+* Launch a new experiment (simple way) 
 
 ```
-mkdir ./Results/myExperiment
 mpirun -np nbProc ./sph ../Playgrounds/<name>_Para.kzr ../Playgrounds/<name>_Geom.kzr myExperiment/<name>
+```
+* Launch a new experiment (proper way) 
+On nic4
+```
+Take the file scriptTest.sh and make a copy and make a copy of it in the build folder:
+cp scriptTest.sh ./build
+open scriptTest.sh:
+nano scriptTest.sh
+Choose the number of processor allocated to the job with ntasks
+Choose the number of threads allocated to the job with cpus-per-task
+save the file, and launch it:
+sbatch scriptTest.sh
 ```
 
 ## Experiment Analysis (Matlab)

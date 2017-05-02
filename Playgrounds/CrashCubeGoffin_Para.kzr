@@ -1,9 +1,9 @@
 #PARA1
 %**********************************************************************************************
-% PLAYGROUND : Parameter example
+% PLAYGROUND : Goffin CrashCube param
 % #param
 %
-% kernel = type of kernel : Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline 
+% kernel = type of kernel : Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline
 % kh = smothing length
 % integrationMethod = euler or RK2
 % theta = RK2 parameter : 1 for mid point method, 0.5 for Heun's method, 1.5 for Ralston's method
@@ -19,16 +19,16 @@
 % viscosityModel = violeauArtificial
 % alpha, beta & epsilon = viscosity parameters
 % stateEquationMethod = quasiIncompressible, perfectGas, etc.
-% molarMass = 
-% temperature = 
+% molarMass =
+% temperature =
 % massInitMethod = violeau2012 (all particles have same volumes), etc.
 %
-% movingDirection X, Y & Z = 
+% movingDirection X, Y & Z =
 % speedLaw = dictate the behaviour of moving boundaries
 %
 % writeInteval = time interval between two outputs file are generated
 % matlab = write .txt for matlab analysis:  noMatlab or fullMatlab
-% paraview = write .vtx for paraview analysis: noParaview, fullParaview, nFreeParaview,
+% paraview = write .vtk for paraview analysis: noParaview, fullParaview, nFreeParaview,
 %                                              nMovingFixedParaview, nFree_nMovingFixedParaview
 %**********************************************************************************************
 
@@ -36,15 +36,15 @@
 
     % Numerical parameters
         kernel=2
-        kh=0.12
+        kh=0.024
 
-        integrationMethod=0
+        integrationMethod=1
         theta=0.5
 
         adaptativeTimeStep=0
-        k=0.005
+        k=0.00004
 
-        T=0.4
+        T=3
 
     % Physical Parameters 
         densityRef=1000.0
@@ -53,10 +53,10 @@
         B=1280000
         gamma=7.0
         g=9.81
-        c=100
+        c=35
 
         viscosityModel=0
-        alpha=0.1
+        alpha=0.5
         beta=0
         epsilon=0.1
 
@@ -67,8 +67,8 @@
         massInitMethod=0
  
     % Output Parameters
-        writeInterval=0.01
-        matlab=1
-        paraview=2
+        writeInterval=0.005
+        matlab=0
+        paraview=4
         
 #END_F

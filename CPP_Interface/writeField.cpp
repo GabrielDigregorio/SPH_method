@@ -1,6 +1,7 @@
 #include "Main.h"
 #include "Interface.h"
 #include "Tools.h"
+#include "paraview.h"
 
 
 /*
@@ -20,7 +21,7 @@ void writeField(Field* field, double t, Parameter* parameter,
     std::map<std::string, std::vector<double> (*)[3]> vectors;
     Field newFieldInstance;
     Field* newField = &newFieldInstance;
-
+    int count=0;
     // TO BE CHANGED LATER
     if(parameter->paraview != noParaview || parameter->matlab != noMatlab)
     {
@@ -54,6 +55,7 @@ void writeField(Field* field, double t, Parameter* parameter,
                 newField->density.push_back(field->density[i]);
                 newField->pressure.push_back(field->pressure[i]);
                 newField->mass.push_back(field->mass[i]);
+                count=count+1;
             }
         }
         for(int i=0; i<field->pos[0].size(); ++i)
@@ -83,29 +85,35 @@ void writeField(Field* field, double t, Parameter* parameter,
         // nbr of particles should be multiple of 3
         int nbp = newField->pos[0].size(), nbpStart, nbpEnd;
 
+        // !! CHOOSE YOUR FORMAT !!
+        //PFormat format = LEGACY_TXT;
+        //PFormat format = LEGACY_BIN;
+        //PFormat format = XML_BIN;
+        PFormat format = XML_BINZ;
+
         // Selection of the output format
         // Full
         if(parameter->paraview == fullParaview)
         {
             nbpStart = 0;
             nbpEnd   = nbp;
-            paraView(filename+"_Full", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
+            paraview(filename+"_Full", t, newField->pos, scalars, vectors, nbpStart, nbpEnd, format);
         }
 
         // Only nFree
         if(parameter->paraview == nFreeParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
             nbpStart = 0;
-            nbpEnd   = newField->nFree;
-            paraView(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
+            nbpEnd   = count;
+            paraview(filename + "_Free", t, newField->pos, scalars, vectors, nbpStart, nbpEnd, format);
         }
 
         // Only nFree and nMoving
         if(parameter->paraview == nMovingFixedParaview || parameter->paraview == nFree_nMovingFixedParaview )
         {
-            nbpStart = newField->nFree;
+            nbpStart = count;
             nbpEnd   = nbp;
-            paraView(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd);
+            paraview(filename + "_MovingFixed", t, newField->pos, scalars, vectors, nbpStart, nbpEnd, format);
         }
     }
 
@@ -124,76 +132,6 @@ void writeField(Field* field, double t, Parameter* parameter,
     newField->mass.clear(); newField->mass.shrink_to_fit();
 
 }
-
-
-
-// export results to paraview (VTK polydata - legacy file fomat)
-//   filename: file name without vtk extension
-//   pos:     positions (vector of size number of particles)
-//   step:    time step number
-//   scalars: scalar fields defined on particles (map linking [field name] <=> [vector of results v1, v2, v3, v4, ...]
-//   vectors: vector fields defined on particles (map linking [field name] <=> [vector of results v1x, v1y, v1z, v2x, v2y, ...]
-void paraView(std::string const &filename,
-              int step,
-              std::vector<double> (&pos)[3],
-              std::map<std::string, std::vector<double> *> const &scalars,
-              std::map<std::string, std::vector<double> (*)[3] > const &vectors,
-              int nbpStart, int nbpEnd)
-{
-    // number of particles to write
-    int nbp = (nbpEnd-nbpStart);
-
-    // build file name + stepno + vtk extension
-    std::stringstream s; s <<"Results/"<< filename << "_" << std::setw(8) << std::setfill('0') << step << ".vtk";
-
-    // open file
-    //std::cout << "writing results to " << s.str() << std::endl;
-    std::ofstream f(s.str().c_str());
-    f << std::scientific;
-    // header
-    f << "# vtk DataFile Version 3.0"<<std::endl;
-    f << "file written by sph.exe"<<std::endl;
-    f << "ASCII"<<std::endl;
-    f << "DATASET POLYDATA"<<std::endl;
-
-    // points
-    f << "POINTS " << nbp << " float"<<std::endl;
-    for(int i=nbpStart; i<nbpEnd; ++i)
-        f << pos[0][i] << " " << pos[1][i] << " " << pos[2][i] << std::endl;
-
-    // vertices
-    f << "VERTICES " << nbp << " " << 2*nbp << std::endl;
-    for(int i=nbpStart; i<nbpEnd; ++i)
-        f << "1 " << i-nbpStart << std::endl;
-    f << '\n'; // empty line (required)
-
-    // fields
-    f << "POINT_DATA " << nbp << '\n';
-    f << "FIELD FieldData " << scalars.size()+vectors.size() << std::endl;
-
-    // scalar fields
-    std::map<std::string, std::vector<double> *>::const_iterator it=scalars.begin();
-    for(; it!=scalars.end(); ++it)
-    {
-        //assert(it->second->size()==nbp);
-        f << it->first << " 1 " << nbp << " float"<<std::endl;
-        for(int i=nbpStart; i<nbpEnd; ++i)
-            f << (*it->second)[i] << '\n';
-    }
-
-    // vector fields
-    std::map<std::string, std::vector<double> (*)[3]>::const_iterator itV=vectors.begin();
-    for(; itV!=vectors.end(); ++itV)
-    {
-        //assert(itV->second->size()==3*nbp);
-        f << itV->first << " 3 " << nbp << " float"<<std::endl;
-        for(int i=nbpStart; i<nbpEnd; ++i)
-            f << (*itV->second)[0][i] << " " << (*itV->second)[1][i] << " " << (*itV->second)[2][i] << std::endl;
-    }
-    f.close();
-}
-
-
 
 // export results to Matlab (.txt)
 //   filename: file name without txt extension
@@ -282,4 +220,4 @@ void matlab(std::string const &filename,
 
     f.close();
 
-    }
+}
