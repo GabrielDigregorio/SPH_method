@@ -33,12 +33,12 @@
 
 
 #domsz
-    ux = 50
-    uy = 15
-    uz = 17
-    lx = -1.5
-    ly = -1.5
-    lz = -1.5
+    ux = 40
+    uy = 2.5
+    uz = 9.5
+    lx = -1
+    ly = -2.5
+    lz = -1
 #brick
   %du bas , plaque supportrice
         %param
@@ -47,11 +47,11 @@
             r=0
         %coord
             x=20
-            y=5
+            y=0
             z=0
         %dimen
             L=40
-            W=11.6
+            W=5
             H=1
         %inclin
             tetax=0.0
@@ -72,16 +72,16 @@
     %verticale du fond
         %param
             c=1
-            s=0.8
+            s=0.5
             r=0
         %coord
             x=20
-            y=10.8
-            z=6.1
+            y=1.75
+            z=4
         %dimen
             L=40
-            W=1.6
-            H=13
+            W=0.5
+            H=7
         %inclin
             tetax=0.0
             tetay=0.0
@@ -102,16 +102,16 @@
 
            %param
             c=1
-            s=0.8
+            s=0.5
             r=0
         %coord
-            x=0.8
-            y=5
-            z=6.1
+            x=0.5
+            y=0
+            z=4
         %dimen
-            L=1.6
-            W=11.6
-            H=13
+            L=1
+            W=3
+            H=7
         %inclin
             tetax=0.0
             tetay=0.0
@@ -131,16 +131,16 @@
     % verticale devant
             %param
                 c=1
-                s=0.8
+                s=0.5
                 r=0
             %coord
                 x=20
-                y=-0.8
-                z=6.1
+                y=-1.75
+                z=4
             %dimen
                 L=40
-                W=1.6
-                H=13
+                W=0.5
+                H=7
             %inclin
                 tetax=0.0
                 tetay=0.0
@@ -160,16 +160,16 @@
         % moving plate
             %param
                 c=2
-                s=0.8
+                s=0.5
                 r=0
             %coord
-                x=35
-                y=5
-                z=7.6
+                x=37.5
+                y=0
+                z=4
             %dimen
-                L=1.6
-                W=10
-                H=15
+                L=1
+                W=3
+                H=7
             %inclin
                 tetax=0.0
                 tetay=0.0
@@ -177,28 +177,28 @@
             %movpara
                 speedLaw=1
                 angleLaw=1
-                charactTime=5
+                charactTime=2
                 movingDirectionX=1
                 movingDirectionY=0
                 movingDirectionZ=0
                 rotationCenterX=24
                 rotationCenterY=5
                 rotationCenterZ=0.3
-                amplitude=2
+                amplitude=0.5
 #brick
         % fluid
             %param
                 c=0
-                s=0.8
+                s=0.5
                 r=0
             %coord
-                x=17.9
-                y=5
-                z=5.5
+                x=19
+                y=0
+                z=3
             %dimen
-                L=32
-                W=9.2
-                H=9.6
+                L=36
+                W=3
+                H=5
             %inclin
                 tetax=0.0
                 tetay=0.0

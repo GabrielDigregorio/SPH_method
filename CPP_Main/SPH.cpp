@@ -96,6 +96,9 @@ int main(int argc, char *argv[])
 	// Copies the invariant information about the field
 	copyField(currentField, nextField);
 
+	// Barrier (just to synchronize the output information)
+	MPI_Barrier(MPI_COMM_WORLD);
+
 	// Initialization done
 	if(subdomainInfo.procID==0){std::cout << "Done.\n"  << std::endl;}
 

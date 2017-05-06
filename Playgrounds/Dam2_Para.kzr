@@ -35,8 +35,8 @@
 #param
 
     % Numerical parameters
-        kernel=2
-        kh=0.45
+        kernel=4
+        kh=0.9
 
         integrationMethod=1
         theta=0.5
@@ -44,19 +44,19 @@
         adaptativeTimeStep=0
         k=0.001
 
-        T=2
+        T=6
 
   % Physical Parameters
         densityRef=1000.0
         densityInitMethod=1
 
-        B=175000
+        B=357000
         gamma=7.0
         g=9.81
-        c=35
+        c=50
 
         viscosityModel=0
-        alpha=0.5
+        alpha=0.1
         beta=0
         epsilon=0.01
 

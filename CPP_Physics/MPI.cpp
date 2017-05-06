@@ -809,8 +809,6 @@ void computeOverlapIndex(std::vector<double>& posX,
     std::vector< std::pair<int,int> >& index, int* nOverlap,
     double leftMinX, double leftMaxX, double rightMinX, double rightMaxX){
 
-    //std::cout << "And, inside = " << posX.size() << std::endl;
-
     nOverlap[0] = 0; nOverlap[1] = 0;
     for(unsigned int i=0; i<posX.size(); ++i){
         if(posX[i]>rightMinX && posX[i]<=rightMaxX){
@@ -824,7 +822,7 @@ void computeOverlapIndex(std::vector<double>& posX,
         else if(posX[i]<leftMinX || posX[i] > rightMaxX){ // TO MAKE SURE EVERYTHING IS OK !
             std::cout << "Particle " << i << " with position " << posX[i] << " should not be here !!" << std::endl;
             std::cout << "This particle has travelled more than one subdomain in one time step." << std::endl;
-            std::cout << "The time step is probably too small and the numerical integration has diverged." << std::endl;
+            std::cout << "The time step is probably too large and the numerical integration has diverged." << std::endl;
         }
         else{
             index.push_back( std::make_pair(noOverlap, i) );
