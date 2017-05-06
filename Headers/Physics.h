@@ -37,6 +37,7 @@ void findNeighbors(int particleID, std::vector<double> (&pos)[3], double kh,
                     std::vector<int> &surrBoxes,
                     std::vector<int> &neighbors,
                     std::vector<double> &kernelGradients,
+                    std::vector<double> &kernelValues,
                     Kernel myKernel);
 void findNeighbors(int particleID, std::vector<double> (&pos)[3], double kh,
                     std::vector<std::vector<int> > &boxes,
@@ -83,6 +84,7 @@ void updateMovingPos(Field* field, Parameter* parameter, double t,double k, int 
 // navierStokes.cpp
 double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);
 void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField , Parameter* parameter,std::vector<double>& speedDerivative);
+void xsphCorrection(int particleID, std::vector<int> &neighbors, std::vector<double>& kernelValues, Field* currentField, Parameter* parameter, std::vector<double>& positionDerivative);
 
 // navierStokes.cpp
 double continuity(int particleID, std::vector<int>& neighbors, std::vector<double>& kernelGradients,Field* currentField);

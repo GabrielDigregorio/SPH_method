@@ -109,7 +109,7 @@ void sortParticles(std::vector<double> (&pos)[3], double l[3], double u[3], doub
     }
 }
 
-// Overload with "optimization" -> useless with vectors, maybe useful with lists...
+// Overload with "optimization" -> useless (-> not used)
 void sortParticles(std::vector<double> (&pos)[3], double l[3], double u[3], double boxSize,
                    std::vector<std::vector<int> > &boxes, bool toOptimize){
 
@@ -167,6 +167,7 @@ void findNeighbors(int particleID, std::vector<double> (&pos)[3], double kh,
                     std::vector<int> &surrBoxes,
                     std::vector<int> &neighbors,
                     std::vector<double> &kernelGradients,
+                    std::vector<double> &kernelValues,
                     Kernel myKernel){
     double kh2 = kh*kh;
     double r;
@@ -184,6 +185,7 @@ void findNeighbors(int particleID, std::vector<double> (&pos)[3], double kh,
                 // Kernel gradient saving
                 r = sqrt(r2);
                 currentKernelGradientMag = gradWab(r, kh, myKernel);
+                kernelValues.push_back(Wab(r, kh, myKernel));
                 for(int coord=0 ; coord<3 ; coord++){
                     direction = (pos[coord][particleID]-pos[coord][potNeighborID]) / r;
                     kernelGradients.push_back(direction * currentKernelGradientMag);

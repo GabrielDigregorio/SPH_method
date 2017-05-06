@@ -61,7 +61,7 @@ enum ParticleType {freePart=0, fixedPart=1,movingPart=2};
 
 
 struct Parameter {
-    double kh, h, k, T, densityRef, B, gamma, g, writeInterval, c, alpha, beta, epsilon, molarMass, temperature, theta;
+    double kh, h, k, T, densityRef, B, gamma, g, writeInterval, c, alpha, beta, epsilon, molarMass, temperature, theta, epsilonXSPH;
     Kernel kernel;
     ViscosityModel viscosityModel;
     IntegrationMethod integrationMethod;

@@ -61,3 +61,26 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
   }
   speedDerivative[3*particleID + 2] -= parameter->g; // Gravitational acceleration
 }
+
+/*
+*
+*
+*
+*/
+void xsphCorrection(int particleID, std::vector<int> &neighbors, std::vector<double>& kernelValues, Field* currentField, Parameter* parameter, std::vector<double>& positionDerivative){
+
+    parameter->epsilonXSPH = 0.25;
+
+    for (int j = 0; j <= 2; j++){
+        double particleSpeed = currentField->speed[j][particleID];
+        positionDerivative[3*particleID + j] = particleSpeed;
+        /*
+        for (int i = 0; i < neighbors.size(); i++){
+            positionDerivative[3*particleID + j] += parameter->epsilonXSPH * (currentField->speed[j][neighbors[i]] - particleSpeed)
+                * kernelValues[i] * currentField->mass[neighbors[i]] / currentField->density[neighbors[i]];
+        }*/
+    }
+
+
+
+}
