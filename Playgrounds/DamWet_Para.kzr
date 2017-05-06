@@ -44,7 +44,7 @@
         adaptativeTimeStep=0
         k=0.0005
 
-        T=6
+        T=20
 
   % Physical Parameters
         densityRef=1000.0
@@ -69,6 +69,6 @@
     % Output Parameters
         writeInterval=0.05
         matlab=0
-        paraview=4
+        paraview=2
 
 #END_F
