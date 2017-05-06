@@ -16,7 +16,7 @@
 */
 void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* currentField, Parameter* parameter,std::vector<double>& viscosity)
 {
-    double h = gethFromkh(parameter->kernel ,parameter->kh);
+    double h = parameter->h;
     double maxMu = 0.0;
     double mean_rho = 0.0;
 
@@ -31,7 +31,7 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
             double rx =  currentField->pos[0][particleID]-currentField->pos[0][neighbors[i]];
             double ry =  currentField->pos[1][particleID]-currentField->pos[1][neighbors[i]];
             double rz =  currentField->pos[2][particleID]-currentField->pos[2][neighbors[i]];
-            double Rij_Uij = ux*rx+ry*uy+rz*uz;// moyen plus élégant de faire tout ça ?
+            double Rij_Uij = ux*rx+ry*uy+rz*uz;
             if(Rij_Uij < 0.0)
             {
                 double Rij2 = rx*rx+ry*ry+rz*rz;

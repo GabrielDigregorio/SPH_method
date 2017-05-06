@@ -453,8 +453,10 @@ Error readParameter(std::string filename, Parameter* parameter)
                             return parameterError;
                           }
                         }
-                        if(cnt==1)
+                        if(cnt==1){
                             parameter->kh=atof(valueArray);
+                            parameter->h = gethFromkh(parameter->kernel ,parameter->kh);
+                        }
                         if(cnt==2)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_INTEGRATION_VALUE) )

@@ -89,6 +89,8 @@ void sortParticles(std::vector<double> (&pos)[3], double l[3], double u[3], doub
     // Box identifier variables
     int boxX; int boxY; int boxZ;
     double temp;
+    // Note: no OpenMP because the push_back would require "critical" section -> not efficient at all (has been tested)
+    //      but not a big problem, this loop is not too much time consuming
     for(int i=0 ; i<pos[0].size() ; i++){
         // Box coordinate along X
         temp = (pos[0][i] - l[0])/boxSize; // Integer division

@@ -119,7 +119,7 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
   std::vector<double> viscosity;
 
   // Sort the particles at the current time step
-  if(!midPoint){sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes);} // At each time step, restart it (to optimize with lists?)
+  if(!midPoint){sortParticles(currentField->pos, currentField->l, currentField->u, subdomainInfo.boxSize, boxes);} // At each time step, restart it
 
   // Spans the boxes
   #pragma omp parallel for private(neighbors, kernelGradients, viscosity) schedule(dynamic)
