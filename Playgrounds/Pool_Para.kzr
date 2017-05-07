@@ -36,7 +36,7 @@
 
     % Numerical parameters
         kernel=2  
-        kh=0.048
+        kh=0.012
 
         integrationMethod=1
         theta=0.5
@@ -48,7 +48,7 @@
 
     % Physical Parameters 
         densityRef=1000.0
-        densityInitMethod=1 
+        densityInitMethod=0
 
         B=1280000
         gamma=7.0
@@ -56,7 +56,7 @@
         c=100
 
         viscosityModel=0
-        alpha=0.1
+        alpha=0.5
         beta=0
         epsilon=0.1
 
@@ -68,7 +68,7 @@
 
     % Output Parameters
         writeInterval=0.002
-        matlab=1
+        matlab=0
         paraview=4
 
 

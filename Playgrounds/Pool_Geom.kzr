@@ -33,27 +33,27 @@
 
 
 #domsz
-    ux = 0.3
-    uy = 0.3
-    uz = 0.6
-    lx = -0.3
-    ly = -0.3
-    lz = -0.1
+    ux = 0.4
+    uy = 0.4
+    uz = 0.7
+    lx = -0.4
+    ly = -0.4
+    lz = -0.4
 
 % Fluid
     #brick
         %param
             c=0
-            s=0.05
+            s=0.01
             r=0
         %coord
             x=0
             y=0
-            z=0.26
+            z=0.255
         %dimen
-            L=0.4
-            W=0.4
-            H=0.4
+            L=0.385
+            W=0.385
+            H=0.485
         %inclin
             tetax=0.0
             tetay=0.0
@@ -73,16 +73,16 @@
     #brick
         %param
             c=1
-            s=0.05
+            s=0.01
             r=0
         %coord
             x=0
             y=0
-            z=0
+            z=0.006
         %dimen
-            L=0.6
-            W=0.6
-            H=0.1
+            L=0.41
+            W=0.41
+            H=0.01
         %inclin
             tetax=0.0
             tetay=0.0
@@ -102,15 +102,15 @@
     #brick
         %param
             c=1
-            s=0.05
+            s=0.01
             r=0
         %coord
-            x=0.25
+            x=0.20
             y=0
-            z=0.3
+            z=0.26
         %dimen
-            L=0.1
-            W=0.5
+            L=0.01
+            W=0.41
             H=0.5
         %inclin
             tetax=0.0
@@ -131,15 +131,15 @@
     #brick
         %param
             c=1
-            s=0.05
+            s=0.01
             r=0
         %coord
-            x=-0.25
+            x=-0.20
             y=0
-            z=0.3
+            z=0.26
         %dimen
-            L=0.1
-            W=0.5
+            L=0.01
+            W=0.41
             H=0.5
         %inclin
             tetax=0.0
@@ -160,15 +160,15 @@
     #brick
         %param
             c=1
-            s=0.05
+            s=0.01
             r=0
         %coord
             x=0
-            y=0.25
-            z=0.3
+            y=0.20
+            z=0.26
         %dimen
-            L=0.6
-            W=0.1
+            L=0.41
+            W=0.01
             H=0.5
         %inclin
             tetax=0.0
@@ -189,15 +189,15 @@
     #brick
         %param
             c=1
-            s=0.05
+            s=0.01
             r=0
         %coord
             x=0
-            y=-0.25
-            z=0.3
+            y=-0.20
+            z=0.26
         %dimen
-            L=0.6
-            W=0.1
+            L=0.41
+            W=0.01
             H=0.5
         %inclin
             tetax=0.0
