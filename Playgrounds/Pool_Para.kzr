@@ -56,7 +56,7 @@
         c=100
 
         viscosityModel=0
-        alpha=0.1
+        alpha=0.5
         beta=0
         epsilon=0.1
 
