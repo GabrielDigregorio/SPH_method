@@ -1,0 +1,279 @@
+#GEOM1
+%********************************************
+% PLAYGROUND : Geometry example
+%
+% #GEOM
+% #domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+%
+% geometry : #brick, #cylin or #spher
+% %param
+%   c ==> 0=free, 1=fixed, 2=moving
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% %coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% %dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+% %inclin
+%   tetax ==> Angle of rotation around the x axis (in degre)
+%   tetay ==> Angle of rotation around the y axis (in degre)
+%   tetaz ==> Angle of rotation around the z axis (in degre)
+% %movpara
+%   movingDirection X, Y & Z =
+%   speedLaw = dictate the behaviour of moving boundaries
+%********************************************
+
+
+#domsz
+    ux = 15.2
+    uy = 15.2
+    uz = 15.2
+    lx = -15.2
+    ly = -15.2
+    lz = -0.5
+
+% Fluid
+   #brick
+        %param
+            c=0
+            s=0.2
+            r=0
+        %coord
+            x=0.0
+            y=0
+            z=2.1
+        %dimen
+            L=29.7
+            W=29.7
+            H=4
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+      %movpara
+            posLaw=0
+            angleLaw=0
+            charactTime=0.0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+
+    #brick
+         %param
+             c=0
+             s=0.2
+             r=0
+         %coord
+             x=0.0
+             y=0.0
+             z=8.6
+         %dimen
+             L=5
+             W=5
+             H=9
+         %inclin
+             tetax=0.0
+             tetay=0.0
+             tetaz=0.0
+       %movpara
+             posLaw=0
+             angleLaw=0
+             charactTime=0.0
+             movingDirectionX=0
+             movingDirectionY=0
+             movingDirectionZ=0
+             rotationCenterX=0
+             rotationCenterY=0
+             rotationCenterZ=0
+             amplitude=0
+
+% Wall
+   #brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=0
+            y=0
+            z=-0.2
+        %dimen
+            L=30.2
+            W=30.2
+            H=0.4
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0.0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+
+    #brick
+         %param
+             c=1
+             s=0.2
+             r=0
+         %coord
+             x=0
+             y=0
+             z=15.1
+         %dimen
+             L=30.2
+             W=30.2
+             H=0.2
+         %inclin
+             tetax=0.0
+             tetay=0.0
+             tetaz=0.0
+
+          %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+
+   #brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=-15
+            y=0
+            z=7.5
+        %dimen
+            L=0.2
+            W=30
+            H=15
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0.0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+
+   #brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=0
+            y=15
+            z=7.5
+        %dimen
+            L=29.8
+            W=0.2
+            H=15
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0.0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+
+
+   #brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=0
+            y=-15
+            z=7.5
+        %dimen
+            L=29.8
+            W=0.2
+            H=15
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+         %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0.0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+
+   #brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=15
+            y=0
+            z=7.5
+        %dimen
+            L=0.2
+            W=30
+            H=15
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0.0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+
+#END_G
