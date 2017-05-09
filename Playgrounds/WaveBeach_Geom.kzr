@@ -47,7 +47,7 @@
 % batFile=Playgrounds/beachSmooth.dat
 
    #bathy
-	batFile=Playgrounds/beachReal.dat
+	batFile=Playgrounds/beachRough2.dat
 	s=3
 	r=0
 	numberGroundParticles=2
