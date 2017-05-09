@@ -41,7 +41,8 @@
 
 % Volcano bathymetry
    #bathy
-	batFile=Playgrounds/MaunaLona.dat
+   % modification pour Romain (mac user) 
+	batFile=../Playgrounds/MaunaLona.dat
 	s=5
 	r=0
 	numberGroundParticles=2
