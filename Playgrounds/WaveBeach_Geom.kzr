@@ -1,0 +1,173 @@
+#GEOM1
+%********************************************
+% PLAYGROUND : Geometry example
+%
+% #GEOM
+% #domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+%
+% geometry : #brick, #cylin or #spher
+% %param
+%   c ==> 0=free, 1=moving, 2=fixed
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% %coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% %dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+% %inclin
+%   tetax ==> Angle of rotation around the x axis (in degre)
+%   tetay ==> Angle of rotation around the y axis (in degre)
+%   tetaz ==> Angle of rotation around the z axis (in degre)
+% %movpara
+%   movingDirection X, Y & Z =
+%   speedLaw = dictate the behaviour of moving boundaries
+%********************************************
+
+#domsz
+    ux = 300
+    uy = 100
+    uz = 100
+    lx = -10
+    ly = -10
+    lz = -10
+
+% Beach bathymetry. Use :
+% batFile=Playgrounds/beachReal.dat
+% batFile=Playgrounds/beachRough.dat
+% batFile=Playgrounds/beachRough2.dat
+% batFile=Playgrounds/beachWall.dat
+% batFile=Playgrounds/beachSmooth.dat
+
+   #bathy
+	batFile=Playgrounds/beachReal.dat
+	s=3
+	r=0
+	numberGroundParticles=2
+	height0=0
+	hFreeSurface=30
+
+% End wall
+   #brick
+       %param
+           c=1
+           s=3
+           r=0
+       %coord
+           x=-1
+           y=30
+           z=45
+       %dimen
+           L=5
+           W=60
+           H=30
+       %inclin
+           tetax=0.0
+           tetay=0.0
+           tetaz=0.0
+       %movpara
+           speedLaw=0
+           angleLaw=0
+           charactTime=0
+           movingDirectionX=0
+           movingDirectionY=0
+           movingDirectionZ=0
+           rotationCenterX=0
+           rotationCenterY=0
+           rotationCenterZ=0
+           amplitude=0
+% Side wall
+#brick
+    %param
+        c=1
+        s=3
+        r=0
+    %coord
+        x=100
+        y=61
+        z=30
+    %dimen
+        L=200
+        W=5
+        H=60
+    %inclin
+        tetax=0.0
+        tetay=0.0
+        tetaz=0.0
+    %movpara
+        speedLaw=0
+        angleLaw=0
+        charactTime=0
+        movingDirectionX=0
+        movingDirectionY=0
+        movingDirectionZ=0
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0
+% Side wall
+#brick
+    %param
+        c=1
+        s=3
+        r=0
+    %coord
+        x=100
+        y=-1
+        z=30
+    %dimen
+        L=200
+        W=5
+        H=60
+    %inclin
+        tetax=0.0
+        tetay=0.0
+        tetaz=0.0
+    %movpara
+        speedLaw=0
+        angleLaw=0
+        charactTime=0
+        movingDirectionX=0
+        movingDirectionY=0
+        movingDirectionZ=0
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0
+% Moving plate
+#brick
+    %param
+        c=1
+        s=2
+        r=0
+    %coord
+        x=201
+        y=30
+        z=30
+    %dimen
+        L=5
+        W=60
+        H=60
+    %inclin
+        tetax=0.0
+        tetay=0.0
+        tetaz=0.0
+    %movpara
+        speedLaw=3
+        angleLaw=0
+        charactTime=1.0
+        movingDirectionX=0
+        movingDirectionY=0
+        movingDirectionZ=0
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=5
+#END_G
