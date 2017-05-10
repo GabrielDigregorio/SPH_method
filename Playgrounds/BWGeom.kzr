@@ -139,7 +139,7 @@
 % Moving plate
 #brick
     %param
-        c=1
+        c=2
         s=0.5
         r=0
     %coord
@@ -155,10 +155,10 @@
         tetay=0.0
         tetaz=0.0
     %movpara
-        speedLaw=3
+        speedLaw=1
         angleLaw=0
-        charactTime=1.0
-        movingDirectionX=0
+        charactTime=2.0
+        movingDirectionX=1
         movingDirectionY=0
         movingDirectionZ=0
         rotationCenterX=0
