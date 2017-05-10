@@ -1,0 +1,50 @@
+#GEOM1
+%********************************************
+% PLAYGROUND : Geometry example
+%
+% #GEOM
+% #domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+%
+% geometry : #brick, #cylin or #spher
+% %param
+%   c ==> 0=free, 1=moving, 2=fixed
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% %coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% %dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+% %inclin
+%   tetax ==> Angle of rotation around the x axis (in degre)
+%   tetay ==> Angle of rotation around the y axis (in degre)
+%   tetaz ==> Angle of rotation around the z axis (in degre)
+% %movpara
+%   movingDirection X, Y & Z = 
+%   speedLaw = dictate the behaviour of moving boundaries
+%********************************************
+
+#domsz
+    ux = 171
+    uy = 5
+    uz = 15
+    lx = -1
+    ly = -5
+    lz = -5
+
+     #bathy
+	batFile=Playgrounds/smoothSlope.txt
+	file=1
+	s=0.5
+	r=0
+	numberGroundParticles=2
+	height0=0
+	hFreeSurface=9
+#END_G
