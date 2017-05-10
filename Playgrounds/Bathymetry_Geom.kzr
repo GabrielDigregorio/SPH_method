@@ -27,7 +27,7 @@
 %   tetay ==> Angle of rotation around the y axis (in degre)
 %   tetaz ==> Angle of rotation around the z axis (in degre)
 % %movpara
-%   movingDirection X, Y & Z = 
+%   movingDirection X, Y & Z =
 %   speedLaw = dictate the behaviour of moving boundaries
 %********************************************
 
@@ -64,13 +64,17 @@
             tetax=0.0
             tetay=0.0
             tetaz=0.0
-        %movpara
+         %movpara
             speedLaw=0
-            charactTime = 0
+            angleLaw=0
+            charactTime=0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
-
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
     #brick
         %param
             c=1
@@ -88,13 +92,17 @@
             tetax=0.0
             tetay=0.0
             tetaz=0.0
-        %movpara
+         %movpara
             speedLaw=0
-            charactTime = 0
+            angleLaw=0
+            charactTime=0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
-
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
     #brick
         %param
             c=1
@@ -112,13 +120,17 @@
             tetax=0.0
             tetay=0.0
             tetaz=0.0
-        %movpara
+         %movpara
             speedLaw=0
-            charactTime = 0
+            angleLaw=0
+            charactTime=0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
-
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
     #brick
         %param
             c=1
@@ -136,10 +148,15 @@
             tetax=0.0
             tetay=0.0
             tetaz=0.0
-        %movpara
+         %movpara
             speedLaw=0
-            charactTime = 0
+            angleLaw=0
+            charactTime=0
             movingDirectionX=0
             movingDirectionY=0
             movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
 #END_G
