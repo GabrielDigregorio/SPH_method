@@ -466,17 +466,17 @@ Error meshBathymetry(char* batFile,int bathType, int numberGroundParticles, doub
                case txt: //.txt
                // Reading bathymetry parameters
                bytesRead = fscanf( fp_bat, "%lf", &xa);
-               std::cout << xa << std::endl;
+               //std::cout << xa << std::endl;
                bytesRead = fscanf( fp_bat, "%lf", &xb);
-               std::cout << xb << std::endl;
+               //std::cout << xb << std::endl;
                bytesRead = fscanf( fp_bat, "%lf", &ya);
-               std::cout << ya << std::endl;
+               //std::cout << ya << std::endl;
                bytesRead = fscanf( fp_bat, "%lf", &yb);
-               std::cout << yb << std::endl;
+               //std::cout << yb << std::endl;
                bytesRead = fscanf( fp_bat, "%d", &Nx);
-               std::cout << Nx << std::endl;
+               //std::cout << Nx << std::endl;
                bytesRead = fscanf( fp_bat, "%d", &Ny);
-               std::cout << Ny << std::endl;
+               //std::cout << Ny << std::endl;
                break;
              }
 
@@ -499,7 +499,7 @@ Error meshBathymetry(char* batFile,int bathType, int numberGroundParticles, doub
                for(int i=0; i < ((Nx+1)*(Ny+1)); ++i)
                {
                  bytesRead = fscanf( fp_bat, "%lf", &bath[i]);
-                 std::cout << bath[i] << std::endl;
+                 //std::cout << bath[i] << std::endl;
                }
                break;
 

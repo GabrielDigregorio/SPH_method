@@ -67,8 +67,8 @@
         massInitMethod=0
 
     % Output Parameters
-        writeInterval=0.2
+        writeInterval=0.05
         matlab=0
-        paraview=4
+        paraview=2
 
 #END_F

@@ -35,11 +35,11 @@
     ux = 171
     uy = 5
     uz = 15
-    lx = -1
+    lx = -11
     ly = -5
     lz = -5
 
-     #bathy
+    #bathy
 	batFile=../Playgrounds/smoothSlope.txt
 	file=1
 	s=0.5
@@ -47,4 +47,152 @@
 	numberGroundParticles=2
 	height0=0
 	hFreeSurface=9
+
+
+% End wall
+   #brick
+       %param
+           c=1
+           s=0.5
+           r=0
+       %coord
+           x=170.25
+           y=0
+           z=7
+       %dimen
+           L=0.5
+           W=8
+           H=15
+       %inclin
+           tetax=0.0
+           tetay=0.0
+           tetaz=0.0
+       %movpara
+           speedLaw=0
+           angleLaw=0
+           charactTime=0
+           movingDirectionX=0
+           movingDirectionY=0
+           movingDirectionZ=0
+           rotationCenterX=0
+           rotationCenterY=0
+           rotationCenterZ=0
+           amplitude=0
+% Side wall
+#brick
+    %param
+        c=1
+        s=0.5
+        r=0
+    %coord
+        x=80
+        y=-4.25
+        z=7
+    %dimen
+        L=181
+        W=0.5
+        H=15
+    %inclin
+        tetax=0.0
+        tetay=0.0
+        tetaz=0.0
+    %movpara
+        speedLaw=0
+        angleLaw=0
+        charactTime=0
+        movingDirectionX=0
+        movingDirectionY=0
+        movingDirectionZ=0
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0
+% Side wall
+#brick
+    %param
+        c=1
+        s=0.5
+        r=0
+    %coord
+        x=80
+        y=4.25
+        z=7
+    %dimen
+        L=181
+        W=0.5
+        H=15
+    %inclin
+        tetax=0.0
+        tetay=0.0
+        tetaz=0.0
+    %movpara
+        speedLaw=0
+        angleLaw=0
+        charactTime=0
+        movingDirectionX=0
+        movingDirectionY=0
+        movingDirectionZ=0
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0
+% Moving plate
+#brick
+    %param
+        c=1
+        s=0.5
+        r=0
+    %coord
+        x=-0.5
+        y=0
+        z=7.5
+    %dimen
+        L=1
+        W=8
+        H=14.5
+    %inclin
+        tetax=0.0
+        tetay=0.0
+        tetaz=0.0
+    %movpara
+        speedLaw=3
+        angleLaw=0
+        charactTime=1.0
+        movingDirectionX=0
+        movingDirectionY=0
+        movingDirectionZ=0
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=5
+
+% Below moving plate
+#brick
+    %param
+        c=1
+        s=0.5
+        r=0
+    %coord
+        x=-5
+        y=0
+        z=-0.25
+    %dimen
+        L=10
+        W=8
+        H=1
+    %inclin
+        tetax=0.0
+        tetay=0.0
+        tetaz=0.0
+    %movpara
+        speedLaw=0
+        angleLaw=0
+        charactTime=0
+        movingDirectionX=0
+        movingDirectionY=0
+        movingDirectionZ=0
+        rotationCenterX=0
+        rotationCenterY=0
+        rotationCenterZ=0
+        amplitude=0
 #END_G
