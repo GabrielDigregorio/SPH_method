@@ -43,6 +43,8 @@ enum Paraview {noParaview, fullParaview, nFreeParaview, nMovingFixedParaview, nF
 // Particle type (Necessary to impose value here!)
 enum ParticleType {freePart=0, fixedPart=1,movingPart=2};
 
+enum BathType {dat=0,txt=1};
+
 // charactTime = characteristic time of movement or period of oscillations
 
 // movingDirection = direction de la paroi mouvante
