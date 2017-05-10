@@ -27,7 +27,7 @@
 %   tetay ==> Angle of rotation around the y axis (in degre)
 %   tetaz ==> Angle of rotation around the z axis (in degre)
 % %movpara
-%   movingDirection X, Y & Z = 
+%   movingDirection X, Y & Z =
 %   speedLaw = dictate the behaviour of moving boundaries
 %********************************************
 
@@ -40,7 +40,7 @@
     lz = -5
 
      #bathy
-	batFile=Playgrounds/smoothSlope.txt
+	batFile=../Playgrounds/smoothSlope.txt
 	file=1
 	s=0.5
 	r=0

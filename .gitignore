@@ -9,7 +9,6 @@ sph
 *.vtk
 *.out
 *.exe
-*.txt
 *.log
 *.asv
 *.eps
