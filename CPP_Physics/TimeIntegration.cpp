@@ -145,7 +145,9 @@ void derivativeComputation(Field* currentField, Parameter* parameter, SubdomainI
       // Momentum equation only for free particles
       if(currentField->type[particleID] == freePart)
         momentum(particleID, neighbors, kernelGradients, currentField, parameter, currentSpeedDerivative, viscosity);
+        if(parameter->epsilonXSPH>0.0){
         xsphCorrection(particleID, neighbors, kernelValues, currentField, parameter, currentPositionDerivative);
+        }
     }
   }
 
