@@ -38,6 +38,7 @@ void RotateVector(std::vector<double> &pos,double teta[3],int i )
     Rz[5]=0;
     Rz[6]=0;
     Rz[7]=0;
+    Rz[8]=1;
     double R11=(Rz[0]*Ry[0]+Rz[1]*Ry[3]+Rz[2]*Ry[6])*Rx[0]+(Rz[0]*Ry[1]+Rz[1]*Ry[4]+Rz[2]*Ry[7])*Rx[3]+(Rz[0]*Ry[2]+Rz[1]*Ry[5]+Rz[2]*Ry[8])*Rx[6];
     double R21=(Rz[3]*Ry[0]+Rz[4]*Ry[3]+Rz[5]*Ry[6])*Rx[0]+(Rz[3]*Ry[1]+Rz[4]*Ry[4]+Rz[5]*Ry[7])*Rx[3]+(Rz[3]*Ry[2]+Rz[4]*Ry[5]+Rz[5]*Ry[8])*Rx[6];
     double R31=(Rz[6]*Ry[0]+Rz[7]*Ry[3]+Rz[8]*Ry[6])*Rx[0]+(Rz[6]*Ry[1]+Rz[7]*Ry[4]+Rz[8]*Ry[7])*Rx[3]+(Rz[6]*Ry[2]+Rz[7]*Ry[5]+Rz[8]*Ry[8])*Rx[6];
@@ -413,7 +414,7 @@ int interpBathymetry(double* sTrue, int* n, double xa, double xb, double ya, dou
   return nFreeTotal;
 }
 
-Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, double hFreeSurface, double s, std::vector<double> &posFree,std::vector<double> &posFixed,  int* nPartFree, int* nPartFixed, double* volPart,
+Error meshBathymetry(char* batFile,int bathType, int numberGroundParticles, double height0, double hFreeSurface, double s, std::vector<double> &posFree,std::vector<double> &posFixed,  int* nPartFree, int* nPartFixed, double* volPart,
      double perturbation, bool stack)
      {
 
@@ -431,33 +432,85 @@ Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, d
 
              // Reading bathymetry parameters
              unsigned int bytesRead;
-             bytesRead = fread(&buf, 8, 1, fp_bat);
-             double xa = (*(double*)buf);
-             //std::cout << xa << std::endl;
-             bytesRead = fread(&buf, 8, 1, fp_bat);
-             double xb = (*(double*)buf);
-             //std::cout << xb << std::endl;
-             bytesRead = fread(&buf, 8, 1, fp_bat);
-             double ya = (*(double*)buf);
-             //std::cout << ya << std::endl;
-             bytesRead = fread(&buf, 8, 1, fp_bat);
-             double yb = (*(double*)buf);
-             //std::cout << yb << std::endl;
-             bytesRead = fread(&buf, 4, 1, fp_bat);
-             int Nx = (*(int*)buf);
-             //std::cout << Nx << std::endl;
-             bytesRead = fread(&buf, 4, 1, fp_bat);
-             int Ny = (*(int*)buf);
-             //std::cout << Ny << std::endl;
+             double xa;
+             double xb;
+             double ya;
+             double yb;
+             int Nx;
+             int Ny;
 
-
-             // Reading the bathymetry
-             bath = (double*) malloc((Nx+1)*(Ny+1)*sizeof(double));
-             for(int i=0; i < ((Nx+1)*(Ny+1)); ++i)
+             switch (bathType)
              {
+               case dat: //.dat
+               // Reading bathymetry parameters
                bytesRead = fread(&buf, 8, 1, fp_bat);
-               bath[i] = (*(double*)buf);
+               xa = (*(double*)buf);
+               //std::cout << xa << std::endl;
+               bytesRead = fread(&buf, 8, 1, fp_bat);
+               xb = (*(double*)buf);
+               //std::cout << xb << std::endl;
+               bytesRead = fread(&buf, 8, 1, fp_bat);
+               ya = (*(double*)buf);
+               //std::cout << ya << std::endl;
+               bytesRead = fread(&buf, 8, 1, fp_bat);
+               yb = (*(double*)buf);
+               //std::cout << yb << std::endl;
+               bytesRead = fread(&buf, 4, 1, fp_bat);
+               Nx = (*(int*)buf);
+               //std::cout << Nx << std::endl;
+               bytesRead = fread(&buf, 4, 1, fp_bat);
+               Ny = (*(int*)buf);
+               //std::cout << Ny << std::endl;
+               break;
+
+               case txt: //.txt
+               // Reading bathymetry parameters
+               bytesRead = fscanf( fp_bat, "%lf", &xa);
+               //std::cout << xa << std::endl;
+               bytesRead = fscanf( fp_bat, "%lf", &xb);
+               //std::cout << xb << std::endl;
+               bytesRead = fscanf( fp_bat, "%lf", &ya);
+               //std::cout << ya << std::endl;
+               bytesRead = fscanf( fp_bat, "%lf", &yb);
+               //std::cout << yb << std::endl;
+               bytesRead = fscanf( fp_bat, "%d", &Nx);
+               //std::cout << Nx << std::endl;
+               bytesRead = fscanf( fp_bat, "%d", &Ny);
+               //std::cout << Ny << std::endl;
+               break;
              }
+
+
+             bath = (double*) malloc((Nx+1)*(Ny+1)*sizeof(double));
+
+             switch (bathType)
+             {
+               case dat:
+               // Reading the bathymetry
+               for(int i=0; i < ((Nx+1)*(Ny+1)); ++i)
+               {
+                 bytesRead = fread(&buf, 8, 1, fp_bat);
+                 bath[i] = (*(double*)buf);
+               }
+               break;
+               case txt:
+               // Reading the bathymetry
+               bath = (double*) malloc((Nx+1)*(Ny+1)*sizeof(double));
+               for(int i=0; i < ((Nx+1)*(Ny+1)); ++i)
+               {
+                 bytesRead = fscanf( fp_bat, "%lf", &bath[i]);
+                 //std::cout << bath[i] << std::endl;
+               }
+               break;
+
+             }
+
+
+
+
+
+
+
              fclose(fp_bat);
              // Interpolating the bathymetry
              // Number of grid points -1 along x and y

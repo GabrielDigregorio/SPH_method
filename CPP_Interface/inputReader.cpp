@@ -10,7 +10,7 @@
 
 #define N_UL 3
 #define N_DATA 22
-#define N_DATA_BATHYMETRY 5
+#define N_DATA_BATHYMETRY 6
 #define N_PARAM 24
 
 enum geomType{cube,cylinder,sphere};
@@ -191,16 +191,16 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
         }
         else{continue;}
       }
-
-      float s=brickData[0];
-      float r=brickData[1];
-      double numberGroundParticles = (int) brickData[2];
-      double height0 = brickData[3];
-      double hFreeSurface = brickData[4];
+      int bathType = (int) brickData[0];
+      float s=brickData[1];
+      float r=brickData[2];
+      double numberGroundParticles = (int) brickData[3];
+      double height0 = brickData[4];
+      double hFreeSurface = brickData[5];
       int nPartFree, nPartFixed;
       double volPart;
 
-      if(meshBathymetry(batFile, numberGroundParticles, height0, hFreeSurface, s, *posFree, *posFixed, &nPartFree, &nPartFixed, &volPart,
+      if(meshBathymetry(batFile,bathType, numberGroundParticles, height0, hFreeSurface, s, *posFree, *posFixed, &nPartFree, &nPartFixed, &volPart,
         r, true)!=noError)
         {
           return geometryError;

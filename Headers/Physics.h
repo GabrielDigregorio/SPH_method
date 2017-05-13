@@ -12,7 +12,7 @@ void RotateVector(std::vector<double> &pos,double teta[3],int i );
 void meshcube(double o[3], double L[3],double teta[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
 void meshcylinder(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
 void meshsphere(double o[3], double L[3], double s, std::vector<double> &pos, int* nPart, double* volPart, double perturbation = 0.0, bool stack = false);
-Error meshBathymetry(char* batFile, int numberGroundParticles, double height0, double hFreeSurface, double s, std::vector<double> &posFree,std::vector<double> &posFixed,  int* nPartFree, int* nPartFixed, double* volPart,
+Error meshBathymetry(char* batFile,int bathType, int numberGroundParticles, double height0, double hFreeSurface, double s, std::vector<double> &posFree,std::vector<double> &posFixed,  int* nPartFree, int* nPartFixed, double* volPart,
      double perturbation, bool stack);
 
 
