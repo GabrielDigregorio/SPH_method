@@ -69,8 +69,6 @@ void momentum(int particleID, std::vector<int>& neighbors, std::vector<double>& 
 */
 void xsphCorrection(int particleID, std::vector<int> &neighbors, std::vector<double>& kernelValues, Field* currentField, Parameter* parameter, std::vector<double>& positionDerivative){
 
-    parameter->epsilonXSPH = 0.0;
-
     for (int j = 0; j <= 2; j++){
         double particleSpeed = currentField->speed[j][particleID];
         positionDerivative[3*particleID + j] = particleSpeed;

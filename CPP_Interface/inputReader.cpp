@@ -527,8 +527,10 @@ Error readParameter(std::string filename, Parameter* parameter)
                             parameter->alpha=atof(valueArray);
                         if(cnt==15)
                             parameter->beta=atof(valueArray);
-                        if(cnt==16)
-                            parameter->epsilon=atof(valueArray);
+                        if(cnt==16){
+                            parameter->epsilon=0.01; // Fixed stabilization parameter
+                            parameter->epsilonXSPH=atof(valueArray); // XSPH parameter
+                        }
                         if(cnt==17)
                         {
                           if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_STATEEQUATION_VALUE) )
