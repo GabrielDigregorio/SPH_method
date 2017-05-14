@@ -36,21 +36,21 @@
 
     % Numerical parameters
         kernel=4
-        kh=0.002
+        kh=0.004
 
         integrationMethod=1
         theta=0.5
 
         adaptativeTimeStep=0
-        k=0.0001
+        k=0.00005
 
         T=20
-
+git 
   % Physical Parameters
         densityRef=1000.0
         densityInitMethod=1
 
-        B=6000
+        B=60000
         gamma=7.0
         g=9.81
         c=20

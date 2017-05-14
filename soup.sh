@@ -5,10 +5,10 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=soup.txt
 #
-#SBATCH --ntasks=20
-#SBATCH --cpus-per-task=1
-#SBATCH --time=600:00
-#SBATCH --mem-per-cpu=4000
+#SBATCH --ntasks=8
+#SBATCH --cpus-per-task=16
+#SBATCH --time=360:00
+#SBATCH --mem-per-cpu=500
 
 Para="../Playgrounds/soupPara.kzr"
 Geom="../Playgrounds/soupGeom.kzr"

@@ -42,7 +42,7 @@
 #bathy
 	batFile=Playgrounds/soup.txt
 	file=1
-	s=0.001
+	s=0.002
 	r=0
 	numberGroundParticles=1
 	height0=0
@@ -53,15 +53,15 @@
    #brick
        %param
            c=1
-           s=0.001
+           s=0.002
            r=0
        %coord
            x=0
-           y=-0.3005
+           y=-0.301
            z=0.125
        %dimen
-           L=0.1002
-           W=0.001
+           L=0.104
+           W=0.002
            H=0.09
        %inclin
            tetax=0.0
@@ -82,15 +82,15 @@
    #brick
        %param
            c=1
-           s=0.001
+           s=0.002
            r=0
        %coord
            x=0
-           y=-0.0995
+           y=-0.099
            z=0.125
        %dimen
-           L=0.102
-           W=0.001
+           L=0.104
+           W=0.002
            H=0.09
        %inclin
            tetax=0.0
@@ -111,14 +111,14 @@
    #brick
        %param
            c=1
-           s=0.001
+           s=0.002
            r=0
        %coord
-           x=-0.0505
+           x=-0.051
            y=-0.2
            z=0.125
        %dimen
-           L=0.001
+           L=0.002
            W=0.2
            H=0.09
        %inclin
@@ -140,14 +140,14 @@
    #brick
        %param
            c=1
-           s=0.001
+           s=0.002
            r=0
        %coord
-           x=0.0505
+           x=0.051
            y=-0.2
            z=0.125
        %dimen
-           L=0.001
+           L=0.002
            W=0.2
            H=0.09
        %inclin
@@ -169,16 +169,16 @@
    #brick
        %param
            c=1
-           s=0.001
+           s=0.002
            r=0
        %coord
            x=0
            y=-0.2
-           z=0.08
+           z=0.079
        %dimen
-           L=0.1
-           W=0.2
-           H=0.001
+           L=0.104
+           W=0.204
+           H=0.002
        %inclin
            tetax=0.0
            tetay=0.0
@@ -198,12 +198,12 @@
    #brick
        %param
            c=0
-           s=0.001
+           s=0.002
            r=0
        %coord
            x=0
            y=-0.2
-           z=0.1201
+           z=0.1202
        %dimen
            L=0.1
            W=0.2
@@ -227,7 +227,7 @@
    #brick
        %param
            c=1
-           s=0.001
+           s=0.002
            r=0
        %coord
            x=0
@@ -236,7 +236,7 @@
        %dimen
            L=0.3
            W=0.3
-           H=0.001
+           H=0.002
        %inclin
            tetax=0.0
            tetay=0.0
