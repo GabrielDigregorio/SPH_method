@@ -1,0 +1,104 @@
+#GEOM1
+%********************************************
+% PLAYGROUND : Geometry example
+%
+% #GEOM
+% #domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+%
+% geometry : #brick, #cylin or #spher
+% %param
+%   c ==> 0=free, 1=fixed, 2=moving
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% %coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% %dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+% %inclin
+%   tetax ==> Angle of rotation around the x axis (in degre)
+%   tetay ==> Angle of rotation around the y axis (in degre)
+%   tetaz ==> Angle of rotation around the z axis (in degre)
+% %movpara
+%   movingDirection X, Y & Z =
+%   speedLaw = dictate the behaviour of moving boundaries
+%********************************************
+
+
+#domsz
+    ux = 8
+    uy = 8
+    uz = 8
+    lx = -6
+    ly = -6
+    lz = -6
+
+% Fluid
+   #brick
+        %param
+            c=0
+            s=0.2
+            r=0
+        %coord
+            x=0.0
+            y=0.0
+            z=0.0
+        %dimen
+            L=5
+            W=5
+            H=5
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0.0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=1.0
+            rotationCenterZ=4.0
+            amplitude=0
+
+    #brick
+         %param
+             c=0
+             s=0.2
+             r=0
+         %coord
+             x=4.0
+             y=3.0
+             z=1.0
+         %dimen
+             L=2
+             W=2
+             H=2
+         %inclin
+             tetax=0.0
+             tetay=0.0
+             tetaz=0.0
+         %movpara
+             speedLaw=0
+             angleLaw=0
+             charactTime=0.0
+             movingDirectionX=0
+             movingDirectionY=0
+             movingDirectionZ=0
+             rotationCenterX=0
+             rotationCenterY=1.0
+             rotationCenterZ=4.0
+             amplitude=0
+
+
+
+#END_G
