@@ -34,7 +34,7 @@
 #domsz
 	ux = 0.16
 	uy = 0.26
-	uz = 0.18
+	uz = 0.31
 	lx = -0.16
 	ly = -0.31
 	lz = -0.04
@@ -42,26 +42,26 @@
 #bathy
 	batFile=Playgrounds/soup.txt
 	file=1
-	s=0.002
+	s=0.006
 	r=0
 	numberGroundParticles=1
 	height0=0
-	hFreeSurface=0.02
+	hFreeSurface=0.01
 
 % Glass
 % End wall
    #brick
        %param
-           c=1
-           s=0.002
+           c=2
+           s=0.006
            r=0
        %coord
            x=0
-           y=-0.301
+           y=-0.303
            z=0.125
        %dimen
-           L=0.104
-           W=0.002
+           L=0.112
+           W=0.006
            H=0.09
        %inclin
            tetax=0.0
@@ -70,27 +70,27 @@
        %movpara
            speedLaw=3
            angleLaw=2
-           charactTime=10
+           charactTime=3
            movingDirectionX=1
            movingDirectionY=0
            movingDirectionZ=0
            rotationCenterX=0
            rotationCenterY=-0.10
-           rotationCenterZ=0.8
-           amplitude=1.7
+           rotationCenterZ=0.08
+           amplitude=-1.7
 %Front wall
    #brick
        %param
-           c=1
-           s=0.002
+           c=2
+           s=0.006
            r=0
        %coord
            x=0
-           y=-0.099
+           y=-0.097
            z=0.125
        %dimen
-           L=0.104
-           W=0.002
+           L=0.112
+           W=0.006
            H=0.09
        %inclin
            tetax=0.0
@@ -99,26 +99,26 @@
        %movpara
            speedLaw=3
            angleLaw=2
-           charactTime=10
+           charactTime=3
            movingDirectionX=1
            movingDirectionY=0
            movingDirectionZ=0
            rotationCenterX=0
            rotationCenterY=-0.10
-           rotationCenterZ=0.8
-           amplitude=1.7
+           rotationCenterZ=0.08
+           amplitude=-1.7
 %Side wall
    #brick
        %param
-           c=1
-           s=0.002
+           c=2
+           s=0.006
            r=0
        %coord
-           x=-0.051
+           x=-0.053
            y=-0.2
            z=0.125
        %dimen
-           L=0.002
+           L=0.006
            W=0.2
            H=0.09
        %inclin
@@ -128,26 +128,26 @@
        %movpara
            speedLaw=3
            angleLaw=2
-           charactTime=10
+           charactTime=3
            movingDirectionX=1
            movingDirectionY=0
            movingDirectionZ=0
            rotationCenterX=0
            rotationCenterY=-0.10
-           rotationCenterZ=0.8
-           amplitude=1.7
+           rotationCenterZ=0.08
+           amplitude=-1.7
 %Side wall
    #brick
        %param
-           c=1
-           s=0.002
+           c=2
+           s=0.006
            r=0
        %coord
-           x=0.051
+           x=0.053
            y=-0.2
            z=0.125
        %dimen
-           L=0.002
+           L=0.006
            W=0.2
            H=0.09
        %inclin
@@ -157,28 +157,28 @@
        %movpara
            speedLaw=3
            angleLaw=2
-           charactTime=10
+           charactTime=3
            movingDirectionX=1
            movingDirectionY=0
            movingDirectionZ=0
            rotationCenterX=0
            rotationCenterY=-0.10
-           rotationCenterZ=0.8
-           amplitude=1.7
+           rotationCenterZ=0.08
+           amplitude=-1.7
 %Bottom wall
    #brick
        %param
-           c=1
-           s=0.002
+           c=2
+           s=0.006
            r=0
        %coord
            x=0
            y=-0.2
-           z=0.079
+           z=0.077
        %dimen
-           L=0.104
-           W=0.204
-           H=0.002
+           L=0.112
+           W=0.212
+           H=0.006
        %inclin
            tetax=0.0
            tetay=0.0
@@ -186,24 +186,24 @@
        %movpara
            speedLaw=3
            angleLaw=2
-           charactTime=10
+           charactTime=3
            movingDirectionX=1
            movingDirectionY=0
            movingDirectionZ=0
            rotationCenterX=0
            rotationCenterY=-0.10
-           rotationCenterZ=0.8
-           amplitude=1.7
+           rotationCenterZ=0.08
+           amplitude=-1.7
 %Fluid
    #brick
        %param
            c=0
-           s=0.002
+           s=0.006
            r=0
        %coord
            x=0
            y=-0.2
-           z=0.1202
+           z=0.1206
        %dimen
            L=0.1
            W=0.2
@@ -224,32 +224,13 @@
            rotationCenterZ=0
            amplitude=0
 %Floor
-   #brick
-       %param
-           c=1
-           s=0.002
-           r=0
-       %coord
-           x=0
-           y=0
-           z=-0.02
-       %dimen
-           L=0.3
-           W=0.3
-           H=0.002
-       %inclin
-           tetax=0.0
-           tetay=0.0
-           tetaz=0.0
-       %movpara
-           speedLaw=0
-           angleLaw=0
-           charactTime=0
-           movingDirectionX=0
-           movingDirectionY=0
-           movingDirectionZ=0
-           rotationCenterX=0
-           rotationCenterY=0
-           rotationCenterZ=0
-           amplitude=0
+% Soup and container
+#bathy
+	batFile=Playgrounds/soup2.txt
+	file=1
+	s=0.006
+	r=0
+	numberGroundParticles=1
+	height0=-0.006
+	hFreeSurface=-0.01
 #END_G
