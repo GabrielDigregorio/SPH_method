@@ -163,35 +163,7 @@
             rotationCenterY=25
             rotationCenterZ=0
             amplitude=3
-    #brick
-  % pal du haut 
-        %param
-            c=2
-            s=0.5
-            r=0
-        %coord
-            x=25
-            y=26.75
-            z=5.25
-        %dimen
-            L=1
-            W=3
-            H=10
-        %inclin
-            tetax=0.0
-            tetay=0.0
-            tetaz=0.0
-        %movpara
-            speedLaw=3
-            angleLaw=0
-            charactTime=5
-            movingDirectionX=0
-            movingDirectionY=0
-            movingDirectionZ=1
-            rotationCenterX=25
-            rotationCenterY=25
-            rotationCenterZ=0
-            amplitude=3
+   
     #brick
   % plaque du bas  
         %param
