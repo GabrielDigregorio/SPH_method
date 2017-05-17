@@ -514,7 +514,7 @@
             amplitude=3
 
  #brick
-  % fluide centrale haut 
+  % fluide centrale droite
         %param
             c=0
             s=0.5
@@ -574,7 +574,7 @@
             amplitude=3
 
     #brick
-  % fluide centrale gauche
+  % fluide  haut
         %param
             c=0
             s=0.5
