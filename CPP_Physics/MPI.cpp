@@ -27,12 +27,15 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
     SubdomainInfo &subdomainInfo){
     // Error flag
     Error errorFlag = noError;
+
     // Basic MPI process information
     int nTasks = subdomainInfo.nTasks;
     int procID = subdomainInfo.procID;
+
     // Box size (bigger if RK2 to avoid sorting twice at each time step)
     double boxSize = boxSizeCalc(parameter->kh, parameter->integrationMethod);
     subdomainInfo.boxSize = boxSize;
+
     // Checks if the number of processor appropriate (only node 0 has the info)
     int nTotalBoxesX;
     if(procID == 0){
@@ -50,6 +53,7 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
     }
     MPI_Bcast(&errorFlag, 1, MPI_INT, 0, MPI_COMM_WORLD);
     if(errorFlag != noError){return errorFlag;}
+
     // Broadcasts the total number of boxes along x
     MPI_Bcast(&nTotalBoxesX, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -76,6 +80,7 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
         localField->l[0] = globall0 + (startBoxX[procID]-1)*boxSize;
         subdomainInfo.startingBox = nBoxesY*nBoxesZ;
     }
+
     // Right boundary and ending box
     if(procID == nTasks - 1){
         localField->u[0] = globall0 + startBoxX[procID+1]*boxSize;
@@ -138,7 +143,8 @@ Error scatterField(Field* globalField, Field* localField, Parameter* parameter,
 
     // Computes nTotal
     localField->nTotal = localField->pos[0].size();
-    // Computes nFree, nMoving and nFixed (IS IT REALLY USEFUL ??)
+
+    // Computes nFree, nMoving and nFixed
     localField->nFree = 0;
     localField->nFixed = 0;
     localField->nMoving = 0;
@@ -235,6 +241,7 @@ void deleteHalos(Field &field, SubdomainInfo &subdomainInfo){
     // Starting and ending particles
     int start = subdomainInfo.startingParticle;
     int end = subdomainInfo.endingParticle;
+
     // Deletes in all fields
     for(int i=0 ; i<3 ; i++){
         // Cut position
@@ -324,11 +331,13 @@ void shareRKMidpoint(Field& field, SubdomainInfo &subdomainInfo){
     int end = subdomainInfo.endingParticle;
     int procID = subdomainInfo.procID;
     int nTasks = subdomainInfo.nTasks;
+
     // Declarations
     int sizeToLeft;
     int sizeToRight;
     int sizeFromLeft = start;
     int sizeFromRight = field.nTotal - end - 1;
+
     // Different possible cases
     if(nTasks > 1){
         if(procID == 0){
@@ -418,6 +427,7 @@ void shareOverlap(Field& field, SubdomainInfo &subdomainInfo){
     double boxSize = subdomainInfo.boxSize;
     int procID = subdomainInfo.procID;
     int nTasks = subdomainInfo.nTasks;
+
     // Different possible cases (trivial if only one node)
     if(nTasks > 1){
         if(procID == 0){ // No left neighbor domain
@@ -570,12 +580,14 @@ void shareMigrate(Field& field, SubdomainInfo &subdomainInfo){
     int nMigrate[2];
     int startMigrateToLeft, startMigrateToRight;
     int sizeRecvMigrate;
+
     // Useful information
     double l0 = field.l[0];
     double u0 = field.u[0];
     double boxSize = subdomainInfo.boxSize;
     int procID = subdomainInfo.procID;
     int nTasks = subdomainInfo.nTasks;
+
     // Different possible cases (trivial if only one node)
     if(nTasks > 1){
         if(procID == 0){ // No left neighbor domain
@@ -730,7 +742,7 @@ void processUpdate(Field& localField, SubdomainInfo& subdomainInfo){
     shareOverlap(localField, subdomainInfo);
 
     localField.nTotal = localField.pos[0].size();
-    // Computes nFree, nMoving and nFixed (IS IT REALLY USEFUL ??)
+    // Computes nFree, nMoving and nFixed
     localField.nFree = 0;
     localField.nFixed = 0;
     localField.nMoving = 0;
@@ -751,13 +763,16 @@ void processUpdate(Field& localField, SubdomainInfo& subdomainInfo){
 void timeStepUpdate(double &nextK, double &localProposition, SubdomainInfo &subdomainInfo){
     // If only one task, no communication is needed
     if(subdomainInfo.nTasks==1){nextK = localProposition; return;}
+
     // Declarations
     std::vector<double> allPropositions(subdomainInfo.nTasks);
+
     // Gathering information
     MPI_Gather(&localProposition, 1, MPI_DOUBLE, &(allPropositions[0]), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     if(subdomainInfo.procID == 0){
         nextK = *std::min_element(allPropositions.begin(), allPropositions.begin()+subdomainInfo.nTasks-1);
     }
+
     // Scattering information
     MPI_Bcast(&nextK, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 }
@@ -774,7 +789,7 @@ void computeDomainIndex(std::vector<double> &posX,
 }
 
 int getDomainNumber(double x, std::vector<double> &limits, int nTasks){
-    // NAIVE !!! (implement a tree based search instead)
+    //Improvement: implement a tree based search.
     int i;
     for(i=0 ; i<nTasks && x>limits[i] ; i++);
     return i-1;
@@ -838,9 +853,11 @@ void sortParticles(Field& field, std::vector< std::pair<int,int> >& index){
     // Sort the index vector
     std::sort(index.begin(), index.end(), sortFunction);
     int N=field.pos[0].size();
+
     // Temporary vectors for sorting
     std::vector<double> tmp(N);
     std::vector<int> tmpType(N);
+
     // --- Sorts all data one by one ---
     int i, coord;
         for(coord=0 ; coord<3 ; coord++){
@@ -853,37 +870,22 @@ void sortParticles(Field& field, std::vector< std::pair<int,int> >& index){
                 tmp[i]=field.speed[coord][ index[i].second ];
             (field.speed[coord]).swap(tmp);
         }
-        //#pragma omp parallel sections default(shared) private(i, tmp, tmpType)
-        //{
-        //#pragma omp section
-        //{
-            // Density reordering
+        // Density reordering
             for(i=0; i<N; ++i)
                 tmp[i]=field.density[ index[i].second ];
             (field.density).swap(tmp);
-        //}
-        //#pragma omp section
-        //{
-            // Pressure reordering
+        // Pressure reordering
             for(i=0; i<N; ++i)
                 tmp[i]=field.pressure[ index[i].second ];
             (field.pressure).swap(tmp);
-        //}
-        //#pragma omp section
-        //{
-            // Mass reordering
+        // Mass reordering
             for(i=0; i<N; ++i)
                 tmp[i]=field.mass[ index[i].second ];
             (field.mass).swap(tmp);
-        //}
-        //#pragma omp section
-        //{
-            // Type reordering
+        // Type reordering
             for(i=0; i<N; ++i)
                 tmpType[i]=field.type[ index[i].second ];
             (field.type).swap(tmpType);
-        //}
-        //}
 }
 
 void resizeField(Field& field, int nMigrate){

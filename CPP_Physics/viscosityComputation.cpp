@@ -43,7 +43,7 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
 
                 if (maxMu < mu)
                 {
-                  maxMu = mu;
+                    maxMu = mu;
                 }
                 mean_rho += rho;
             }
@@ -73,7 +73,7 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
 
             if(1)
             {
-               t_cv = 0.4  * (h/(parameter->c+0.6*parameter->alpha*parameter->c+0.6*parameter->beta*maxMu));
+                t_cv = 0.4  * (h/(parameter->c+0.6*parameter->alpha*parameter->c+0.6*parameter->beta*maxMu));
             }
             else
             {
@@ -82,9 +82,9 @@ void viscosityComputation(int particleID, std::vector<int>& neighbors, Field* cu
                 t_cv = 0.4  * (h/(c+0.6*parameter->alpha*c+0.6*parameter->beta*maxMu));
             }
             if (t_f < t_cv)
-                currentField->nextK = t_f ;
+            currentField->nextK = t_f ;
             else if(t_cv < t_f)
-                currentField->nextK = t_cv ;
+            currentField->nextK = t_cv ;
         }
         break;
     }

@@ -38,10 +38,12 @@ void RK2Update(Field* currentField, Field* midField, Field* nextField,Parameter*
                 nextField->pos[j][i] = currentField->pos[j][i] + k*((1-parameter->theta)*currentPositionDerivative[3*i+j] + parameter->theta*midPositionDerivative[3*i+j]);
             }
             break;
+
             // Fixed particles update
             case fixedPart:
             nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
             break;
+
             // Moving boundary particles update
             default:
             nextField->density[i] = currentField->density[i] + k*((1-parameter->theta)*currentDensityDerivative[i] + parameter->theta*midDensityDerivative[i]);
@@ -77,7 +79,6 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
         switch (currentField->type[i])
         {
             // Free particles update
-
             case freePart:
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             for (int j = 0; j <= 2; j++)
@@ -85,11 +86,13 @@ void eulerUpdate(Field* currentField, Field* nextField,Parameter* parameter, Sub
                 nextField->speed[j][i] = currentField->speed[j][i] + k*currentSpeedDerivative[3*i + j];
                 nextField->pos[j][i] = currentField->pos[j][i] + k*currentPositionDerivative[3*i+j];
             }
+
             // Fixed particles update
             break;
             case fixedPart:
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
             break;
+
             // Moving boundary particles update
             default:
             nextField->density[i] = currentField->density[i] + k*currentDensityDerivative[i];
@@ -170,46 +173,46 @@ void timeIntegration(Field* currentField, Field* nextField, Parameter* parameter
   SubdomainInfo &subdomainInfo, std::vector<std::vector<int> >& boxes, std::vector<std::vector<int> >& surrBoxesAll,
   double t, double k)
   {
-    std::vector<double> currentSpeedDerivative;
-    std::vector<double> currentPositionDerivative; // For XSPH method
-    std::vector<double> currentDensityDerivative;
-    currentSpeedDerivative.assign(3*currentField->nTotal, 0.0);
-    currentPositionDerivative.assign(3*currentField->nTotal, 0.0);
-    currentDensityDerivative.assign(currentField->nTotal, 0.0);
-    // CPU time information
-    derivativeComputation(currentField, parameter, subdomainInfo, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, currentPositionDerivative, false);
+      std::vector<double> currentSpeedDerivative;
+      std::vector<double> currentPositionDerivative; // For XSPH method
+      std::vector<double> currentDensityDerivative;
+      currentSpeedDerivative.assign(3*currentField->nTotal, 0.0);
+      currentPositionDerivative.assign(3*currentField->nTotal, 0.0);
+      currentDensityDerivative.assign(currentField->nTotal, 0.0);
+      // CPU time information
+      derivativeComputation(currentField, parameter, subdomainInfo, boxes, surrBoxesAll, currentDensityDerivative, currentSpeedDerivative, currentPositionDerivative, false);
 
-    switch (parameter->integrationMethod)
-    {
-      case euler:
+      switch (parameter->integrationMethod)
       {
-          eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, currentPositionDerivative, t, k);
-      }
-      break;
+          case euler:
+          {
+              eulerUpdate(currentField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, currentPositionDerivative, t, k);
+          }
+          break;
 
 
-      case RK2:
-      {
-          double kMid = 0.5*k/parameter->theta;
-          Field midFieldInstance;
-          Field* midField = &midFieldInstance;
-          std::vector<double> midSpeedDerivative;
-          std::vector<double> midPositionDerivative;
-          std::vector<double> midDensityDerivative;
-          midSpeedDerivative.assign(3*currentField->nTotal, 0.0);
-          midPositionDerivative.assign(3*currentField->nTotal, 0.0);
-          midDensityDerivative.assign(currentField->nTotal, 0.0);
-          copyField(currentField,midField);
-          // Storing midpoint in midField
-          eulerUpdate(currentField, midField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, currentPositionDerivative, t, kMid);
-          // Share the mid point
-          shareRKMidpoint(*midField, subdomainInfo);
-          // Compute derivatives at midPoint
-          derivativeComputation(midField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, midPositionDerivative, true);
-          // Update
-          RK2Update(currentField, midField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, currentPositionDerivative, midDensityDerivative, midSpeedDerivative, midPositionDerivative, t, k);
+          case RK2:
+          {
+              double kMid = 0.5*k/parameter->theta;
+              Field midFieldInstance;
+              Field* midField = &midFieldInstance;
+              std::vector<double> midSpeedDerivative;
+              std::vector<double> midPositionDerivative;
+              std::vector<double> midDensityDerivative;
+              midSpeedDerivative.assign(3*currentField->nTotal, 0.0);
+              midPositionDerivative.assign(3*currentField->nTotal, 0.0);
+              midDensityDerivative.assign(currentField->nTotal, 0.0);
+              copyField(currentField,midField);
+              // Storing midpoint in midField
+              eulerUpdate(currentField, midField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, currentPositionDerivative, t, kMid);
+              // Share the mid point
+              shareRKMidpoint(*midField, subdomainInfo);
+              // Compute derivatives at midPoint
+              derivativeComputation(midField, parameter, subdomainInfo, boxes, surrBoxesAll, midDensityDerivative, midSpeedDerivative, midPositionDerivative, true);
+              // Update
+              RK2Update(currentField, midField, nextField, parameter, subdomainInfo, currentDensityDerivative, currentSpeedDerivative, currentPositionDerivative, midDensityDerivative, midSpeedDerivative, midPositionDerivative, t, k);
+          }
+          break;
       }
-      break;
-    }
-    return;
+      return;
   }
