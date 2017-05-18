@@ -1,0 +1,228 @@
+#GEOM1
+%********************************************
+% PLAYGROUND : Geometry example
+%
+% #GEOM
+% #domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+%
+% geometry : #brick, #cylin or #spher
+% %param
+%   c ==> 0=free, 1=fixed, 2=moving
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% %coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% %dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+% %inclin
+%   tetax ==> Angle of rotation around the x axis (in degre)
+%   tetay ==> Angle of rotation around the y axis (in degre)
+%   tetaz ==> Angle of rotation around the z axis (in degre)
+% %movpara
+%   movingDirection X, Y & Z =
+%   speedLaw = dictate the behaviour of moving boundaries
+
+
+%// speedLaw = Will dictate the behaviour of moving boundaries: constant, sine, exponential
+%enum PosLaw {constant, sine, exponential,rotating, NB_SPEEDLAW_VALUE};
+
+%// angleLaw = Will dictate the behaviour of moving boundaries: linear, sine, exponential
+%enum AngleLaw {linearAngle, sineAngle, exponentialAngle, NB_ANGLELAW_VALUE};
+
+%********************************************
+
+
+#domsz
+    ux = 40
+    uy = 40
+    uz = 15
+    lx = 4
+    ly = 4
+    lz = -1
+#brick
+  % pal du bas 
+        %param
+            c=2
+            s=0.5
+            r=0
+        %coord
+            x=25
+            y=19.75
+            z=4.25
+        %dimen
+            L=1
+            W=6
+            H=8
+        %inclin
+            tetax=0.0
+            tetay=45.0
+            tetaz=0.0
+        %movpara
+            speedLaw=3
+            angleLaw=0
+            charactTime=5
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=1
+            rotationCenterX=25
+            rotationCenterY=25
+            rotationCenterZ=0
+            amplitude=3
+    #brick
+  % pal de droite 
+        %param
+            c=2
+            s=0.5
+            r=0
+        %coord
+            x=30.25
+            y=25
+            z=4.25
+        %dimen
+            L=6
+            W=1
+            H=8
+        %inclin
+            tetax=-45
+            tetay=0.0
+            tetaz=0.0
+       %movpara
+            speedLaw=3
+            angleLaw=0
+            charactTime=5
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=1
+            rotationCenterX=25
+            rotationCenterY=25
+            rotationCenterZ=0
+            amplitude=3
+  #brick
+  % pal du haut 
+        %param
+            c=2
+            s=0.5
+            r=0
+        %coord
+            x=25
+            y=30.25
+            z=4.25
+        %dimen
+            L=1
+            W=6
+            H=8
+        %inclin
+            tetax=0.0
+            tetay=-45.0
+            tetaz=0.0
+        %movpara
+            speedLaw=3
+            angleLaw=0
+            charactTime=5
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=1
+            rotationCenterX=25
+            rotationCenterY=25
+            rotationCenterZ=0
+            amplitude=3
+    #brick
+  % pal de gauche 
+        %param
+            c=2
+            s=0.5
+            r=0
+        %coord
+            x=19.75
+            y=25
+            z=4.25
+        %dimen
+            L=6
+            W=1
+            H=8
+        %inclin
+            tetax=45.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=3
+            angleLaw=0
+            charactTime=5
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=1
+            rotationCenterX=25
+            rotationCenterY=25
+            rotationCenterZ=0
+            amplitude=3
+ #brick
+  % arbre 
+        %param
+            c=2
+            s=0.5
+            r=0
+        %coord
+            x=25
+            y=25
+            z=4.25
+        %dimen
+            L=5
+            W=5
+            H=6
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=3
+            angleLaw=0
+            charactTime=5
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=1
+            rotationCenterX=25
+            rotationCenterY=25
+            rotationCenterZ=0
+            amplitude=3
+  
+  #brick
+  % arbre 
+        %param
+            c=1
+            s=0.5
+            r=0
+        %coord
+            x=25
+            y=25
+            z=1
+        %dimen
+            L=30
+            W=30
+            H=1
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=3
+            angleLaw=0
+            charactTime=5
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=1
+            rotationCenterX=25
+            rotationCenterY=25
+            rotationCenterZ=0
+            amplitude=3
+  
+
+   
+#END_G
