@@ -321,8 +321,8 @@
             y=15
              z=5.75
         %dimen
-           L=17
-            W=17
+           L=18
+            W=18
             H=10
         %inclin
             tetax=0.0
@@ -350,8 +350,8 @@
             y=15
             z=5.75
         %dimen
-            L=17
-            W=17
+            L=18
+            W=18
             H=10
         %inclin
             tetax=0.0
@@ -379,8 +379,8 @@
             y=35
              z=5.75
         %dimen
-            L=17
-            W=17
+            L=18
+            W=18
             H=10
         %inclin
             tetax=0.0
@@ -408,8 +408,8 @@
             y=35
              z=5.75
         %dimen
-            L=17
-            W=17
+            L=18
+            W=18
             H=10
         %inclin
             tetax=0.0
@@ -545,5 +545,4 @@
             amplitude=3
 
 
- 
 #END_G
