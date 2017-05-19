@@ -1,6 +1,6 @@
 # Smoothed-particle hydrodynamics
 MATH0471 – Spring 2017
-v.1 (7/02/2017)
+v.2 (19/05/2017)
 
 
 
