@@ -11,18 +11,18 @@
 *Decscription:
 *Initialise speed from field.
 */
-// To be totally changed because of updateMoving speed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void speedInit(Field* field, Parameter* parameter)
 {
 	for(int j=0 ; j<3 ; j++)
-		field->speed[j].assign(field->nTotal, 0.0); // Initial state is zero speed; other choice could be implemented
+	// Initial state is zero speed; other choice could be implemented
+	field->speed[j].assign(field->nTotal, 0.0);
 	if (field->nMoving != 0) {
 		int start=field->nFree+field->nFixed;
 		int end=field->nTotal;
-		 for(int i=start ; i<end ; i++)
-		 {
-            updateMovingSpeed(field,parameter,0.0,0.0,i);
-		 }
+		for(int i=start ; i<end ; i++)
+		{
+			updateMovingSpeed(field,parameter,0.0,0.0,i);
+		}
 
 	}
 }
@@ -77,10 +77,10 @@ void densityInit(Field* field, Parameter* parameter)
 				}
 				break;
 			}
-			// Boundaries have constant densities, no reason for this, might thus be changed !!!!!
+			// Boundaries have constant densities
 			for (int k = 0; k < field->nTotal; k++){
 				if(field->type[k] != freePart)
-					field->density.push_back(parameter->densityRef);
+				field->density.push_back(parameter->densityRef);
 			}
 		}
 		break;

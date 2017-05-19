@@ -1,6 +1,3 @@
-///**************************************************************************
-/// SOURCE: Functions to read the parameters and geometry given by the user.
-///**************************************************************************
 #include "Physics.h"
 #include "Main.h"
 #include "Interface.h"
@@ -10,7 +7,7 @@
 
 #define N_UL 3
 #define N_DATA 22
-#define N_DATA_BATHYMETRY 5
+#define N_DATA_BATHYMETRY 6
 #define N_PARAM 24
 
 enum geomType{cube,cylinder,sphere};
@@ -25,15 +22,11 @@ enum geomType{cube,cylinder,sphere};
 *Decscription:
 *Read a brick from the geometry file and generate the position and the volume of the particle inside the brick and store these information in the corresponding vectors.
 */
-
-// Why "int type" and not "GoeomType type" ? would help identify the use of this argument ?
-// Why passing vector with a pointer ? Isn't it possible with a reference ?
-// Field* currentField useless here ?
-
 Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vector<double>* posFree,
-  std::vector<double>* posMoving, std::vector<double>* posFixed,
-  std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<double>* volVectorMoving,std::vector<int>* typeFree,  std::vector<int>* typeFixed, std::vector<int>* typeMoving, int* numberMovingBoundaries)
-  {
+std::vector<double>* posMoving, std::vector<double>* posFixed,
+std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<double>* volVectorMoving,std::vector<int>* typeFree,
+std::vector<int>* typeFixed, std::vector<int>* typeMoving, int* numberMovingBoundaries)
+{
     std::string buf;
     int cnt=0;
     char valueArray[1024];
@@ -41,22 +34,22 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
 
     while(cnt!=N_DATA && inFile->peek() != std::ifstream::traits_type::eof())
     {
-      std::getline(*inFile, buf);
-      if(1==sscanf(buf.c_str(),"%*[^#]#%s", valueArray)){
-        std::cout << "Missing an element parameter.\n" << std::endl;
-        return geometryError;
-      }
-      if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
-      {
-        brickData[cnt]=atof(valueArray);
-        ++cnt;
-      }
-      else{continue;}
+        std::getline(*inFile, buf);
+        if(1==sscanf(buf.c_str(),"%*[^#]#%s", valueArray)){
+            std::cout << "Missing an element parameter.\n" << std::endl;
+            return geometryError;
+        }
+        if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
+        {
+            brickData[cnt]=atof(valueArray);
+            ++cnt;
+        }
+        else{continue;}
     }
     if(cnt!=N_DATA)
     {
-      std::cout << "Reached end of file before geometry reading.\n" << std::endl;
-      return geometryError;
+        std::cout << "Reached end of file before geometry reading is complete.\n" << std::endl;
+        return geometryError;
     }
     int c=(int)brickData[0];
     float s=brickData[1];
@@ -73,151 +66,151 @@ Error readBrick(int type, std::ifstream* inFile, Parameter* parameter, std::vect
     double amplitude={brickData[21]};
     for(int j = 0; j<3; j++)
     {
-      if(L[j] < s)
-      {
-        std::cout << "Box smaller than s." << '\n';
-        return geometryError;
-      }
+        if(L[j] < s)
+        {
+            std::cout << "Brick box smaller than s." << '\n';
+            return geometryError;
+        }
     }
     int nPart;
     double volPart;
 
     switch(c)
     {
-      case freePart :
-      switch(type)
-      {
-        case cube :
-        meshcube(o, L,teta,s, *posFree, &nPart, &volPart, r, true);
-        break;
-        case cylinder :
-        meshcylinder(o, L, s, *posFree, &nPart, &volPart, r, true);
-        break;
-        case sphere :
-        meshsphere(o, L, s, *posFree, &nPart, &volPart, r, true);
-        break;
-      }
-      for(cnt=0; cnt<nPart; ++cnt)
-      {
-        (*volVectorFree).push_back(volPart);
-        (*typeFree).push_back(c);
-      }
-      break;
-      case fixedPart :
-      switch(type)
-      {
-        case cube :
-        meshcube(o, L,teta, s, *posFixed, &nPart, &volPart, r, true);
-        break;
-        case cylinder :
-        meshcylinder(o, L, s, *posFixed, &nPart, &volPart, r, true);
-        break;
-        case sphere :
-        meshsphere(o, L, s, *posFixed, &nPart, &volPart, r, true);
-        break;
-      }
-      for(cnt=0; cnt<nPart; ++cnt)
-      {
-        (*volVectorFixed).push_back(volPart);
-        (*typeFixed).push_back(c);
-      }
-      break;
-      case movingPart :
-      {
-        (*numberMovingBoundaries)++;
-        int movingBoundaryID = (*numberMovingBoundaries) - 1 + 2;  //Indeed, type = 0 is free, type = 1 is fixed and type > 1 is movingS !
-
-        for(int j=0 ; j<3 ; j++)
-        {
-          parameter->teta[j].push_back(teta[j]);
-          parameter->movingDirection[j].push_back(movingDirection[j]);
-          parameter->rotationCenter[j].push_back(rotationCenter[j]);
-        }
-        parameter->charactTime.push_back(charactTime);
-        parameter->posLaw.push_back(posLaw);
-        parameter->angleLaw.push_back(angleLaw);
-        parameter->amplitude.push_back(amplitude);
+        case freePart :
         switch(type)
         {
-          case cube :
-          meshcube(o, L,teta,s, *posMoving, &nPart, &volPart, r, true);
-          break;
-          case cylinder :
-          meshcylinder(o, L, s, *posMoving, &nPart, &volPart, r, true);
-          break;
-          case sphere :
-          meshsphere(o, L, s, *posMoving, &nPart, &volPart, r, true);
-          break;
+            case cube :
+            meshcube(o, L,teta,s, *posFree, &nPart, &volPart, r, true);
+            break;
+            case cylinder :
+            meshcylinder(o, L, s, *posFree, &nPart, &volPart, r, true);
+            break;
+            case sphere :
+            meshsphere(o, L, s, *posFree, &nPart, &volPart, r, true);
+            break;
         }
         for(cnt=0; cnt<nPart; ++cnt)
         {
-          (*volVectorMoving).push_back(volPart);
-          (*typeMoving).push_back(movingBoundaryID);
+            (*volVectorFree).push_back(volPart);
+            (*typeFree).push_back(c);
         }
-      }
-      break;
+        break;
+        case fixedPart :
+        switch(type)
+        {
+            case cube :
+            meshcube(o, L,teta, s, *posFixed, &nPart, &volPart, r, true);
+            break;
+            case cylinder :
+            meshcylinder(o, L, s, *posFixed, &nPart, &volPart, r, true);
+            break;
+            case sphere :
+            meshsphere(o, L, s, *posFixed, &nPart, &volPart, r, true);
+            break;
+        }
+        for(cnt=0; cnt<nPart; ++cnt)
+        {
+            (*volVectorFixed).push_back(volPart);
+            (*typeFixed).push_back(c);
+        }
+        break;
+        case movingPart :
+        {
+            (*numberMovingBoundaries)++;
+            int movingBoundaryID = (*numberMovingBoundaries) - 1 + 2;
+            //type = 0 is free; type = 1 is fixed; type > 1 is movings
+
+            for(int j=0 ; j<3 ; j++)
+            {
+                parameter->teta[j].push_back(teta[j]);
+                parameter->movingDirection[j].push_back(movingDirection[j]);
+                parameter->rotationCenter[j].push_back(rotationCenter[j]);
+            }
+            parameter->charactTime.push_back(charactTime);
+            parameter->posLaw.push_back(posLaw);
+            parameter->angleLaw.push_back(angleLaw);
+            parameter->amplitude.push_back(amplitude);
+            switch(type)
+            {
+                case cube :
+                meshcube(o, L,teta,s, *posMoving, &nPart, &volPart, r, true);
+                break;
+                case cylinder :
+                meshcylinder(o, L, s, *posMoving, &nPart, &volPart, r, true);
+                break;
+                case sphere :
+                meshsphere(o, L, s, *posMoving, &nPart, &volPart, r, true);
+                break;
+            }
+            for(cnt=0; cnt<nPart; ++cnt)
+            {
+                (*volVectorMoving).push_back(volPart);
+                (*typeMoving).push_back(movingBoundaryID);
+            }
+        }
+        break;
     }
     return noError;
-  }
+}
 
-  /*
-  *Input:
-  *- inFile: Pointer to the input stream associated to the geometry file
-  *- currentField: Pointer to the structure to fill
-  *- posFree/posFree/posMoving: vector to store the position of the particles generated during brick reading
-  *- volVectorFree/Fixed/Moving: vector to store the volume of the particles generated during brick reading
-  *Decscription:
-  */
-  //Add defensive programmation here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  Error readBathymetry(std::ifstream* inFile, std::vector<double>* posFree, std::vector<double>* posFixed,
-    std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<int>* typeFree,  std::vector<int>* typeFixed)
+/*
+*Input:
+*- inFile: Pointer to the input stream associated to the geometry file
+*- currentField: Pointer to the structure to fill
+*- posFree/posFree/posMoving: vector to store the position of the particles generated during brick reading
+*- volVectorFree/Fixed/Moving: vector to store the volume of the particles generated during brick reading
+*Decscription:
+*/
+Error readBathymetry(std::ifstream* inFile, std::vector<double>* posFree, std::vector<double>* posFixed,
+std::vector<double>* volVectorFree,  std::vector<double>* volVectorFixed, std::vector<int>* typeFree,  std::vector<int>* typeFixed)
+{
+    std::string buf;
+    char batFile[64];
+    int cnt=0;
+    char valueArray[1024];
+    float brickData[N_DATA_BATHYMETRY];
+
+    std::getline(*inFile, buf);
+    sscanf(buf.c_str(),"%*[^=]=%s", batFile);
+
+    while(cnt!=N_DATA_BATHYMETRY)
     {
-      std::string buf;
-      char batFile[64];
-      int cnt=0;
-      char valueArray[1024];
-      float brickData[N_DATA_BATHYMETRY];
-
-      std::getline(*inFile, buf);
-      sscanf(buf.c_str(),"%*[^=]=%s", batFile);
-
-      while(cnt!=N_DATA_BATHYMETRY)
-      {
         std::getline(*inFile, buf);
         if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
         {
-          brickData[cnt]=atof(valueArray);
-          ++cnt;
+            brickData[cnt]=atof(valueArray);
+            ++cnt;
         }
         else{continue;}
-      }
+    }
+    int bathType = (int) brickData[0];
+    float s=brickData[1];
+    float r=brickData[2];
+    double numberGroundParticles = (int) brickData[3];
+    double height0 = brickData[4];
+    double hFreeSurface = brickData[5];
+    int nPartFree, nPartFixed;
+    double volPart;
 
-      float s=brickData[0];
-      float r=brickData[1];
-      double numberGroundParticles = (int) brickData[2];
-      double height0 = brickData[3];
-      double hFreeSurface = brickData[4];
-      int nPartFree, nPartFixed;
-      double volPart;
-
-      if(meshBathymetry(batFile, numberGroundParticles, height0, hFreeSurface, s, *posFree, *posFixed, &nPartFree, &nPartFixed, &volPart,
+    if(meshBathymetry(batFile,bathType, numberGroundParticles, height0, hFreeSurface, s, *posFree, *posFixed, &nPartFree, &nPartFixed, &volPart,
         r, true)!=noError)
         {
-          return geometryError;
+            return geometryError;
         }
 
         for(int i=0; i<nPartFree; i++)
         {
-          (*volVectorFree).push_back(volPart);
-          (*typeFree).push_back(freePart);
+            (*volVectorFree).push_back(volPart);
+            (*typeFree).push_back(freePart);
         }
         for(int i=0; i<nPartFixed; i++)
         {
-          (*volVectorFixed).push_back(volPart);
-          (*typeFixed).push_back(fixedPart);
+            (*volVectorFixed).push_back(volPart);
+            (*typeFixed).push_back(fixedPart);
         }
         return noError;
-      }
+    }
 
 /*
 *Input:
@@ -241,7 +234,7 @@ Error readGeometry(std::string filename, Field* currentField, Parameter* paramet
     std::getline(inFile, buf);
     if(buf!="#GEOM1")
     {
-        std::cout << "Wrong Geometry file type.\n" << std::endl;
+        std::cout << "#GEOM1 identifier could not be read. Wrong geometry file.\n" << std::endl;
         return geometryError;
     }
     while(inFile.peek() != std::ifstream::traits_type::eof())
@@ -262,7 +255,7 @@ Error readGeometry(std::string filename, Field* currentField, Parameter* paramet
                     {
                         std::getline(inFile, buf);
                         if(1==sscanf(buf.c_str(),"%*[^#]#%s", valueArray)){
-                            std::cout << "Missing a domain parameter.\n" << std::endl;
+                            std::cout << "Missing a domain value.\n" << std::endl;
                             return geometryError;
                         }
                         if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
@@ -271,19 +264,19 @@ Error readGeometry(std::string filename, Field* currentField, Parameter* paramet
                             ++cnt;
                         }
                         else
-                            continue;
-                }
-                if(cnt!=N_UL)
-                {
-                    std::cout << "Reached end of file before geometry reading.\n" << std::endl;
-                    return geometryError;
-                }
-                cnt = 0;
+                        continue;
+                    }
+                    if(cnt!=N_UL)
+                    {
+                        std::cout << "Reached end of file before geometry reading is complete.\n" << std::endl;
+                        return geometryError;
+                    }
+                    cnt = 0;
                     while(cnt!=N_UL && inFile.peek() != std::ifstream::traits_type::eof())
                     {
                         std::getline(inFile, buf);
                         if(1==sscanf(buf.c_str(),"%*[^#]#%s", valueArray)){
-                            std::cout << "Missing a domain parameter.\n" << std::endl;
+                            std::cout << "Missing a domain value.\n" << std::endl;
                             return geometryError;
                         }
                         if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
@@ -292,10 +285,10 @@ Error readGeometry(std::string filename, Field* currentField, Parameter* paramet
                             ++cnt;
                         }
                         else
-                            continue;
+                        continue;
                     }
                     if(cnt!=N_UL){
-                        std::cout << "Reached end of file before geometry reading.\n" << std::endl;
+                        std::cout << "Reached end of file before geometry reading is complete.\n" << std::endl;
                         return geometryError;
                     }
                 }
@@ -305,74 +298,75 @@ Error readGeometry(std::string filename, Field* currentField, Parameter* paramet
                         &posFree, &posMoving, &posFixed,
                         &volVectorFree, &volVectorFixed, &volVectorMoving,&typeFree, &typeFixed, &typeMoving, &numberMovingBoundaries)==geometryError){
                             return geometryError;
-                    }
-                }
-                else if(buf=="cylin")
-                {
-                    if(readBrick(cylinder,&inFile, parameter,
-                        &posFree, &posMoving, &posFixed,
-                        &volVectorFree, &volVectorFixed, &volVectorMoving,&typeFree, &typeFixed, &typeMoving, &numberMovingBoundaries)==geometryError){
-                            return geometryError;
-                    }
-                }
-                else if(buf=="spher")
-                {
-                    if(readBrick(sphere,&inFile, parameter,
-                        &posFree, &posMoving, &posFixed,
-                        &volVectorFree, &volVectorFixed, &volVectorMoving,&typeFree, &typeFixed, &typeMoving, &numberMovingBoundaries)==geometryError){
-                            return geometryError;
-                    }
-                }
-                else if(buf=="bathy")
-                {
-                    if(readBathymetry(&inFile, &posFree, &posFixed,
-                            &volVectorFree,  &volVectorFixed, &typeFree, &typeFixed)!=noError){
-                              return geometryError;
-                            }
-                }
-                else if(buf=="END_G")
-                {
-                    // Number of particles
-                    currentField->nFree=posFree.size()/3;
-                    currentField->nFixed=posFixed.size()/3;
-                    currentField->nMoving=posMoving.size()/3;
-                    currentField->nTotal= currentField->nFree + currentField->nFixed + currentField->nMoving;
-                    // Position and volume vector sorting
-                    posFree.insert(posFree.end(), posFixed.begin(), posFixed.end());
-                    posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
-                    volVectorFree.insert(volVectorFree.end(), volVectorFixed.begin(), volVectorFixed.end());
-                    volVectorFree.insert(volVectorFree.end(), volVectorMoving.begin(), volVectorMoving.end());
-                    typeFree.insert(typeFree.end(), typeFixed.begin(), typeFixed.end());
-                    typeFree.insert(typeFree.end(), typeMoving.begin(), typeMoving.end());
-                    (*volVector)=volVectorFree;
-
-                    // Filling position vector
-                    for(int i=0 ; i < currentField->nTotal ; i++)
-                    {
-                        currentField->type.push_back(typeFree[i]); //Possible to do this in a better way ?
-                        for(int j=0 ; j<3 ; j++)
-                        {
-                            currentField->pos[j].push_back(posFree[3*i+j]);
                         }
                     }
-                    return noError;
-                }
-                else
-                {
-                    std::cout <<"Unknown '"<<buf<<"' identifier.\n" << std::endl;
+                    else if(buf=="cylin")
+                    {
+                        if(readBrick(cylinder,&inFile, parameter,
+                            &posFree, &posMoving, &posFixed,
+                            &volVectorFree, &volVectorFixed, &volVectorMoving,&typeFree, &typeFixed, &typeMoving, &numberMovingBoundaries)==geometryError){
+                                return geometryError;
+                            }
+                        }
+                        else if(buf=="spher")
+                        {
+                            if(readBrick(sphere,&inFile, parameter,
+                                &posFree, &posMoving, &posFixed,
+                                &volVectorFree, &volVectorFixed, &volVectorMoving,&typeFree, &typeFixed, &typeMoving, &numberMovingBoundaries)==geometryError){
+                                    return geometryError;
+                                }
+                            }
+                            else if(buf=="bathy")
+                            {
+                                if(readBathymetry(&inFile, &posFree, &posFixed,
+                                    &volVectorFree,  &volVectorFixed, &typeFree, &typeFixed)!=noError){
+                                        return geometryError;
+                                    }
+                                }
+                                else if(buf=="END_G")
+                                {
+                                    // Number of particles
+                                    currentField->nFree=posFree.size()/3;
+                                    currentField->nFixed=posFixed.size()/3;
+                                    currentField->nMoving=posMoving.size()/3;
+                                    currentField->nTotal= currentField->nFree + currentField->nFixed + currentField->nMoving;
+
+                                    // Position and volume vector sorting
+                                    posFree.insert(posFree.end(), posFixed.begin(), posFixed.end());
+                                    posFree.insert(posFree.end(), posMoving.begin(), posMoving.end());
+                                    volVectorFree.insert(volVectorFree.end(), volVectorFixed.begin(), volVectorFixed.end());
+                                    volVectorFree.insert(volVectorFree.end(), volVectorMoving.begin(), volVectorMoving.end());
+                                    typeFree.insert(typeFree.end(), typeFixed.begin(), typeFixed.end());
+                                    typeFree.insert(typeFree.end(), typeMoving.begin(), typeMoving.end());
+                                    (*volVector)=volVectorFree;
+
+                                    // Filling position vector
+                                    for(int i=0 ; i < currentField->nTotal ; i++)
+                                    {
+                                        currentField->type.push_back(typeFree[i]);
+                                        for(int j=0 ; j<3 ; j++)
+                                        {
+                                            currentField->pos[j].push_back(posFree[3*i+j]);
+                                        }
+                                    }
+                                    return noError;
+                                }
+                                else
+                                {
+                                    std::cout <<"Unknown '"<<buf<<"' identifier.\n" << std::endl;
+                                    return geometryError;
+                                }
+                                break;
+                                default :
+                                std::cout <<"Wrong tag in the geometry file.\n" << std::endl;
+                                return geometryError;
+                                continue;
+                            }
+                        }
+                    }
+                    std::cout << "Reached end of file before geometry reading is complete.\n" << std::endl;
                     return geometryError;
                 }
-                break;
-                default :
-                    std::cout <<"Wrong tag in the geometry file.\n" << std::endl;
-                    return geometryError;
-                continue;
-            }
-        }
-    }
-    std::cout << "Reached end of file before geometry reading.\n" << std::endl;
-    return geometryError;
-}
 
 /*
 Read the geometry and make all particle initializations
@@ -380,9 +374,8 @@ Read the geometry and make all particle initializations
 Error initializeField(std::string filename, Field* currentField, Parameter* parameter){
 
     Error errorFlag = noError;
-
-    std::vector<double> volVector; // Temporary volume vector used to initialize the mass vector
-    errorFlag = readGeometry(filename, currentField, parameter, &volVector); //Why sending adress of volVector ?
+    std::vector<double> volVector;
+    errorFlag = readGeometry(filename, currentField, parameter, &volVector);
     if (errorFlag != noError){return errorFlag;}
 
     // Checking consistency of user datas
@@ -411,7 +404,6 @@ Error initializeField(std::string filename, Field* currentField, Parameter* para
 */
 Error readParameter(std::string filename, Parameter* parameter)
 {
-    // open a file geometry.kzr
     std::ifstream inFile(filename);
     std::string buf;
     std::getline(inFile, buf);
@@ -440,18 +432,18 @@ Error readParameter(std::string filename, Parameter* parameter)
                     std::getline(inFile, buf);
                     if(1==sscanf(buf.c_str(),"%*[^=]=%s", valueArray))
                     {
-                         // Numerical parameters
+                        // Numerical parameters
                         if(cnt==0)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_KERNEL_VALUE) )
-                          {
-                            parameter->kernel=(Kernel) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid Kernel.\n" << std::endl;
-                            return parameterError;
-                          }
+                            if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_KERNEL_VALUE) )
+                            {
+                                parameter->kernel=(Kernel) atoi(valueArray);
+                            }
+                            else
+                            {
+                                std::cout <<"Invalid Kernel.\n" << std::endl;
+                                return parameterError;
+                            }
                         }
                         if(cnt==1){
                             parameter->kh=atof(valueArray);
@@ -459,131 +451,133 @@ Error readParameter(std::string filename, Parameter* parameter)
                         }
                         if(cnt==2)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_INTEGRATION_VALUE) )
-                          {
-                            parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid integrationMethod.\n" << std::endl;
-                            return parameterError;
-                          }
+                            if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_INTEGRATION_VALUE) )
+                            {
+                                parameter->integrationMethod=(IntegrationMethod) atoi(valueArray);
+                            }
+                            else
+                            {
+                                std::cout <<"Invalid integrationMethod.\n" << std::endl;
+                                return parameterError;
+                            }
                         }
                         if(cnt==3)
-                            parameter->theta = atof(valueArray);
+                        parameter->theta = atof(valueArray);
                         if(cnt==4)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_ADAPTATIVE_VALUE) )
-                          {
-                            parameter->adaptativeTimeStep=(AdaptativeTimeStep) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid adaptativeTimeStep.\n" << std::endl;
-                            return parameterError;
-                          }
+                            if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_ADAPTATIVE_VALUE) )
+                            {
+                                parameter->adaptativeTimeStep=(AdaptativeTimeStep) atoi(valueArray);
+                            }
+                            else
+                            {
+                                std::cout <<"Invalid adaptativeTimeStep.\n" << std::endl;
+                                return parameterError;
+                            }
                         }
                         if(cnt==5)
-                            parameter->k=atof(valueArray);
+                        parameter->k=atof(valueArray);
                         if(cnt==6)
-                            parameter->T=atof(valueArray);
+                        parameter->T=atof(valueArray);
 
                         // Physical Parameters
                         if(cnt==7)
-                            parameter->densityRef=atof(valueArray);
+                        parameter->densityRef=atof(valueArray);
                         if(cnt==8)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_DENSITYINIT_VALUE) )
-                          {
-                            parameter->densityInitMethod=(DensityInitMethod) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid densityInitMethod.\n" << std::endl;
-                            return parameterError;
-                          }
+                            if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_DENSITYINIT_VALUE) )
+                            {
+                                parameter->densityInitMethod=(DensityInitMethod) atoi(valueArray);
+                            }
+                            else
+                            {
+                                std::cout <<"Invalid densityInitMethod.\n" << std::endl;
+                                return parameterError;
+                            }
                         }
                         if(cnt==9)
-                            parameter->B=atof(valueArray);
+                        parameter->B=atof(valueArray);
                         if(cnt==10)
-                            parameter->gamma=atof(valueArray);
+                        parameter->gamma=atof(valueArray);
                         if(cnt==11)
-                            parameter->g=atof(valueArray);
+                        parameter->g=atof(valueArray);
                         if(cnt==12)
-                            parameter->c=atof(valueArray);
+                        parameter->c=atof(valueArray);
                         if(cnt==13)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_VISCOSITY_VALUE) )
-                          {
-                            parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid viscosityModel.\n" << std::endl;
-                            return parameterError;
-                          }
+                            if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_VISCOSITY_VALUE) )
+                            {
+                                parameter->viscosityModel=(ViscosityModel) atoi(valueArray);
+                            }
+                            else
+                            {
+                                std::cout <<"Invalid viscosityModel.\n" << std::endl;
+                                return parameterError;
+                            }
                         }
                         if(cnt==14)
-                            parameter->alpha=atof(valueArray);
+                        parameter->alpha=atof(valueArray);
                         if(cnt==15)
-                            parameter->beta=atof(valueArray);
-                        if(cnt==16)
-                            parameter->epsilon=atof(valueArray);
+                        parameter->beta=atof(valueArray);
+                        if(cnt==16){
+                            parameter->epsilon=0.01; // Fixed stabilization parameter
+                            parameter->epsilonXSPH=atof(valueArray); // XSPH parameter
+                        }
                         if(cnt==17)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_STATEEQUATION_VALUE) )
-                          {
-                            parameter->stateEquationMethod=(StateEquationMethod) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid stateEquationMethod.\n" << std::endl;
-                            return parameterError;
-                          }
+                            if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_STATEEQUATION_VALUE) )
+                            {
+                                parameter->stateEquationMethod=(StateEquationMethod) atoi(valueArray);
+                            }
+                            else
+                            {
+                                std::cout <<"Invalid stateEquationMethod.\n" << std::endl;
+                                return parameterError;
+                            }
                         }
                         if(cnt==18)
-                            parameter->molarMass = atof(valueArray);
+                        parameter->molarMass = atof(valueArray);
                         if(cnt==19)
-                            parameter->temperature = atof(valueArray);
+                        parameter->temperature = atof(valueArray);
                         if(cnt==20)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MASSINIT_VALUE) )
-                          {
-                            parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid massInitMethod.\n" << std::endl;
-                            return parameterError;
-                          }
+                            if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MASSINIT_VALUE) )
+                            {
+                                parameter->massInitMethod=(MassInitMethod) atoi(valueArray);
+                            }
+                            else
+                            {
+                                std::cout <<"Invalid massInitMethod.\n" << std::endl;
+                                return parameterError;
+                            }
                         }
 
                         // Output Parameters
                         if(cnt==21)
-                            parameter->writeInterval=atof(valueArray);
+                        parameter->writeInterval=atof(valueArray);
                         if(cnt==22)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MATLAB_VALUE) )
-                          {
-                            parameter->matlab=(Matlab) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid outputFormat.\n" << std::endl;
-                            return parameterError;
-                          }
+                            if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_MATLAB_VALUE) )
+                            {
+                                parameter->matlab=(Matlab) atoi(valueArray);
+                            }
+                            else
+                            {
+                                std::cout <<"Invalid outputFormat.\n" << std::endl;
+                                return parameterError;
+                            }
                         }
                         if(cnt==23)
                         {
-                          if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_PARAVIEW_VALUE) )
-                          {
-                            parameter->paraview=(Paraview) atoi(valueArray);
-                          }
-                          else
-                          {
-                            std::cout <<"Invalid outputFormat.\n" << std::endl;
-                            return parameterError;
-                          }
+                            if( (0 <= atoi(valueArray)) && (atoi(valueArray) < NB_PARAVIEW_VALUE) )
+                            {
+                                parameter->paraview=(Paraview) atoi(valueArray);
+                            }
+                            else
+                            {
+                                std::cout <<"Invalid outputFormat.\n" << std::endl;
+                                return parameterError;
+                            }
                         }
                         ++cnt;
                     }

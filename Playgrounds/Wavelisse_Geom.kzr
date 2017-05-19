@@ -1,0 +1,270 @@
+#GEOM1
+%********************************************
+% PLAYGROUND : Geometry example
+%
+% #GEOM
+% #domain
+%   lx, ly, lz ==> Lower coordinate of the domain
+%   ux, uy, uz ==> Upper coordinate of the domain
+%
+% geometry : #brick, #cylin or #spher
+% %param
+%   c ==> 0=free, 1=fixed, 2=moving
+%   s ==> spacing between particles
+%   r ==> % randomness in particle's position
+% %coord
+%   x ==> x coordinate of the center of mass
+%   y ==> y coordinate of the center of mass
+%   z ==> z coordinate of the center of mass
+% %dimen
+%   L ==> Length of the geometry
+%   W ==> Width  of the geometry
+%   H ==> Height of the geometry
+%   d ==> Small diameter of the geometry
+%   D ==> Large diameter of the geometry
+% %inclin
+%   tetax ==> Angle of rotation around the x axis (in degre)
+%   tetay ==> Angle of rotation around the y axis (in degre)
+%   tetaz ==> Angle of rotation around the z axis (in degre)
+% %movpara
+%   movingDirection X, Y & Z =
+%   speedLaw = dictate the behaviour of moving boundaries
+%********************************************
+
+
+#domsz
+    ux = 70
+    uy = 11
+    uz = 9
+    lx = -11
+    ly = -1.5
+    lz = -1.5
+#brick
+  %du bas , plaque supportrice
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=0
+            y=5
+            z=0
+        %dimen
+            L=20
+            W=10
+            H=0.4
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+#brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=40
+            y=5
+            z= 2.6247
+        %dimen
+            L=60.2292
+            W=10
+            H=0.4
+        %inclin
+            tetax=0.0
+            tetay=-5.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+    #brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=0
+            y=10
+            z=3
+        %dimen
+            L=20
+            W=0.2
+            H=6
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+    #brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=0
+            y=0
+            z=3
+        %dimen
+            L=20
+            W=0.2
+            H=6
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+    #brick
+    %plaque verticale à gauche 
+        %param
+            c=2
+            s=0.2
+            r=0
+        %coord
+            x=-5.2
+            y=5
+            z=2.7
+        %dimen
+            L=0.4
+            W=9.8
+            H=5
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=1
+            angleLaw=0
+            charactTime=7.5
+            movingDirectionX=1
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=2
+    #brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=40
+            y=10
+            z=3
+        %dimen
+            L=60
+            W=0.2
+            H=6
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+    #brick
+        %param
+            c=1
+            s=0.2
+            r=0
+        %coord
+            x=40
+            y=0
+            z=3
+        %dimen
+            L=60
+            W=0.2
+            H=6
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+    #brick
+        %param
+            c=0
+            s=0.2
+            r=0
+        %coord
+            x=2.5
+            y=5
+            z=2.2
+        %dimen
+            L=14.6
+            W=9.6
+            H=4
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            speedLaw=0
+            angleLaw=0
+            charactTime=0
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=0
+    
+
+#END_G

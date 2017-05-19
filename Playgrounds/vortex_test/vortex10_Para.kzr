@@ -1,0 +1,74 @@
+#PARA1
+%**********************************************************************************************
+% PLAYGROUND : Parameter example
+% #param
+%
+% kernel = type of kernel : Gaussian, Bell_shaped, Cubic_spline, Quadratic, Quintic, Quintic_spline
+% kh = smothing length
+% integrationMethod = euler or RK2
+% theta = RK2 parameter : 1 for mid point method, 0.5 for Heun's method, 1.5 for Ralston's method
+% adaptativeTimeStep= no or yes
+% k = time step
+% T = simulation time
+%
+% densityRef = density of the fluid at atmospheric pressure
+% densityInitMethod = hydrosatic, etc.
+% B & gamma = fluid constants
+% g = gravity
+% c = speed of sound
+% viscosityModel = violeauArtificial
+% alpha, beta & epsilon = viscosity parameters
+% stateEquationMethod = quasiIncompressible, perfectGas, etc.
+% molarMass =
+% temperature =
+% massInitMethod = violeau2012 (all particles have same volumes), etc.
+%
+% movingDirection X, Y & Z =
+% speedLaw = dictate the behaviour of moving boundaries
+%
+% writeInteval = time interval between two outputs file are generated
+% matlab = write .txt for matlab analysis:  noMatlab or fullMatlab
+% paraview = write .vtx for paraview analysis: noParaview, fullParaview, nFreeParaview,
+%                                              nMovingFixedParaview, nFree_nMovingFixedParaview
+%**********************************************************************************************
+
+#param
+
+    % Numerical parameters
+        kernel=1
+        kh=1
+
+        integrationMethod=1
+        theta=0.5
+
+        adaptativeTimeStep=0
+        k=0.0005
+
+        T=40
+
+  % Physical Parameters
+        densityRef=1000.0
+        densityInitMethod=1
+
+        B=175000
+        gamma=7.0
+        g=9.81
+        c=35
+
+        viscosityModel=0
+        alpha=0.1
+        beta=0
+        epsilon=0.01
+
+        stateEquationMethod=0
+        molarMass=1
+        temperature=293.15
+
+        massInitMethod=0
+
+    % Output Parameters
+        writeInterval=0.25
+        matlab=0
+        paraview=4
+
+#END_F

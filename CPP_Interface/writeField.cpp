@@ -22,7 +22,6 @@ void writeField(Field* field, double t, Parameter* parameter,
     Field newFieldInstance;
     Field* newField = &newFieldInstance;
     int count=0;
-    // TO BE CHANGED LATER
     if(parameter->paraview != noParaview || parameter->matlab != noMatlab)
     {
         newField->nFree = field->nFree;
@@ -31,7 +30,7 @@ void writeField(Field* field, double t, Parameter* parameter,
         newField->l[0] = field->l[0]; newField->l[1] = field->l[1]; newField->l[2] = field->l[2];
         newField->u[0] = field->u[0]; newField->u[1] = field->u[1]; newField->u[2] = field->u[2];
         newField->currentTime = field->currentTime;
-        
+
         // Reserves the space for the vectors
         for(int i = 0 ; i<3 ; i++){
             newField->pos[i].reserve(field->nTotal);

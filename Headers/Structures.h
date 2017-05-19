@@ -43,22 +43,7 @@ enum Paraview {noParaview, fullParaview, nFreeParaview, nMovingFixedParaview, nF
 // Particle type (Necessary to impose value here!)
 enum ParticleType {freePart=0, fixedPart=1,movingPart=2};
 
-// charactTime = characteristic time of movement or period of oscillations
-
-// movingDirection = direction de la paroi mouvante
-
-/* Parameter Structure
- * kh = smothing length
- * k = time step
- * T = simulation time
- * densityRef = density of the fluid at atmospheric pressure
- * l & u = lower and upper limit of the domain
- * B & gamma = fluid constants
- * g = gravity
- * writeInteval = time interval between two outputs file are generated
- * c, alpha, beta, epsilon = parameter relativ to artificial viscosity
-*/
-
+enum BathType {dat=0,txt=1};
 
 struct Parameter {
     double kh, h, k, T, densityRef, B, gamma, g, writeInterval, c, alpha, beta, epsilon, molarMass, temperature, theta, epsilonXSPH;
@@ -69,7 +54,7 @@ struct Parameter {
     DensityInitMethod densityInitMethod;
     StateEquationMethod stateEquationMethod;
     MassInitMethod massInitMethod;
-    std::vector<double> teta[3]; //To be changed to another greek letter, this is misleading with theta from RK2 scheme !!
+    std::vector<double> teta[3];
     std::vector<int> posLaw;
     std::vector<int> angleLaw;
     std::vector<double> charactTime;
