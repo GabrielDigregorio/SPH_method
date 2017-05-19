@@ -69,7 +69,7 @@ mingw32-make
 
 * Linux & mac OS
 
-The Cmake software must be installed and a \texttt{g++} compiler must be available.
+The Cmake software must be installed and a g++ compiler must be available.
 ```
 mkdir build
 cd build
