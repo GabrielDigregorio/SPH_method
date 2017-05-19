@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 			std::cout << "Number of time steps = " << nMax << "\n" << std::endl;
 		}
 		else
-	        std::cout << "Number of time steps = " << "not defined (adaptative time step)" << "\n" << std::endl;
+		std::cout << "Number of time steps = " << "not defined (adaptative time step)" << "\n" << std::endl;
 		std::cout << "Number of free particles = " << globalField->nFree << "\n" << std::endl;
 		std::cout << "Number of fixed particles = " << globalField->nFixed << "\n" << std::endl;
 		std::cout << "Number of particles with imposed speed = " << globalField->nMoving << "\n" << std::endl;
@@ -126,17 +126,17 @@ int main(int argc, char *argv[])
 		// Previous time step for reference
 		currentField->nextK = parameter->k;
 
-		// Next field !!!!! TO OPTIMIZE !!!!
+		// Next field
 		copyField(currentField, nextField);
 		// ---
 
 		// Solve the time step
-        timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k);
+		timeIntegration(currentField, nextField, parameter, subdomainInfo, boxes, surrBoxesAll, currentTime,parameter->k);
 		currentTime += parameter->k;
 
 		// Adaptive time step
 		if(parameter->adaptativeTimeStep)
-			timeStepUpdate(parameter->k, currentField->nextK, subdomainInfo);
+		timeStepUpdate(parameter->k, currentField->nextK, subdomainInfo);
 
 		// Swap the two fields
 		swapField(&currentField, &nextField);
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 		processUpdate(*currentField, subdomainInfo);
 
 		// Write field when needed
-    	if (writeCount*parameter->writeInterval <= currentTime+0.000001*currentTime){
+		if (writeCount*parameter->writeInterval <= currentTime+0.000001*currentTime){
 			gatherField(globalField, currentField, subdomainInfo);
 			globalField->currentTime = currentTime;
 			if(subdomainInfo.procID==0){writeField(globalField, n, parameter, parameterFilename, geometryFilename, experimentFilename);}

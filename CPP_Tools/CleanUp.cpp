@@ -4,13 +4,13 @@
 // Clear the boxes content
 void boxClear(std::vector<std::vector<int> > &boxes)
 {
-    for(int i=0 ; i<boxes.size() ; i++)
-        boxes[i].clear();
+  for(int i=0 ; i<boxes.size() ; i++)
+  boxes[i].clear();
 }
 
 // Get the time (or not)
 std::clock_t getTime(){
-    return 0.0;
+  return 0.0;
 }
 
 
@@ -42,21 +42,9 @@ void copyField(Field *sourceField,Field *copiedField)
   copiedField->density = sourceField->density;
 
   for(int j=0 ; j<3 ; j++){
-      copiedField->pos[j] = sourceField->pos[j];//.resize(nTotal);//
-      copiedField->speed[j] = sourceField->speed[j];//.resize(nTotal);
+    copiedField->pos[j] = sourceField->pos[j];//.resize(nTotal);//
+    copiedField->speed[j] = sourceField->speed[j];//.resize(nTotal);
   }
-  /*
-  copiedField->pressure.resize(nTotal);
-  copiedField->density.resize(nTotal);
-
-  // Copying fixed positions and particle type
-    for(int i = 0 ; i<nTotal ; i++){
-        if(sourceField->type[i] == fixedPart){
-            for(int j=0 ; j<3 ; j++)
-                copiedField->pos[j][i] = sourceField->pos[j][i];
-        }
-    }
-    */
 }
 
 /*

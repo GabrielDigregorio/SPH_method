@@ -64,7 +64,7 @@ end
     %     plot(InitExperiment.data(:,3), InitExperiment.data(:,8))
 
     for i=1 : nstep
-        
+
         % Open File nbr i
         %disp(dirName(i+1).name);
         filename=strcat(nameExperiment,'/',dirName(i).name);
@@ -195,7 +195,7 @@ save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 case 2
 
     % Parameters
-    nbrWindows = 4;
+    nbrWindows = 6;
     % Cube:
 
 
@@ -222,7 +222,7 @@ case 2
 
     
         % Compute the hydrostatic pressure
-        for j=1:nbrWindows+1
+        for j=1:nbrWindows
             height_min = (j-1)*(Height(i)/nbrWindows);%(nbrWindows-(j-1))*(Height/nbrWindows);
             height_max = (j)*(Height(i)/nbrWindows);%(nbrWindows-(j))*(Height/nbrWindows);
             WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min));
@@ -238,7 +238,14 @@ case 2
     end
 
 
+% Delta Log
+[pks,locs] = findpeaks(mean_Hydrostatic(1:end/2,3),time(1:end/2));
+Delta_log = mean(log(pks(2:end-1)./pks(3:end)));
+epsilon_log = sqrt(Delta_log^2/(Delta_log^2+4*pi^2))
 
+% natural Frequency of the system
+Deltat = mean(locs(2:end)-locs(1:end-1));
+freq = 1/Deltat
 
 figure(1)
 hold on
@@ -258,10 +265,11 @@ figure(2)
 hold on
     plot(H(1,:), mean_Hydrostatic(1,:), '*','LineWidth', 2)
     %i=[floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
-    for i=[floor(length(H(:,1))/2)  length(H(:,1))]
+    for i=[floor(length(H(:,1))/4)  length(H(:,1))]
         errorbar(H(i,:), mean_Hydrostatic(i,:), std_Hydrostatic(i,:), '*','LineWidth', 2)
     end
-    plot(H(i,:), 1000*9.81*(height_max -H(i,:)), 'color', 'k')
+    plot(H(1,:), 1000*9.81*(Height(end)+0.025 -H(1,:)), '-k')
+    %plot(H(end,:), 1279.7*9.81*(Height(end) -H(end,:)), '-.k')
     %axis([0 1 2 3])
     set(gca,'FontSize',22);
     xlabel('Height [m]','FontSize',22,'Interpreter','latex');
@@ -271,13 +279,33 @@ hold on
     set(gca,'XTick',linspace(L(1),L(2),NumTicks))
     L = get(gca,'YLim');
     set(gca,'YTick',linspace(L(1),L(2),NumTicks))
-    legendInfo={'t = 0 [s]'; 't = 1 [s]';'t = 2 [s]';'Analytical solution'};
+    legendInfo={'t = 0 [s]'; 't = 0.25 [s]';'t = 1 [s]';'Analytical solution at t = 0 [s]'};
     legend(legendInfo,'Interpreter','latex','Location','Best');
     grid
     box on
     %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
     hold off   
 
+
+
+figure(3)
+plot(time,mean_Hydrostatic(:,3))
+    %axis([0 0 0 0])
+    title('')
+    set(gca,'FontSize',22);
+    xlabel('Time [s]','FontSize',22,'Interpreter','latex');
+    ylabel('Hydrostatic Pressure [Pa]','FontSize',22,'Interpreter','latex');
+    NumTicks=5;
+    L = get(gca,'XLim');
+    set(gca,'XTick',linspace(L(1),L(2),NumTicks))
+    L = get(gca,'YLim');
+    set(gca,'YTick',linspace(L(1),L(2),NumTicks))
+    %legendInfo={ 'SPH';'SPH Pressure no init'; 'SPH $\alpha = 0.1$';'SPH $B = 128$';'XSPH $\epsilon = 0.5$'};
+    %legend(legendInfo,'Interpreter','latex','Location','Best');
+    grid
+    box on
+    hold off
+    
 % Save data
 DATA.name = dirName(1).name;
 DATA.path = nameExperiment;
@@ -296,6 +324,9 @@ DATA.meanDensity = mean_Density;
 DATA.stdDensity = std_Density;
 DATA.meanHydrostatic = mean_Hydrostatic;
 DATA.stdHydrostatic = std_Hydrostatic;
+DATA.DeltaLog = Delta_log;
+DATA.epsilonLog = epsilon_log;
+DATA.freq = freq;
 
 save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 

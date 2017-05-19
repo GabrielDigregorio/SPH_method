@@ -6,84 +6,84 @@
 
 Error consistencyParameters(Parameter* parameter)
 {
-  int cntError = 0;
+    int cntError = 0;
 
-  if(parameter->kh <= 0.0)
-  {
-    std::cout << "Invalid kh.\n" << std::endl;
-    cntError++;
-  }
+    if(parameter->kh <= 0.0)
+    {
+        std::cout << "Invalid kh.\n" << std::endl;
+        cntError++;
+    }
 
-  if( (parameter->k <= 0.0) || (parameter->k > parameter->T) )
-  {
-    std::cout << "Invalid timestep.\n" << std::endl;
-    cntError++;
-  }
+    if( (parameter->k <= 0.0) || (parameter->k > parameter->T) )
+    {
+        std::cout << "Invalid timestep.\n" << std::endl;
+        cntError++;
+    }
 
-  if(parameter->densityRef <= 0.0)
-  {
-    std::cout << "Invalid reference density.\n" << std::endl;
-    cntError++;
-  }
+    if(parameter->densityRef <= 0.0)
+    {
+        std::cout << "Invalid reference density.\n" << std::endl;
+        cntError++;
+    }
 
-  if(parameter->B < 0.0)
-  {
-    std::cout << "Invalid B.\n" << std::endl;
-    cntError++;
-  }
-  if(parameter->gamma < 0.0)
-  {
-    std::cout << "Invalid gamma.\n" << std::endl;
-    cntError++;
-  }
-  if(parameter->writeInterval < parameter->k)
-  {
-    std::cout << "Invalid writeInterval.\n" << std::endl;
-    cntError++;
-  }
-  if(parameter->c < 0.0)
-  {
-    std::cout << "Invalid speed of sound.\n" << std::endl;
-    cntError++;
-  }
-  if(parameter->alpha < 0.0)
-  {
-    std::cout << "Invalid alpha.\n" << std::endl;
-    cntError++;
-  }
-  if(parameter->beta < 0.0)
-  {
-    std::cout << "Invalid beta.\n" << std::endl;
-    cntError++;
-  }
-  if(parameter->epsilon < 0.0)
-  {
-    std::cout << "Invalid epsilon.\n" << std::endl;
-    cntError++;
-  }
-  if(parameter->temperature < 0.0)
-  {
-    std::cout << "Invalid temperature.\n" << std::endl;
-    cntError++;
-  }
-  if(parameter->molarMass < 0.0)
-  {
-    std::cout << "Invalid molarMass.\n" << std::endl;
-    cntError++;
-  }
-  if( (parameter->theta <= 0.0) || (parameter->theta > 1.0) )
-  {
-    std::cout << "Invalid theta.\n" << std::endl;
-    cntError++;
-  }
-  if (cntError != 0)
-  {
-    return consistencyError;
-  }
-  else
-  {
-    return noError;
-  }
+    if(parameter->B < 0.0)
+    {
+        std::cout << "Invalid B.\n" << std::endl;
+        cntError++;
+    }
+    if(parameter->gamma < 0.0)
+    {
+        std::cout << "Invalid gamma.\n" << std::endl;
+        cntError++;
+    }
+    if(parameter->writeInterval < parameter->k)
+    {
+        std::cout << "Invalid writeInterval.\n" << std::endl;
+        cntError++;
+    }
+    if(parameter->c < 0.0)
+    {
+        std::cout << "Invalid speed of sound.\n" << std::endl;
+        cntError++;
+    }
+    if(parameter->alpha < 0.0)
+    {
+        std::cout << "Invalid alpha.\n" << std::endl;
+        cntError++;
+    }
+    if(parameter->beta < 0.0)
+    {
+        std::cout << "Invalid beta.\n" << std::endl;
+        cntError++;
+    }
+    if(parameter->epsilon < 0.0)
+    {
+        std::cout << "Invalid epsilon.\n" << std::endl;
+        cntError++;
+    }
+    if(parameter->temperature < 0.0)
+    {
+        std::cout << "Invalid temperature.\n" << std::endl;
+        cntError++;
+    }
+    if(parameter->molarMass < 0.0)
+    {
+        std::cout << "Invalid molarMass.\n" << std::endl;
+        cntError++;
+    }
+    if( (parameter->theta <= 0.0) || (parameter->theta > 1.0) )
+    {
+        std::cout << "Invalid theta.\n" << std::endl;
+        cntError++;
+    }
+    if (cntError != 0)
+    {
+        return consistencyError;
+    }
+    else
+    {
+        return noError;
+    }
 }
 
 

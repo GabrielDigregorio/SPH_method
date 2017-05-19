@@ -4,13 +4,13 @@
 %                 - Run an experiment
 %                 - Analyse an experiment
 %**************************************************************************
-clc; clear all; %close all;
+clc; clear all; close all;
 
 % Get Environement:
 name = getenv('COMPUTERNAME');
 if (strcmp(name,'DESKTOP-31TT348')) 
-     path = 'C:\Users\gabri\Dropbox\Applications\ShareLaTeX\SPH_PROJECT\';
-     disp(['Welcome GabyGab: ']); disp(['*****************']);disp([' ']);
+     path = 'C:\Users\';
+     disp(['Welcome DESKTOP-31TT348: ']); disp(['*****************']);disp([' ']);
 else path = ''; 
 end
 
