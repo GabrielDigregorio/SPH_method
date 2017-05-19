@@ -106,14 +106,14 @@ cd build
 mkdir Results
 mkdir ./Results/<myName>
 ```
-The field <myName> should be replaced by an user chosen name for the simulation.
+The field "myName" should be replaced by an user chosen name for the simulation.
 
 * Launch a new experiment (command line)
 
 ```
 mpirun -np <nbProc> ./sph <pathToParameterFile> <pathToGeometryFile> <name>
 ```
-The fields <nbProc> and <name> should be replaced by the desired number of processors and the desired name for the output files while <pathToParameterFile> and <pathToGeometryFile> should be replaced by the path to the parameter and the geometry file.
+The fields "nbProc" and "name" should be replaced by the desired number of processors and the desired name for the output files while "pathToParameterFile" and "pathToGeometryFile" should be replaced by the path to the parameter and the geometry file.
 
 
 * Launch a new experiment (bash script)
@@ -143,7 +143,7 @@ An example file of a bash script is given here below
             mpirun sph \$Para \$Geom \$TestName 
 ```
 
-The number of processors allocated to the job are fixed with \texttt{ntasks}. The number of threads allocated to the job are specified with \texttt{cpus-per-task}. The name of the input files as well as the output file name also have to be entered. After saving the file, it can be launched with
+The number of processors allocated to the job are fixed with "ntasks". The number of threads allocated to the job are specified with "cpus-per-task". The name of the input files as well as the output file name also have to be entered. After saving the file, it can be launched with
 
 ```
 sbatch scriptTest.sh
