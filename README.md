@@ -57,6 +57,7 @@ questions will be asked to each member of the two student groups.
 ## Compilation
 
 * Windows
+
 A compiler (g++ MinGw) must be installed or an IDE with a build-in compiler can be used (e.g. Visual Studio). Also, the Cmake software must be installed. Compilation on Windows can be different, depending on the used IDE. Here follows some command lines for compilation:
 ```
 mkdir build
@@ -67,6 +68,7 @@ mingw32-make
 ```
 
 * Linux & mac OS
+
 The Cmake software must be installed and a \texttt{g++} compiler must be available.
 ```
 mkdir build
@@ -101,6 +103,7 @@ export CXX=g++
 
 * Create a new directory to store data
 
+
 ```
 cd build
 mkdir Results
@@ -110,6 +113,7 @@ The field "myName" should be replaced by an user chosen name for the simulation.
 
 * Launch a new experiment (command line)
 
+
 ```
 mpirun -np <nbProc> ./sph <pathToParameterFile> <pathToGeometryFile> <name>
 ```
@@ -117,6 +121,7 @@ The fields "nbProc" and "name" should be replaced by the desired number of proce
 
 
 * Launch a new experiment (bash script)
+
 An example file of a bash script is given here below
 
 ```
