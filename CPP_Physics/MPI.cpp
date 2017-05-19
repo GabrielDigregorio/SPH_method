@@ -806,11 +806,11 @@ void computeMigrateIndex(std::vector<double>& posX,
 
     nMigrate[0]=0; nMigrate[1]=0;
     for(unsigned int i=0; i<posX.size(); ++i){
-        if(posX[i]>=Xmax){
+        if(posX[i]>Xmax){
             index.push_back( std::make_pair(rightMigrate,i) );
             ++nMigrate[1];
         }
-        else if(posX[i]<Xmin){
+        else if(posX[i]<=Xmin){
             index.push_back( std::make_pair(leftMigrate,i) );
             ++nMigrate[0];
         }

@@ -48,7 +48,7 @@
     ly = 4
     lz = -1
 #brick
-  % pal du bas 
+  % pal du bas
         %param
             c=2
             s=0.5
@@ -77,7 +77,7 @@
             rotationCenterZ=0
             amplitude=3
     #brick
-  % pal de droite 
+  % pal de droite
         %param
             c=2
             s=0.5
@@ -106,7 +106,7 @@
             rotationCenterZ=0
             amplitude=3
   #brick
-  % pal du haut 
+  % pal du haut
         %param
             c=2
             s=0.5
@@ -135,7 +135,7 @@
             rotationCenterZ=0
             amplitude=3
     #brick
-  % pal de gauche 
+  % pal de gauche
         %param
             c=2
             s=0.5
@@ -163,9 +163,9 @@
             rotationCenterY=25
             rotationCenterZ=0
             amplitude=3
-  
+
     #brick
-  % plaque du bas  
+  % plaque du bas
         %param
             c=1
             s=0.5
@@ -194,7 +194,7 @@
             rotationCenterZ=0
             amplitude=3
       #brick
-  % plaque de gauche 
+  % plaque de gauche
         %param
             c=1
             s=0.5
@@ -223,7 +223,7 @@
             rotationCenterZ=0
             amplitude=3
        #brick
-  % plaque de droite 
+  % plaque de droite
         %param
             c=1
             s=0.5
@@ -252,7 +252,7 @@
             rotationCenterZ=0
             amplitude=3
      #brick
-  % plaque du fond 
+  % plaque du fond
         %param
             c=1
             s=0.5
@@ -281,7 +281,7 @@
             rotationCenterZ=0
             amplitude=3
    #brick
-  % plaque devant 
+  % plaque devant
         %param
             c=1
             s=0.5
@@ -311,7 +311,7 @@
             amplitude=3
 
  #brick
-  % fluide bas gauche 
+  % fluide bas gauche
         %param
             c=0
             s=0.5
@@ -340,7 +340,7 @@
             rotationCenterZ=0
             amplitude=3
     #brick
-  % fluide bas droite 
+  % fluide bas droite
         %param
             c=0
             s=0.5
@@ -369,7 +369,7 @@
             rotationCenterZ=0
             amplitude=3
       #brick
-  % fluide haut droite 
+  % fluide haut droite
         %param
             c=0
             s=0.5
@@ -456,7 +456,7 @@
             rotationCenterZ=0
             amplitude=3
 #brick
-% fluide centrale haut 
+% fluide centrale haut
         %param
             c=0
             s=0.5
@@ -485,7 +485,7 @@
             rotationCenterZ=0
             amplitude=3
 #brick
-    % fluide centrale droite 
+    % fluide centrale droite
         %param
             c=0
             s=0.5
@@ -545,7 +545,7 @@
             amplitude=3
 
 #brick
-  % plaque du bas  
+  % plaque du bas
         %param
             c=0
             s=0.5
@@ -573,5 +573,5 @@
             rotationCenterY=25
             rotationCenterZ=0
             amplitude=3
- 
+
 #END_G
