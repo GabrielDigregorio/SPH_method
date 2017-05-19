@@ -33,11 +33,11 @@
 
 #domsz
     ux = 171
-    uy = 10
+    uy = 11
     uz = 15
-    lx = -11
-    ly = -5
-    lz = -5
+    lx = -20
+    ly = -11
+    lz = -1
 
 #bathy
    	batFile=Playgrounds/beachReal.dat
@@ -57,7 +57,7 @@
            r=0
        %coord
            x=170.25
-           y=0
+           y=4.25
            z=7
        %dimen
            L=0.5
@@ -86,7 +86,7 @@
         r=0
     %coord
         x=80
-        y=-4.25
+        y=-0.25
         z=7
     %dimen
         L=181
@@ -115,7 +115,7 @@
         r=0
     %coord
         x=80
-        y=4.25
+        y=8.25
         z=7
     %dimen
         L=181
@@ -144,7 +144,7 @@
         r=0
     %coord
         x=-0.5
-        y=0
+        y=4.25
         z=7.5
     %dimen
         L=1
@@ -174,7 +174,7 @@
         r=0
     %coord
         x=-5
-        y=0
+        y=4.25
         z=-0.25
     %dimen
         L=10

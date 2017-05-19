@@ -35,7 +35,7 @@
 #domsz
     ux = 0.4
     uy = 0.4
-    uz = 0.7
+    uz = 0.5
     lx = -0.4
     ly = -0.4
     lz = -0.4
@@ -44,16 +44,16 @@
     #brick
         %param
             c=0
-            s=0.01
+            s=0.02
             r=0
         %coord
             x=0
             y=0
-            z=0.255
+            z=0.254
         %dimen
-            L=0.385
-            W=0.385
-            H=0.485
+            L=0.384
+            W=0.384
+            H=0.484
         %inclin
             tetax=0.0
             tetay=0.0
@@ -73,7 +73,7 @@
     #brick
         %param
             c=1
-            s=0.01
+            s=0.02
             r=0
         %coord
             x=0
@@ -82,7 +82,7 @@
         %dimen
             L=0.41
             W=0.41
-            H=0.01
+            H=0.02
         %inclin
             tetax=0.0
             tetay=0.0
@@ -102,14 +102,14 @@
     #brick
         %param
             c=1
-            s=0.01
+            s=0.02
             r=0
         %coord
             x=0.20
             y=0
             z=0.26
         %dimen
-            L=0.01
+            L=0.02
             W=0.41
             H=0.5
         %inclin
@@ -131,14 +131,14 @@
     #brick
         %param
             c=1
-            s=0.01
+            s=0.02
             r=0
         %coord
             x=-0.20
             y=0
             z=0.26
         %dimen
-            L=0.01
+            L=0.02
             W=0.41
             H=0.5
         %inclin
@@ -160,7 +160,7 @@
     #brick
         %param
             c=1
-            s=0.01
+            s=0.02
             r=0
         %coord
             x=0
@@ -168,7 +168,7 @@
             z=0.26
         %dimen
             L=0.41
-            W=0.01
+            W=0.02
             H=0.5
         %inclin
             tetax=0.0
@@ -189,7 +189,7 @@
     #brick
         %param
             c=1
-            s=0.01
+            s=0.02
             r=0
         %coord
             x=0
@@ -197,7 +197,7 @@
             z=0.26
         %dimen
             L=0.41
-            W=0.01
+            W=0.02
             H=0.5
         %inclin
             tetax=0.0
@@ -213,5 +213,37 @@
             rotationCenterX=0
             rotationCenterY=0
             rotationCenterZ=0
-            amplitude=0      
+            amplitude=0  
+            
+  
 #END_G
+
+% Solid Tube that is pushed into the pool (to test XSPH method). Set movingDirectionZ=-0.4 and domain uz = 0.9
+    #brick
+        %param
+            c=2
+            s=0.02
+            r=0
+        %coord
+            x=0
+            y=0
+            z=0.7
+        %dimen
+            L=0.05
+            W=0.05
+            H=0.4
+        %inclin
+            tetax=0.0
+            tetay=0.0
+            tetaz=0.0
+        %movpara
+            posLaw=0
+            angleLaw=0
+            charactTime=0.4
+            movingDirectionX=0
+            movingDirectionY=0
+            movingDirectionZ=-0.0
+            rotationCenterX=0
+            rotationCenterY=0
+            rotationCenterZ=0
+            amplitude=1   
