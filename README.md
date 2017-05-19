@@ -125,27 +125,27 @@ The fields "nbProc" and "name" should be replaced by the desired number of proce
 An example file of a bash script is given here below
 
 ```
-           #!/bin/bash
-            #
-            #SBATCH --job-name=wetFloor
-            #SBATCH --mail-user=karl.ajumide@student.ulg.ac.be
-            #SBATCH --mail-type=ALL
-            #SBATCH --output=wetFloor.txt
-            #
-            #SBATCH --ntasks=8
-            #SBATCH --cpus-per-task=4
-            #SBATCH --time=100:00
-            #SBATCH --mem-per-cpu=400
-            
-            Para="../Playgrounds/wetFloor.para"
-            Geom="../Playgrounds/wetFloor.geom"
-            TestName="wetFloor"
-            
-            
-            module load openmpi/1.6.4/gcc-4.9.2 
-            module load cmake/3.5.2 
-            export OMP_NUM_THREADS=\$SLURM_CPUS_PER_TASK 
-            mpirun sph \$Para \$Geom \$TestName 
+#!/bin/bash
+#
+#SBATCH --job-name=wetFloor
+#SBATCH --mail-user=karl.ajumide@student.ulg.ac.be
+#SBATCH --mail-type=ALL
+#SBATCH --output=wetFloor.txt
+#
+#SBATCH --ntasks=8
+#SBATCH --cpus-per-task=4
+#SBATCH --time=100:00
+#SBATCH --mem-per-cpu=400
+
+Para="../Playgrounds/wetFloor.para"
+Geom="../Playgrounds/wetFloor.geom"
+TestName="wetFloor"
+
+
+module load openmpi/1.6.4/gcc-4.9.2 
+module load cmake/3.5.2 
+export OMP_NUM_THREADS=\$SLURM_CPUS_PER_TASK 
+mpirun sph \$Para \$Geom \$TestName 
 ```
 
 The number of processors allocated to the job are fixed with "ntasks". The number of threads allocated to the job are specified with "cpus-per-task". The name of the input files as well as the output file name also have to be entered. After saving the file, it can be launched with
