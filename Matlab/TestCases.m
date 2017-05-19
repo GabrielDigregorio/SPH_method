@@ -479,6 +479,86 @@ DATA.meanZexperiment = MeanZ_experiment;
 
 save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
+%% Dam break
+%  ************************************************************************
+case 5
+
+     L_init = max(InitExperiment.data(1:limit(1),2))- min(InitExperiment.data(1:limit(1),2));
+     
+     for i=1 : nstep
+        
+        % Open File nbr i
+        %disp(dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i).name);
+        Experiment = importdata(filename); % Import Data
+        
+        % Compute time of the experiment
+        time(i) = (i-1)*timeWrite; % Time 
+        
+    
+    end
+    
+    
+    % Put file in a new directory
+    %     if(input('MoveFile to an other folder (1 for yes, 0 for no): ' ))
+    %     mkdir ../build/Results/FreeFallingCube
+    %     movefile ../build/Results/FreeFallingCube_*.txt ../build/Results/FreeFallingCube
+    %     movefile ../build/Results/FreeFallingCube_*.vtk ../build/Results/FreeFallingCube
+    %     end
+
+    
+    for i=1 : nstep 
+        % Open File nbr i
+        %disp(dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i).name);
+        Experiment = importdata(filename); % Import Data
+        
+        L = max(Experiment.data(1:limit(1),2))- min(Experiment.data(1:limit(1),2));
+        part = find (Experiment.data(1:limit(1),2) > (min(Experiment.data(1:limit(1),2))+0.9*L) & Experiment.data(1:limit(1),2) <= (min(Experiment.data(1:limit(1),2))+L));  
+        v(i) = mean(Experiment.data(part(:),5));
+        %part2 = find(Experiment.data(1:limit(1),2)==max(Experiment.data(1:limit(1),2)));
+        %v2(i) = mean(Experiment.data(part2(:),5));
+        X(i) = L;
+        
+    end
+    
+    
+    X = X./L_init;
+    t = time.*sqrt(2*9.81/L_init);
+    
+    t1_exp = [0 0.383261 0.773638 1.15393 1.52373 1.93278 2.3185 2.70362 3.08399];
+    X1_exp = [1 1.11204 1.25257 1.50677 1.89359 2.24755 2.61080 3.00249 3.62163];
+    t2_exp = [0 0.4063 0.8591 1.1862 1.4280 1.6316 1.8201 1.9849 2.1882 2.3149 2.5031 2.6372 2.8178 2.9672 3.0937];
+    X2_exp = [1 1.1122 1.2201 1.4359 1.6748 1.8944 2.1044 2.3333 2.5718 2.7814 3.0009  3.2294 3.4394 3.6728 3.8918];
+    t3_exp = [0 0.3986 0.8206 1.5622 1.9001 2.2146 2.5602 2.89];
+    X3_exp = [1 1.1122 1.2198 1.8939 2.3326 2.7853 3.2241 3.6769];
+    
+    figure(1)
+    hold on
+    plot(t(1:22),X(1:22))
+    plot(t1_exp,X1_exp,'o')
+    plot(t2_exp,X2_exp,'s')
+    plot(t3_exp,X3_exp,'rx')
+    set(gca,'xlim',[0,3.5])
+    set(gca,'ylim',[1 4])
+    grid on
+    box on
+    ylabel('$Y/L$','Interpreter','Latex')
+    xlabel('$t(2g/L)^{1/2}$','Interpreter','Latex')
+    set(gca,'FontSize',25)
+    h=legend('Numerical results','Experiment 1','Experiment 2','Experiment 3');
+    set(h,'Interpreter','Latex')
+    
+    figure(2)
+    hold on
+    plot(time,v)
+    grid on
+    box on
+    ylabel('$u_y$ [m/s]','Interpreter','Latex')
+    xlabel('Time [s]','Interpreter','Latex')
+    set(gca,'FontSize',25)
+    set(h,'Interpreter','Latex')
+
 %% Not Valid Experiment
 %  ************************************************************************
 otherwise
