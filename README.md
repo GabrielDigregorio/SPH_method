@@ -53,11 +53,12 @@ non-trivial configurations) is due on May 19th. An oral presentation of the main
 results will be organized during the June exam session; individual theoretical and practical
 questions will be asked to each member of the two student groups.
 
+## Entertainment
+Differents simulations can be viewed on Youtube at: https://www.youtube.com/channel/UCX6ev3zeYFJvDY86Tb7ebhg
 
 ## Compilation
 
 * Windows
-
 A compiler (g++ MinGw) must be installed or an IDE with a build-in compiler can be used (e.g. Visual Studio). Also, the Cmake software must be installed. Compilation on Windows can be different, depending on the used IDE. Here follows some command lines for compilation:
 ```
 mkdir build
@@ -68,8 +69,7 @@ mingw32-make
 ```
 
 * Linux & mac OS
-
-The Cmake software must be installed and a g++ compiler must be available.
+The Cmake software must be installed and a \texttt{g++} compiler must be available.
 ```
 mkdir build
 cd build
@@ -103,7 +103,6 @@ export CXX=g++
 
 * Create a new directory to store data
 
-
 ```
 cd build
 mkdir Results
@@ -113,7 +112,6 @@ The field "myName" should be replaced by an user chosen name for the simulation.
 
 * Launch a new experiment (command line)
 
-
 ```
 mpirun -np <nbProc> ./sph <pathToParameterFile> <pathToGeometryFile> <name>
 ```
@@ -121,31 +119,30 @@ The fields "nbProc" and "name" should be replaced by the desired number of proce
 
 
 * Launch a new experiment (bash script)
-
 An example file of a bash script is given here below
 
 ```
-#!/bin/bash
-#
-#SBATCH --job-name=wetFloor
-#SBATCH --mail-user=karl.ajumide@student.ulg.ac.be
-#SBATCH --mail-type=ALL
-#SBATCH --output=wetFloor.txt
-#
-#SBATCH --ntasks=8
-#SBATCH --cpus-per-task=4
-#SBATCH --time=100:00
-#SBATCH --mem-per-cpu=400
-
-Para="../Playgrounds/wetFloor.para"
-Geom="../Playgrounds/wetFloor.geom"
-TestName="wetFloor"
-
-
-module load openmpi/1.6.4/gcc-4.9.2 
-module load cmake/3.5.2 
-export OMP_NUM_THREADS=\$SLURM_CPUS_PER_TASK 
-mpirun sph \$Para \$Geom \$TestName 
+           #!/bin/bash
+            #
+            #SBATCH --job-name=wetFloor
+            #SBATCH --mail-user=karl.ajumide@student.ulg.ac.be
+            #SBATCH --mail-type=ALL
+            #SBATCH --output=wetFloor.txt
+            #
+            #SBATCH --ntasks=8
+            #SBATCH --cpus-per-task=4
+            #SBATCH --time=100:00
+            #SBATCH --mem-per-cpu=400
+            
+            Para="../Playgrounds/wetFloor.para"
+            Geom="../Playgrounds/wetFloor.geom"
+            TestName="wetFloor"
+            
+            
+            module load openmpi/1.6.4/gcc-4.9.2 
+            module load cmake/3.5.2 
+            export OMP_NUM_THREADS=\$SLURM_CPUS_PER_TASK 
+            mpirun sph \$Para \$Geom \$TestName 
 ```
 
 The number of processors allocated to the job are fixed with "ntasks". The number of threads allocated to the job are specified with "cpus-per-task". The name of the input files as well as the output file name also have to be entered. After saving the file, it can be launched with
