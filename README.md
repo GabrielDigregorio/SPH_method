@@ -4,10 +4,6 @@ v.1 (7/02/2017)
 
 
 
-## Teasing
-[![SPH Method](https://youtu.be/k7f6HWMVLPA/0.jpg)](https://youtu.be/k7f6HWMVLPA)
-
-
 ## Assignment
 
 This project consists in studying, implementing and validating a numerical scheme for the
