@@ -66,6 +66,10 @@
             rotationCenterY=0
             rotationCenterZ=0
             amplitude=0
+ 
+ #END_G
+ 
+ 
     #brick 
     %verticale du fond
         %param
@@ -212,4 +216,4 @@
                 rotationCenterY=5
                 rotationCenterZ=0.4
                 amplitude=0.4
-#END_G
+

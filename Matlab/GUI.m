@@ -4,13 +4,13 @@
 %                 - Run an experiment
 %                 - Analyse an experiment
 %**************************************************************************
-clc; clear all; %close all;
+clc; clear all; close all;
 
 % Get Environement:
 name = getenv('COMPUTERNAME');
 if (strcmp(name,'DESKTOP-31TT348')) 
-     path = 'C:\Users\gabri\Dropbox\Applications\ShareLaTeX\SPH_PROJECT\';
-     disp(['Welcome GabyGab: ']); disp(['*****************']);disp([' ']);
+     path = 'C:\Users\';
+     disp(['Welcome DESKTOP-31TT348: ']); disp(['*****************']);disp([' ']);
 else path = ''; 
 end
 
@@ -70,7 +70,8 @@ switch(choice)
         disp(['1) Free Falling Cube']);
         disp(['2) Swimming Pool']);
         disp(['3) Piston']);
-        disp(['4) Crash Cube']);disp([' ']);
+        disp(['4) Crash Cube']);
+        disp(['5) Dam break']);disp([' ']);
         n = input('Enter the TYPE of the experiment: ');disp([' ']);
         disp(['Clic on directory: ']);
         nameExperiment = uigetdir('../build/Results/');

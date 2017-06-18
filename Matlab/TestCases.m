@@ -64,7 +64,7 @@ end
     %     plot(InitExperiment.data(:,3), InitExperiment.data(:,8))
 
     for i=1 : nstep
-        
+
         % Open File nbr i
         %disp(dirName(i+1).name);
         filename=strcat(nameExperiment,'/',dirName(i).name);
@@ -195,7 +195,7 @@ save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 case 2
 
     % Parameters
-    nbrWindows = 4;
+    nbrWindows = 6;
     % Cube:
 
 
@@ -222,7 +222,7 @@ case 2
 
     
         % Compute the hydrostatic pressure
-        for j=1:nbrWindows+1
+        for j=1:nbrWindows
             height_min = (j-1)*(Height(i)/nbrWindows);%(nbrWindows-(j-1))*(Height/nbrWindows);
             height_max = (j)*(Height(i)/nbrWindows);%(nbrWindows-(j))*(Height/nbrWindows);
             WindowsDown = min(find(Experiment.data(1:limit(1),3) >= height_min));
@@ -238,7 +238,14 @@ case 2
     end
 
 
+% Delta Log
+[pks,locs] = findpeaks(mean_Hydrostatic(1:end/2,3),time(1:end/2));
+Delta_log = mean(log(pks(2:end-1)./pks(3:end)));
+epsilon_log = sqrt(Delta_log^2/(Delta_log^2+4*pi^2))
 
+% natural Frequency of the system
+Deltat = mean(locs(2:end)-locs(1:end-1));
+freq = 1/Deltat
 
 figure(1)
 hold on
@@ -258,10 +265,11 @@ figure(2)
 hold on
     plot(H(1,:), mean_Hydrostatic(1,:), '*','LineWidth', 2)
     %i=[floor(length(H(:,1))/4) floor(length(H(:,1))/2) 3*floor(length(H(:,1))/4) length(H(:,1))-1]
-    for i=[floor(length(H(:,1))/2)  length(H(:,1))]
+    for i=[floor(length(H(:,1))/4)  length(H(:,1))]
         errorbar(H(i,:), mean_Hydrostatic(i,:), std_Hydrostatic(i,:), '*','LineWidth', 2)
     end
-    plot(H(i,:), 1000*9.81*(height_max -H(i,:)), 'color', 'k')
+    plot(H(1,:), 1000*9.81*(Height(end)+0.025 -H(1,:)), '-k')
+    %plot(H(end,:), 1279.7*9.81*(Height(end) -H(end,:)), '-.k')
     %axis([0 1 2 3])
     set(gca,'FontSize',22);
     xlabel('Height [m]','FontSize',22,'Interpreter','latex');
@@ -271,13 +279,33 @@ hold on
     set(gca,'XTick',linspace(L(1),L(2),NumTicks))
     L = get(gca,'YLim');
     set(gca,'YTick',linspace(L(1),L(2),NumTicks))
-    legendInfo={'t = 0 [s]'; 't = 1 [s]';'t = 2 [s]';'Analytical solution'};
+    legendInfo={'t = 0 [s]'; 't = 0.25 [s]';'t = 1 [s]';'Analytical solution at t = 0 [s]'};
     legend(legendInfo,'Interpreter','latex','Location','Best');
     grid
     box on
     %print(strcat(path,'FreeFallingCube_Memory'), '-depsc')
     hold off   
 
+
+
+figure(3)
+plot(time,mean_Hydrostatic(:,3))
+    %axis([0 0 0 0])
+    title('')
+    set(gca,'FontSize',22);
+    xlabel('Time [s]','FontSize',22,'Interpreter','latex');
+    ylabel('Hydrostatic Pressure [Pa]','FontSize',22,'Interpreter','latex');
+    NumTicks=5;
+    L = get(gca,'XLim');
+    set(gca,'XTick',linspace(L(1),L(2),NumTicks))
+    L = get(gca,'YLim');
+    set(gca,'YTick',linspace(L(1),L(2),NumTicks))
+    %legendInfo={ 'SPH';'SPH Pressure no init'; 'SPH $\alpha = 0.1$';'SPH $B = 128$';'XSPH $\epsilon = 0.5$'};
+    %legend(legendInfo,'Interpreter','latex','Location','Best');
+    grid
+    box on
+    hold off
+    
 % Save data
 DATA.name = dirName(1).name;
 DATA.path = nameExperiment;
@@ -296,6 +324,9 @@ DATA.meanDensity = mean_Density;
 DATA.stdDensity = std_Density;
 DATA.meanHydrostatic = mean_Hydrostatic;
 DATA.stdHydrostatic = std_Hydrostatic;
+DATA.DeltaLog = Delta_log;
+DATA.epsilonLog = epsilon_log;
+DATA.freq = freq;
 
 save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
 
@@ -447,6 +478,86 @@ DATA.time = time;
 DATA.meanZexperiment = MeanZ_experiment;
 
 save(strcat(nameExperiment,strcat('/',dirName(1).name(1:end-13))), 'DATA')
+
+%% Dam break
+%  ************************************************************************
+case 5
+
+     L_init = max(InitExperiment.data(1:limit(1),2))- min(InitExperiment.data(1:limit(1),2));
+     
+     for i=1 : nstep
+        
+        % Open File nbr i
+        %disp(dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i).name);
+        Experiment = importdata(filename); % Import Data
+        
+        % Compute time of the experiment
+        time(i) = (i-1)*timeWrite; % Time 
+        
+    
+    end
+    
+    
+    % Put file in a new directory
+    %     if(input('MoveFile to an other folder (1 for yes, 0 for no): ' ))
+    %     mkdir ../build/Results/FreeFallingCube
+    %     movefile ../build/Results/FreeFallingCube_*.txt ../build/Results/FreeFallingCube
+    %     movefile ../build/Results/FreeFallingCube_*.vtk ../build/Results/FreeFallingCube
+    %     end
+
+    
+    for i=1 : nstep 
+        % Open File nbr i
+        %disp(dirName(i+1).name);
+        filename=strcat(nameExperiment,'/',dirName(i).name);
+        Experiment = importdata(filename); % Import Data
+        
+        L = max(Experiment.data(1:limit(1),2))- min(Experiment.data(1:limit(1),2));
+        part = find (Experiment.data(1:limit(1),2) > (min(Experiment.data(1:limit(1),2))+0.9*L) & Experiment.data(1:limit(1),2) <= (min(Experiment.data(1:limit(1),2))+L));  
+        v(i) = mean(Experiment.data(part(:),5));
+        %part2 = find(Experiment.data(1:limit(1),2)==max(Experiment.data(1:limit(1),2)));
+        %v2(i) = mean(Experiment.data(part2(:),5));
+        X(i) = L;
+        
+    end
+    
+    
+    X = X./L_init;
+    t = time.*sqrt(2*9.81/L_init);
+    
+    t1_exp = [0 0.383261 0.773638 1.15393 1.52373 1.93278 2.3185 2.70362 3.08399];
+    X1_exp = [1 1.11204 1.25257 1.50677 1.89359 2.24755 2.61080 3.00249 3.62163];
+    t2_exp = [0 0.4063 0.8591 1.1862 1.4280 1.6316 1.8201 1.9849 2.1882 2.3149 2.5031 2.6372 2.8178 2.9672 3.0937];
+    X2_exp = [1 1.1122 1.2201 1.4359 1.6748 1.8944 2.1044 2.3333 2.5718 2.7814 3.0009  3.2294 3.4394 3.6728 3.8918];
+    t3_exp = [0 0.3986 0.8206 1.5622 1.9001 2.2146 2.5602 2.89];
+    X3_exp = [1 1.1122 1.2198 1.8939 2.3326 2.7853 3.2241 3.6769];
+    
+    figure(1)
+    hold on
+    plot(t(1:22),X(1:22))
+    plot(t1_exp,X1_exp,'o')
+    plot(t2_exp,X2_exp,'s')
+    plot(t3_exp,X3_exp,'rx')
+    set(gca,'xlim',[0,3.5])
+    set(gca,'ylim',[1 4])
+    grid on
+    box on
+    ylabel('$Y/L$','Interpreter','Latex')
+    xlabel('$t(2g/L)^{1/2}$','Interpreter','Latex')
+    set(gca,'FontSize',25)
+    h=legend('Numerical results','Experiment 1','Experiment 2','Experiment 3');
+    set(h,'Interpreter','Latex')
+    
+    figure(2)
+    hold on
+    plot(time,v)
+    grid on
+    box on
+    ylabel('$u_y$ [m/s]','Interpreter','Latex')
+    xlabel('Time [s]','Interpreter','Latex')
+    set(gca,'FontSize',25)
+    set(h,'Interpreter','Latex')
 
 %% Not Valid Experiment
 %  ************************************************************************
