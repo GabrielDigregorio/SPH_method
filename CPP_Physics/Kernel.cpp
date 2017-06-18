@@ -55,9 +55,9 @@ double Wab(double r, double kh, Kernel myKernel)
         h = kh/2.0;
         alphaD = 1.5/(M_PI*h*h*h);
         if(r < h) // never negative...
-        return alphaD*(1.5 - r*r/(h*h) + 0.5*r*r*r/(h*h*h) );
+        return alphaD*(2.0/3.0 - r*r/(h*h) + 0.5*r*r*r/(h*h*h) );
         else if (r < 2*h)
-        return alphaD*((1.0/6.0) * (1.0-(r/h))*(1.0-(r/h))*(1.0-(r/h)));
+        return alphaD*((1.0/6.0) * (2.0-(r/h))*(2.0-(r/h))*(2.0-(r/h)));
         else
         return 0.0;
         break;
@@ -66,7 +66,7 @@ double Wab(double r, double kh, Kernel myKernel)
         h = kh/2.0;
         alphaD = 1.25/(M_PI*h*h*h);
         if(r < 2*h)
-        return alphaD*(0.0625*r*r/(h*h) - 0.75*(r/h) + 0.75);
+        return alphaD*(0.1875*r*r/(h*h) - 0.75*(r/h) + 0.75);
         else
         return 0.0;
         break;
